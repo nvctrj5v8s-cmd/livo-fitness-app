@@ -9,3 +9,6 @@
 - Keine Diagnose, Behandlung oder Medikamentenempfehlung implementieren.
 - Änderungen an Datenspeicherung, Tracking, APIs, Berechtigungen oder Zahlungen
   müssen in Datenschutztexten und dieser Datei dokumentiert werden.
+- Aktuell ist ausschließlich eine responsive UI-Vorschau aktiv. Dashboard,
+  Tagebuch, KI-Coach und Fortschritt verwenden Demo-Inhalte und speichern oder
+  übertragen noch keine Nutzerdaten.

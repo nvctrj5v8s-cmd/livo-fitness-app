@@ -6,6 +6,16 @@ Eine Lifestyle-App für gesunde Erwachsene, die Mahlzeiten dokumentiert,
 Nährwerte nachvollziehbar berechnet und allgemeine Unterstützung beim Erreichen
 persönlicher Fitnessziele bietet.
 
+## Aktueller Prototyp
+
+- responsive Navigation für Smartphone, Tablet und Web/Desktop
+- modernes Dashboard mit animiertem Kalorienring und Tageswerten
+- Ernährungstagebuch als klickbare UI-Vorschau
+- klar gekennzeichneter, noch nicht verbundener KI-Coach
+- animierte Fortschrittsansicht mit Demo-Daten
+- alle angezeigten Gesundheits- und Nährwerte sind derzeit reine Demo-Werte
+- noch keine Datenbank, KI-API, Analyse, Anmeldung oder Zahlung aktiv
+
 ## Reihenfolge
 
 ### Phase 1: Lokaler Prototyp

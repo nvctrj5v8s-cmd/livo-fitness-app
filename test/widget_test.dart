@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('starter page is visible', (tester) async {
     await tester.pumpWidget(const FitnessAiApp());
+    await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('Fitness AI'), findsOneWidget);
-    expect(find.text('Dein persönlicher Ernährungsbegleiter'), findsOneWidget);
+    expect(find.text('Bereit für deinen Tag?'), findsOneWidget);
+    expect(find.text('Heute'), findsOneWidget);
   });
 }

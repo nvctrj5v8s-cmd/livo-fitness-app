@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../features/home/presentation/home_page.dart';
+import '../core/theme/app_theme.dart';
+import '../features/navigation/presentation/app_shell.dart';
 
 class FitnessAiApp extends StatelessWidget {
   const FitnessAiApp({super.key});
@@ -10,11 +11,8 @@ class FitnessAiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fitness AI',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF356859)),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
+      theme: AppTheme.light,
+      home: const AppShell(),
     );
   }
 }

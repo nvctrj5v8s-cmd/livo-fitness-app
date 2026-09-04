@@ -22,3 +22,9 @@ flutter run
 
 Keine Diagnosen, Krankheitsbehandlungen, Medikamentenempfehlungen oder extremen
 Diätpläne. Die konkrete Produktplanung steht in `docs/PRODUCT_PLAN.md`.
+
+## Aktueller Stand
+
+Die App enthält eine responsive und animierte Design-Vorschau für Dashboard,
+Ernährungstagebuch, KI-Coach und Fortschritt. Alle Zahlen sind Demo-Werte. Es
+sind noch keine externen APIs, Konten, Zahlungen oder Datenspeicherungen aktiv.
