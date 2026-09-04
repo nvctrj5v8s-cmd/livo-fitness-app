@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 
+import '../core/state/app_controller.dart';
 import '../core/theme/app_theme.dart';
 import '../features/navigation/presentation/app_shell.dart';
 
-class FitnessAiApp extends StatelessWidget {
+class FitnessAiApp extends StatefulWidget {
   const FitnessAiApp({super.key});
 
   @override
+  State<FitnessAiApp> createState() => _FitnessAiAppState();
+}
+
+class _FitnessAiAppState extends State<FitnessAiApp> {
+  final AppController _controller = AppController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'LIVO – Ernährung & Fitness',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      home: const AppShell(),
+    return AppScope(
+      controller: _controller,
+      child: MaterialApp(
+        title: 'LIVO – Ernährung',
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.dark,
+        darkTheme: AppTheme.dark,
+        home: const AppShell(),
+      ),
     );
   }
 }

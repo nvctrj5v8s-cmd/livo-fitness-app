@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  static const ink = Color(0xFF0D1B17);
-  static const forest = Color(0xFF123D31);
-  static const darkForest = Color(0xFF09251E);
-  static const mint = Color(0xFF8FE3CB);
-  static const lime = Color(0xFFD8FF74);
-  static const cream = Color(0xFFF5F3EC);
+  static const background = Color(0xFF080B0A);
+  static const surface = Color(0xFF101513);
+  static const surfaceHigh = Color(0xFF171D1A);
+  static const surfaceSoft = Color(0xFF1D2421);
+  static const border = Color(0xFF29312D);
+  static const text = Color(0xFFF7F9F7);
+  static const textMuted = Color(0xFFA1ACA6);
+  static const primary = Color(0xFFD6F76F);
+  static const mint = Color(0xFF73DEC5);
+  static const orange = Color(0xFFFFA56B);
+  static const purple = Color(0xFFA99AF5);
+  static const blue = Color(0xFF79BFFF);
+  static const error = Color(0xFFFF7E82);
+  static const black = Color(0xFF050706);
   static const white = Color(0xFFFFFFFF);
-  static const muted = Color(0xFF6D7873);
-  static const line = Color(0xFFE3E5DF);
-  static const peach = Color(0xFFFFCDBB);
-  static const coral = Color(0xFFFF8C6B);
-  static const lilac = Color(0xFFD8D3FF);
-  static const sky = Color(0xFFC9EAFF);
+
+  // Compatibility aliases for older widgets while the prototype evolves.
+  static const ink = text;
+  static const forest = mint;
+  static const darkForest = background;
+  static const lime = primary;
+  static const cream = background;
+  static const muted = textMuted;
+  static const line = border;
+  static const peach = orange;
+  static const coral = orange;
+  static const lilac = purple;
+  static const sky = blue;
 }

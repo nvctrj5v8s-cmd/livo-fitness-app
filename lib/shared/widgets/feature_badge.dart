@@ -16,7 +16,8 @@ class FeatureBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.lime.withValues(alpha: 0.35),
+        color: AppColors.primary.withValues(alpha: 0.12),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.22)),
         borderRadius: BorderRadius.circular(99),
       ),
       child: Padding(
@@ -24,12 +25,12 @@ class FeatureBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 13, color: AppColors.forest),
+            Icon(icon, size: 13, color: AppColors.primary),
             const SizedBox(width: 5),
             Text(
               label,
               style: const TextStyle(
-                color: AppColors.forest,
+                color: AppColors.primary,
                 fontSize: 10,
                 letterSpacing: 0.8,
                 fontWeight: FontWeight.w800,

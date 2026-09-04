@@ -1,70 +1,144 @@
 # Produktplan
 
-## Ziel
+## Vision
 
-Eine Lifestyle-App für gesunde Erwachsene, die Mahlzeiten dokumentiert,
-Nährwerte nachvollziehbar berechnet und allgemeine Unterstützung beim Erreichen
-persönlicher Fitnessziele bietet.
+LIVO soll für gesunde Erwachsene der zentrale, leicht verständliche Begleiter
+für Essen, Diätziele und alltägliche Planung werden. Nutzer sollen Mahlzeiten,
+Nährwerte, Wasser, Rezepte, Einkauf, Ziele und Fortschritt in einer ruhigen App
+finden, ohne mehrere Tracker und Notizen parallel zu benötigen.
 
-## Aktueller Prototyp
+Die App bleibt eine Lifestyle-Anwendung. Sie ersetzt keine medizinische,
+psychologische oder qualifizierte Ernährungsberatung.
 
-- Arbeitsname und visuelle Marke: LIVO
-- responsive Navigation für Smartphone, Tablet und Web/Desktop
-- modernes Dashboard mit animiertem Kalorienring, Makros und Tageswerten
-- Ernährungstagebuch mit manueller, Text-, Foto- und Barcode-Vorschau
-- Rezept-Entdeckung mit Kategorien und interaktiven Favoriten
-- Wochenplan, Einkaufsliste und Vorratsküche als vorbereitete Module
-- Ernährungs-Lernbereich für später redaktionell geprüfte Inhalte
-- klar gekennzeichneter, noch nicht verbundener KI-Coach mit Chat-Vorschau
-- Schnell-hinzufügen-Menü und interaktiver Wasserzähler
-- animierte Fortschrittsansicht mit Demo-Daten
-- alle angezeigten Gesundheits- und Nährwerte sind derzeit reine Demo-Werte
-- noch keine Datenbank, KI-API, Analyse, Anmeldung oder Zahlung aktiv
+## Produktprinzipien
 
-## Reihenfolge
+- einfach genug für die tägliche Nutzung, aber nicht leer
+- dark-first, hochwertig, kontrastreich und ohne visuelle Überladung
+- wichtige Tageswerte auf einen Blick, Details erst bei Bedarf
+- schnelle, nachvollziehbare Eingaben statt langer Formulare
+- echte Berechnungen aus strukturierten Daten; KI formuliert oder interpretiert,
+  erfindet aber keine Nährwerte
+- lokal nutzbare Oberfläche mit klarer Trennung zu späteren Cloud-Diensten
+- sichere Grenzen vor Funktionsumfang
 
-### Phase 1: Lokaler Prototyp
+## Aktuelle Designrichtung
 
-- App-Name und visuelle Richtung festlegen
-- Onboarding und Zielauswahl
-- lokales Ernährungstagebuch
-- Tagesziele und Fortschritt
-- Demo-Daten ohne Benutzerkonto und ohne externe APIs
+- Material-3-basierte Dark UI mit fast schwarzem Hintergrund
+- abgestufte dunkle Oberflächen und helle Typografie
+- Limettengrün als primärer Akzent; weitere Farben nur semantisch für Diagramme
+- lokale Food-Fotografie und persönliches Profilbild
+- responsive Bottom Navigation auf Mobilgeräten und Seitenleiste auf Desktop
+- sanfte Seitenwechsel, gestaffeltes Einblenden, Press-Feedback, animierte
+  Zahlen, Ringe, Balken und Diagrammpfade
+- Unterstützung für reduzierte Bewegung wird schrittweise für alle Animationen
+  vervollständigt
 
-### Phase 2: Produkt-MVP
+## Produktbereiche
 
-- Benutzerkonto und Backend
-- echte Lebensmitteldatenbank
-- KI zerlegt Texteingaben in strukturierte Lebensmittel
-- Sicherheitsregeln und problematische Eingaben
-- Datenschutz, Datenexport und Kontolöschung
+### Heute
 
-### Phase 3: Bezahlversion
+Persönliche Begrüßung, Profilzugang, Kalorien- und Makroübersicht,
+Schnellaktionen, heutige Mahlzeiten, Wochenstatus und Einstieg zum späteren
+KI-Coach.
 
-- Store-Abonnements und RevenueCat
-- begrenzte kostenlose KI-Nutzung
-- Premium-Wochenpläne und Fortschrittsberichte
-- Kostenlimits, Monitoring und Missbrauchsschutz
+### Tagebuch
 
-### Später
+Tagesauswahl, Tagesbilanz, Mahlzeiten, Wasser und ein schneller Dialog zum
+Hinzufügen. Aktuell arbeitet dieser Bereich mit einer kleinen lokalen
+Demo-Auswahl; später kommen manuelle Eingabe, echte Suche, Barcode und
+KI-unterstützte Erfassung hinzu.
 
-- Mahlzeitenfoto als ausdrücklich gekennzeichnete Schätzung
-- HealthKit und Health Connect
-- Spracheingabe
+### Rezepte und Planung
+
+Suche, Kategorien, Favoriten, bebilderte Rezeptkarten, Detailansicht und
+Einkaufsliste. Ein vollständiger Wochenplan, individuelle Zutaten und Vorräte
+werden als lokale Flows ergänzt, bevor eine KI personalisierte Pläne erstellt.
+
+### Fortschritt
+
+Animierter Gewichtsverlauf mit Zielmarke und auswählbaren Punkten,
+Ernährungsbalken, Serien, Wasserstatus und Meilensteine. Zeiträume und Werte
+werden derzeit mit Demo-Daten dargestellt und später an echte Verlaufsdaten
+gebunden.
+
+### Profil
+
+Profilbild, Name, persönliches Ziel, Zielgewicht, Kalorien- und Proteinziel,
+Ernährungsprofil sowie vorbereitete Einstellungen für Premium, Erinnerungen,
+Datenschutz und Hilfe.
+
+### KI-Coach
+
+Die Oberfläche und ein Beispielgespräch zeigen die spätere Nutzererfahrung.
+Die Eingabe bleibt deaktiviert, bis Backend, Sicherheitsregeln, Kostenlimits und
+Datenschutzprüfung umgesetzt sind.
+
+Der verbindliche Ist-Stand steht in [FEATURE_STATUS.md](FEATURE_STATUS.md).
+
+## Umsetzungsphasen
+
+### Phase 1 – Lokales Produkt vollständig machen
+
+- Onboarding für Alterseignung, Ziel, Aktivität und Ernährungsvorlieben
+- freie manuelle Mahlzeiteneingabe und Bearbeiten vorhandener Einträge
+- echte Tages- und Datumsauswahl mit getrennten lokalen Tagesdaten
+- lokale Wochenplanung und Vorratsverwaltung
+- Profilbildauswahl sowie bearbeitbare Vorlieben, Allergien und Aktivität
+- lokale Erinnerungseinstellungen ohne Cloud-Abhängigkeit
+- vollständige Reduced-Motion-, Semantics- und Textskalierungsprüfung
+- responsive Widget-, Interaktions- und Golden-Tests
+
+Abnahmekriterium: Alle sichtbaren Kernaktionen funktionieren mit lokalen
+Demo-Daten; nur externe Datenquellen, Konto, KI und Bezahlung fehlen.
+
+### Phase 2 – Verlässliche Daten und Konto
+
+- geeignete Lebensmitteldatenbank auswählen und Lizenz/Nutzungsbedingungen
+  prüfen
+- lokales persistentes Datenmodell und Migrationen
+- Authentifizierung und Backend nur für notwendige Synchronisation
+- Nutzerkonto, Gerätewechsel, Datenexport und vollständige Kontolöschung
+- Datenschutztexte, ausdrückliche Einwilligungen und Verträge mit Anbietern
+- Fehler-, Offline- und Ladezustände sowie Monitoring ohne Gesundheitsdaten in
+  Werbe- oder Analyseprofilen
+
+### Phase 3 – Sicher begrenzte KI
+
+- Texteingaben serverseitig in strukturierte Lebensmittelvorschläge zerlegen
+- Werte immer aus der Lebensmitteldatenbank beziehen und bestätigen lassen
+- Coach mit Tageskontext, klaren Lifestyle-Grenzen und festen Antwortlimits
+- Risikoerkennung für Essstörungen, extreme Ziele, Erkrankungen und andere
+  ausgeschlossene Situationen
+- Prompt-/Modellversionen, Sicherheitsfälle, Kostenlimits und Missbrauchsschutz
+- Fotoanalyse erst später als ausdrücklich gekennzeichnete Schätzung
+
+### Phase 4 – Premium und Veröffentlichung
+
+- Monats- und Jahresabo mit sauberem Restore-/Kündigungsablauf
+- Premium-Grenzen, Paywall und serverseitige Berechtigungsprüfung
+- optionale Benachrichtigungen
+- Store-Metadaten, Icons, Screenshots, Support und rechtliche Prüfung
+- Crash-Reporting und datensparsame Produktanalyse
+- später optional HealthKit, Health Connect und Spracheingabe
 
 ## Sicherheitsgrenzen
 
-- Start zunächst nur für Personen ab 18 Jahren
+- Start nur für Erwachsene; Altersprüfung im Onboarding
 - kein Medizinprodukt und keine Diagnose oder Behandlung
-- keine Empfehlungen bei Schwangerschaft oder Essstörungen
+- keine automatischen Pläne bei Schwangerschaft, Essstörungen oder relevanten
+  Erkrankungen ohne qualifizierte Begleitung
 - keine Medikamenten- oder Supplementdosierung
-- keine garantierten Ergebnisse oder extremen Kalorienziele
-- KI-Ausgaben müssen vom Nutzer geprüft und korrigiert werden können
+- keine garantierten Ergebnisse oder extrem niedrigen Kalorienziele
+- nachvollziehbare Quellen und normale Programmlogik für Berechnungen
+- KI-Ausgaben und Fotoerkennung als fehlbare Vorschläge kennzeichnen
+- Nutzer müssen vorgeschlagene Lebensmittel, Mengen und Nährwerte prüfen können
 
 ## Noch zu entscheiden
 
-- endgültiger Name und Logo
-- Zielgruppe und wichtigste Abnehm-/Fitness-Nische
-- Preis des Monats- und Jahresabos
-- Lebensmittel-Datenquelle
-- Backend- und KI-Anbieter vor Verarbeitung echter Nutzerdaten
+- endgültiger Name, Logo und Markenprüfung
+- engste Startzielgruppe und stärkstes Alleinstellungsmerkmal
+- Lebensmittel-Datenquelle und deren kommerzielle Lizenz
+- lokale Persistenz, Backend-Standort und Aufbewahrungsfristen
+- KI-Anbieter und Datenverarbeitung vor Übertragung echter Nutzerdaten
+- Preis, kostenlose Grenzen und Inhalt des Premium-Abos
+- konkrete juristische Prüfung und passende Haftpflichtversicherung

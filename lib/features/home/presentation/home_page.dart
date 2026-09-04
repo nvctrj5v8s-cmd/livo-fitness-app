@@ -2,79 +2,98 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/models/app_models.dart';
+import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
-import '../../../shared/widgets/feature_badge.dart';
+import '../../../shared/widgets/ui_components.dart';
+import '../../coach/presentation/coach_page.dart';
+import '../../diary/presentation/add_meal_sheet.dart';
+import '../../profile/presentation/settings_sheets.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({required this.onOpenPage, super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _waterGlasses = 4;
+  final ValueChanged<int> onOpenPage;
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppScope.of(context);
     return SingleChildScrollView(
+      key: const PageStorageKey('home-scroll'),
       physics: const BouncingScrollPhysics(),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1160),
+          constraints: const BoxConstraints(maxWidth: 1120),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 40),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 110),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AnimatedReveal(child: _TopBar()),
-                const SizedBox(height: 24),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 60),
-                  child: _Greeting(),
+                AnimatedReveal(
+                  child: _HomeHeader(
+                    name: controller.name,
+                    onProfile: () => onOpenPage(4),
+                    onNotifications: () =>
+                        showReminderSheet(context, controller),
+                  ),
                 ),
-                const SizedBox(height: 20),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 120),
-                  child: _NutritionHero(),
+                const SizedBox(height: 26),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 70),
+                  child: _NutritionOverview(controller: controller),
+                ),
+                const SizedBox(height: 26),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 140),
+                  child: _QuickActions(
+                    controller: controller,
+                    onAddMeal: () => showAddMealSheet(context),
+                    onDiary: () => onOpenPage(1),
+                    onRecipes: () => onOpenPage(2),
+                  ),
                 ),
                 const SizedBox(height: 28),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 190),
-                  child: _SectionHeading(
-                    eyebrow: 'SCHNELLZUGRIFF',
-                    title: 'Alles an einem Ort',
-                  ),
-                ),
-                const SizedBox(height: 14),
                 AnimatedReveal(
-                  delay: const Duration(milliseconds: 240),
-                  child: _ToolGrid(
-                    waterGlasses: _waterGlasses,
-                    onAddWater: () => setState(
-                      () => _waterGlasses = math.min(8, _waterGlasses + 1),
-                    ),
+                  delay: const Duration(milliseconds: 210),
+                  child: SectionHeader(
+                    title: 'Heute gegessen',
+                    action: 'Tagebuch',
+                    onAction: () => onOpenPage(1),
                   ),
                 ),
-                const SizedBox(height: 30),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 310),
-                  child: _SectionHeading(
-                    eyebrow: 'HEUTE',
-                    title: 'Dein Essensplan',
-                    action: 'Alle ansehen',
+                const SizedBox(height: 12),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 260),
+                  child: _MealRail(meals: controller.meals),
+                ),
+                const SizedBox(height: 28),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 330),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final wide = constraints.maxWidth >= 760;
+                      if (!wide) {
+                        return Column(
+                          children: [
+                            _WeekCard(onTap: () => onOpenPage(3)),
+                            const SizedBox(height: 14),
+                            const _CoachCard(),
+                          ],
+                        );
+                      }
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: _WeekCard(onTap: () => onOpenPage(3)),
+                          ),
+                          const SizedBox(width: 14),
+                          const Expanded(child: _CoachCard()),
+                        ],
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(height: 14),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 360),
-                  child: _MealTimeline(),
-                ),
-                const SizedBox(height: 20),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 420),
-                  child: _SmartInsight(),
                 ),
               ],
             ),
@@ -85,698 +104,491 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _TopBar extends StatelessWidget {
-  const _TopBar();
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader({
+    required this.name,
+    required this.onProfile,
+    required this.onNotifications,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppColors.darkForest,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: const Icon(Icons.bubble_chart_rounded, color: AppColors.lime),
-        ),
-        const SizedBox(width: 10),
-        const Text(
-          'LIVO',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2.2,
-          ),
-        ),
-        const Spacer(),
-        _TopAction(icon: Icons.notifications_none_rounded, onTap: () {}),
-        const SizedBox(width: 9),
-        _TopAction(icon: Icons.person_outline_rounded, onTap: () {}),
-      ],
-    );
-  }
-}
-
-class _TopAction extends StatelessWidget {
-  const _TopAction({required this.icon, required this.onTap});
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        width: 42,
-        height: 42,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.line),
-        ),
-        child: Icon(icon, size: 21),
-      ),
-    );
-  }
-}
-
-class _Greeting extends StatelessWidget {
-  const _Greeting();
+  final String name;
+  final VoidCallback onProfile;
+  final VoidCallback onNotifications;
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     const weekdays = [
-      'MONTAG',
-      'DIENSTAG',
-      'MITTWOCH',
-      'DONNERSTAG',
-      'FREITAG',
-      'SAMSTAG',
-      'SONNTAG',
+      'Montag',
+      'Dienstag',
+      'Mittwoch',
+      'Donnerstag',
+      'Freitag',
+      'Samstag',
+      'Sonntag',
     ];
-    const months = [
-      'JANUAR',
-      'FEBRUAR',
-      'MÄRZ',
-      'APRIL',
-      'MAI',
-      'JUNI',
-      'JULI',
-      'AUGUST',
-      'SEPTEMBER',
-      'OKTOBER',
-      'NOVEMBER',
-      'DEZEMBER',
-    ];
-    final dateLabel =
-        '${weekdays[now.weekday - 1]}, ${now.day}. ${months[now.month - 1]}';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          dateLabel,
-          style: const TextStyle(
-            color: AppColors.forest,
-            fontSize: 10,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.4,
-          ),
-        ),
-        const SizedBox(height: 7),
-        Text(
-          'Guten Morgen 👋',
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        const SizedBox(height: 5),
-        const Text(
-          'Heute zählt nicht perfekt – heute zählt, dass du dranbleibst.',
-        ),
-      ],
-    );
-  }
-}
-
-class _NutritionHero extends StatelessWidget {
-  const _NutritionHero();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF17493A), AppColors.darkForest],
-        ),
-        borderRadius: BorderRadius.circular(34),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.darkForest.withValues(alpha: 0.22),
-            blurRadius: 34,
-            offset: const Offset(0, 18),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          const Positioned(
-            right: -70,
-            top: -70,
-            child: _GlowBubble(size: 220, color: AppColors.mint),
-          ),
-          const Positioned(
-            left: -60,
-            bottom: -100,
-            child: _GlowBubble(size: 190, color: AppColors.lime),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final wide = constraints.maxWidth >= 720;
-                final summary = Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const FeatureBadge(
-                      label: 'DEIN TAGESZIEL · DEMO',
-                      icon: Icons.bolt_rounded,
-                    ),
-                    const SizedBox(height: 18),
-                    const Text(
-                      '1.420',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 48,
-                        fontWeight: FontWeight.w900,
-                        height: 0.95,
-                        letterSpacing: -2,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'kcal noch verfügbar',
-                      style: TextStyle(
-                        color: AppColors.white.withValues(alpha: 0.68),
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _MacroPill(
-                          label: 'Protein',
-                          value: '46 / 130 g',
-                          color: AppColors.peach,
-                        ),
-                        _MacroPill(
-                          label: 'Carbs',
-                          value: '72 / 220 g',
-                          color: AppColors.lime,
-                        ),
-                        _MacroPill(
-                          label: 'Fett',
-                          value: '24 / 70 g',
-                          color: AppColors.lilac,
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-                if (!wide) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      summary,
-                      const SizedBox(height: 28),
-                      const Center(child: _CalorieDial()),
-                    ],
-                  );
-                }
-                return SizedBox(
-                  height: 275,
-                  child: Row(
-                    children: [
-                      Expanded(child: summary),
-                      const SizedBox(width: 30),
-                      const _CalorieDial(size: 205),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GlowBubble extends StatelessWidget {
-  const _GlowBubble({required this.size, required this.color});
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color.withValues(alpha: 0.08),
-      ),
-    );
-  }
-}
-
-class _MacroPill extends StatelessWidget {
-  const _MacroPill({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
-      decoration: BoxDecoration(
-        color: AppColors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: AppColors.white.withValues(alpha: 0.08)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 7,
-            height: 7,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 7),
-          Text(
-            '$label  ',
-            style: TextStyle(
-              color: AppColors.white.withValues(alpha: 0.66),
-              fontSize: 11,
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CalorieDial extends StatelessWidget {
-  const _CalorieDial({this.size = 175});
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 0.33),
-      duration: const Duration(milliseconds: 1500),
-      curve: Curves.easeOutExpo,
-      builder: (context, value, _) => SizedBox.square(
-        dimension: size,
-        child: CustomPaint(
-          painter: _DialPainter(value),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.local_fire_department_rounded,
-                color: AppColors.lime,
-                size: 26,
-              ),
-              SizedBox(height: 5),
-              Text(
-                '680',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              Text(
-                'von 2.100 kcal',
-                style: TextStyle(color: AppColors.mint, fontSize: 11),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DialPainter extends CustomPainter {
-  const _DialPainter(this.value);
-  final double value;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bounds = (Offset.zero & size).deflate(9);
-    canvas.drawArc(
-      bounds,
-      0,
-      math.pi * 2,
-      false,
-      Paint()
-        ..color = AppColors.white.withValues(alpha: 0.1)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 12,
-    );
-    canvas.drawArc(
-      bounds,
-      -math.pi / 2,
-      math.pi * 2 * value,
-      false,
-      Paint()
-        ..color = AppColors.lime
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 12
-        ..strokeCap = StrokeCap.round,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_DialPainter oldDelegate) => value != oldDelegate.value;
-}
-
-class _SectionHeading extends StatelessWidget {
-  const _SectionHeading({
-    required this.eyebrow,
-    required this.title,
-    this.action,
-  });
-  final String eyebrow;
-  final String title;
-  final String? action;
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                eyebrow,
+                '${weekdays[now.weekday - 1]}, ${now.day}.${now.month}.',
                 style: const TextStyle(
-                  color: AppColors.coral,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.4,
+                  color: AppColors.textMuted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                'Hallo, $name',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
             ],
           ),
         ),
-        if (action != null)
-          Text(
-            action!,
-            style: const TextStyle(
-              color: AppColors.forest,
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-            ),
+        IconButton.filledTonal(
+          onPressed: onNotifications,
+          tooltip: 'Benachrichtigungen',
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.surface,
+            foregroundColor: AppColors.text,
+            side: const BorderSide(color: AppColors.border),
           ),
+          icon: const Icon(Icons.notifications_none_rounded),
+        ),
+        const SizedBox(width: 9),
+        AppAvatar(radius: 23, onTap: onProfile),
       ],
     );
   }
 }
 
-class _ToolGrid extends StatelessWidget {
-  const _ToolGrid({required this.waterGlasses, required this.onAddWater});
-  final int waterGlasses;
-  final VoidCallback onAddWater;
+class _NutritionOverview extends StatelessWidget {
+  const _NutritionOverview({required this.controller});
+
+  final AppController controller;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 900
-            ? 4
-            : constraints.maxWidth >= 520
-            ? 2
-            : 1;
-        const gap = 12.0;
-        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            _ToolCard(
-              width: width,
-              icon: Icons.water_drop_outlined,
-              color: AppColors.sky,
-              title: 'Wasser',
-              value: '$waterGlasses von 8 Gläsern',
-              action: '+ 1 Glas',
-              onTap: onAddWater,
-            ),
-            _ToolCard(
-              width: width,
-              icon: Icons.calendar_month_outlined,
-              color: AppColors.lime,
-              title: 'Wochenplan',
-              value: '7 Tage im Blick',
-              action: 'Plan öffnen',
-              onTap: () => _preview(context, 'Der Wochenplan ist vorbereitet.'),
-            ),
-            _ToolCard(
-              width: width,
-              icon: Icons.shopping_bag_outlined,
-              color: AppColors.peach,
-              title: 'Einkaufsliste',
-              value: '12 offene Artikel',
-              action: 'Liste öffnen',
-              onTap: () => _preview(
-                context,
-                'Die Einkaufsliste folgt mit dem Wochenplan.',
-              ),
-            ),
-            _ToolCard(
-              width: width,
-              icon: Icons.kitchen_outlined,
-              color: AppColors.lilac,
-              title: 'Meine Vorräte',
-              value: 'Rezepte daraus finden',
-              action: 'Vorrat öffnen',
-              onTap: () => _preview(
-                context,
-                'Der Vorratsbereich wird später mit Rezepten verbunden.',
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _preview(BuildContext context, String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-}
-
-class _ToolCard extends StatelessWidget {
-  const _ToolCard({
-    required this.width,
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.value,
-    required this.action,
-    required this.onTap,
-  });
-  final double width;
-  final IconData icon;
-  final Color color;
-  final String title;
-  final String value;
-  final String action;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        width: width,
-        padding: const EdgeInsets.all(17),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.line),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: AppColors.ink),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.035),
+            blurRadius: 34,
+            spreadRadius: 3,
+          ),
+        ],
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 680;
+          final ring = _CalorieRing(
+            progress: controller.calorieProgress,
+            consumed: controller.consumedCalories,
+            remaining: controller.remainingCalories,
+          );
+          final details = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.w800),
+                  const StatusPill(
+                    label: 'HEUTE',
+                    icon: Icons.local_fire_department_rounded,
                   ),
-                  const SizedBox(height: 3),
+                  const Spacer(),
                   Text(
-                    value,
+                    '${controller.calorieGoal} kcal Ziel',
                     style: const TextStyle(
-                      color: AppColors.muted,
-                      fontSize: 11,
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  Text(
-                    action,
-                    style: const TextStyle(
-                      color: AppColors.forest,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 11,
+                      color: AppColors.textMuted,
+                      fontSize: 13,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              _MacroRow(
+                label: 'Protein',
+                value: controller.consumedProtein,
+                goal: controller.proteinGoal,
+                color: AppColors.primary,
+              ),
+              const SizedBox(height: 15),
+              _MacroRow(
+                label: 'Kohlenhydrate',
+                value: controller.consumedCarbs,
+                goal: 240,
+                color: AppColors.mint,
+              ),
+              const SizedBox(height: 15),
+              _MacroRow(
+                label: 'Fett',
+                value: controller.consumedFat,
+                goal: 70,
+                color: AppColors.orange,
+              ),
+            ],
+          );
+
+          if (!wide) {
+            return Column(
+              children: [ring, const SizedBox(height: 24), details],
+            );
+          }
+          return Row(
+            children: [
+              ring,
+              const SizedBox(width: 38),
+              Expanded(child: details),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CalorieRing extends StatelessWidget {
+  const _CalorieRing({
+    required this.progress,
+    required this.consumed,
+    required this.remaining,
+  });
+
+  final double progress;
+  final int consumed;
+  final int remaining;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: progress),
+      duration: const Duration(milliseconds: 1100),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, _) => SizedBox.square(
+        dimension: 178,
+        child: CustomPaint(
+          painter: _RingPainter(progress: value),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TweenAnimationBuilder<int>(
+                tween: IntTween(begin: 0, end: consumed),
+                duration: const Duration(milliseconds: 900),
+                builder: (context, number, _) => Text(
+                  '$number',
+                  style: const TextStyle(
+                    color: AppColors.text,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -1,
+                  ),
+                ),
+              ),
+              const Text(
+                'kcal gegessen',
+                style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+              ),
+              const SizedBox(height: 7),
+              Text(
+                '$remaining übrig',
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _MealTimeline extends StatelessWidget {
-  const _MealTimeline();
+class _RingPainter extends CustomPainter {
+  const _RingPainter({required this.progress});
+  final double progress;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = (Offset.zero & size).deflate(8);
+    final base = Paint()
+      ..color = AppColors.surfaceSoft
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12;
+    final active = Paint()
+      ..shader = const SweepGradient(
+        colors: [AppColors.primary, AppColors.mint],
+      ).createShader(rect)
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 12;
+    canvas.drawArc(rect, 0, math.pi * 2, false, base);
+    canvas.drawArc(rect, -math.pi / 2, math.pi * 2 * progress, false, active);
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter oldDelegate) =>
+      oldDelegate.progress != progress;
+}
+
+class _MacroRow extends StatelessWidget {
+  const _MacroRow({
+    required this.label,
+    required this.value,
+    required this.goal,
+    required this.color,
+  });
+
+  final String label;
+  final int value;
+  final int goal;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = (value / goal).clamp(0.0, 1.0);
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            Text(
+              '$value / $goal g',
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: progress),
+          duration: const Duration(milliseconds: 900),
+          curve: Curves.easeOutCubic,
+          builder: (context, animatedValue, _) => LinearProgressIndicator(
+            value: animatedValue,
+            minHeight: 6,
+            borderRadius: BorderRadius.circular(99),
+            backgroundColor: AppColors.surfaceSoft,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickActions extends StatelessWidget {
+  const _QuickActions({
+    required this.controller,
+    required this.onAddMeal,
+    required this.onDiary,
+    required this.onRecipes,
+  });
+
+  final AppController controller;
+  final VoidCallback onAddMeal;
+  final VoidCallback onDiary;
+  final VoidCallback onRecipes;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 190,
+      height: 94,
       child: ListView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        children: const [
-          _MealCard(
-            time: '08:15',
-            title: 'Beeren-Bowl',
-            detail: '420 kcal · 26 g Protein',
-            icon: Icons.breakfast_dining_rounded,
-            color: AppColors.lilac,
-            completed: true,
-          ),
-          SizedBox(width: 12),
-          _MealCard(
-            time: '13:00',
-            title: 'Green Power Bowl',
-            detail: '610 kcal · 38 g Protein',
-            icon: Icons.rice_bowl_rounded,
-            color: AppColors.lime,
-          ),
-          SizedBox(width: 12),
-          _MealCard(
-            time: '19:00',
-            title: 'Ofengemüse & Feta',
-            detail: '530 kcal · 31 g Protein',
-            icon: Icons.dinner_dining_rounded,
-            color: AppColors.peach,
-          ),
-          SizedBox(width: 12),
-          _MealCard(
-            time: 'Flexibel',
-            title: 'Snack hinzufügen',
-            detail: 'Noch 360 kcal geplant',
+        children: [
+          _QuickButton(
             icon: Icons.add_rounded,
-            color: AppColors.sky,
+            label: 'Mahlzeit',
+            color: AppColors.primary,
+            onTap: onAddMeal,
+          ),
+          _QuickButton(
+            icon: Icons.water_drop_outlined,
+            label: '${controller.waterGlasses}/8 Wasser',
+            color: AppColors.blue,
+            onTap: controller.addWater,
+          ),
+          _QuickButton(
+            icon: Icons.menu_book_outlined,
+            label: 'Tagebuch',
+            color: AppColors.mint,
+            onTap: onDiary,
+          ),
+          _QuickButton(
+            icon: Icons.restaurant_menu_rounded,
+            label: 'Rezepte',
+            color: AppColors.orange,
+            onTap: onRecipes,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuickButton extends StatelessWidget {
+  const _QuickButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 11),
+      child: PressableScale(
+        onTap: onTap,
+        borderRadius: 19,
+        child: Container(
+          width: 104,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(19),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 25),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                maxLines: 1,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MealRail extends StatelessWidget {
+  const _MealRail({required this.meals});
+  final List<MealEntry> meals;
+
+  @override
+  Widget build(BuildContext context) {
+    if (meals.isEmpty) return const Text('Noch keine Mahlzeiten eingetragen.');
+    return SizedBox(
+      height: 206,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: meals.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: (context, index) => _MealCard(meal: meals[index]),
       ),
     );
   }
 }
 
 class _MealCard extends StatelessWidget {
-  const _MealCard({
-    required this.time,
-    required this.title,
-    required this.detail,
-    required this.icon,
-    required this.color,
-    this.completed = false,
-  });
-  final String time;
-  final String title;
-  final String detail;
-  final IconData icon;
-  final Color color;
-  final bool completed;
+  const _MealCard({required this.meal});
+  final MealEntry meal;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 230,
-      padding: const EdgeInsets.all(18),
+      width: 252,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: AppColors.line),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(23),
+        border: Border.all(color: AppColors.border),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(icon, color: AppColors.ink),
+          SizedBox(
+            width: 105,
+            height: double.infinity,
+            child: meal.imageAsset == null
+                ? const ColoredBox(
+                    color: AppColors.surfaceHigh,
+                    child: Icon(
+                      Icons.restaurant_rounded,
+                      color: AppColors.primary,
+                      size: 34,
+                    ),
+                  )
+                : Image.asset(meal.imageAsset!, fit: BoxFit.cover),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    meal.slot.label,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 11,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  Text(
+                    meal.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${meal.calories} kcal',
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${meal.protein} g Protein',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              if (completed)
-                const Icon(Icons.check_circle_rounded, color: AppColors.forest)
-              else
-                const Icon(Icons.more_horiz_rounded, color: AppColors.muted),
-            ],
-          ),
-          const Spacer(),
-          Text(
-            time,
-            style: const TextStyle(
-              color: AppColors.coral,
-              fontSize: 10,
-              fontWeight: FontWeight.w900,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            detail,
-            style: const TextStyle(color: AppColors.muted, fontSize: 11),
           ),
         ],
       ),
@@ -784,42 +596,143 @@ class _MealCard extends StatelessWidget {
   }
 }
 
-class _SmartInsight extends StatelessWidget {
-  const _SmartInsight();
+class _WeekCard extends StatelessWidget {
+  const _WeekCard({required this.onTap});
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.lilac, Color(0xFFEAE7FF)],
-        ),
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: const Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.auto_awesome_rounded, color: AppColors.forest, size: 28),
-          SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    const values = [0.78, 0.92, 0.64, 0.86, 0.71, 0.88, 0.56];
+    const labels = ['M', 'D', 'M', 'D', 'F', 'S', 'S'];
+    return PressableScale(
+      onTap: onTap,
+      child: SurfaceCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
               children: [
-                FeatureBadge(label: 'KI-EINBLICK · SPÄTER'),
-                SizedBox(height: 13),
-                Text(
-                  'Dein Protein ist morgens noch etwas niedrig.',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                Expanded(
+                  child: Text(
+                    'Diese Woche',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                  ),
                 ),
-                SizedBox(height: 6),
-                Text(
-                  'Der spätere Coach könnte passende, einfache Ergänzungen aus deinen Vorlieben vorschlagen.',
-                ),
+                Icon(Icons.arrow_forward_rounded, color: AppColors.textMuted),
               ],
             ),
+            const SizedBox(height: 4),
+            const Text(
+              'Ø 84 % deines Kalorienziels',
+              style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+            ),
+            const SizedBox(height: 22),
+            SizedBox(
+              height: 92,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List.generate(
+                  values.length,
+                  (index) => Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0, end: values[index]),
+                            duration: Duration(milliseconds: 500 + index * 70),
+                            curve: Curves.easeOutCubic,
+                            builder: (context, value, _) => Container(
+                              height: 58 * value,
+                              decoration: BoxDecoration(
+                                color: index == 3
+                                    ? AppColors.primary
+                                    : AppColors.surfaceSoft,
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            labels[index],
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CoachCard extends StatelessWidget {
+  const _CoachCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return PressableScale(
+      onTap: () => Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const CoachPage())),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.primary.withValues(alpha: 0.16),
+              AppColors.mint.withValues(alpha: 0.07),
+            ],
           ),
-        ],
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.22)),
+        ),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                StatusPill(
+                  label: 'KI · SPÄTER',
+                  icon: Icons.auto_awesome_rounded,
+                ),
+                Spacer(),
+                Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
+              ],
+            ),
+            SizedBox(height: 22),
+            Icon(
+              Icons.chat_bubble_outline_rounded,
+              color: AppColors.primary,
+              size: 30,
+            ),
+            SizedBox(height: 12),
+            Text(
+              'Dein persönlicher Coach',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: 6),
+            Text(
+              'Versteht später deinen Tag, deine Ziele und deine Vorlieben.',
+              style: TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 12,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

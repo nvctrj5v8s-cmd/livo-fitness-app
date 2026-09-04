@@ -1,57 +1,87 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/models/app_models.dart';
+import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
-import '../../../shared/widgets/feature_badge.dart';
+import '../../../shared/widgets/ui_components.dart';
 
-class DiaryPage extends StatelessWidget {
-  const DiaryPage({super.key});
+class DiaryPage extends StatefulWidget {
+  const DiaryPage({required this.onAddMeal, super.key});
+
+  final VoidCallback onAddMeal;
+
+  @override
+  State<DiaryPage> createState() => _DiaryPageState();
+}
+
+class _DiaryPageState extends State<DiaryPage> {
+  int _selectedDay = 3;
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppScope.of(context);
     return SingleChildScrollView(
+      key: const PageStorageKey('diary-scroll'),
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 36),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AnimatedReveal(
-                child: Text(
-                  'Ernährung',
-                  style: Theme.of(context).textTheme.headlineLarge,
+          constraints: const BoxConstraints(maxWidth: 920),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 110),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedReveal(
+                  child: PageHeader(
+                    title: 'Tagebuch',
+                    subtitle:
+                        'Deine Mahlzeiten klar und ohne unnötigen Aufwand.',
+                    trailing: IconButton.filledTonal(
+                      onPressed: widget.onAddMeal,
+                      tooltip: 'Mahlzeit hinzufügen',
+                      icon: const Icon(Icons.add_rounded),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const AnimatedReveal(
-                delay: Duration(milliseconds: 60),
-                child: Text(
-                  'Einfach erfassen. Klar verstehen. Besser entscheiden.',
+                const SizedBox(height: 22),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 70),
+                  child: _WeekSelector(
+                    selected: _selectedDay,
+                    onSelected: (index) => setState(() => _selectedDay = index),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              const AnimatedReveal(
-                delay: Duration(milliseconds: 110),
-                child: _WeekPicker(),
-              ),
-              const SizedBox(height: 18),
-              const AnimatedReveal(
-                delay: Duration(milliseconds: 170),
-                child: _QuickCapture(),
-              ),
-              const SizedBox(height: 28),
-              const AnimatedReveal(
-                delay: Duration(milliseconds: 230),
-                child: _DailySummary(),
-              ),
-              const SizedBox(height: 28),
-              const AnimatedReveal(
-                delay: Duration(milliseconds: 290),
-                child: _MealSection(),
-              ),
-            ],
+                const SizedBox(height: 20),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 130),
+                  child: _DiarySummary(controller: controller),
+                ),
+                const SizedBox(height: 26),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 200),
+                  child: SectionHeader(
+                    title: 'Mahlzeiten',
+                    action: 'Hinzufügen',
+                    onAction: widget.onAddMeal,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 250),
+                  child: _MealList(
+                    meals: controller.meals,
+                    onRemove: controller.removeMeal,
+                    onAdd: widget.onAddMeal,
+                  ),
+                ),
+                const SizedBox(height: 26),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 320),
+                  child: _HydrationCard(controller: controller),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -59,8 +89,10 @@ class DiaryPage extends StatelessWidget {
   }
 }
 
-class _WeekPicker extends StatelessWidget {
-  const _WeekPicker();
+class _WeekSelector extends StatelessWidget {
+  const _WeekSelector({required this.selected, required this.onSelected});
+  final int selected;
+  final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -74,43 +106,53 @@ class _WeekPicker extends StatelessWidget {
       ('So', '07'),
     ];
     return SizedBox(
-      height: 78,
+      height: 72,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: days.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 9),
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          final selected = index == 3;
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 220),
-            width: 58,
-            decoration: BoxDecoration(
-              color: selected ? AppColors.forest : AppColors.white,
-              borderRadius: BorderRadius.circular(19),
-              border: Border.all(
-                color: selected ? AppColors.forest : AppColors.line,
+          final active = index == selected;
+          return Semantics(
+            button: true,
+            selected: active,
+            label: '${days[index].$1}, ${days[index].$2}',
+            child: InkWell(
+              onTap: () => onSelected(index),
+              borderRadius: BorderRadius.circular(18),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 240),
+                curve: Curves.easeOut,
+                width: 55,
+                decoration: BoxDecoration(
+                  color: active ? AppColors.primary : AppColors.surface,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: active ? AppColors.primary : AppColors.border,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      days[index].$1,
+                      style: TextStyle(
+                        color: active ? AppColors.black : AppColors.textMuted,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      days[index].$2,
+                      style: TextStyle(
+                        color: active ? AppColors.black : AppColors.text,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  days[index].$1,
-                  style: TextStyle(
-                    color: selected ? AppColors.mint : AppColors.muted,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  days[index].$2,
-                  style: TextStyle(
-                    color: selected ? AppColors.white : AppColors.ink,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 17,
-                  ),
-                ),
-              ],
             ),
           );
         },
@@ -119,285 +161,317 @@ class _WeekPicker extends StatelessWidget {
   }
 }
 
-class _QuickCapture extends StatelessWidget {
-  const _QuickCapture();
+class _DiarySummary extends StatelessWidget {
+  const _DiarySummary({required this.controller});
+  final AppController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SurfaceCard(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: AppColors.line),
-      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Wie möchtest du eintragen?',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
-                ),
-              ),
-              FeatureBadge(label: 'KI BALD'),
-            ],
-          ),
-          const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(
-                child: _CaptureButton(
-                  icon: Icons.edit_note_rounded,
-                  label: 'Manuell',
-                  active: true,
-                  onTap: () => _soon(context, false),
-                ),
+              _SummaryNumber(
+                label: 'Gegessen',
+                value: '${controller.consumedCalories}',
+                suffix: 'kcal',
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _CaptureButton(
-                  icon: Icons.auto_awesome_rounded,
-                  label: 'Mit Text',
-                  onTap: () => _soon(context, true),
-                ),
+              const _SummaryDivider(),
+              _SummaryNumber(
+                label: 'Übrig',
+                value: '${controller.remainingCalories}',
+                suffix: 'kcal',
+                accent: true,
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _CaptureButton(
-                  icon: Icons.photo_camera_outlined,
-                  label: 'Foto',
-                  onTap: () => _soon(context, true),
-                ),
+              const _SummaryDivider(),
+              _SummaryNumber(
+                label: 'Protein',
+                value: '${controller.consumedProtein}',
+                suffix: 'g',
               ),
             ],
           ),
+          const SizedBox(height: 18),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: controller.calorieProgress),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => LinearProgressIndicator(
+              value: value,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(99),
+              backgroundColor: AppColors.surfaceSoft,
+              color: AppColors.primary,
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  void _soon(BuildContext context, bool ai) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          ai
-              ? 'Diese KI-Funktion wird später sicher angebunden.'
-              : 'Die manuelle Eingabe bauen wir als erste echte Funktion.',
-        ),
       ),
     );
   }
 }
 
-class _CaptureButton extends StatelessWidget {
-  const _CaptureButton({
-    required this.icon,
+class _SummaryNumber extends StatelessWidget {
+  const _SummaryNumber({
     required this.label,
-    required this.onTap,
-    this.active = false,
+    required this.value,
+    required this.suffix,
+    this.accent = false,
   });
-  final IconData icon;
   final String label;
-  final VoidCallback onTap;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        decoration: BoxDecoration(
-          color: active ? AppColors.forest : AppColors.cream,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: active ? AppColors.lime : AppColors.forest),
-            const SizedBox(height: 7),
-            Text(
-              label,
-              maxLines: 1,
-              style: TextStyle(
-                color: active ? AppColors.white : AppColors.ink,
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DailySummary extends StatelessWidget {
-  const _DailySummary();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        color: AppColors.peach,
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: const Row(
-        children: [
-          Expanded(
-            child: _SummaryValue(value: '680', label: 'gegessen'),
-          ),
-          _Divider(),
-          Expanded(
-            child: _SummaryValue(value: '2.100', label: 'Tagesziel'),
-          ),
-          _Divider(),
-          Expanded(
-            child: _SummaryValue(value: '1.420', label: 'übrig'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryValue extends StatelessWidget {
-  const _SummaryValue({required this.value, required this.label});
   final String value;
-  final String label;
+  final String suffix;
+  final bool accent;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 19,
-            fontWeight: FontWeight.w800,
-            color: AppColors.ink,
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, color: AppColors.muted),
-        ),
-      ],
-    );
-  }
-}
-
-class _Divider extends StatelessWidget {
-  const _Divider();
-  @override
-  Widget build(BuildContext context) => Container(
-    width: 1,
-    height: 34,
-    color: AppColors.ink.withValues(alpha: 0.1),
-  );
-}
-
-class _MealSection extends StatelessWidget {
-  const _MealSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Heute', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 13),
-        const _MealTile(
-          icon: Icons.wb_sunny_outlined,
-          color: AppColors.lime,
-          title: 'Frühstück',
-          subtitle: 'Haferflocken, Beeren, Joghurt',
-          calories: '420 kcal',
-        ),
-        const SizedBox(height: 10),
-        const _MealTile(
-          icon: Icons.lunch_dining_outlined,
-          color: AppColors.peach,
-          title: 'Mittagessen',
-          subtitle: 'Noch nichts eingetragen',
-          calories: '＋',
-        ),
-        const SizedBox(height: 10),
-        const _MealTile(
-          icon: Icons.nights_stay_outlined,
-          color: AppColors.lilac,
-          title: 'Abendessen',
-          subtitle: 'Noch nichts eingetragen',
-          calories: '＋',
-        ),
-      ],
-    );
-  }
-}
-
-class _MealTile extends StatelessWidget {
-  const _MealTile({
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.subtitle,
-    required this.calories,
-  });
-  final IconData icon;
-  final Color color;
-  final String title;
-  final String subtitle;
-  final String calories;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(17),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: AppColors.ink),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 5),
+          FittedBox(
+            child: Text.rich(
+              TextSpan(
+                text: value,
+                style: TextStyle(
+                  color: accent ? AppColors.primary : AppColors.text,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                ),
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  TextSpan(
+                    text: ' $suffix',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
             ),
-            Text(
-              calories,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.forest,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SummaryDivider extends StatelessWidget {
+  const _SummaryDivider();
+  @override
+  Widget build(BuildContext context) =>
+      Container(width: 1, height: 42, color: AppColors.border);
+}
+
+class _MealList extends StatelessWidget {
+  const _MealList({
+    required this.meals,
+    required this.onRemove,
+    required this.onAdd,
+  });
+  final List<MealEntry> meals;
+  final ValueChanged<String> onRemove;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (final meal in meals) ...[
+          Dismissible(
+            key: ValueKey(meal.id),
+            direction: DismissDirection.endToStart,
+            onDismissed: (_) => onRemove(meal.id),
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 22),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.16),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.delete_outline_rounded,
+                color: AppColors.error,
               ),
             ),
-          ],
+            child: _MealRow(meal: meal),
+          ),
+          const SizedBox(height: 9),
+        ],
+        PressableScale(
+          onTap: onAdd,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(19),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_rounded, color: AppColors.primary),
+                SizedBox(width: 7),
+                Text(
+                  'Weitere Mahlzeit',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+      ],
+    );
+  }
+}
+
+class _MealRow extends StatelessWidget {
+  const _MealRow({required this.meal});
+  final MealEntry meal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: SizedBox(
+              width: 58,
+              height: 58,
+              child: meal.imageAsset == null
+                  ? const ColoredBox(
+                      color: AppColors.surfaceHigh,
+                      child: Icon(
+                        Icons.restaurant_rounded,
+                        color: AppColors.primary,
+                      ),
+                    )
+                  : Image.asset(meal.imageAsset!, fit: BoxFit.cover),
+            ),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  meal.slot.label,
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  meal.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  '${meal.protein} P · ${meal.carbs} K · ${meal.fat} F',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${meal.calories}\nkcal',
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              height: 1.25,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HydrationCard extends StatelessWidget {
+  const _HydrationCard({required this.controller});
+  final AppController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SurfaceCard(
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: AppColors.blue.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.water_drop_rounded, color: AppColors.blue),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Wasser',
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  '${controller.waterGlasses} von 8 Gläsern',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: controller.removeWater,
+            icon: const Icon(Icons.remove_rounded),
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            child: Text(
+              '${controller.waterGlasses}',
+              key: ValueKey(controller.waterGlasses),
+              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+            ),
+          ),
+          IconButton.filled(
+            onPressed: controller.addWater,
+            style: IconButton.styleFrom(
+              backgroundColor: AppColors.blue,
+              foregroundColor: AppColors.black,
+            ),
+            icon: const Icon(Icons.add_rounded),
+          ),
+        ],
       ),
     );
   }

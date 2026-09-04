@@ -36,6 +36,9 @@ class _AnimatedRevealState extends State<AnimatedReveal> {
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      return widget.child;
+    }
     return AnimatedOpacity(
       opacity: _visible ? 1 : 0,
       duration: const Duration(milliseconds: 500),
