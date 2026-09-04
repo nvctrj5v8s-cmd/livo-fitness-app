@@ -9,7 +9,7 @@ class FitnessAiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fitness AI',
+      title: 'LIVO – Ernährung & Fitness',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: const AppShell(),

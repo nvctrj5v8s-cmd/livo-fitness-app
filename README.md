@@ -1,4 +1,4 @@
-# Fitness AI
+# LIVO – Ernährung & Fitness
 
 Eigenständige Flutter-App für Ernährungstracking und einen vorsichtig begrenzten
 KI-Coach. Dieses Projekt ist vollständig von der Quran-App getrennt.
@@ -26,5 +26,7 @@ Diätpläne. Die konkrete Produktplanung steht in `docs/PRODUCT_PLAN.md`.
 ## Aktueller Stand
 
 Die App enthält eine responsive und animierte Design-Vorschau für Dashboard,
-Ernährungstagebuch, KI-Coach und Fortschritt. Alle Zahlen sind Demo-Werte. Es
-sind noch keine externen APIs, Konten, Zahlungen oder Datenspeicherungen aktiv.
+Ernährungstagebuch, Rezepte, Wochenplanung, Einkauf, Vorräte, KI-Coach und
+Fortschritt. Alle Zahlen und Rezepte sind Demo-Werte. Es sind noch keine
+externen APIs, Konten, Zahlungen oder Datenspeicherungen aktiv. `LIVO` ist
+zunächst ein Arbeitsname und kann vor Veröffentlichung geändert werden.

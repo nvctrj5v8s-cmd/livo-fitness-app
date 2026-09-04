@@ -16,26 +16,26 @@ abstract final class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.cream,
-      fontFamily: 'Arial',
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           color: AppColors.ink,
-          fontSize: 34,
-          height: 1.08,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -1.2,
+          fontSize: 36,
+          height: 1.04,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1.5,
         ),
         headlineMedium: TextStyle(
           color: AppColors.ink,
-          fontSize: 25,
-          height: 1.15,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -0.7,
+          fontSize: 27,
+          height: 1.1,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1,
         ),
         titleLarge: TextStyle(
           color: AppColors.ink,
-          fontSize: 19,
-          fontWeight: FontWeight.w700,
+          fontSize: 20,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -0.3,
         ),
         bodyLarge: TextStyle(color: AppColors.ink, fontSize: 16, height: 1.45),
         bodyMedium: TextStyle(
@@ -49,7 +49,26 @@ abstract final class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(24)),
+          borderRadius: BorderRadius.all(Radius.circular(28)),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.forest,
+          foregroundColor: AppColors.white,
+          minimumSize: const Size(48, 52),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          textStyle: const TextStyle(fontWeight: FontWeight.w800),
+        ),
+      ),
+      snackBarTheme: const SnackBarThemeData(
+        backgroundColor: AppColors.darkForest,
+        contentTextStyle: TextStyle(color: AppColors.white),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(

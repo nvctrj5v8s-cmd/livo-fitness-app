@@ -8,10 +8,15 @@ persönlicher Fitnessziele bietet.
 
 ## Aktueller Prototyp
 
+- Arbeitsname und visuelle Marke: LIVO
 - responsive Navigation für Smartphone, Tablet und Web/Desktop
-- modernes Dashboard mit animiertem Kalorienring und Tageswerten
-- Ernährungstagebuch als klickbare UI-Vorschau
-- klar gekennzeichneter, noch nicht verbundener KI-Coach
+- modernes Dashboard mit animiertem Kalorienring, Makros und Tageswerten
+- Ernährungstagebuch mit manueller, Text-, Foto- und Barcode-Vorschau
+- Rezept-Entdeckung mit Kategorien und interaktiven Favoriten
+- Wochenplan, Einkaufsliste und Vorratsküche als vorbereitete Module
+- Ernährungs-Lernbereich für später redaktionell geprüfte Inhalte
+- klar gekennzeichneter, noch nicht verbundener KI-Coach mit Chat-Vorschau
+- Schnell-hinzufügen-Menü und interaktiver Wasserzähler
 - animierte Fortschrittsansicht mit Demo-Daten
 - alle angezeigten Gesundheits- und Nährwerte sind derzeit reine Demo-Werte
 - noch keine Datenbank, KI-API, Analyse, Anmeldung oder Zahlung aktiv
