@@ -31,6 +31,36 @@ class MealEntry {
   final String? imageAsset;
 }
 
+class FoodItem {
+  const FoodItem({
+    required this.id,
+    required this.name,
+    required this.servingGrams,
+    required this.calories,
+    required this.protein,
+    required this.carbohydrates,
+    required this.fat,
+  });
+
+  final String id;
+  final String name;
+  final double servingGrams;
+  final double calories;
+  final double protein;
+  final double carbohydrates;
+  final double fat;
+
+  factory FoodItem.fromMap(Map<String, dynamic> map) => FoodItem(
+        id: map['id'].toString(),
+        name: map['name'] as String? ?? 'Lebensmittel',
+        servingGrams: (map['serving_grams'] as num?)?.toDouble() ?? 100,
+        calories: (map['calories'] as num?)?.toDouble() ?? 0,
+        protein: (map['protein'] as num?)?.toDouble() ?? 0,
+        carbohydrates: (map['carbohydrates'] as num?)?.toDouble() ?? 0,
+        fat: (map['fat'] as num?)?.toDouble() ?? 0,
+      );
+}
+
 class Recipe {
   const Recipe({
     required this.id,

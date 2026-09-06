@@ -24,6 +24,56 @@ class _AddMealSheet extends StatefulWidget {
 class _AddMealSheetState extends State<_AddMealSheet> {
   String _query = '';
 
+  static const _demoFoods = [
+    FoodItem(
+      id: 'demo-chicken',
+      name: 'H\u00e4hnchen-Reis-Bowl',
+      servingGrams: 1,
+      calories: 540,
+      protein: 46,
+      carbohydrates: 58,
+      fat: 13,
+    ),
+    FoodItem(
+      id: 'demo-bread',
+      name: 'Vollkornbrot mit Ei',
+      servingGrams: 1,
+      calories: 360,
+      protein: 24,
+      carbohydrates: 34,
+      fat: 14,
+    ),
+    FoodItem(
+      id: 'demo-yogurt',
+      name: 'Griechischer Joghurt',
+      servingGrams: 1,
+      calories: 220,
+      protein: 23,
+      carbohydrates: 18,
+      fat: 7,
+    ),
+    FoodItem(
+      id: 'demo-pasta',
+      name: 'Protein-Pasta',
+      servingGrams: 1,
+      calories: 570,
+      protein: 38,
+      carbohydrates: 72,
+      fat: 15,
+    ),
+    FoodItem(
+      id: 'demo-omelet',
+      name: 'Gem\u00fcse-Omelett',
+      servingGrams: 1,
+      calories: 390,
+      protein: 32,
+      carbohydrates: 18,
+      fat: 21,
+    ),
+  ];
+
+  // Kept for backwards-compatible demo copy in older builds.
+  // ignore: unused_field
   static const _foods = [
     ('Hähnchen-Reis-Bowl', 540, 46, 58, 13, MealSlot.lunch),
     ('Vollkornbrot mit Ei', 360, 24, 34, 14, MealSlot.breakfast),
@@ -34,8 +84,10 @@ class _AddMealSheetState extends State<_AddMealSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final results = _foods
-        .where((food) => food.$1.toLowerCase().contains(_query.toLowerCase()))
+    final controller = AppScope.of(context);
+    final sourceFoods = controller.foods.isEmpty ? _demoFoods : controller.foods;
+    final results = sourceFoods
+        .where((food) => food.name.toLowerCase().contains(_query.toLowerCase()))
         .toList();
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -55,7 +107,11 @@ class _AddMealSheetState extends State<_AddMealSheet> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 7),
-            const Text('Lokale Demo-Suche – funktioniert bereits ohne Konto.'),
+            Text(controller.catalogLoading
+                ? 'Lebensmittel werden aus deiner Datenbank geladen ...'
+                : controller.foods.isEmpty
+                    ? 'Lokale Demo-Suche \u2013 funktioniert bereits ohne Konto.'
+                    : 'Lebensmittel aus deiner LIVO-Datenbank'),
             const SizedBox(height: 18),
             TextField(
               autofocus: false,
@@ -104,8 +160,10 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                         color: AppColors.primary,
                       ),
                     ),
-                    title: Text(food.$1),
-                    subtitle: Text('${food.$2} kcal · ${food.$3} g Protein'),
+                    title: Text(food.name),
+                    subtitle: Text(
+                      '${food.calories.round()} kcal · ${food.protein.round()} g Protein',
+                    ),
                     trailing: const Icon(
                       Icons.add_circle_rounded,
                       color: AppColors.primary,
@@ -113,19 +171,19 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                     onTap: () {
                       AppScope.of(context).addMeal(
                         MealEntry(
-                          id: '${food.$1}-${DateTime.now().microsecondsSinceEpoch}',
-                          name: food.$1,
-                          calories: food.$2,
-                          protein: food.$3,
-                          carbs: food.$4,
-                          fat: food.$5,
-                          slot: food.$6,
+                          id: '${food.id}-${DateTime.now().microsecondsSinceEpoch}',
+                          name: food.name,
+                          calories: food.calories.round(),
+                          protein: food.protein.round(),
+                          carbs: food.carbohydrates.round(),
+                          fat: food.fat.round(),
+                          slot: MealSlot.snack,
                         ),
                       );
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('${food.$1} wurde hinzugefügt.'),
+                          content: Text('${food.name} wurde hinzugefügt.'),
                         ),
                       );
                     },

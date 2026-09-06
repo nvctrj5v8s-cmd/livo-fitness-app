@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/state/app_controller.dart';
 import '../../diary/presentation/add_meal_sheet.dart';
 import '../../diary/presentation/diary_page.dart';
 import '../../discover/presentation/discover_page.dart';
@@ -35,6 +38,9 @@ class _AppShellState extends State<AppShell> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(AppScope.of(context).loadRemoteCatalog());
+    });
   }
 
   @override

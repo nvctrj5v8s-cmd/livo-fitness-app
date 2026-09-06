@@ -1,8 +1,14 @@
 import 'package:flutter/widgets.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../data/supabase_catalog_repository.dart';
 import '../models/app_models.dart';
 
 class AppController extends ChangeNotifier {
+  final List<FoodItem> foods = [];
+  bool catalogLoading = false;
+  String? catalogError;
+
   String name = 'Alex';
   String goal = 'Fett verlieren';
   int calorieGoal = 2100;
@@ -52,7 +58,7 @@ class AppController extends ChangeNotifier {
     ),
   ];
 
-  final List<Recipe> recipes = const [
+  List<Recipe> recipes = [
     Recipe(
       id: 'salmon-bowl',
       title: 'Lachs Power Bowl',
@@ -84,6 +90,31 @@ class AppController extends ChangeNotifier {
       tags: ['Für dich', 'High Protein', 'Schnell', 'Budget'],
     ),
   ];
+
+  Future<void> loadRemoteCatalog() async {
+    if (catalogLoading) return;
+    catalogLoading = true;
+    catalogError = null;
+    notifyListeners();
+    try {
+      final catalog = await SupabaseCatalogRepository().loadCatalog();
+      if (catalog.foods.isNotEmpty) {
+        foods
+          ..clear()
+          ..addAll(catalog.foods);
+      }
+      if (catalog.recipes.isNotEmpty) {
+        recipes = catalog.recipes;
+      }
+    } on PostgrestException catch (error) {
+      catalogError = error.message;
+    } catch (error) {
+      catalogError = error.toString();
+    } finally {
+      catalogLoading = false;
+      notifyListeners();
+    }
+  }
 
   final Set<String> favoriteRecipeIds = {'berry-oats'};
 
