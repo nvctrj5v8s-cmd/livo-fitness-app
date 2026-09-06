@@ -10,35 +10,48 @@ class SupabaseCatalogRepository {
 
   Future<CatalogData> loadCatalog() async {
     final foodRows = await _client.from('foods').select();
-    final recipeRows = await _client
-        .from('recipes')
-        .select('*, recipe_ingredients(amount_grams, position, foods(*))')
-        .order('created_at');
+    final recipeRows = await _client.from('recipes').select().order('created_at');
+    final ingredientRows = await _client.from('recipe_ingredients').select();
     final foods = foodRows
         .whereType<Map>()
         .map((row) => FoodItem.fromMap(Map<String, dynamic>.from(row)))
         .toList();
+    final foodsById = {for (final food in foods) food.id: food};
+    final ingredientsByRecipe = <String, List<Map<String, dynamic>>>{};
+    for (final raw in ingredientRows.whereType<Map>()) {
+      final row = Map<String, dynamic>.from(raw);
+      final recipeId = row['recipe_id']?.toString();
+      if (recipeId == null) continue;
+      ingredientsByRecipe.putIfAbsent(recipeId, () => []).add(row);
+    }
     final recipes = recipeRows
         .whereType<Map>()
-        .map((row) => _recipeFromMap(Map<String, dynamic>.from(row)))
+        .map((row) {
+          final recipe = Map<String, dynamic>.from(row);
+          return _recipeFromMap(
+            recipe,
+            ingredientsByRecipe[recipe['id']?.toString()] ?? const [],
+            foodsById,
+          );
+        })
         .toList();
     return CatalogData(foods: foods, recipes: recipes);
   }
 
-  Recipe _recipeFromMap(Map<String, dynamic> row) {
+  Recipe _recipeFromMap(
+    Map<String, dynamic> row,
+    List<Map<String, dynamic>> ingredients,
+    Map<String, FoodItem> foodsById,
+  ) {
     var calories = 0.0;
     var protein = 0.0;
-    final ingredients = row['recipe_ingredients'];
-    if (ingredients is List) {
-      for (final raw in ingredients.whereType<Map>()) {
-        final amount = (raw['amount_grams'] as num?)?.toDouble() ?? 0;
-        final foodRaw = raw['foods'];
-        if (foodRaw is Map) {
-          final food = FoodItem.fromMap(Map<String, dynamic>.from(foodRaw));
-          final factor = amount / food.servingGrams;
-          calories += food.calories * factor;
-          protein += food.protein * factor;
-        }
+    for (final raw in ingredients) {
+      final amount = (raw['amount_grams'] as num?)?.toDouble() ?? 0;
+      final food = foodsById[raw['food_id']?.toString()];
+      if (food != null) {
+        final factor = amount / food.servingGrams;
+        calories += food.calories * factor;
+        protein += food.protein * factor;
       }
     }
     final slug = row['slug'] as String? ?? '';
