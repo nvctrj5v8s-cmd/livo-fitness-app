@@ -108,7 +108,7 @@ void main() {
       tester.view.resetPhysicalSize();
     });
 
-    await tester.pumpWidget(const FitnessAiApp());
+    await tester.pumpWidget(const FitnessAiApp(useAuth: false));
     await tester.pumpAndSettle();
     expect(find.text('LIVO'), findsOneWidget);
 
@@ -126,7 +126,7 @@ Future<void> _pumpApp(WidgetTester tester) async {
     tester.view.resetPhysicalSize();
   });
 
-  await tester.pumpWidget(const FitnessAiApp());
+  await tester.pumpWidget(const FitnessAiApp(useAuth: false));
   await tester.pumpAndSettle();
 }
 
