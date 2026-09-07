@@ -4,6 +4,7 @@ import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/status_pill.dart';
+import 'barcode_scanner_page.dart';
 
 Future<void> showAddMealSheet(BuildContext context) {
   return showModalBottomSheet<void>(
@@ -122,6 +123,31 @@ class _AddMealSheetState extends State<_AddMealSheet> {
               ),
             ),
             const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () async {
+                final food = await Navigator.of(context).push<FoodItem>(
+                  MaterialPageRoute(
+                    builder: (_) => const BarcodeScannerPage(),
+                  ),
+                );
+                if (!context.mounted || food == null) return;
+                AppScope.of(context).addMeal(
+                  MealEntry(
+                    id: '${food.id}-${DateTime.now().microsecondsSinceEpoch}',
+                    name: food.name,
+                    calories: food.calories.round(),
+                    protein: food.protein.round(),
+                    carbs: food.carbohydrates.round(),
+                    fat: food.fat.round(),
+                    slot: MealSlot.snack,
+                  ),
+                );
+                if (context.mounted) Navigator.pop(context);
+              },
+              icon: const Icon(Icons.qr_code_scanner_rounded),
+              label: const Text('Barcode scannen'),
+            ),
+            const SizedBox(height: 8),
             const Wrap(
               spacing: 8,
               runSpacing: 8,
