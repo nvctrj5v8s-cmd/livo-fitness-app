@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/state/app_controller.dart';
+import '../../../shared/widgets/ui_components.dart';
 import '../../diary/presentation/add_meal_sheet.dart';
 import '../../diary/presentation/diary_page.dart';
 import '../../discover/presentation/discover_page.dart';
@@ -71,49 +72,95 @@ class _AppShellState extends State<AppShell> {
 
         if (desktop) {
           return Scaffold(
-            body: Row(
-              children: [
-                _DesktopNavigation(
-                  selectedIndex: _selectedIndex,
-                  onSelected: _selectPage,
-                  onAdd: () => showAddMealSheet(context),
-                ),
-                const VerticalDivider(width: 1),
-                Expanded(child: pageView),
-              ],
+            backgroundColor: Colors.transparent,
+            body: AppBackdrop(
+              child: Row(
+                children: [
+                  _DesktopNavigation(
+                    selectedIndex: _selectedIndex,
+                    onSelected: _selectPage,
+                    onAdd: () => showAddMealSheet(context),
+                  ),
+                  Container(
+                    width: 1,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          AppColors.borderBright,
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(child: SafeArea(child: pageView)),
+                ],
+              ),
             ),
           );
         }
 
         return Scaffold(
-          body: pageView,
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: AppBackdrop(child: SafeArea(bottom: false, child: pageView)),
           floatingActionButton: FloatingActionButton(
             onPressed: () => showAddMealSheet(context),
             tooltip: 'Mahlzeit hinzufügen',
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.black,
-            elevation: 4,
+            elevation: 10,
+            hoverElevation: 14,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(20),
+              side: BorderSide(color: AppColors.white.withValues(alpha: 0.18)),
             ),
             child: const Icon(Icons.add_rounded, size: 29),
           ),
-          bottomNavigationBar: DecoratedBox(
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.border)),
-            ),
-            child: NavigationBar(
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _selectPage,
-              destinations: _items
-                  .map(
-                    (item) => NavigationDestination(
-                      icon: Icon(item.icon),
-                      selectedIcon: Icon(item.selectedIcon),
-                      label: item.label,
-                    ),
-                  )
-                  .toList(),
+          bottomNavigationBar: SafeArea(
+            top: false,
+            minimum: const EdgeInsets.fromLTRB(10, 0, 10, 9),
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceHigh.withValues(alpha: 0.96),
+                borderRadius: BorderRadius.circular(26),
+                border: Border.all(color: AppColors.borderBright),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.42),
+                    blurRadius: 28,
+                    offset: const Offset(0, 14),
+                  ),
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.035),
+                    blurRadius: 22,
+                  ),
+                ],
+              ),
+              child: NavigationBar(
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: _selectPage,
+                destinations: _items
+                    .map(
+                      (item) => NavigationDestination(
+                        icon: Icon(item.icon),
+                        selectedIcon: TweenAnimationBuilder<double>(
+                          key: ValueKey('${item.label}-selected'),
+                          tween: Tween(begin: 0.88, end: 1),
+                          duration: const Duration(milliseconds: 260),
+                          curve: Curves.easeOutBack,
+                          builder: (context, value, child) =>
+                              Transform.scale(scale: value, child: child),
+                          child: Icon(item.selectedIcon),
+                        ),
+                        label: item.label,
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         );
@@ -125,12 +172,12 @@ class _AppShellState extends State<AppShell> {
     if (index == _selectedIndex) return;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (reduceMotion) {
+    if (reduceMotion || (index - _selectedIndex).abs() > 1) {
       _pageController.jumpToPage(index);
     } else {
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 420),
+        duration: const Duration(milliseconds: 310),
         curve: Curves.easeOutCubic,
       );
     }
@@ -152,13 +199,28 @@ class _DesktopNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 232,
-      color: AppColors.surface,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.surfaceHigh, AppColors.backgroundRaised],
+        ),
+      ),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _Brand(),
-          const SizedBox(height: 34),
+          const SizedBox(height: 12),
+          const Text(
+            'Dein Alltag. Dein Rhythmus.',
+            style: TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 11,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 28),
           for (var index = 0; index < _AppShellState._items.length; index++)
             Padding(
               padding: const EdgeInsets.only(bottom: 7),
@@ -188,21 +250,32 @@ class _Brand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.primary, AppColors.mint],
+            ),
             borderRadius: BorderRadius.all(Radius.circular(14)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary,
+                blurRadius: 18,
+                spreadRadius: -8,
+              ),
+            ],
           ),
-          child: SizedBox(
+          child: const SizedBox(
             width: 42,
             height: 42,
             child: Icon(Icons.eco_rounded, color: AppColors.black),
           ),
         ),
-        SizedBox(width: 11),
-        Text(
+        const SizedBox(width: 11),
+        const Text(
           'LIVO',
           style: TextStyle(
             color: AppColors.text,
@@ -241,9 +314,14 @@ class _DesktopNavButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
           decoration: BoxDecoration(
             color: selected
-                ? AppColors.primary.withValues(alpha: 0.11)
+                ? AppColors.primary.withValues(alpha: 0.12)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: selected
+                  ? AppColors.primary.withValues(alpha: 0.22)
+                  : Colors.transparent,
+            ),
           ),
           child: Row(
             children: [

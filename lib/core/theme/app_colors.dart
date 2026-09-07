@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  static const background = Color(0xFF080B0A);
-  static const surface = Color(0xFF101513);
-  static const surfaceHigh = Color(0xFF171D1A);
-  static const surfaceSoft = Color(0xFF1D2421);
-  static const border = Color(0xFF29312D);
-  static const text = Color(0xFFF7F9F7);
-  static const textMuted = Color(0xFFA1ACA6);
-  static const primary = Color(0xFFD6F76F);
-  static const mint = Color(0xFF73DEC5);
-  static const orange = Color(0xFFFFA56B);
-  static const purple = Color(0xFFA99AF5);
-  static const blue = Color(0xFF79BFFF);
+  static const background = Color(0xFF050708);
+  static const backgroundRaised = Color(0xFF090D0E);
+  static const surface = Color(0xFF0E1414);
+  static const surfaceHigh = Color(0xFF151D1C);
+  static const surfaceSoft = Color(0xFF1B2523);
+  static const border = Color(0xFF283633);
+  static const borderBright = Color(0xFF3A4A46);
+  static const text = Color(0xFFF5F8F7);
+  static const textMuted = Color(0xFF98A6A1);
+  static const primary = Color(0xFFC8FF5A);
+  static const primarySoft = Color(0xFF9EEA4F);
+  static const mint = Color(0xFF57E3BC);
+  static const orange = Color(0xFFFFB06A);
+  static const purple = Color(0xFFB6A3FF);
+  static const blue = Color(0xFF5DCAFF);
+  static const cyan = Color(0xFF55E2E8);
   static const error = Color(0xFFFF7E82);
   static const black = Color(0xFF050706);
   static const white = Color(0xFFFFFFFF);

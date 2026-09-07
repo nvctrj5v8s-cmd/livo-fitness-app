@@ -161,29 +161,21 @@ class _EditableAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        const AppAvatar(radius: 45),
-        Positioned(
-          right: -3,
-          bottom: -3,
-          child: Container(
-            width: 31,
-            height: 31,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.surface, width: 3),
-            ),
-            child: const Icon(
-              Icons.camera_alt_rounded,
-              color: AppColors.black,
-              size: 15,
-            ),
-          ),
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.mint],
         ),
-      ],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            blurRadius: 24,
+          ),
+        ],
+      ),
+      child: const AppAvatar(radius: 42),
     );
   }
 }

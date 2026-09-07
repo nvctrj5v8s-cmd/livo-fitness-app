@@ -118,167 +118,172 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 36, 24, 36),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 460),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _AuthBrand(),
-                  const SizedBox(height: 38),
-                  Text(
-                    _isSignUp
-                        ? 'Starte deinen Rhythmus.'
-                        : 'Schön, dass du da bist.',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _isSignUp
-                        ? 'Erstelle dein persönliches LIVO-Profil.'
-                        : 'Melde dich an und setze dort fort, wo du aufgehört hast.',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 26),
-                  SurfaceCard(
-                    padding: const EdgeInsets.all(20),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (_isSignUp) ...[
+      backgroundColor: Colors.transparent,
+      body: AppBackdrop(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 36, 24, 36),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 460),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const _AuthBrand(),
+                    const SizedBox(height: 38),
+                    Text(
+                      _isSignUp
+                          ? 'Starte deinen Rhythmus.'
+                          : 'Schön, dass du da bist.',
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _isSignUp
+                          ? 'Erstelle dein persönliches LIVO-Profil.'
+                          : 'Melde dich an und setze dort fort, wo du aufgehört hast.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 26),
+                    SurfaceCard(
+                      padding: const EdgeInsets.all(20),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (_isSignUp) ...[
+                              TextFormField(
+                                controller: _nameController,
+                                textInputAction: TextInputAction.next,
+                                decoration: const InputDecoration(
+                                  labelText: 'Name',
+                                  prefixIcon: Icon(
+                                    Icons.person_outline_rounded,
+                                  ),
+                                ),
+                                validator: (value) =>
+                                    value == null || value.trim().isEmpty
+                                    ? 'Bitte gib deinen Namen ein.'
+                                    : null,
+                              ),
+                              const SizedBox(height: 13),
+                            ],
                             TextFormField(
-                              controller: _nameController,
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
                               decoration: const InputDecoration(
-                                labelText: 'Name',
-                                prefixIcon: Icon(Icons.person_outline_rounded),
+                                labelText: 'E-Mail-Adresse',
+                                prefixIcon: Icon(Icons.alternate_email_rounded),
                               ),
                               validator: (value) =>
-                                  value == null || value.trim().isEmpty
-                                  ? 'Bitte gib deinen Namen ein.'
+                                  value == null || !value.contains('@')
+                                  ? 'Bitte gib eine gültige E-Mail ein.'
                                   : null,
                             ),
                             const SizedBox(height: 13),
-                          ],
-                          TextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              labelText: 'E-Mail-Adresse',
-                              prefixIcon: Icon(Icons.alternate_email_rounded),
-                            ),
-                            validator: (value) =>
-                                value == null || !value.contains('@')
-                                ? 'Bitte gib eine gültige E-Mail ein.'
-                                : null,
-                          ),
-                          const SizedBox(height: 13),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) => _submit(),
-                            decoration: InputDecoration(
-                              labelText: 'Passwort',
-                              prefixIcon: const Icon(
-                                Icons.lock_outline_rounded,
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () => setState(
-                                  () => _obscurePassword = !_obscurePassword,
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => _submit(),
+                              decoration: InputDecoration(
+                                labelText: 'Passwort',
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline_rounded,
                                 ),
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
+                                suffixIcon: IconButton(
+                                  onPressed: () => setState(
+                                    () => _obscurePassword = !_obscurePassword,
+                                  ),
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_outlined
+                                        : Icons.visibility_off_outlined,
+                                  ),
                                 ),
                               ),
+                              validator: (value) =>
+                                  value == null || value.length < 6
+                                  ? 'Mindestens sechs Zeichen.'
+                                  : null,
                             ),
-                            validator: (value) =>
-                                value == null || value.length < 6
-                                ? 'Mindestens sechs Zeichen.'
-                                : null,
-                          ),
-                          if (!_isSignUp) ...[
-                            const SizedBox(height: 3),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: _loading ? null : _resetPassword,
-                                child: const Text('Passwort vergessen?'),
+                            if (!_isSignUp) ...[
+                              const SizedBox(height: 3),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: _loading ? null : _resetPassword,
+                                  child: const Text('Passwort vergessen?'),
+                                ),
                               ),
-                            ),
-                          ],
-                          if (_message != null) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              _message!,
-                              style: TextStyle(
-                                color: _messageIsError
-                                    ? AppColors.error
-                                    : AppColors.primary,
-                                fontSize: 13,
-                                height: 1.35,
+                            ],
+                            if (_message != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                _message!,
+                                style: TextStyle(
+                                  color: _messageIsError
+                                      ? AppColors.error
+                                      : AppColors.primary,
+                                  fontSize: 13,
+                                  height: 1.35,
+                                ),
                               ),
-                            ),
-                          ],
-                          const SizedBox(height: 15),
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              onPressed: _loading ? null : _submit,
-                              child: _loading
-                                  ? const SizedBox.square(
-                                      dimension: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.black,
+                            ],
+                            const SizedBox(height: 15),
+                            SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: _loading ? null : _submit,
+                                child: _loading
+                                    ? const SizedBox.square(
+                                        dimension: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: AppColors.black,
+                                        ),
+                                      )
+                                    : Text(
+                                        _isSignUp
+                                            ? 'Konto erstellen'
+                                            : 'Anmelden',
                                       ),
-                                    )
-                                  : Text(
-                                      _isSignUp
-                                          ? 'Konto erstellen'
-                                          : 'Anmelden',
-                                    ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 19),
-                  Center(
-                    child: TextButton(
-                      onPressed: _loading
-                          ? null
-                          : () => setState(() {
-                              _isSignUp = !_isSignUp;
-                              _message = null;
-                            }),
-                      child: Text(
-                        _isSignUp
-                            ? 'Du hast schon ein Konto? Anmelden'
-                            : 'Noch kein Konto? Jetzt registrieren',
+                    const SizedBox(height: 19),
+                    Center(
+                      child: TextButton(
+                        onPressed: _loading
+                            ? null
+                            : () => setState(() {
+                                _isSignUp = !_isSignUp;
+                                _message = null;
+                              }),
+                        child: Text(
+                          _isSignUp
+                              ? 'Du hast schon ein Konto? Anmelden'
+                              : 'Noch kein Konto? Jetzt registrieren',
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 22),
-                  const Text(
-                    'Deine Daten werden nur für dein LIVO-Profil verwendet. Medizinische Beratung ersetzt die App nicht.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 11,
-                      height: 1.45,
+                    const SizedBox(height: 22),
+                    const Text(
+                      'Deine Daten werden nur für dein LIVO-Profil verwendet. Medizinische Beratung ersetzt die App nicht.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 11,
+                        height: 1.45,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

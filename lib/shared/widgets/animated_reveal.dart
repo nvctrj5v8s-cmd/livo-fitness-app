@@ -41,13 +41,19 @@ class _AnimatedRevealState extends State<AnimatedReveal> {
     }
     return AnimatedOpacity(
       opacity: _visible ? 1 : 0,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOut,
-      child: AnimatedSlide(
-        offset: _visible ? Offset.zero : const Offset(0, 0.08),
-        duration: const Duration(milliseconds: 550),
-        curve: Curves.easeOutCubic,
-        child: widget.child,
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutCubic,
+      child: AnimatedScale(
+        scale: _visible ? 1 : 0.975,
+        alignment: Alignment.topCenter,
+        duration: const Duration(milliseconds: 520),
+        curve: Curves.easeOutBack,
+        child: AnimatedSlide(
+          offset: _visible ? Offset.zero : const Offset(0, 0.055),
+          duration: const Duration(milliseconds: 520),
+          curve: Curves.easeOutCubic,
+          child: widget.child,
+        ),
       ),
     );
   }

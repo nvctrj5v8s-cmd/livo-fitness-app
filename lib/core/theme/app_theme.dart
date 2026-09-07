@@ -22,20 +22,21 @@ abstract final class AppTheme {
       canvasColor: AppColors.background,
       dividerColor: AppColors.border,
       splashFactory: InkSparkle.splashFactory,
+      visualDensity: VisualDensity.standard,
       textTheme: const TextTheme(
         displaySmall: TextStyle(
           color: AppColors.text,
-          fontSize: 40,
+          fontSize: 42,
           height: 1.02,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -1.6,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1.8,
         ),
         headlineLarge: TextStyle(
           color: AppColors.text,
-          fontSize: 32,
+          fontSize: 34,
           height: 1.08,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -1.1,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1.25,
         ),
         headlineMedium: TextStyle(
           color: AppColors.text,
@@ -64,40 +65,40 @@ abstract final class AppTheme {
         labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
       ),
       cardTheme: const CardThemeData(
-        color: AppColors.surface,
+        color: AppColors.surfaceHigh,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: AppColors.border),
-          borderRadius: BorderRadius.all(Radius.circular(24)),
+          borderRadius: BorderRadius.all(Radius.circular(26)),
         ),
       ),
       inputDecorationTheme: const InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surfaceHigh,
+        fillColor: Color(0xCC151D1C),
         hintStyle: TextStyle(color: AppColors.textMuted),
         prefixIconColor: AppColors.textMuted,
         suffixIconColor: AppColors.textMuted,
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.border),
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.primary, width: 1.4),
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.black,
-          minimumSize: const Size(52, 52),
+          minimumSize: const Size(52, 54),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(17),
+            borderRadius: BorderRadius.circular(19),
           ),
           textStyle: const TextStyle(fontWeight: FontWeight.w800),
         ),
@@ -120,9 +121,9 @@ abstract final class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        height: 70,
-        backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.primary.withValues(alpha: 0.14),
+        height: 72,
+        backgroundColor: AppColors.surfaceHigh,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.16),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
             size: 23,
@@ -149,6 +150,14 @@ abstract final class AppTheme {
           TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(),
           TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),
         },
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: const WidgetStatePropertyAll(Size(46, 46)),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+        ),
       ),
     );
   }

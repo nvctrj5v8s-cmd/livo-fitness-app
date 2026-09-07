@@ -177,14 +177,23 @@ class _NutritionOverview extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.surfaceHigh,
+            AppColors.surface,
+            AppColors.primary.withValues(alpha: 0.055),
+          ],
+        ),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.borderBright),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.035),
-            blurRadius: 34,
-            spreadRadius: 3,
+            color: AppColors.primary.withValues(alpha: 0.075),
+            blurRadius: 42,
+            spreadRadius: -12,
+            offset: const Offset(0, 18),
           ),
         ],
       ),
@@ -472,9 +481,20 @@ class _QuickButton extends StatelessWidget {
           width: 104,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [color.withValues(alpha: 0.13), AppColors.surfaceHigh],
+            ),
             borderRadius: BorderRadius.circular(19),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(color: color.withValues(alpha: 0.22)),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.06),
+                blurRadius: 22,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

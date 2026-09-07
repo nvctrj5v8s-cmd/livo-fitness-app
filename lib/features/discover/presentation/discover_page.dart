@@ -156,7 +156,7 @@ class _RecipeGrid extends StatelessWidget {
         child: Center(
           child: Padding(
             padding: EdgeInsets.all(24),
-            child: Text('Kein Demo-Rezept passt zu dieser Suche.'),
+            child: Text('Kein Rezept passt zu dieser Suche.'),
           ),
         ),
       );
@@ -226,7 +226,7 @@ class _RecipeCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(recipe.imageAsset, fit: BoxFit.cover),
+                    _RecipeArtwork(recipe: recipe),
                     const DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -325,6 +325,68 @@ class _RecipeCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _RecipeArtwork extends StatelessWidget {
+  const _RecipeArtwork({required this.recipe});
+
+  final Recipe recipe;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = recipe.tags.contains('Vegetarisch')
+        ? AppColors.mint
+        : recipe.tags.contains('High Protein')
+        ? AppColors.primary
+        : AppColors.orange;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            accent.withValues(alpha: 0.42),
+            AppColors.surfaceHigh,
+            AppColors.background,
+          ],
+        ),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            right: -36,
+            top: -44,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: accent.withValues(alpha: 0.24),
+                  width: 22,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 18,
+            top: 18,
+            child: Container(
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.22),
+                borderRadius: BorderRadius.circular(19),
+                border: Border.all(color: accent.withValues(alpha: 0.32)),
+              ),
+              child: Icon(Icons.restaurant_rounded, color: accent, size: 28),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -460,7 +522,7 @@ class RecipeDetailPage extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
                 tag: 'recipe-${recipe.id}',
-                child: Image.asset(recipe.imageAsset, fit: BoxFit.cover),
+                child: _RecipeArtwork(recipe: recipe),
               ),
             ),
           ),

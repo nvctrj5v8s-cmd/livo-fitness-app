@@ -153,7 +153,7 @@ class _AddMealSheetState extends State<_AddMealSheet> {
               runSpacing: 8,
               children: [
                 StatusPill(
-                  label: 'BARCODE · SPÄTER',
+                  label: 'BARCODE · AKTIV',
                   icon: Icons.qr_code_scanner_rounded,
                   color: AppColors.blue,
                 ),

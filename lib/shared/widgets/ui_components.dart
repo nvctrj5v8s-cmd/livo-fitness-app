@@ -23,6 +23,23 @@ class PageHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                width: 34,
+                height: 4,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primary, AppColors.mint],
+                  ),
+                  borderRadius: BorderRadius.circular(99),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.24),
+                      blurRadius: 14,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 13),
               Text(title, style: Theme.of(context).textTheme.headlineLarge),
               const SizedBox(height: 7),
               Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
@@ -51,6 +68,15 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        Container(
+          width: 7,
+          height: 7,
+          decoration: const BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 9),
         Expanded(
           child: Text(title, style: Theme.of(context).textTheme.titleLarge),
         ),
@@ -71,6 +97,8 @@ class SurfaceCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(18),
     this.color = AppColors.surface,
     this.borderRadius = 24,
+    this.gradient,
+    this.borderColor,
     super.key,
   });
 
@@ -78,17 +106,116 @@ class SurfaceCard extends StatelessWidget {
   final EdgeInsets padding;
   final Color color;
   final double borderRadius;
+  final Gradient? gradient;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            borderColor ?? AppColors.borderBright,
+            AppColors.border.withValues(alpha: 0.42),
+          ],
+        ),
         borderRadius: BorderRadius.circular(borderRadius),
-        side: const BorderSide(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.22),
+            blurRadius: 26,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
-      child: Padding(padding: padding, child: child),
+      child: Padding(
+        padding: const EdgeInsets.all(1),
+        child: Material(
+          color: gradient == null ? color : Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius - 1),
+          ),
+          child: Ink(
+            decoration: gradient == null
+                ? null
+                : BoxDecoration(
+                    gradient: gradient,
+                    borderRadius: BorderRadius.circular(borderRadius - 1),
+                  ),
+            child: Padding(padding: padding, child: child),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppBackdrop extends StatelessWidget {
+  const AppBackdrop({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.background,
+                AppColors.backgroundRaised,
+                AppColors.background,
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: -180,
+          right: -120,
+          child: IgnorePointer(
+            child: Container(
+              width: 430,
+              height: 430,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.primary.withValues(alpha: 0.10),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: -170,
+          bottom: -240,
+          child: IgnorePointer(
+            child: Container(
+              width: 520,
+              height: 520,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    AppColors.mint.withValues(alpha: 0.07),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        child,
+      ],
     );
   }
 }
@@ -158,23 +285,35 @@ class PressableScale extends StatefulWidget {
 
 class _PressableScaleState extends State<PressableScale> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    return Semantics(
-      button: true,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        onTapDown: (_) => setState(() => _pressed = true),
-        onTapCancel: () => setState(() => _pressed = false),
-        onTapUp: (_) => setState(() => _pressed = false),
-        child: AnimatedScale(
-          scale: _pressed && !reduceMotion ? 0.975 : 1,
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOut,
-          child: widget.child,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: Semantics(
+        button: true,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          onTapDown: (_) => setState(() => _pressed = true),
+          onTapCancel: () => setState(() => _pressed = false),
+          onTapUp: (_) => setState(() => _pressed = false),
+          child: AnimatedScale(
+            scale: reduceMotion
+                ? 1
+                : _pressed
+                ? 0.972
+                : _hovered
+                ? 1.018
+                : 1,
+            duration: Duration(milliseconds: _pressed ? 100 : 180),
+            curve: Curves.easeOutCubic,
+            child: widget.child,
+          ),
         ),
       ),
     );
