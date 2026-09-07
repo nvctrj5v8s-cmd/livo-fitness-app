@@ -422,91 +422,140 @@ class _QuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 94,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        children: [
-          _QuickButton(
-            icon: Icons.add_rounded,
-            label: 'Mahlzeit',
-            color: AppColors.primary,
-            onTap: onAddMeal,
-          ),
-          _QuickButton(
-            icon: Icons.water_drop_outlined,
-            label: '${controller.waterGlasses}/8 Wasser',
-            color: AppColors.blue,
-            onTap: controller.addWater,
-          ),
-          _QuickButton(
-            icon: Icons.menu_book_outlined,
-            label: 'Tagebuch',
-            color: AppColors.mint,
-            onTap: onDiary,
-          ),
-          _QuickButton(
-            icon: Icons.restaurant_menu_rounded,
-            label: 'Rezepte',
-            color: AppColors.orange,
-            onTap: onRecipes,
-          ),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = constraints.maxWidth >= 760 ? 4 : 2;
+        const gap = 10.0;
+        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            _QuickButton(
+              width: width,
+              icon: Icons.add_rounded,
+              label: 'Mahlzeit',
+              detail: 'Suchen oder scannen',
+              color: AppColors.primary,
+              onTap: onAddMeal,
+            ),
+            _QuickButton(
+              width: width,
+              icon: Icons.water_drop_outlined,
+              label: '${controller.waterGlasses}/8 Wasser',
+              detail: 'Glas hinzufügen',
+              color: AppColors.blue,
+              onTap: controller.addWater,
+            ),
+            _QuickButton(
+              width: width,
+              icon: Icons.menu_book_outlined,
+              label: 'Tagebuch',
+              detail: 'Heute ansehen',
+              color: AppColors.mint,
+              onTap: onDiary,
+            ),
+            _QuickButton(
+              width: width,
+              icon: Icons.restaurant_menu_rounded,
+              label: 'Rezepte',
+              detail: 'Neue Ideen',
+              color: AppColors.orange,
+              onTap: onRecipes,
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
 class _QuickButton extends StatelessWidget {
   const _QuickButton({
+    required this.width,
     required this.icon,
     required this.label,
+    required this.detail,
     required this.color,
     required this.onTap,
   });
+  final double width;
   final IconData icon;
   final String label;
+  final String detail;
   final Color color;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 11),
+    return SizedBox(
+      width: width,
       child: PressableScale(
         onTap: onTap,
-        borderRadius: 19,
+        borderRadius: 21,
         child: Container(
-          width: 104,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          padding: const EdgeInsets.all(13),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [color.withValues(alpha: 0.13), AppColors.surfaceHigh],
+              colors: [color.withValues(alpha: 0.14), AppColors.surfaceHigh],
             ),
-            borderRadius: BorderRadius.circular(19),
-            border: Border.all(color: color.withValues(alpha: 0.22)),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.06),
-                blurRadius: 22,
-                offset: const Offset(0, 10),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(21),
+            border: Border.all(color: color.withValues(alpha: 0.24)),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             children: [
-              Icon(icon, color: color, size: 25),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                maxLines: 1,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      transitionBuilder: (child, animation) => FadeTransition(
+                        opacity: animation,
+                        child: ScaleTransition(
+                          scale: Tween(begin: 0.82, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutBack,
+                            ),
+                          ),
+                          child: child,
+                        ),
+                      ),
+                      child: Text(
+                        label,
+                        key: ValueKey(label),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      detail,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -524,14 +573,63 @@ class _MealRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (meals.isEmpty) return const Text('Noch keine Mahlzeiten eingetragen.');
-    return SizedBox(
-      height: 206,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: meals.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 12),
-        itemBuilder: (context, index) => _MealCard(meal: meals[index]),
+    return Column(
+      children: List.generate(
+        meals.length,
+        (index) => Padding(
+          padding: EdgeInsets.only(bottom: index == meals.length - 1 ? 0 : 10),
+          child: SizedBox(
+            height: 116,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: 22,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 11,
+                        height: 11,
+                        decoration: BoxDecoration(
+                          color: index == 0
+                              ? AppColors.primary
+                              : AppColors.surfaceSoft,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: index == 0
+                                ? AppColors.primary
+                                : AppColors.borderBright,
+                            width: 2,
+                          ),
+                          boxShadow: index == 0
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    blurRadius: 12,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                      ),
+                      if (index != meals.length - 1)
+                        Expanded(
+                          child: Container(
+                            width: 1,
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            color: AppColors.border,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 7),
+                Expanded(child: _MealCard(meal: meals[index])),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -544,17 +642,21 @@ class _MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 252,
+      height: 116,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.surfaceHigh, AppColors.surface],
+        ),
         borderRadius: BorderRadius.circular(23),
         border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
           SizedBox(
-            width: 105,
+            width: 92,
             height: double.infinity,
             child: meal.imageAsset == null
                 ? const ColoredBox(
@@ -580,7 +682,7 @@ class _MealCard extends StatelessWidget {
                       fontSize: 11,
                     ),
                   ),
-                  const SizedBox(height: 7),
+                  const SizedBox(height: 5),
                   Text(
                     meal.name,
                     maxLines: 2,
@@ -591,20 +693,34 @@ class _MealCard extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Text(
-                    '${meal.calories} kcal',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${meal.protein} g Protein',
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 11,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        '${meal.calories} kcal',
+                        style: const TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      const Text(
+                        '•',
+                        style: TextStyle(color: AppColors.borderBright),
+                      ),
+                      const SizedBox(width: 7),
+                      Flexible(
+                        child: Text(
+                          '${meal.protein} g Protein',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

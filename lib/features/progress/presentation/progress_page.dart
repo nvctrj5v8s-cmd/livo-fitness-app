@@ -53,13 +53,30 @@ class _ProgressPageState extends State<ProgressPage> {
                 const SizedBox(height: 18),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 130),
-                  child: _WeightChartCard(
-                    values: controller.weightHistory,
-                    currentWeight: controller.currentWeight,
-                    targetWeight: controller.targetWeight,
-                    selectedPoint: _selectedPoint,
-                    onPointSelected: (index) =>
-                        setState(() => _selectedPoint = index),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 380),
+                    switchInCurve: Curves.easeOutCubic,
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.035, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    ),
+                    child: KeyedSubtree(
+                      key: ValueKey(_period),
+                      child: _WeightChartCard(
+                        values: controller.weightHistory,
+                        currentWeight: controller.currentWeight,
+                        targetWeight: controller.targetWeight,
+                        selectedPoint: _selectedPoint,
+                        onPointSelected: (index) =>
+                            setState(() => _selectedPoint = index),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -115,19 +132,32 @@ class _PeriodSelector extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: selected == index
-                      ? AppColors.surfaceSoft
-                      : Colors.transparent,
+                  color: selected == index ? null : Colors.transparent,
+                  gradient: selected == index
+                      ? const LinearGradient(
+                          colors: [AppColors.primary, AppColors.mint],
+                        )
+                      : null,
                   borderRadius: BorderRadius.circular(12),
+                  boxShadow: selected == index
+                      ? [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.18),
+                            blurRadius: 14,
+                            offset: const Offset(0, 5),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Text(
                   labels[index],
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: selected == index
-                        ? AppColors.text
+                        ? AppColors.black
                         : AppColors.textMuted,
                     fontSize: 12,
                     fontWeight: selected == index
@@ -165,6 +195,15 @@ class _WeightChartCard extends StatelessWidget {
         : values[selectedPoint!];
     return SurfaceCard(
       padding: const EdgeInsets.all(20),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          AppColors.mint.withValues(alpha: 0.11),
+          AppColors.surfaceHigh,
+          AppColors.surface,
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -338,6 +377,24 @@ class _WeightChartPainter extends CustomPainter {
     }
     final metrics = fullPath.computeMetrics().first;
     final path = metrics.extractPath(0, metrics.length * animation);
+    final endpoint =
+        metrics.getTangentForOffset(metrics.length * animation)?.position ??
+        points.first;
+    final areaPath = Path.from(path)
+      ..lineTo(endpoint.dx, chart.bottom)
+      ..lineTo(points.first.dx, chart.bottom)
+      ..close();
+    final areaPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          AppColors.primary.withValues(alpha: 0.24),
+          AppColors.mint.withValues(alpha: 0.015),
+        ],
+      ).createShader(chart)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(areaPath, areaPaint);
     final linePaint = Paint()
       ..shader = const LinearGradient(
         colors: [AppColors.mint, AppColors.primary],
@@ -484,6 +541,15 @@ class _NutritionChartCard extends StatelessWidget {
     const labels = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
     return SurfaceCard(
       padding: const EdgeInsets.fromLTRB(18, 20, 18, 16),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          AppColors.blue.withValues(alpha: 0.08),
+          AppColors.surfaceHigh,
+          AppColors.primary.withValues(alpha: 0.04),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

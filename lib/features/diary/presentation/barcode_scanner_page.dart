@@ -12,13 +12,25 @@ class BarcodeScannerPage extends StatefulWidget {
   State<BarcodeScannerPage> createState() => _BarcodeScannerPageState();
 }
 
-class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
+class _BarcodeScannerPageState extends State<BarcodeScannerPage>
+    with SingleTickerProviderStateMixin {
   final _scannerController = MobileScannerController();
+  late final AnimationController _scanLineController;
   bool _loading = false;
   String? _message;
 
   @override
+  void initState() {
+    super.initState();
+    _scanLineController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1700),
+    )..repeat(reverse: true);
+  }
+
+  @override
   void dispose() {
+    _scanLineController.dispose();
     _scannerController.dispose();
     super.dispose();
   }
@@ -56,14 +68,67 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          MobileScanner(controller: _scannerController, onDetect: _handleBarcode),
+          MobileScanner(
+            controller: _scannerController,
+            onDetect: _handleBarcode,
+          ),
           Center(
-            child: Container(
+            child: SizedBox(
               width: 280,
               height: 150,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.primary, width: 3),
-                borderRadius: BorderRadius.circular(18),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.primary, width: 3),
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.18),
+                            blurRadius: 28,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  AnimatedBuilder(
+                    animation: _scanLineController,
+                    builder: (context, _) {
+                      final reduceMotion =
+                          MediaQuery.maybeOf(context)?.disableAnimations ??
+                          false;
+                      final progress = reduceMotion
+                          ? 0.5
+                          : _scanLineController.value;
+                      return Positioned(
+                        left: 16,
+                        right: 16,
+                        top: 18 + (112 * progress),
+                        child: Container(
+                          height: 2,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                AppColors.primary,
+                                Colors.transparent,
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.65,
+                                ),
+                                blurRadius: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),

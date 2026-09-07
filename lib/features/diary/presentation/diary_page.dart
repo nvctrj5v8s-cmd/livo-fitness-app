@@ -55,7 +55,25 @@ class _DiaryPageState extends State<DiaryPage> {
                 const SizedBox(height: 20),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 130),
-                  child: _DiarySummary(controller: controller),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 360),
+                    switchInCurve: Curves.easeOutCubic,
+                    switchOutCurve: Curves.easeInCubic,
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.04, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    ),
+                    child: KeyedSubtree(
+                      key: ValueKey(_selectedDay),
+                      child: _DiarySummary(controller: controller),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 26),
                 AnimatedReveal(
@@ -120,37 +138,58 @@ class _WeekSelector extends StatelessWidget {
             child: InkWell(
               onTap: () => onSelected(index),
               borderRadius: BorderRadius.circular(18),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 240),
-                curve: Curves.easeOut,
-                width: 55,
-                decoration: BoxDecoration(
-                  color: active ? AppColors.primary : AppColors.surface,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: active ? AppColors.primary : AppColors.border,
+              child: AnimatedScale(
+                duration: const Duration(milliseconds: 260),
+                curve: Curves.easeOutBack,
+                scale: active ? 1 : 0.94,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 260),
+                  curve: Curves.easeOutCubic,
+                  width: 55,
+                  decoration: BoxDecoration(
+                    color: active ? null : AppColors.surface,
+                    gradient: active
+                        ? const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [AppColors.primary, AppColors.mint],
+                          )
+                        : null,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(
+                      color: active ? AppColors.primary : AppColors.border,
+                    ),
+                    boxShadow: active
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.2),
+                              blurRadius: 18,
+                              offset: const Offset(0, 8),
+                            ),
+                          ]
+                        : null,
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      days[index].$1,
-                      style: TextStyle(
-                        color: active ? AppColors.black : AppColors.textMuted,
-                        fontSize: 12,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        days[index].$1,
+                        style: TextStyle(
+                          color: active ? AppColors.black : AppColors.textMuted,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      days[index].$2,
-                      style: TextStyle(
-                        color: active ? AppColors.black : AppColors.text,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
+                      const SizedBox(height: 4),
+                      Text(
+                        days[index].$2,
+                        style: TextStyle(
+                          color: active ? AppColors.black : AppColors.text,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -169,6 +208,15 @@ class _DiarySummary extends StatelessWidget {
   Widget build(BuildContext context) {
     return SurfaceCard(
       padding: const EdgeInsets.all(20),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          AppColors.primary.withValues(alpha: 0.13),
+          AppColors.surfaceHigh,
+          AppColors.mint.withValues(alpha: 0.05),
+        ],
+      ),
       child: Column(
         children: [
           Row(
@@ -447,6 +495,36 @@ class _HydrationCard extends StatelessWidget {
                     color: AppColors.textMuted,
                     fontSize: 12,
                   ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: List.generate(8, (index) {
+                    final filled = index < controller.waterGlasses;
+                    return Expanded(
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 180 + index * 25),
+                        curve: Curves.easeOutBack,
+                        height: filled ? 5 : 3,
+                        margin: EdgeInsets.only(right: index == 7 ? 0 : 4),
+                        decoration: BoxDecoration(
+                          color: filled
+                              ? AppColors.blue
+                              : AppColors.surfaceSoft,
+                          borderRadius: BorderRadius.circular(99),
+                          boxShadow: filled
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.blue.withValues(
+                                      alpha: 0.22,
+                                    ),
+                                    blurRadius: 7,
+                                  ),
+                                ]
+                              : null,
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),

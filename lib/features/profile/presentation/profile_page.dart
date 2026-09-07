@@ -97,6 +97,15 @@ class _ProfileHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return SurfaceCard(
       padding: const EdgeInsets.all(20),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          AppColors.primary.withValues(alpha: 0.15),
+          AppColors.surfaceHigh,
+          AppColors.blue.withValues(alpha: 0.06),
+        ],
+      ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final compact = constraints.maxWidth < 520;
@@ -139,6 +148,13 @@ class _ProfileHero extends StatelessWidget {
                 const _EditableAvatar(),
                 const SizedBox(height: 16),
                 details,
+                const SizedBox(height: 20),
+                _GoalRing(progress: controller.goalProgress),
+                const SizedBox(height: 6),
+                const Text(
+                  'Dein Weg zum Ziel',
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+                ),
               ],
             );
           }
@@ -393,7 +409,15 @@ class _ProfileRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 17, vertical: 2),
-      leading: Icon(icon, color: AppColors.textMuted, size: 21),
+      leading: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: AppColors.primary, size: 20),
+      ),
       title: Text(title),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -482,7 +506,15 @@ class _SettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
-      leading: Icon(icon, color: color),
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: Icon(icon, color: color, size: 21),
+      ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 11)),
       trailing: const Icon(

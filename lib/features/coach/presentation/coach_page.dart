@@ -23,7 +23,20 @@ class _CoachPageState extends State<CoachPage>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
-    )..repeat();
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final reduceMotion =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    if (reduceMotion) {
+      _controller.stop();
+      _controller.value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
   }
 
   @override
@@ -108,40 +121,104 @@ class _CoachOrb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, _) {
-        final wave = math.sin(animation.value * math.pi * 2);
-        return Container(
-          width: 126,
-          height: 126,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.mint],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(
-                  alpha: 0.16 + (wave + 1) * 0.05,
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, _) {
+          final wave = math.sin(animation.value * math.pi * 2);
+          return SizedBox(
+            width: 190,
+            height: 166,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Transform.rotate(
+                  angle: animation.value * math.pi * 2,
+                  child: Container(
+                    width: 158,
+                    height: 158,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.18),
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: 11,
+                        height: 11,
+                        margin: const EdgeInsets.only(top: 3),
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                blurRadius: 34 + wave * 7,
-                spreadRadius: 6 + wave * 2,
-              ),
-            ],
-          ),
-          child: Transform.rotate(
-            angle: wave * 0.04,
-            child: const Icon(
-              Icons.auto_awesome_rounded,
-              color: AppColors.black,
-              size: 42,
+                Transform.rotate(
+                  angle: -animation.value * math.pi * 1.35,
+                  child: Container(
+                    width: 136,
+                    height: 136,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.blue.withValues(alpha: 0.16),
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(bottom: 2),
+                        decoration: const BoxDecoration(
+                          color: AppColors.blue,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Transform.scale(
+                  scale: 1 + wave * 0.035,
+                  child: Container(
+                    width: 108,
+                    height: 108,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.primary, AppColors.mint],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(
+                            alpha: 0.17 + (wave + 1) * 0.045,
+                          ),
+                          blurRadius: 34 + wave * 6,
+                          spreadRadius: 5 + wave * 2,
+                        ),
+                      ],
+                    ),
+                    child: Transform.rotate(
+                      angle: wave * 0.05,
+                      child: const Icon(
+                        Icons.auto_awesome_rounded,
+                        color: AppColors.black,
+                        size: 39,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

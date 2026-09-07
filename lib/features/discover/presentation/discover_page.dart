@@ -79,7 +79,27 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 const SizedBox(height: 11),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 230),
-                  child: _RecipeGrid(recipes: recipes, controller: controller),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 330),
+                    switchInCurve: Curves.easeOutCubic,
+                    transitionBuilder: (child, animation) => FadeTransition(
+                      opacity: animation,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0.035, 0.025),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
+                      ),
+                    ),
+                    child: KeyedSubtree(
+                      key: ValueKey('$_category-$_query-${recipes.length}'),
+                      child: _RecipeGrid(
+                        recipes: recipes,
+                        controller: controller,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 30),
                 const AnimatedReveal(
