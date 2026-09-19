@@ -17,6 +17,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
   final _scannerController = MobileScannerController();
   late final AnimationController _scanLineController;
   bool _loading = false;
+  bool _manualEntryOpen = false;
   String? _message;
 
   @override
@@ -36,7 +37,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
   }
 
   Future<void> _handleBarcode(BarcodeCapture capture) async {
-    if (_loading) return;
+    if (_loading || _manualEntryOpen) return;
     final code = capture.barcodes
         .map((barcode) => barcode.rawValue)
         .whereType<String>()
@@ -51,7 +52,6 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
       _loading = true;
       _message = 'Produkt wird gesucht ...';
     });
-    await _scannerController.stop();
     try {
       final food = await BarcodeLookupService().lookup(code);
       if (!mounted) return;
@@ -68,20 +68,18 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
           _ => error.message,
         };
       });
-      await _scannerController.start();
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _loading = false;
         _message = 'Barcode konnte gerade nicht verarbeitet werden.';
       });
-      await _scannerController.start();
     }
   }
 
   Future<void> _openManualEntry() async {
-    if (_loading) return;
-    await _scannerController.stop();
+    if (_loading || _manualEntryOpen) return;
+    setState(() => _manualEntryOpen = true);
     if (!mounted) return;
     final textController = TextEditingController();
     final code = await showDialog<String>(
@@ -112,11 +110,10 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
     );
     textController.dispose();
     if (!mounted) return;
+    setState(() => _manualEntryOpen = false);
     if (code?.trim().isNotEmpty == true) {
       await _lookupBarcode(code!);
-      return;
     }
-    await _scannerController.start();
   }
 
   @override
