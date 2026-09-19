@@ -42,6 +42,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
         .whereType<String>()
         .firstWhere((value) => value.isNotEmpty, orElse: () => '');
     if (code.isEmpty) return;
+    await _lookupBarcode(code);
+  }
+
+  Future<void> _lookupBarcode(String code) async {
+    if (_loading) return;
     setState(() {
       _loading = true;
       _message = 'Produkt wird gesucht ...';
@@ -72,6 +77,46 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
       });
       await _scannerController.start();
     }
+  }
+
+  Future<void> _openManualEntry() async {
+    if (_loading) return;
+    await _scannerController.stop();
+    if (!mounted) return;
+    final textController = TextEditingController();
+    final code = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Barcode eingeben'),
+        content: TextField(
+          controller: textController,
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            hintText: 'z. B. 3017620422003',
+            labelText: 'EAN / Barcode',
+          ),
+          onSubmitted: (value) => Navigator.pop(dialogContext, value),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Abbrechen'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, textController.text),
+            child: const Text('Suchen'),
+          ),
+        ],
+      ),
+    );
+    textController.dispose();
+    if (!mounted) return;
+    if (code?.trim().isNotEmpty == true) {
+      await _lookupBarcode(code!);
+      return;
+    }
+    await _scannerController.start();
   }
 
   @override
@@ -153,22 +198,38 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
               color: Colors.black.withValues(alpha: 0.78),
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (_loading)
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    else
-                      const Icon(Icons.qr_code_scanner_rounded),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        _message ?? 'Barcode in den Rahmen halten',
-                        style: const TextStyle(color: Colors.white),
+                    Row(
+                      children: [
+                        if (_loading)
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        else
+                          const Icon(Icons.qr_code_scanner_rounded),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            _message ??
+                                'Kamera aktiv – Barcode in den Rahmen halten',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    TextButton.icon(
+                      onPressed: _loading ? null : _openManualEntry,
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primary,
                       ),
+                      icon: const Icon(Icons.keyboard_rounded, size: 18),
+                      label: const Text('Barcode manuell eingeben'),
                     ),
                   ],
                 ),

@@ -70,9 +70,21 @@ class BarcodeLookupService {
       return FoodItem.fromMap(Map<String, dynamic>.from(food));
     } on BarcodeLookupException {
       rethrow;
-    } on FunctionException {
+    } on FunctionException catch (error) {
+      if (error.status == 401 || error.status == 403) {
+        throw const BarcodeLookupException(
+          'Bitte melde dich erneut an und versuche den Scan danach noch einmal.',
+          kind: BarcodeErrorKind.unavailable,
+        );
+      }
+      if (error.status == 429) {
+        throw const BarcodeLookupException(
+          'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
+          kind: BarcodeErrorKind.rateLimited,
+        );
+      }
       throw const BarcodeLookupException(
-        'Die Barcode-Suche ist gerade nicht erreichbar. Bitte versuche es später erneut.',
+        'Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.',
         kind: BarcodeErrorKind.unavailable,
       );
     } catch (_) {
