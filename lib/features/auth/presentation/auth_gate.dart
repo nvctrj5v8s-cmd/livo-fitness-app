@@ -33,7 +33,7 @@ class AuthGate extends StatelessWidget {
             ),
           ),
           child: KeyedSubtree(
-            key: ValueKey(signedIn),
+            key: ValueKey(auth.currentUser?.id ?? 'signed-out'),
             child: signedIn ? child : const AuthPage(),
           ),
         );

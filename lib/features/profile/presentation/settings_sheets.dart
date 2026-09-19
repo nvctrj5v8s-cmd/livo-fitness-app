@@ -225,29 +225,33 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
       title: 'Ernährungsprofil',
-      subtitle: 'Grundlage für passende Empfehlungen',
+      subtitle: widget.controller.personalization == null
+          ? 'Deine gespeicherten Profilangaben'
+          : 'Ernährungsweise und Aktivität änderst du unter „Antworten ändern“.',
       child: ListView(
         children: [
-          const Text(
-            'Ernährungsstil',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 9),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: ['Ausgewogen', 'Vegetarisch', 'Vegan', 'Low Carb']
-                .map(
-                  (value) => ChoiceChip(
-                    label: Text(value),
-                    selected: _style == value,
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _style = value),
-                  ),
-                )
-                .toList(),
-          ),
-          const SizedBox(height: 20),
+          if (widget.controller.personalization == null) ...[
+            const Text(
+              'Ernährungsstil',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 9),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: ['Ausgewogen', 'Vegetarisch', 'Vegan', 'Low Carb']
+                  .map(
+                    (value) => ChoiceChip(
+                      label: Text(value),
+                      selected: _style == value,
+                      showCheckmark: false,
+                      onSelected: (_) => setState(() => _style = value),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 20),
+          ],
           TextField(
             controller: _allergiesController,
             decoration: const InputDecoration(
@@ -257,25 +261,27 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Aktivitätsniveau',
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 9),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: ['Wenig aktiv', 'Moderat aktiv', 'Sehr aktiv']
-                .map(
-                  (value) => ChoiceChip(
-                    label: Text(value),
-                    selected: _activity == value,
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _activity = value),
-                  ),
-                )
-                .toList(),
-          ),
+          if (widget.controller.personalization == null) ...[
+            const Text(
+              'Aktivitätsniveau',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 9),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: ['Wenig aktiv', 'Moderat aktiv', 'Sehr aktiv']
+                  .map(
+                    (value) => ChoiceChip(
+                      label: Text(value),
+                      selected: _activity == value,
+                      showCheckmark: false,
+                      onSelected: (_) => setState(() => _activity = value),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
           const SizedBox(height: 26),
           FilledButton(
             onPressed: () {

@@ -51,11 +51,24 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
       final food = await BarcodeLookupService().lookup(code);
       if (!mounted) return;
       Navigator.of(context).pop<FoodItem>(food);
-    } catch (error) {
+    } on BarcodeLookupException catch (error) {
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _message = 'Nicht gefunden. Bitte Barcode nochmals scannen.';
+        _message = switch (error.kind) {
+          BarcodeErrorKind.notFound =>
+            'Dieses Produkt ist noch nicht in der Datenquelle. Du kannst es selbst eintragen.',
+          BarcodeErrorKind.rateLimited =>
+            'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
+          _ => error.message,
+        };
+      });
+      await _scannerController.start();
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _message = 'Barcode konnte gerade nicht verarbeitet werden.';
       });
       await _scannerController.start();
     }

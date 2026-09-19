@@ -3,61 +3,129 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Content-Type': 'application/json; charset=utf-8',
 }
+
+const sourceUrl = 'https://world.openfoodfacts.org'
+const sourceLicense = 'Open Database License (ODbL)'
+const sourceAttribution = 'Open Food Facts contributors'
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
+  if (request.method !== 'POST') {
+    return json({ error: 'Nur POST ist erlaubt.', code: 'method_not_allowed' }, 405)
+  }
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const authorization = request.headers.get('Authorization')
+  if (!supabaseUrl || !anonKey || !serviceRoleKey || !authorization) {
+    return json({ error: 'Nicht angemeldet.', code: 'unauthorized' }, 401)
+  }
+
+  const userClient = createClient(supabaseUrl, anonKey, {
+    global: { headers: { Authorization: authorization } },
+  })
+  const { data: { user } } = await userClient.auth.getUser()
+  if (!user) {
+    return json({ error: 'Nicht angemeldet.', code: 'unauthorized' }, 401)
+  }
 
   try {
-    const { barcode } = await request.json()
-    const normalized = String(barcode ?? '').replace(/\D/g, '')
-    if (normalized.length < 8 || normalized.length > 14) {
-      return json({ error: 'Ungültiger Barcode.' }, 400)
+    const body = await request.json()
+    const barcode = normalizeBarcode(body?.barcode)
+    if (!barcode) {
+      return json({ error: 'Dieser Barcode ist ungültig.', code: 'invalid_barcode' })
     }
 
-    const admin = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    )
-
+    const admin = createClient(supabaseUrl, serviceRoleKey)
     const { data: cached, error: cacheError } = await admin
       .from('foods')
       .select('*')
-      .eq('barcode', normalized)
+      .eq('barcode', barcode)
       .maybeSingle()
     if (cacheError) throw cacheError
-    if (cached) return json({ food: cached, cached: true })
+    if (cached) return json({ food: cached, cache: 'catalog' })
 
-    const response = await fetch(
-      `https://world.openfoodfacts.org/api/v2/product/${normalized}.json?fields=code,product_name,brands,nutriments,serving_size,allergens_tags,categories_tags`,
-      { headers: { 'User-Agent': 'LIVO-Fitness/1.0 (contact@livo.app)' } },
+    // Only uncached lookups reach the external source and consume the quota.
+    const { data: allowed, error: quotaError } = await admin.rpc(
+      'consume_barcode_lookup_quota',
+      { p_user_id: user.id },
     )
-    if (!response.ok) return json({ error: 'Produktdienst nicht erreichbar.' }, 502)
+    if (quotaError) throw quotaError
+    if (allowed !== true) {
+      return json({
+        error: 'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
+        code: 'rate_limited',
+      })
+    }
+
+    const userAgent = Deno.env.get('OFF_USER_AGENT')
+    if (!userAgent) {
+      console.error('OFF_USER_AGENT secret is missing')
+      return json({
+        error: 'Die Barcode-Suche wird noch eingerichtet.',
+        code: 'upstream_unavailable',
+      })
+    }
+
+    const fields = [
+      'code', 'product_name', 'product_name_de', 'brands', 'nutriments',
+      'serving_size', 'quantity', 'allergens_tags', 'ingredients_text',
+      'ingredients_text_de', 'nutrition_grades', 'nova_group',
+    ].join(',')
+    const response = await fetch(
+      `${sourceUrl}/api/v3/product/${encodeURIComponent(barcode)}?fields=${encodeURIComponent(fields)}`,
+      { headers: { 'User-Agent': userAgent, Accept: 'application/json' } },
+    )
+    if (response.status === 404) {
+      return json({ error: 'Dieses Produkt wurde nicht gefunden.', code: 'not_found' })
+    }
+    if (!response.ok) {
+      console.error('Open Food Facts response', response.status)
+      return json({
+        error: 'Die Produktdatenquelle ist gerade nicht erreichbar.',
+        code: 'upstream_unavailable',
+      })
+    }
+
     const payload = await response.json()
     if (payload.status !== 1 || !payload.product) {
-      return json({ error: 'Produkt nicht gefunden.' }, 404)
+      return json({ error: 'Dieses Produkt wurde nicht gefunden.', code: 'not_found' })
     }
 
     const product = payload.product
     const nutrients = product.nutriments ?? {}
+    const productCode = normalizeBarcode(product.code) ?? barcode
     const row = {
-      slug: `barcode-${normalized}`,
-      name: product.product_name || `Produkt ${normalized}`,
-      brand: product.brands || null,
-      barcode: normalized,
-      serving_grams: 100,
-      calories: Number(nutrients['energy-kcal_100g'] ?? 0),
-      protein: Number(nutrients['proteins_100g'] ?? 0),
-      carbohydrates: Number(nutrients['carbohydrates_100g'] ?? 0),
-      fat: Number(nutrients['fat_100g'] ?? 0),
-      fiber: Number(nutrients['fiber_100g'] ?? 0),
-      sugar: Number(nutrients['sugars_100g'] ?? 0),
-      salt: Number(nutrients['salt_100g'] ?? 0),
-      allergens: product.allergens_tags ?? [],
-      diet_tags: product.categories_tags ?? [],
+      slug: `barcode-${productCode}`,
+      name: text(product.product_name_de) ?? text(product.product_name) ?? `Produkt ${productCode}`,
+      brand: text(product.brands),
+      barcode: productCode,
+      serving_grams: servingGrams(product.serving_size),
+      calories: nutrient(nutrients, 'energy-kcal_100g'),
+      protein: nutrient(nutrients, 'proteins_100g'),
+      carbohydrates: nutrient(nutrients, 'carbohydrates_100g'),
+      fat: nutrient(nutrients, 'fat_100g'),
+      fiber: nutrient(nutrients, 'fiber_100g'),
+      sugar: nutrient(nutrients, 'sugars_100g'),
+      salt: nutrient(nutrients, 'salt_100g'),
+      saturated_fat: nutrient(nutrients, 'saturated-fat_100g'),
+      allergens: textList(product.allergens_tags),
+      diet_tags: [],
+      ingredients_text: text(product.ingredients_text_de) ?? text(product.ingredients_text),
+      nutriscore_grade: grade(product.nutrition_grades),
+      nova_group: novaGroup(product.nova_group),
+      product_quantity: text(product.quantity),
       source: 'open_food_facts',
+      source_url: sourceUrl,
+      source_license: sourceLicense,
+      source_attribution: sourceAttribution,
+      data_quality: 'imported',
+      verified_at: new Date().toISOString(),
       is_premium: false,
     }
     const { data: inserted, error: insertError } = await admin
@@ -66,16 +134,56 @@ Deno.serve(async (request) => {
       .select()
       .single()
     if (insertError) throw insertError
-    return json({ food: inserted, cached: false })
+    return json({ food: inserted, cache: 'open_food_facts' })
   } catch (error) {
-    console.error(error)
-    return json({ error: 'Barcode konnte nicht verarbeitet werden.' }, 500)
+    console.error('barcode-lookup failed', error)
+    return json({
+      error: 'Barcode konnte gerade nicht verarbeitet werden.',
+      code: 'upstream_unavailable',
+    })
   }
 })
 
+function normalizeBarcode(value: unknown): string | null {
+  let code = String(value ?? '').replace(/\D/g, '')
+  if (code.length >= 9 && code.length <= 12) code = code.padStart(13, '0')
+  if (code.length <= 7) code = code.padStart(8, '0')
+  return code.length >= 8 && code.length <= 14 ? code : null
+}
+
+function nutrient(values: Record<string, unknown>, key: string): number {
+  const value = Number(values[key])
+  return Number.isFinite(value) && value >= 0 ? value : 0
+}
+
+function servingGrams(value: unknown): number {
+  const match = String(value ?? '').replace(',', '.').match(/\d+(?:\.\d+)?/)
+  const parsed = match ? Number(match[0]) : 100
+  return Number.isFinite(parsed) && parsed > 0 && parsed <= 5000 ? parsed : 100
+}
+
+function text(value: unknown): string | null {
+  const result = typeof value === 'string' ? value.trim() : ''
+  return result.length > 0 ? result.slice(0, 4000) : null
+}
+
+function textList(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+      .map((item) => item.trim()).filter(Boolean).slice(0, 32)
+    : []
+}
+
+function grade(value: unknown): string | null {
+  const result = text(value)?.toLowerCase()
+  return result && /^[a-e]$/.test(result) ? result : null
+}
+
+function novaGroup(value: unknown): number | null {
+  const result = Number(value)
+  return Number.isInteger(result) && result >= 1 && result <= 4 ? result : null
+}
+
 function json(body: Record<string, unknown>, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  })
+  return new Response(JSON.stringify(body), { status, headers: corsHeaders })
 }

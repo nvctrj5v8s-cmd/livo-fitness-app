@@ -1,5 +1,179 @@
 # Funktionsstatus
 
+## Aktualisierung: Neues Tagebuch, eigene Lebensmittel und Serie, 17. September 2026
+
+- Die ruhige Tagebuchansicht ist jetzt die Startseite. Kalorien und Makros
+  stehen vor vier klaren Bereichen für Frühstück, Mittagessen, Abendessen und
+  Snacks; Wochenkarte, Schnellaktionen und mobiler Floating-Button wurden dort
+  entfernt.
+- Die Navigation enthält `Tagebuch`, `KI`, `Rezepte`, `Fortschritt` und
+  `Profil`. Der bisherige Coach ist dadurch ein eigener Bereich; er ist
+  weiterhin eine gekennzeichnete Demo ohne angebundene KI.
+- Jede Mahlzeitenkarte öffnet die Suche mit der passenden Kategorie. Eigene
+  Lebensmittel akzeptieren Etikettwerte pro 100 g, 100 ml oder Portion,
+  rechnen die gegessene Menge ohne Zwischenrundung und speichern die Werte im
+  bestehenden Supabase-Tagebuch. Frühere einfache eigene Einträge bleiben
+  lesbar und bearbeitbar.
+- Die Tracking-Serie wird aus wirklich gespeicherten Kalendertagen berechnet.
+  Ein neuer heutiger Tag zeigt einmalig eine große, endliche
+  Flammen-Animation; leere Mahlzeiten zählen nicht. Der lokale
+  Schon-gezeigt-Marker enthält nur Konto-ID und Datum.
+- Das Profil zeigt die echte Serie statt erfundener Levelwerte. Profilbilder
+  können als JPG/PNG gewählt, lokal zugeschnitten, von Metadaten befreit und
+  nur auf diesem Gerät gespeichert oder entfernt werden. Sie werden nicht zu
+  Supabase hochgeladen und erscheinen daher nicht automatisch auf einem
+  zweiten Gerät.
+- Erinnerungsschalter werden lokal pro Konto gespeichert. Sie planen noch
+  keine Betriebssystem-Push-Nachrichten; dieser Unterschied bleibt im Sheet
+  ausdrücklich sichtbar.
+- Animationen der neuen Oberfläche sind endlich und respektieren reduzierte
+  Bewegung. Der Datenbankzugriff bleibt durch bestehende RLS-Regeln auf das
+  angemeldete Konto beschränkt.
+
+## Aktualisierung: Persönliche Einrichtung, 16. September 2026
+
+- Nach Vorstellung und Anmeldung erscheinen einmalig acht freiwillige Schritte:
+  Name, Wunsch, Alltag, bisheriger/gewünschter Mahlzeitenrhythmus, Ernährungsweise,
+  Kochzeit, Fokus und eine bearbeitbare Zusammenfassung.
+- Dunkle bestehende LIVO-Farbwelt, ein Lime-Akzent, animierte Vorschaukarten,
+  Diagramme und Übergänge. Die Einrichtung respektiert reduzierte Bewegung.
+- Antworten lassen sich im Profil nachholen, ändern und vom Gerät entfernen.
+  Entwürfe bleiben ungespeichert, bis die Auswahl übernommen wird.
+- Speicherung pro Konto auf diesem Gerät; kein neues Supabase-Schema und keine
+  Synchronisierung dieser Einrichtungsantworten zwischen Geräten. Bestehende
+  Cloud-Profilfelder und manuell eingestellte Kalorienziele bleiben unverändert.
+- Startseite: gewählter Rufname und persönliche Zusammenfassung. Tagebuch:
+  gewünschter Rhythmus ohne Pflicht oder automatische Begrenzung.
+- „Für dich“ priorisiert Rezepte regelbasiert nach ausdrücklich hinterlegten
+  Ernährungs-Tags, Kochzeit und Budget-Tag. Alle Rezepte bleiben zugänglich;
+  Zutaten und Allergene müssen weiterhin geprüft werden. Es werden keine
+  Ernährungs- oder Gesundheitsversprechen aus Tags abgeleitet.
+- Noch keine KI angebunden: Nur eine versionierte Kontextstruktur ohne Name
+  oder Konto-ID ist für eine spätere Backend-Anbindung vorbereitet. Es gibt
+  keine automatischen Kalorienziele, Diätpläne oder medizinischen Ratschläge.
+- Speicherung, Löschung und verbleibende Produktivvoraussetzungen:
+  `PERSONALIZATION_PRIVACY.md`. Ältere Bestandsaufnahmen darunter bleiben als
+  Historie erhalten; der jeweils neuere Eintrag hat Vorrang.
+- Geprüft: Flutter-Analyse ohne Befund, 50 erfolgreiche Tests (inklusive
+  bisheriger App/Einführung), Release-Web-Build erfolgreich. Neue Tests decken
+  Fragen, Bearbeiten, Überspringen, Speicherfehler, veraltete Leseantworten,
+  kontobezogene Speicherung, Rezeptsortierung und alle acht Schritte bei
+  320 × 568, 390 × 844, 740 × 360 und 1280 × 800 ab; schmale/kurze Ansichten
+  zusätzlich mit doppelter Schriftgröße und reduzierter Bewegung. Handy- und
+  Desktopansichten wurden zusätzlich anhand temporärer Widget-Aufnahmen
+  kontrolliert. Eine Live-Anmeldung mit echten Zugangsdaten wurde nicht
+  automatisiert getestet.
+
+## Aktualisierung: Deutschfreundlicher Lebensmittel-Katalog, 15. September 2026
+
+- Die Suche erkennt haeufige deutsche und englische Begriffe im USDA-Katalog,
+  zum Beispiel `Haehnchen`/`chicken`, `Haferflocken`/`oats` und
+  `Joghurt`/`yogurt`. Der englische Originalname bleibt sichtbar, damit keine
+  ungepruefte automatische Uebersetzung als Quelle ausgegeben wird.
+- Lebensmittel haben eine Detailansicht mit Portion, Makros, Datenquelle und
+  direktem Speichern in das Tagebuch. Filter zeigen zuletzt verwendete,
+  auf diesem Geraet gemerkte, proteinreiche und leichte Lebensmittel.
+- Die Merkliste und die zuletzt verwendeten Lebensmittel werden nur als IDs
+  lokal auf dem jeweiligen Geraet gespeichert. Sie werden nicht an einen
+  zusaetzlichen Anbieter uebertragen und sind nicht zwischen Geraeten synchron.
+
+## Aktualisierung: Vollstaendiges Tagebuch und Rezeptdetails, 15. September 2026
+
+- Gespeicherte Lebensmittel lassen sich in Gramm und Mahlzeitenart aendern,
+  auf einen anderen Tag verschieben oder duplizieren. Eigene Mahlzeiten mit
+  selbst eingetragenen Makros werden dauerhaft im vorhandenen Tagebuch
+  gespeichert.
+- Das Tagebuch kann zu frueheren und kuenftigen Wochen wechseln. Die
+  Tageszusammenfassung zeigt Kalorien sowie Protein, Kohlenhydrate und Fett
+  mit klaren Fortschrittsbalken. Werte dienen nur der Orientierung.
+- Favorisierte Datenbank-Rezepte werden pro angemeldetem Konto in
+  `favorites` gespeichert. Rezeptseiten lesen Zutaten, Mengen und Anleitungen
+  aus dem Katalog; Vorschau-Rezepte behalten deutlich gekennzeichnete lokale
+  Fallback-Inhalte.
+
+## Aktualisierung: Dauerhafte Rezepte im Tagebuch, 15. September 2026
+
+- Ein Rezept aus dem Supabase-Katalog wird als einzelne Mahlzeit mit seinen
+  gespeicherten Zutaten in `meals` und `meal_items` gesichert.
+- Kalorien und Makros werden aus den hinterlegten Zutaten berechnet, beim
+  Neustart erneut geladen und mit einem Wischen wieder komplett geloescht.
+- Die fest eingebauten Vorschau-Rezepte bleiben nur fuer Offline- und
+  Widget-Vorschauen lokal; angemeldete Nutzer speichern die Datenbank-Rezepte.
+
+## Aktualisierung: Wochenansicht im Tagebuch, 15. September 2026
+
+- Die sieben Karten zeigen die echten Daten der aktuellen Kalenderwoche.
+- Beim Antippen wird der jeweilige Tag aus Supabase geladen; neue Lebensmittel
+  werden fuer den ausgewaehlten Tag gespeichert.
+- Die Startseite bleibt bei den heutigen Werten. Ein Kalender fuer weitere
+  Wochen und das Bearbeiten gespeicherter Mengen folgen als naechster
+  Tagebuchschritt.
+
+## Aktualisierung: Gespeichertes Tagebuch fuer heute, 15. September 2026
+
+- Ein aus dem Supabase-Katalog ausgewaehltes Lebensmittel kann mit Mahlzeitenart
+  und Menge (50 bis 300 g) in `meals` und `meal_items` gespeichert werden.
+- Die heutige Liste wird beim Start erneut aus Supabase geladen. Das Entfernen
+  einer gespeicherten Zeile loescht auch ihren Datenbankeintrag.
+- Die Kalenderansicht und das dauerhafte Speichern von Rezepten sind umgesetzt;
+  frei waehlbare Mengen ausserhalb von 50 bis 300 g folgen separat.
+
+## Aktualisierung: Profil-Synchronisierung, 15. September 2026
+
+- Angemeldete Profilwerte werden beim Start aus `public.profiles` geladen.
+- Name, Ziel, Kalorienziel, Zielgewicht, Proteinziel, Ernaehrungsstil,
+  Allergien und Aktivitaetsniveau werden nach einer Bearbeitung wieder in
+  Supabase gespeichert.
+- Bei einem Netzwerkfehler bleibt die lokale Sitzung nutzbar.
+
+## Aktualisierung: App-Einführung, 14. September 2026
+
+- Neu: fünfseitige, responsive Vorstellung vor dem bestehenden Login:
+  Tagesübersicht, Rezepte, Trinkroutinen, Fortschritt und persönliches Profil.
+  Weiter, Zurück, Wischen, Seitenindikatoren, Pfeiltasten und Überspringen
+  funktionieren. Am Ende führt „Los geht’s“ zum bisherigen Anmeldeablauf.
+- Einheitliche dunkle Farbwelt mit Lime-Akzent, nummerierte Themen und fünf
+  animierte Produktvorschauen. Werte zählen hoch, Karten erscheinen versetzt,
+  Wasser und Diagramme bauen sich sichtbar auf (1,8 Sekunden pro Vorstellung).
+- Endliche Animationen mit optionalem Wiederholen-Knopf; die Animationen
+  respektieren `MediaQuery.disableAnimations` und pausieren außerhalb der
+  aktiven Seite. Bei reduzierter Bewegung entfällt der Wiederholen-Knopf.
+- Nur eine lokale Abschlussmarkierung wird dauerhaft gespeichert, damit die
+  Einführung beim nächsten Öffnen nicht erneut erscheint. Bei Speicherausfall
+  bleibt die App zugänglich. Details: `INTRODUCTION_PRIVACY.md`.
+- Der Marker für Version 2 zeigt den überarbeiteten Einstieg einmal erneut,
+  ohne bestehende Kontositzungen oder persönliche Daten anzutasten.
+- Die Vorschauen sind als Beispiele gekennzeichnet. Dieser Schritt fügt keine
+  Altersprüfung, KI-Verbindung, Fotoanalyse oder Zahlungsfunktion hinzu.
+- Verifiziert am 14. September: 22 erfolgreiche Widget-Tests, Flutter-Analyse
+  ohne Befund und erfolgreicher Release-Web-Build. Alle fünf Seiten wurden
+  bei 390 × 844 Pixeln im Browser kontrolliert, außerdem die Desktopansicht
+  bei 1280 × 800 Pixeln und eine Zwischenaufnahme der Wasseranimation.
+  Tests decken zusätzlich 320-Pixel-Displays mit doppelter Schriftgröße,
+  Screenreader-Aktionen, Wiederholen und Änderungen an Reduced Motion ab.
+- Die ältere Bestandsaufnahme darunter beschreibt den ursprünglichen
+  In-Memory-Prototyp. Insbesondere die pauschalen Aussagen „keine Anmeldung“
+  und „keine Übertragung“ sind für den heutigen Gesamtcode nicht mehr aktuell:
+  AuthGate und Supabase-Katalogzugriff sind bereits vorhanden. Ihr aktueller
+  Remote-/Deployment-Status der neuen Importdateien muss noch im Dashboard
+  ausgeführt und anschließend geprüft werden.
+
+## Aktualisierung: Katalogimport, 14. September 2026
+
+- Das Schema enthält jetzt Herkunfts-, Lizenz- und Prüfstatusfelder für
+  Lebensmittel sowie Herkunft und Anleitungen für Rezepte.
+- `supabase/imports/usda_foundation.sql` enthält 354 generische USDA-
+  Foundation-Lebensmittel; `supabase/imports/usda_fndds.sql` enthält 5.431
+  USDA-FNDDS-Lebensmittel. Beide Dateien sind reproduzierbare SQL-Importe mit
+  Quellenangabe.
+- Die tatsächliche Cloud-Datenbank ist erst nach diesem SQL-Schritt gefüllt.
+  Barcode-Daten aus Open Food Facts und Rezepttexte bleiben getrennte Quellen
+  mit eigener Lizenzprüfung.
+- `supabase/imports/curated_recipes.sql` ergänzt zwölf selbst verfasste
+  Starter-Rezepte mit Zutaten und Anweisungen; daraus ergeben sich zusammen
+  mit dem Seed 15 Rezepte. Ein Katalog mit tausenden Rezepten braucht weitere
+  redaktionelle Arbeit oder eine separat geprüfte kommerzielle Lizenz.
+
 Stand: lokaler Dark-UI-Prototyp. Diese Datei trennt sichtbar funktionierende
 Frontend-Flows von Funktionen, die externe Systeme oder weitere lokale Arbeit
 benötigen.
@@ -68,7 +242,7 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 
 ## Noch nicht vorhanden
 
-- Onboarding und Altersprüfung
+- Altersprüfung (App-Vorstellung siehe Aktualisierung oben)
 - echte Konten oder mehrere Profile
 - dauerhafte lokale oder Cloud-Speicherung
 - freie manuelle Mahlzeitenerstellung und Bearbeiten

@@ -7,96 +7,95 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
-import '../../coach/presentation/coach_page.dart';
 import '../../diary/presentation/add_meal_sheet.dart';
+import '../../diary/presentation/edit_meal_sheet.dart';
 import '../../profile/presentation/settings_sheets.dart';
 
-class HomePage extends StatelessWidget {
+/// The first tab is today's diary: calm summary first, meals second.
+class HomePage extends StatefulWidget {
   const HomePage({required this.onOpenPage, super.key});
-
   final ValueChanged<int> onOpenPage;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  MealSlot? _expanded;
 
   @override
   Widget build(BuildContext context) {
     final controller = AppScope.of(context);
     return SingleChildScrollView(
-      key: const PageStorageKey('home-scroll'),
+      key: const PageStorageKey('diary-home-scroll'),
       physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 112),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1120),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 110),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AnimatedReveal(
-                  child: _HomeHeader(
-                    name: controller.name,
-                    onProfile: () => onOpenPage(4),
-                    onNotifications: () =>
-                        showReminderSheet(context, controller),
-                  ),
+          constraints: const BoxConstraints(maxWidth: 920),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AnimatedReveal(
+                child: _DiaryHeader(
+                  name: controller.greetingName,
+                  streak: controller.streakDays,
+                  streakLoading: controller.streakLoading,
+                  remindersActive:
+                      controller.mealReminders ||
+                      controller.waterReminders ||
+                      controller.weeklySummary,
+                  onNotifications: () => showReminderSheet(context, controller),
+                  onProfile: () => widget.onOpenPage(4),
                 ),
-                const SizedBox(height: 26),
+              ),
+              const SizedBox(height: 24),
+              AnimatedReveal(
+                delay: const Duration(milliseconds: 70),
+                child: _CalorieOverview(controller: controller),
+              ),
+              const SizedBox(height: 30),
+              const AnimatedReveal(
+                delay: Duration(milliseconds: 120),
+                child: _MealHeading(),
+              ),
+              const SizedBox(height: 13),
+              for (var index = 0; index < MealSlot.values.length; index++) ...[
                 AnimatedReveal(
-                  delay: const Duration(milliseconds: 70),
-                  child: _NutritionOverview(controller: controller),
-                ),
-                const SizedBox(height: 26),
-                AnimatedReveal(
-                  delay: const Duration(milliseconds: 140),
-                  child: _QuickActions(
-                    controller: controller,
-                    onAddMeal: () => showAddMealSheet(context),
-                    onDiary: () => onOpenPage(1),
-                    onRecipes: () => onOpenPage(2),
-                  ),
-                ),
-                const SizedBox(height: 28),
-                AnimatedReveal(
-                  delay: const Duration(milliseconds: 210),
-                  child: SectionHeader(
-                    title: 'Heute gegessen',
-                    action: 'Tagebuch',
-                    onAction: () => onOpenPage(1),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                AnimatedReveal(
-                  delay: const Duration(milliseconds: 260),
-                  child: _MealRail(meals: controller.meals),
-                ),
-                const SizedBox(height: 28),
-                AnimatedReveal(
-                  delay: const Duration(milliseconds: 330),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final wide = constraints.maxWidth >= 760;
-                      if (!wide) {
-                        return Column(
-                          children: [
-                            _WeekCard(onTap: () => onOpenPage(3)),
-                            const SizedBox(height: 14),
-                            const _CoachCard(),
-                          ],
+                  delay: Duration(milliseconds: 160 + index * 55),
+                  child: _MealSection(
+                    key: ValueKey(
+                      'meal-section-${MealSlot.values[index].name}',
+                    ),
+                    slot: MealSlot.values[index],
+                    entries: controller.meals
+                        .where((meal) => meal.slot == MealSlot.values[index])
+                        .toList(),
+                    expanded: _expanded == MealSlot.values[index],
+                    onToggle: () {
+                      final slot = MealSlot.values[index];
+                      final hasEntries = controller.meals.any(
+                        (meal) => meal.slot == slot,
+                      );
+                      if (!hasEntries) {
+                        showAddMealSheet(context, initialSlot: slot);
+                      } else {
+                        setState(
+                          () => _expanded = _expanded == slot ? null : slot,
                         );
                       }
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _WeekCard(onTap: () => onOpenPage(3)),
-                          ),
-                          const SizedBox(width: 14),
-                          const Expanded(child: _CoachCard()),
-                        ],
-                      );
                     },
+                    onAdd: () => showAddMealSheet(
+                      context,
+                      initialSlot: MealSlot.values[index],
+                    ),
+                    onEdit: (entry) => showEditMealSheet(context, entry),
                   ),
                 ),
+                if (index != MealSlot.values.length - 1)
+                  const SizedBox(height: 11),
               ],
-            ),
+            ],
           ),
         ),
       ),
@@ -104,16 +103,21 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({
+class _DiaryHeader extends StatelessWidget {
+  const _DiaryHeader({
     required this.name,
-    required this.onProfile,
+    required this.streak,
+    required this.streakLoading,
+    required this.remindersActive,
     required this.onNotifications,
+    required this.onProfile,
   });
-
   final String name;
-  final VoidCallback onProfile;
+  final int streak;
+  final bool streakLoading;
+  final bool remindersActive;
   final VoidCallback onNotifications;
+  final VoidCallback onProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -127,55 +131,142 @@ class _HomeHeader extends StatelessWidget {
       'Samstag',
       'Sonntag',
     ];
-    return Row(
+    final greeting = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${weekdays[now.weekday - 1]}, ${now.day}.${now.month}.',
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Hallo, $name',
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-            ],
+        Text(
+          '${weekdays[now.weekday - 1]}, ${now.day}.${now.month}.',
+          style: const TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        IconButton.filledTonal(
+        const SizedBox(height: 4),
+        Text(
+          'Hallo, $name',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+      ],
+    );
+    final controls = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _StreakPill(days: streak, loading: streakLoading),
+        const SizedBox(width: 7),
+        IconButton(
+          key: const ValueKey('reminder-button'),
           onPressed: onNotifications,
-          tooltip: 'Benachrichtigungen',
+          tooltip: 'Erinnerungen',
           style: IconButton.styleFrom(
+            minimumSize: const Size(46, 46),
             backgroundColor: AppColors.surface,
             foregroundColor: AppColors.text,
             side: const BorderSide(color: AppColors.border),
           ),
-          icon: const Icon(Icons.notifications_none_rounded),
+          icon: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              const Icon(Icons.notifications_none_rounded, size: 21),
+              if (remindersActive)
+                Positioned(
+                  right: -1,
+                  top: -1,
+                  child: Container(
+                    width: 7,
+                    height: 7,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
-        const SizedBox(width: 9),
+        const SizedBox(width: 7),
         AppAvatar(radius: 23, onTap: onProfile),
       ],
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 520) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              greeting,
+              const SizedBox(height: 14),
+              Align(alignment: Alignment.centerRight, child: controls),
+            ],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: greeting),
+            const SizedBox(width: 12),
+            controls,
+          ],
+        );
+      },
     );
   }
 }
 
-class _NutritionOverview extends StatelessWidget {
-  const _NutritionOverview({required this.controller});
+class _StreakPill extends StatelessWidget {
+  const _StreakPill({required this.days, required this.loading});
+  final int days;
+  final bool loading;
 
+  @override
+  Widget build(BuildContext context) => Semantics(
+    label: loading ? 'Serie wird geladen' : '$days Tage Tracking-Serie',
+    child: Container(
+      height: 46,
+      padding: const EdgeInsets.symmetric(horizontal: 11),
+      decoration: BoxDecoration(
+        color: AppColors.orange.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: AppColors.orange.withValues(alpha: 0.26)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.local_fire_department_rounded,
+            color: AppColors.orange,
+            size: 21,
+          ),
+          const SizedBox(width: 4),
+          AnimatedSwitcher(
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 260),
+            child: Text(
+              loading ? '…' : '$days',
+              key: ValueKey((loading, days)),
+              style: const TextStyle(
+                color: AppColors.text,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _CalorieOverview extends StatelessWidget {
+  const _CalorieOverview({required this.controller});
   final AppController controller;
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -183,83 +274,40 @@ class _NutritionOverview extends StatelessWidget {
           colors: [
             AppColors.surfaceHigh,
             AppColors.surface,
-            AppColors.primary.withValues(alpha: 0.055),
+            AppColors.primary.withValues(alpha: 0.045),
           ],
         ),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppColors.borderBright),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.075),
-            blurRadius: 42,
-            spreadRadius: -12,
-            offset: const Offset(0, 18),
+            color: Colors.black.withValues(alpha: 0.22),
+            blurRadius: 30,
+            offset: const Offset(0, 14),
           ),
         ],
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final wide = constraints.maxWidth >= 680;
           final ring = _CalorieRing(
             progress: controller.calorieProgress,
             consumed: controller.consumedCalories,
             remaining: controller.remainingCalories,
+            reduceMotion: reduceMotion,
           );
-          final details = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const StatusPill(
-                    label: 'HEUTE',
-                    icon: Icons.local_fire_department_rounded,
-                  ),
-                  const Spacer(),
-                  Text(
-                    '${controller.calorieGoal} kcal Ziel',
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _MacroRow(
-                label: 'Protein',
-                value: controller.consumedProtein,
-                goal: controller.proteinGoal,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 15),
-              _MacroRow(
-                label: 'Kohlenhydrate',
-                value: controller.consumedCarbs,
-                goal: 240,
-                color: AppColors.mint,
-              ),
-              const SizedBox(height: 15),
-              _MacroRow(
-                label: 'Fett',
-                value: controller.consumedFat,
-                goal: 70,
-                color: AppColors.orange,
-              ),
-            ],
+          final macros = _MacroSummary(
+            controller: controller,
+            reduceMotion: reduceMotion,
           );
-
-          if (!wide) {
-            return Column(
-              children: [ring, const SizedBox(height: 24), details],
-            );
-          }
-          return Row(
-            children: [
-              ring,
-              const SizedBox(width: 38),
-              Expanded(child: details),
-            ],
-          );
+          return constraints.maxWidth < 600
+              ? Column(children: [ring, const SizedBox(height: 20), macros])
+              : Row(
+                  children: [
+                    ring,
+                    const SizedBox(width: 34),
+                    Expanded(child: macros),
+                  ],
+                );
         },
       ),
     );
@@ -271,79 +319,127 @@ class _CalorieRing extends StatelessWidget {
     required this.progress,
     required this.consumed,
     required this.remaining,
+    required this.reduceMotion,
   });
-
   final double progress;
   final int consumed;
   final int remaining;
+  final bool reduceMotion;
 
   @override
   Widget build(BuildContext context) {
+    final largeText = MediaQuery.textScalerOf(context).scale(1) >= 1.5;
     return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: progress),
-      duration: const Duration(milliseconds: 1100),
+      tween: Tween(begin: reduceMotion ? progress : 0, end: progress),
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 900),
       curve: Curves.easeOutCubic,
-      builder: (context, value, _) => SizedBox.square(
-        dimension: 178,
-        child: CustomPaint(
-          painter: _RingPainter(progress: value),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TweenAnimationBuilder<int>(
-                tween: IntTween(begin: 0, end: consumed),
-                duration: const Duration(milliseconds: 900),
-                builder: (context, number, _) => Text(
-                  '$number',
+      builder: (context, value, _) {
+        if (largeText) {
+          return SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$consumed kcal gegessen',
                   style: const TextStyle(
-                    color: AppColors.text,
-                    fontSize: 34,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  remaining >= 0
+                      ? '$remaining kcal übrig'
+                      : '${remaining.abs()} kcal über deinem Ziel',
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                LinearProgressIndicator(
+                  value: value,
+                  minHeight: 9,
+                  borderRadius: BorderRadius.circular(99),
+                  backgroundColor: AppColors.surfaceSoft,
+                  color: AppColors.primary,
+                ),
+              ],
+            ),
+          );
+        }
+        return SizedBox.square(
+          dimension: 154,
+          child: CustomPaint(
+            painter: _RingPainter(value),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '$consumed',
+                  style: const TextStyle(
+                    fontSize: 31,
+                    fontWeight: FontWeight.w900,
                     letterSpacing: -1,
                   ),
                 ),
-              ),
-              const Text(
-                'kcal gegessen',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 12),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                '$remaining übrig',
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                const Text(
+                  'kcal gegessen',
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 11),
                 ),
-              ),
-            ],
+                const SizedBox(height: 5),
+                Text(
+                  remaining >= 0
+                      ? '$remaining übrig'
+                      : '${remaining.abs()} darüber',
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class _RingPainter extends CustomPainter {
-  const _RingPainter({required this.progress});
+  const _RingPainter(this.progress);
   final double progress;
-
   @override
   void paint(Canvas canvas, Size size) {
     final rect = (Offset.zero & size).deflate(8);
-    final base = Paint()
-      ..color = AppColors.surfaceSoft
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 12;
-    final active = Paint()
-      ..shader = const SweepGradient(
-        colors: [AppColors.primary, AppColors.mint],
-      ).createShader(rect)
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 12;
-    canvas.drawArc(rect, 0, math.pi * 2, false, base);
-    canvas.drawArc(rect, -math.pi / 2, math.pi * 2 * progress, false, active);
+    canvas.drawArc(
+      rect,
+      0,
+      math.pi * 2,
+      false,
+      Paint()
+        ..color = AppColors.surfaceSoft
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 11,
+    );
+    canvas.drawArc(
+      rect,
+      -math.pi / 2,
+      math.pi * 2 * progress,
+      false,
+      Paint()
+        ..shader = const SweepGradient(
+          colors: [AppColors.primary, AppColors.mint],
+        ).createShader(rect)
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 11,
+    );
   }
 
   @override
@@ -351,52 +447,105 @@ class _RingPainter extends CustomPainter {
       oldDelegate.progress != progress;
 }
 
-class _MacroRow extends StatelessWidget {
-  const _MacroRow({
+class _MacroSummary extends StatelessWidget {
+  const _MacroSummary({required this.controller, required this.reduceMotion});
+  final AppController controller;
+  final bool reduceMotion;
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Wrap(
+        spacing: 12,
+        runSpacing: 3,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          const Text(
+            'Dein Tag',
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+          ),
+          Text(
+            '${controller.calorieGoal} kcal Ziel',
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+          ),
+        ],
+      ),
+      const SizedBox(height: 18),
+      _MacroBar(
+        label: 'Protein',
+        value: controller.consumedProtein,
+        goal: controller.proteinGoal,
+        color: AppColors.primary,
+        reduceMotion: reduceMotion,
+      ),
+      const SizedBox(height: 13),
+      _MacroBar(
+        label: 'Kohlenhydrate',
+        value: controller.consumedCarbs,
+        goal: controller.diaryCarbohydrateGoal,
+        color: AppColors.mint,
+        reduceMotion: reduceMotion,
+      ),
+      const SizedBox(height: 13),
+      _MacroBar(
+        label: 'Fett',
+        value: controller.consumedFat,
+        goal: controller.diaryFatGoal,
+        color: AppColors.orange,
+        reduceMotion: reduceMotion,
+      ),
+    ],
+  );
+}
+
+class _MacroBar extends StatelessWidget {
+  const _MacroBar({
     required this.label,
     required this.value,
     required this.goal,
     required this.color,
+    required this.reduceMotion,
   });
-
   final String label;
   final int value;
   final int goal;
   final Color color;
-
+  final bool reduceMotion;
   @override
   Widget build(BuildContext context) {
-    final progress = (value / goal).clamp(0.0, 1.0);
+    final target = goal <= 0 ? 0.0 : (value / goal).clamp(0.0, 1.0);
     return Column(
       children: [
-        Row(
+        Wrap(
+          spacing: 8,
+          runSpacing: 3,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Container(
-              width: 8,
-              height: 8,
+              width: 7,
+              height: 7,
               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
             const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             Text(
               '$value / $goal g',
-              style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 7),
         TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: progress),
-          duration: const Duration(milliseconds: 900),
-          curve: Curves.easeOutCubic,
-          builder: (context, animatedValue, _) => LinearProgressIndicator(
-            value: animatedValue,
-            minHeight: 6,
+          tween: Tween(begin: reduceMotion ? target : 0, end: target),
+          duration: reduceMotion
+              ? Duration.zero
+              : const Duration(milliseconds: 750),
+          builder: (context, progress, _) => LinearProgressIndicator(
+            value: progress,
+            minHeight: 5,
             borderRadius: BorderRadius.circular(99),
             backgroundColor: AppColors.surfaceSoft,
             color: color,
@@ -407,324 +556,170 @@ class _MacroRow extends StatelessWidget {
   }
 }
 
-class _QuickActions extends StatelessWidget {
-  const _QuickActions({
-    required this.controller,
-    required this.onAddMeal,
-    required this.onDiary,
-    required this.onRecipes,
-  });
-
-  final AppController controller;
-  final VoidCallback onAddMeal;
-  final VoidCallback onDiary;
-  final VoidCallback onRecipes;
-
+class _MealHeading extends StatelessWidget {
+  const _MealHeading();
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 760 ? 4 : 2;
-        const gap = 10.0;
-        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            _QuickButton(
-              width: width,
-              icon: Icons.add_rounded,
-              label: 'Mahlzeit',
-              detail: 'Suchen oder scannen',
-              color: AppColors.primary,
-              onTap: onAddMeal,
-            ),
-            _QuickButton(
-              width: width,
-              icon: Icons.water_drop_outlined,
-              label: '${controller.waterGlasses}/8 Wasser',
-              detail: 'Glas hinzufügen',
-              color: AppColors.blue,
-              onTap: controller.addWater,
-            ),
-            _QuickButton(
-              width: width,
-              icon: Icons.menu_book_outlined,
-              label: 'Tagebuch',
-              detail: 'Heute ansehen',
-              color: AppColors.mint,
-              onTap: onDiary,
-            ),
-            _QuickButton(
-              width: width,
-              icon: Icons.restaurant_menu_rounded,
-              label: 'Rezepte',
-              detail: 'Neue Ideen',
-              color: AppColors.orange,
-              onTap: onRecipes,
-            ),
-          ],
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => const Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Deine Mahlzeiten',
+        style: TextStyle(
+          fontSize: 21,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -0.35,
+        ),
+      ),
+      SizedBox(height: 5),
+      Text(
+        'Tippe auf eine Mahlzeit, um Essen einzutragen.',
+        style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+      ),
+    ],
+  );
 }
 
-class _QuickButton extends StatelessWidget {
-  const _QuickButton({
-    required this.width,
-    required this.icon,
-    required this.label,
-    required this.detail,
-    required this.color,
-    required this.onTap,
+class _MealSection extends StatelessWidget {
+  const _MealSection({
+    required this.slot,
+    required this.entries,
+    required this.expanded,
+    required this.onToggle,
+    required this.onAdd,
+    required this.onEdit,
+    super.key,
   });
-  final double width;
-  final IconData icon;
-  final String label;
-  final String detail;
-  final Color color;
-  final VoidCallback onTap;
+  final MealSlot slot;
+  final List<MealEntry> entries;
+  final bool expanded;
+  final VoidCallback onToggle;
+  final VoidCallback onAdd;
+  final ValueChanged<MealEntry> onEdit;
+  int get calories => entries.fold(0, (sum, entry) => sum + entry.calories);
+  Color get color => switch (slot) {
+    MealSlot.breakfast => AppColors.primary,
+    MealSlot.lunch => AppColors.mint,
+    MealSlot.dinner => AppColors.orange,
+    MealSlot.snack => AppColors.blue,
+  };
+  IconData get icon => switch (slot) {
+    MealSlot.breakfast => Icons.wb_sunny_outlined,
+    MealSlot.lunch => Icons.lunch_dining_outlined,
+    MealSlot.dinner => Icons.nights_stay_outlined,
+    MealSlot.snack => Icons.cookie_outlined,
+  };
+  String get title => slot == MealSlot.snack ? 'Snacks' : slot.label;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: PressableScale(
-        onTap: onTap,
-        borderRadius: 21,
-        child: Container(
-          padding: const EdgeInsets.all(13),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [color.withValues(alpha: 0.14), AppColors.surfaceHigh],
-            ),
-            borderRadius: BorderRadius.circular(21),
-            border: Border.all(color: color.withValues(alpha: 0.24)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(icon, color: color, size: 22),
-              ),
-              const SizedBox(width: 11),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    return AnimatedContainer(
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(23),
+        border: Border.all(
+          color: expanded ? color.withValues(alpha: 0.48) : AppColors.border,
+        ),
+        boxShadow: expanded
+            ? [BoxShadow(color: color.withValues(alpha: 0.06), blurRadius: 24)]
+            : null,
+      ),
+      child: Column(
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onToggle,
+              borderRadius: BorderRadius.circular(23),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(
                   children: [
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      transitionBuilder: (child, animation) => FadeTransition(
-                        opacity: animation,
-                        child: ScaleTransition(
-                          scale: Tween(begin: 0.82, end: 1.0).animate(
-                            CurvedAnimation(
-                              parent: animation,
-                              curve: Curves.easeOutBack,
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Icon(icon, color: color, size: 23),
+                    ),
+                    const SizedBox(width: 13),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
-                          child: child,
-                        ),
-                      ),
-                      child: Text(
-                        label,
-                        key: ValueKey(label),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      detail,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 10,
+                          const SizedBox(height: 4),
+                          Text(
+                            entries.isEmpty
+                                ? 'Noch nichts eingetragen'
+                                : '${entries.length} ${entries.length == 1 ? 'Eintrag' : 'Einträge'} · $calories kcal',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                    IconButton.filledTonal(
+                      key: ValueKey('add-${slot.name}'),
+                      tooltip: '$title hinzufügen',
+                      onPressed: onAdd,
+                      style: IconButton.styleFrom(
+                        backgroundColor: color.withValues(alpha: 0.11),
+                        foregroundColor: color,
+                      ),
+                      icon: const Icon(Icons.add_rounded),
+                    ),
+                    if (entries.isNotEmpty) ...[
+                      const SizedBox(width: 3),
+                      AnimatedRotation(
+                        turns: expanded ? 0.5 : 0,
+                        duration: reduceMotion
+                            ? Duration.zero
+                            : const Duration(milliseconds: 250),
+                        child: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MealRail extends StatelessWidget {
-  const _MealRail({required this.meals});
-  final List<MealEntry> meals;
-
-  @override
-  Widget build(BuildContext context) {
-    if (meals.isEmpty) return const Text('Noch keine Mahlzeiten eingetragen.');
-    return Column(
-      children: List.generate(
-        meals.length,
-        (index) => Padding(
-          padding: EdgeInsets.only(bottom: index == meals.length - 1 ? 0 : 10),
-          child: SizedBox(
-            height: 116,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  width: 22,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 11,
-                        height: 11,
-                        decoration: BoxDecoration(
-                          color: index == 0
-                              ? AppColors.primary
-                              : AppColors.surfaceSoft,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: index == 0
-                                ? AppColors.primary
-                                : AppColors.borderBright,
-                            width: 2,
-                          ),
-                          boxShadow: index == 0
-                              ? [
-                                  BoxShadow(
-                                    color: AppColors.primary.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    blurRadius: 12,
-                                  ),
-                                ]
-                              : null,
-                        ),
-                      ),
-                      if (index != meals.length - 1)
-                        Expanded(
-                          child: Container(
-                            width: 1,
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            color: AppColors.border,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 7),
-                Expanded(child: _MealCard(meal: meals[index])),
-              ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MealCard extends StatelessWidget {
-  const _MealCard({required this.meal});
-  final MealEntry meal;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 116,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.surfaceHigh, AppColors.surface],
-        ),
-        borderRadius: BorderRadius.circular(23),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 92,
-            height: double.infinity,
-            child: meal.imageAsset == null
-                ? const ColoredBox(
-                    color: AppColors.surfaceHigh,
-                    child: Icon(
-                      Icons.restaurant_rounded,
-                      color: AppColors.primary,
-                      size: 34,
-                    ),
+          AnimatedSize(
+            duration: reduceMotion
+                ? Duration.zero
+                : const Duration(milliseconds: 280),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            child: expanded && entries.isNotEmpty
+                ? Column(
+                    children: [
+                      const Divider(height: 1, indent: 14, endIndent: 14),
+                      for (var index = 0; index < entries.length; index++)
+                        _TrackedMealRow(
+                          entry: entries[index],
+                          showDivider: index != entries.length - 1,
+                          onTap: () => onEdit(entries[index]),
+                        ),
+                    ],
                   )
-                : Image.asset(meal.imageAsset!, fit: BoxFit.cover),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    meal.slot.label,
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 11,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    meal.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      height: 1.2,
-                    ),
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Text(
-                        '${meal.calories} kcal',
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(width: 7),
-                      const Text(
-                        '•',
-                        style: TextStyle(color: AppColors.borderBright),
-                      ),
-                      const SizedBox(width: 7),
-                      Flexible(
-                        child: Text(
-                          '${meal.protein} g Protein',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                : const SizedBox(width: double.infinity),
           ),
         ],
       ),
@@ -732,144 +727,61 @@ class _MealCard extends StatelessWidget {
   }
 }
 
-class _WeekCard extends StatelessWidget {
-  const _WeekCard({required this.onTap});
+class _TrackedMealRow extends StatelessWidget {
+  const _TrackedMealRow({
+    required this.entry,
+    required this.showDivider,
+    required this.onTap,
+  });
+  final MealEntry entry;
+  final bool showDivider;
   final VoidCallback onTap;
-
   @override
-  Widget build(BuildContext context) {
-    const values = [0.78, 0.92, 0.64, 0.86, 0.71, 0.88, 0.56];
-    const labels = ['M', 'D', 'M', 'D', 'F', 'S', 'S'];
-    return PressableScale(
-      onTap: onTap,
-      child: SurfaceCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Diese Woche',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-                  ),
-                ),
-                Icon(Icons.arrow_forward_rounded, color: AppColors.textMuted),
-              ],
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Ø 84 % deines Kalorienziels',
-              style: TextStyle(color: AppColors.textMuted, fontSize: 12),
-            ),
-            const SizedBox(height: 22),
-            SizedBox(
-              height: 92,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(
-                  values.length,
-                  (index) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TweenAnimationBuilder<double>(
-                            tween: Tween(begin: 0, end: values[index]),
-                            duration: Duration(milliseconds: 500 + index * 70),
-                            curve: Curves.easeOutCubic,
-                            builder: (context, value, _) => Container(
-                              height: 58 * value,
-                              decoration: BoxDecoration(
-                                color: index == 3
-                                    ? AppColors.primary
-                                    : AppColors.surfaceSoft,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            labels[index],
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CoachCard extends StatelessWidget {
-  const _CoachCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return PressableScale(
-      onTap: () => Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const CoachPage())),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primary.withValues(alpha: 0.16),
-              AppColors.mint.withValues(alpha: 0.07),
-            ],
+  Widget build(BuildContext context) => Column(
+    children: [
+      ListTile(
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 17, vertical: 3),
+        leading: Container(
+          width: 39,
+          height: 39,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceHigh,
+            borderRadius: BorderRadius.circular(13),
           ),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.22)),
+          child: const Icon(
+            Icons.restaurant_rounded,
+            color: AppColors.textMuted,
+            size: 19,
+          ),
         ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Text(
+          entry.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        ),
+        subtitle: Text(
+          '${entry.protein} P · ${entry.carbs} K · ${entry.fat} F',
+          style: const TextStyle(fontSize: 10),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                StatusPill(
-                  label: 'KI · SPÄTER',
-                  icon: Icons.auto_awesome_rounded,
-                ),
-                Spacer(),
-                Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
-              ],
-            ),
-            SizedBox(height: 22),
-            Icon(
-              Icons.chat_bubble_outline_rounded,
-              color: AppColors.primary,
-              size: 30,
-            ),
-            SizedBox(height: 12),
             Text(
-              'Dein persönlicher Coach',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+              '${entry.calories} kcal',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 6),
-            Text(
-              'Versteht später deinen Tag, deine Ziele und deine Vorlieben.',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 12,
-                height: 1.4,
-              ),
+            const SizedBox(width: 6),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.textMuted,
+              size: 19,
             ),
           ],
         ),
       ),
-    );
-  }
+      if (showDivider) const Divider(height: 1, indent: 70, endIndent: 17),
+    ],
+  );
 }

@@ -6,6 +6,9 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../onboarding/presentation/personalization_card.dart';
+import '../../onboarding/presentation/personalization_entry.dart';
+import 'avatar_editor.dart';
 import 'settings_sheets.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -41,6 +44,8 @@ class ProfilePage extends StatelessWidget {
                   delay: const Duration(milliseconds: 70),
                   child: _ProfileHero(controller: controller),
                 ),
+                const SizedBox(height: 20),
+                const PersonalizationCard(profileMode: true),
                 const SizedBox(height: 24),
                 const AnimatedReveal(
                   delay: Duration(milliseconds: 140),
@@ -115,26 +120,30 @@ class _ProfileHero extends StatelessWidget {
                 : CrossAxisAlignment.start,
             children: [
               Text(
-                controller.name,
+                controller.greetingName,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 5),
               Text(
-                controller.goal,
+                controller.personalization == null
+                    ? controller.goal
+                    : controller.personalization!.goal?.label ??
+                          'Dein persönlicher Start',
                 style: const TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 11),
-              const Wrap(
+              Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 7,
                 runSpacing: 7,
                 children: [
-                  StatusPill(label: 'LEVEL 8', icon: Icons.bolt_rounded),
                   StatusPill(
-                    label: '8 TAGE SERIE',
+                    label: controller.streakDays == 1
+                        ? '1 TAG SERIE'
+                        : '${controller.streakDays} TAGE SERIE',
                     icon: Icons.local_fire_department_outlined,
                     color: AppColors.orange,
                   ),
@@ -191,7 +200,11 @@ class _EditableAvatar extends StatelessWidget {
           ),
         ],
       ),
-      child: const AppAvatar(radius: 42),
+      child: AppAvatar(
+        radius: 42,
+        onTap: () => showAvatarEditor(context),
+        semanticLabel: 'Profilbild ändern',
+      ),
     );
   }
 }
@@ -202,9 +215,12 @@ class _GoalRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: progress),
-      duration: const Duration(milliseconds: 1000),
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 1000),
       curve: Curves.easeOutCubic,
       builder: (context, value, _) => SizedBox.square(
         dimension: 88,
@@ -363,8 +379,12 @@ class _NutritionProfile extends StatelessWidget {
           _ProfileRow(
             icon: Icons.restaurant_outlined,
             title: 'Ernährungsstil',
-            value: controller.nutritionStyle,
-            onTap: () => showNutritionProfileSheet(context, controller),
+            value: controller.personalization == null
+                ? controller.nutritionStyle
+                : controller.personalization!.nutrition?.label ?? 'Noch offen',
+            onTap: () => controller.personalization == null
+                ? showNutritionProfileSheet(context, controller)
+                : openPersonalizationEditor(context),
           ),
           const Divider(height: 1),
           _ProfileRow(
@@ -377,15 +397,21 @@ class _NutritionProfile extends StatelessWidget {
           _ProfileRow(
             icon: Icons.directions_run_rounded,
             title: 'Aktivität',
-            value: controller.activityLevel,
-            onTap: () => showNutritionProfileSheet(context, controller),
+            value: controller.personalization == null
+                ? controller.activityLevel
+                : controller.personalization!.activity?.label ?? 'Noch offen',
+            onTap: () => controller.personalization == null
+                ? showNutritionProfileSheet(context, controller)
+                : openPersonalizationEditor(context),
           ),
           const Divider(height: 1),
           _ProfileRow(
             icon: Icons.schedule_rounded,
             title: 'Mahlzeiten',
-            value: '3 + 1 Snack',
-            onTap: () => showNutritionProfileSheet(context, controller),
+            value: controller.personalization?.desiredMeals == null
+                ? 'Flexibel'
+                : '${controller.personalization!.desiredMeals} pro Tag',
+            onTap: () => openPersonalizationEditor(context),
           ),
         ],
       ),
@@ -574,37 +600,47 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 18),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                prefixIcon: Icon(Icons.person_outline_rounded),
+            if (widget.controller.personalization != null)
+              const Text(
+                'Rufname und persönliche Wünsche änderst du im Profil unter „Antworten ändern“. Die folgenden Zahlen sind deine separat eingestellten Ziele.',
+                style: TextStyle(color: AppColors.textMuted, height: 1.5),
               ),
-            ),
-            const SizedBox(height: 18),
-            const Text(
-              'Mein Ziel',
-              style: TextStyle(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 9),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: ['Fett verlieren', 'Gewicht halten', 'Muskeln aufbauen']
-                  .map(
-                    (goal) => ChoiceChip(
-                      label: Text(goal),
-                      selected: _goal == goal,
-                      onSelected: (_) => setState(() => _goal = goal),
-                      showCheckmark: false,
-                      selectedColor: AppColors.primary,
-                      labelStyle: TextStyle(
-                        color: _goal == goal ? AppColors.black : AppColors.text,
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
+            if (widget.controller.personalization == null) ...[
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  prefixIcon: Icon(Icons.person_outline_rounded),
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Text(
+                'Mein Ziel',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 9),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children:
+                    ['Fett verlieren', 'Gewicht halten', 'Muskeln aufbauen']
+                        .map(
+                          (goal) => ChoiceChip(
+                            label: Text(goal),
+                            selected: _goal == goal,
+                            onSelected: (_) => setState(() => _goal = goal),
+                            showCheckmark: false,
+                            selectedColor: AppColors.primary,
+                            labelStyle: TextStyle(
+                              color: _goal == goal
+                                  ? AppColors.black
+                                  : AppColors.text,
+                            ),
+                          ),
+                        )
+                        .toList(),
+              ),
+            ],
             const SizedBox(height: 19),
             Text(
               'Kalorienziel: ${_calories.round()} kcal',

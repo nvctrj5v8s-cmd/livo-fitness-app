@@ -21,14 +21,19 @@ class _DiscoverPageState extends State<DiscoverPage> {
   @override
   Widget build(BuildContext context) {
     final controller = AppScope.of(context);
-    final recipes = controller.recipes.where((recipe) {
-      final matchesCategory =
-          _category == 'Für dich' || recipe.tags.contains(_category);
-      final matchesQuery = recipe.title.toLowerCase().contains(
-        _query.toLowerCase(),
-      );
-      return matchesCategory && matchesQuery;
-    }).toList();
+    final recipes =
+        (_category == 'Für dich'
+                ? controller.personalizedRecipes
+                : controller.recipes)
+            .where((recipe) {
+              final matchesCategory =
+                  _category == 'Für dich' || recipe.tags.contains(_category);
+              final matchesQuery = recipe.title.toLowerCase().contains(
+                _query.toLowerCase(),
+              );
+              return matchesCategory && matchesQuery;
+            })
+            .toList();
 
     return SingleChildScrollView(
       key: const PageStorageKey('discover-scroll'),
@@ -48,6 +53,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         'Ideen, die zu deinem Ziel und deinem Alltag passen.',
                   ),
                 ),
+                if (controller.personalization != null) ...[
+                  const SizedBox(height: 14),
+                  const Text(
+                    'Für dich sortiert nach deinen Vorlieben und deiner Kochzeit. Alle Rezepte bleiben zugänglich.',
+                    style: TextStyle(color: AppColors.textMuted),
+                  ),
+                ],
                 const SizedBox(height: 22),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 70),
@@ -532,6 +544,32 @@ class RecipeDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = AppScope.of(context);
+    final ingredients = recipe.ingredients.isEmpty
+        ? const [
+            RecipeIngredient(
+              foodId: 'preview-protein',
+              name: 'Proteinquelle',
+              amountGrams: 180,
+            ),
+            RecipeIngredient(
+              foodId: 'preview-side',
+              name: 'Vollkorn-Beilage',
+              amountGrams: 80,
+            ),
+            RecipeIngredient(
+              foodId: 'preview-vegetable',
+              name: 'Gemuse nach Wahl',
+              amountGrams: 250,
+            ),
+          ]
+        : recipe.ingredients;
+    final instructions = recipe.instructions.isEmpty
+        ? const [
+            'Zutaten vorbereiten und die Proteinquelle garen.',
+            'Gemuse schonend anbraten oder roesten.',
+            'Alles anrichten, wurzen und servieren.',
+          ]
+        : recipe.instructions;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -545,6 +583,26 @@ class RecipeDetailPage extends StatelessWidget {
                 child: _RecipeArtwork(recipe: recipe),
               ),
             ),
+            actions: [
+              IconButton.filledTonal(
+                tooltip: controller.favoriteRecipeIds.contains(recipe.id)
+                    ? 'Aus Favoriten entfernen'
+                    : 'Zu Favoriten hinzufuegen',
+                onPressed: () => controller.toggleFavorite(recipe.id),
+                icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    controller.favoriteRecipeIds.contains(recipe.id)
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    key: ValueKey(
+                      controller.favoriteRecipeIds.contains(recipe.id),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
           ),
           SliverToBoxAdapter(
             child: Center(
@@ -583,46 +641,85 @@ class RecipeDetailPage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 28),
-                      const SectionHeader(title: 'Zutaten'),
+                      SectionHeader(
+                        title: 'Zutaten',
+                        action: '${ingredients.length} Zutaten',
+                      ),
                       const SizedBox(height: 8),
-                      const SurfaceCard(
+                      SurfaceCard(
                         child: Column(
                           children: [
-                            _Ingredient('Proteinquelle', '180 g'),
-                            Divider(),
-                            _Ingredient('Vollkorn-Beilage', '80 g'),
-                            Divider(),
-                            _Ingredient('Gemüse nach Wahl', '250 g'),
-                            Divider(),
-                            _Ingredient('Joghurt-Kräuter-Dip', '100 g'),
+                            for (
+                              var index = 0;
+                              index < ingredients.length;
+                              index++
+                            ) ...[
+                              _Ingredient(
+                                ingredients[index].name,
+                                ingredients[index].amountLabel,
+                              ),
+                              if (index < ingredients.length - 1)
+                                const Divider(),
+                            ],
                           ],
                         ),
                       ),
                       const SizedBox(height: 22),
-                      const SectionHeader(title: 'Zubereitung'),
+                      SectionHeader(
+                        title: 'Zubereitung',
+                        action: '${instructions.length} Schritte',
+                      ),
                       const SizedBox(height: 8),
-                      const SurfaceCard(
-                        child: Text(
-                          '1. Zutaten vorbereiten und die Proteinquelle garen.\n\n2. Gemüse schonend anbraten oder rösten.\n\n3. Alles anrichten, würzen und mit dem Dip servieren.',
-                          style: TextStyle(height: 1.55),
+                      SurfaceCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (
+                              var index = 0;
+                              index < instructions.length;
+                              index++
+                            )
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: index == instructions.length - 1
+                                      ? 0
+                                      : 16,
+                                ),
+                                child: Text(
+                                  '${index + 1}. ${instructions[index]}',
+                                  style: const TextStyle(height: 1.55),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 22),
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton.icon(
-                          onPressed: () {
-                            controller.addRecipeToDiary(recipe);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${recipe.title} wurde zum Tagebuch hinzugefügt.',
-                                ),
-                              ),
-                            );
-                          },
+                          onPressed: controller.diarySaving
+                              ? null
+                              : () async {
+                                  final saved = await controller
+                                      .addRecipeToDiary(recipe);
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        saved
+                                            ? '${recipe.title} wurde zum Tagebuch hinzugefügt.'
+                                            : controller.diaryError ??
+                                                  'Das Rezept konnte nicht gespeichert werden.',
+                                      ),
+                                    ),
+                                  );
+                                },
                           icon: const Icon(Icons.add_rounded),
-                          label: const Text('Zum Tagesplan hinzufügen'),
+                          label: Text(
+                            controller.diarySaving
+                                ? 'Wird gespeichert ...'
+                                : 'Zum Tagebuch hinzufügen',
+                          ),
                         ),
                       ),
                     ],

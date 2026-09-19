@@ -46,6 +46,11 @@ create table if not exists public.foods (
   diet_tags text[] not null default '{}',
   image_url text,
   source text not null default 'curated',
+  source_url text,
+  source_license text,
+  source_attribution text,
+  data_quality text not null default 'unreviewed' check (data_quality in ('unreviewed', 'imported', 'reviewed')),
+  verified_at timestamptz,
   is_premium boolean not null default false,
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
@@ -65,6 +70,11 @@ create table if not exists public.recipes (
   servings integer not null default 1,
   tags text[] not null default '{}',
   image_url text,
+  instructions text[] not null default '{}',
+  source text not null default 'curated',
+  source_url text,
+  source_license text,
+  source_attribution text,
   access_level text not null default 'free' check (access_level in ('free', 'premium')),
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())

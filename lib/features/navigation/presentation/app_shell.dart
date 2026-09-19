@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/state/app_controller.dart';
+import '../../../core/models/tracking_streak.dart';
 import '../../../shared/widgets/ui_components.dart';
-import '../../diary/presentation/add_meal_sheet.dart';
-import '../../diary/presentation/diary_page.dart';
+import '../../coach/presentation/coach_page.dart';
 import '../../discover/presentation/discover_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
@@ -24,8 +25,8 @@ class _AppShellState extends State<AppShell> {
   late final PageController _pageController;
 
   static const _items = [
-    _NavItem(Icons.home_outlined, Icons.home_rounded, 'Heute'),
     _NavItem(Icons.menu_book_outlined, Icons.menu_book_rounded, 'Tagebuch'),
+    _NavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, 'KI'),
     _NavItem(
       Icons.restaurant_menu_outlined,
       Icons.restaurant_menu_rounded,
@@ -40,7 +41,14 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(AppScope.of(context).loadRemoteCatalog());
+      final controller = AppScope.of(context);
+      unawaited(controller.loadRemoteProfile());
+      unawaited(controller.loadRemoteCatalog());
+      unawaited(controller.loadRemoteDiary());
+      unawaited(controller.loadRemoteFavorites());
+      unawaited(controller.loadFoodPreferences());
+      unawaited(controller.loadTrackingStreak());
+      unawaited(controller.loadReminderPreferences());
     });
   }
 
@@ -54,117 +62,121 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final pages = [
       HomePage(onOpenPage: _selectPage),
-      DiaryPage(onAddMeal: () => showAddMealSheet(context)),
+      const CoachPage(),
       const DiscoverPage(),
       const ProgressPage(),
       const ProfilePage(),
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final desktop = constraints.maxWidth >= 960;
-        final pageView = PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (index) => setState(() => _selectedIndex = index),
-          children: pages,
-        );
+    final controller = AppScope.of(context);
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final desktop = constraints.maxWidth >= 960;
+              final pageView = PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (index) =>
+                    setState(() => _selectedIndex = index),
+                children: pages,
+              );
 
-        if (desktop) {
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: AppBackdrop(
-              child: Row(
-                children: [
-                  _DesktopNavigation(
-                    selectedIndex: _selectedIndex,
-                    onSelected: _selectPage,
-                    onAdd: () => showAddMealSheet(context),
-                  ),
-                  Container(
-                    width: 1,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          AppColors.borderBright,
-                          Colors.transparent,
-                        ],
-                      ),
+              if (desktop) {
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: AppBackdrop(
+                    child: Row(
+                      children: [
+                        _DesktopNavigation(
+                          selectedIndex: _selectedIndex,
+                          onSelected: _selectPage,
+                        ),
+                        Container(
+                          width: 1,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                AppColors.borderBright,
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(child: SafeArea(child: pageView)),
+                      ],
                     ),
                   ),
-                  Expanded(child: SafeArea(child: pageView)),
-                ],
-              ),
-            ),
-          );
-        }
+                );
+              }
 
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: AppBackdrop(child: SafeArea(bottom: false, child: pageView)),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => showAddMealSheet(context),
-            tooltip: 'Mahlzeit hinzufügen',
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.black,
-            elevation: 10,
-            hoverElevation: 14,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(color: AppColors.white.withValues(alpha: 0.18)),
-            ),
-            child: const Icon(Icons.add_rounded, size: 29),
-          ),
-          bottomNavigationBar: SafeArea(
-            top: false,
-            minimum: const EdgeInsets.fromLTRB(10, 0, 10, 9),
-            child: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceHigh.withValues(alpha: 0.96),
-                borderRadius: BorderRadius.circular(26),
-                border: Border.all(color: AppColors.borderBright),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.42),
-                    blurRadius: 28,
-                    offset: const Offset(0, 14),
-                  ),
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.035),
-                    blurRadius: 22,
-                  ),
-                ],
-              ),
-              child: NavigationBar(
-                selectedIndex: _selectedIndex,
-                onDestinationSelected: _selectPage,
-                destinations: _items
-                    .map(
-                      (item) => NavigationDestination(
-                        icon: Icon(item.icon),
-                        selectedIcon: TweenAnimationBuilder<double>(
-                          key: ValueKey('${item.label}-selected'),
-                          tween: Tween(begin: 0.88, end: 1),
-                          duration: const Duration(milliseconds: 260),
-                          curve: Curves.easeOutBack,
-                          builder: (context, value, child) =>
-                              Transform.scale(scale: value, child: child),
-                          child: Icon(item.selectedIcon),
+              return Scaffold(
+                backgroundColor: Colors.transparent,
+                extendBody: true,
+                body: AppBackdrop(
+                  child: SafeArea(bottom: false, child: pageView),
+                ),
+                bottomNavigationBar: SafeArea(
+                  top: false,
+                  minimum: const EdgeInsets.fromLTRB(10, 0, 10, 9),
+                  child: Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceHigh.withValues(alpha: 0.96),
+                      borderRadius: BorderRadius.circular(26),
+                      border: Border.all(color: AppColors.borderBright),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.42),
+                          blurRadius: 28,
+                          offset: const Offset(0, 14),
                         ),
-                        label: item.label,
-                      ),
-                    )
-                    .toList(),
-              ),
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.035),
+                          blurRadius: 22,
+                        ),
+                      ],
+                    ),
+                    child: NavigationBar(
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: _selectPage,
+                      destinations: _items
+                          .map(
+                            (item) => NavigationDestination(
+                              icon: Icon(item.icon),
+                              selectedIcon: TweenAnimationBuilder<double>(
+                                key: ValueKey('${item.label}-selected'),
+                                tween: Tween(begin: 0.88, end: 1),
+                                duration: const Duration(milliseconds: 260),
+                                curve: Curves.easeOutBack,
+                                builder: (context, value, child) =>
+                                    Transform.scale(scale: value, child: child),
+                                child: Icon(item.selectedIcon),
+                              ),
+                              label: item.label,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        if (controller.pendingStreakCelebration case final celebration?)
+          Positioned.fill(
+            child: _StreakCelebrationView(
+              celebration: celebration,
+              onFinished: () =>
+                  controller.consumeStreakCelebration(celebration.id),
             ),
           ),
-        );
-      },
+      ],
     );
   }
 
@@ -188,12 +200,10 @@ class _DesktopNavigation extends StatelessWidget {
   const _DesktopNavigation({
     required this.selectedIndex,
     required this.onSelected,
-    required this.onAdd,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onSelected;
-  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -231,14 +241,6 @@ class _DesktopNavigation extends StatelessWidget {
               ),
             ),
           const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: onAdd,
-              icon: const Icon(Icons.add_rounded),
-              label: const Text('Mahlzeit hinzufügen'),
-            ),
-          ),
         ],
       ),
     );
@@ -354,4 +356,134 @@ class _NavItem {
   final IconData icon;
   final IconData selectedIcon;
   final String label;
+}
+
+class _StreakCelebrationView extends StatefulWidget {
+  const _StreakCelebrationView({
+    required this.celebration,
+    required this.onFinished,
+  });
+  final StreakCelebration celebration;
+  final VoidCallback onFinished;
+
+  @override
+  State<_StreakCelebrationView> createState() => _StreakCelebrationViewState();
+}
+
+class _StreakCelebrationViewState extends State<_StreakCelebrationView>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animation;
+  Timer? _timer;
+  bool _finished = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1350),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (MediaQuery.disableAnimationsOf(context)) {
+        _animation.value = 1;
+      } else {
+        _animation.forward();
+      }
+      _timer = Timer(const Duration(milliseconds: 2600), _finish);
+    });
+  }
+
+  void _finish() {
+    if (_finished) return;
+    _finished = true;
+    widget.onFinished();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _animation.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Material(
+    color: AppColors.black.withValues(alpha: 0.82),
+    child: SafeArea(
+      child: InkWell(
+        key: const ValueKey('streak-celebration'),
+        onTap: _finish,
+        child: Center(
+          child: AnimatedBuilder(
+            animation: _animation,
+            builder: (context, _) {
+              final appear = Curves.easeOutBack.transform(
+                _animation.value.clamp(0, 1),
+              );
+              final glow = math.sin(_animation.value * math.pi).clamp(0.0, 1.0);
+              return Opacity(
+                opacity: _animation.value.clamp(0, 1),
+                child: Transform.scale(
+                  scale: 0.55 + appear * 0.45,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 210 + glow * 30,
+                            height: 210 + glow * 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: RadialGradient(
+                                colors: [
+                                  AppColors.orange.withValues(alpha: 0.28),
+                                  AppColors.orange.withValues(alpha: 0),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.local_fire_department_rounded,
+                            size: 152,
+                            color: AppColors.orange,
+                            shadows: [
+                              Shadow(color: AppColors.primary, blurRadius: 34),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      Text(
+                        widget.celebration.days == 1
+                            ? 'Deine Serie beginnt!'
+                            : '${widget.celebration.days} Tage in Folge!',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: AppColors.text,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.8,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Heute getrackt. Stark geblieben.',
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    ),
+  );
 }

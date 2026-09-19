@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/state/app_controller.dart';
 import '../../core/theme/app_colors.dart';
 
 class PageHeader extends StatelessWidget {
@@ -321,25 +322,34 @@ class _PressableScaleState extends State<PressableScale> {
 }
 
 class AppAvatar extends StatelessWidget {
-  const AppAvatar({this.radius = 24, this.onTap, super.key});
+  const AppAvatar({
+    this.radius = 24,
+    this.onTap,
+    this.semanticLabel = 'Profil öffnen',
+    super.key,
+  });
 
   final double radius;
   final VoidCallback? onTap;
+  final String semanticLabel;
 
   @override
   Widget build(BuildContext context) {
+    final bytes = AppScope.of(context).avatarBytes;
     final avatar = Hero(
       tag: 'profile-avatar',
       child: CircleAvatar(
         radius: radius,
         backgroundColor: AppColors.surfaceHigh,
-        backgroundImage: const AssetImage('assets/images/profile_avatar.webp'),
+        backgroundImage: bytes == null
+            ? const AssetImage('assets/images/profile_avatar.webp')
+            : MemoryImage(bytes),
       ),
     );
     if (onTap == null) return avatar;
     return Semantics(
       button: true,
-      label: 'Profil öffnen',
+      label: semanticLabel,
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
