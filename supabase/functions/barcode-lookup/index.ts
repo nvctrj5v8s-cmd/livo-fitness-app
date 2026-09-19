@@ -93,7 +93,9 @@ Deno.serve(async (request) => {
     }
 
     const payload = await response.json()
-    if (payload.status !== 1 || !payload.product) {
+    // API v3 uses `result.id` instead of the older `status: 1` flag.
+    // Checking the old flag made every valid v3 product look "not found".
+    if (!payload.product || payload.result?.id === 'product_not_found') {
       return json({ error: 'Dieses Produkt wurde nicht gefunden.', code: 'not_found' })
     }
 
