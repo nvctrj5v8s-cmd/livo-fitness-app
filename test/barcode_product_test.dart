@@ -52,4 +52,20 @@ void main() {
     expect(food.allergens, isEmpty);
     expect(food.barcode, isNull);
   });
+
+  test('Externe Barcode-Fallbacks werden sicher erkannt', () {
+    final food = FoodItem.fromMap({
+      'id': 'external-barcode-3017620422003',
+      'name': 'Nutella',
+      'barcode': '3017620422003',
+      'serving_grams': 100,
+      'calories': 539,
+      'protein': 6.3,
+      'carbohydrates': 57.5,
+      'fat': 30.9,
+    });
+
+    expect(food.isExternalBarcodeFallback, isTrue);
+    expect(food.hasBarcodeDetails, isTrue);
+  });
 }

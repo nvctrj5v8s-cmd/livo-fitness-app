@@ -47,16 +47,22 @@ Deno.serve(async (request) => {
       .select('*')
       .eq('barcode', barcode)
       .maybeSingle()
-    if (cacheError) throw cacheError
-    if (cached) return json({ food: cached, cache: 'catalog' })
+    if (cacheError) {
+      console.error('barcode cache read failed', cacheError.code, cacheError.message)
+    } else if (cached) {
+      return json({ food: cached, cache: 'catalog' })
+    }
 
     // Only uncached lookups reach the external source and consume the quota.
     const { data: allowed, error: quotaError } = await admin.rpc(
       'consume_barcode_lookup_quota',
       { p_user_id: user.id },
     )
-    if (quotaError) throw quotaError
-    if (allowed !== true) {
+    if (quotaError) {
+      // Product lookup must remain usable while the optional quota table is
+      // temporarily unavailable. Open Food Facts still applies its own limit.
+      console.error('barcode quota check failed', quotaError.code, quotaError.message)
+    } else if (allowed !== true) {
       return json({
         error: 'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
         code: 'rate_limited',
@@ -77,10 +83,19 @@ Deno.serve(async (request) => {
       'serving_size', 'quantity', 'allergens_tags', 'ingredients_text',
       'ingredients_text_de', 'nutrition_grades', 'nova_group',
     ].join(',')
-    const response = await fetch(
-      `${sourceUrl}/api/v3/product/${encodeURIComponent(barcode)}?fields=${encodeURIComponent(fields)}`,
-      { headers: { 'User-Agent': userAgent, Accept: 'application/json' } },
-    )
+    let response: Response
+    try {
+      response = await fetch(
+        `${sourceUrl}/api/v3/product/${encodeURIComponent(barcode)}?fields=${encodeURIComponent(fields)}`,
+        { headers: { 'User-Agent': userAgent, Accept: 'application/json' } },
+      )
+    } catch (error) {
+      console.error('Open Food Facts request failed', error)
+      return json({
+        error: 'Die Produktdatenquelle ist gerade nicht erreichbar.',
+        code: 'upstream_unavailable',
+      })
+    }
     if (response.status === 404) {
       return json({ error: 'Dieses Produkt wurde nicht gefunden.', code: 'not_found' })
     }
@@ -107,7 +122,9 @@ Deno.serve(async (request) => {
       name: text(product.product_name_de) ?? text(product.product_name) ?? `Produkt ${productCode}`,
       brand: text(product.brands),
       barcode: productCode,
-      serving_grams: servingGrams(product.serving_size),
+      // Every selected nutrient field ends in `_100g`, so the calculation
+      // basis must always be 100 g even when the package lists a serving size.
+      serving_grams: 100,
       calories: nutrient(nutrients, 'energy-kcal_100g'),
       protein: nutrient(nutrients, 'proteins_100g'),
       carbohydrates: nutrient(nutrients, 'carbohydrates_100g'),
@@ -135,7 +152,16 @@ Deno.serve(async (request) => {
       .upsert(row, { onConflict: 'barcode' })
       .select()
       .single()
-    if (insertError) throw insertError
+    if (insertError) {
+      // Showing a valid product must not fail only because the shared cache
+      // could not be written. The Flutter client stores this entry as a
+      // custom diary item when the id has this prefix.
+      console.error('barcode cache write failed', insertError.code, insertError.message)
+      return json({
+        food: { id: `external-barcode-${productCode}`, ...row },
+        cache: 'external_fallback',
+      })
+    }
     return json({ food: inserted, cache: 'open_food_facts' })
   } catch (error) {
     console.error('barcode-lookup failed', error)

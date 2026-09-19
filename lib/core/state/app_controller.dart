@@ -675,12 +675,34 @@ class AppController extends ChangeNotifier {
     diaryError = null;
     notifyListeners();
     try {
-      final entry = await _diary.addFood(
-        food: food,
-        slot: slot,
-        amountGrams: amountGrams,
-        date: date,
-      );
+      final entry = food.isExternalBarcodeFallback
+          ? await _diary.addCustomMeal(
+              name: food.name,
+              slot: slot,
+              calories: (food.calories * amountGrams / 100).round(),
+              protein: (food.protein * amountGrams / 100).round(),
+              carbs: (food.carbohydrates * amountGrams / 100).round(),
+              fat: (food.fat * amountGrams / 100).round(),
+              nutrition: CustomFoodNutrition(
+                basis: NutritionBasis.per100g,
+                amount: amountGrams,
+                calories: food.calories,
+                protein: food.protein,
+                carbohydrates: food.carbohydrates,
+                fat: food.fat,
+                sugar: food.sugar,
+                saturatedFat: food.saturatedFat,
+                salt: food.salt,
+                fiber: food.fiber,
+              ),
+              date: date,
+            )
+          : await _diary.addFood(
+              food: food,
+              slot: slot,
+              amountGrams: amountGrams,
+              date: date,
+            );
       if (_sameDay(date, diaryDate)) diaryMeals.add(entry);
       if (_isToday(date)) meals.add(entry);
       recordFoodUse(food.id);

@@ -143,6 +143,8 @@ class FoodItem {
       nutriScore != null ||
       novaGroup != null;
 
+  bool get isExternalBarcodeFallback => id.startsWith('external-barcode-');
+
   factory FoodItem.fromMap(Map<String, dynamic> map) => FoodItem(
     id: map['id'].toString(),
     name: map['name'] as String? ?? 'Lebensmittel',
