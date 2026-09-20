@@ -45,8 +45,6 @@ class AppController extends ChangeNotifier {
   bool _hasTrackingDays = false;
   int _streakRevision = 0;
   Future<void>? _trackingLoad;
-  String? _lastCelebratedDay;
-  StreakCelebration? pendingStreakCelebration;
   int get streakDays => calculateTrackingStreak(_trackedDays, _now());
   Uint8List? avatarBytes;
   bool avatarSaving = false;
@@ -76,13 +74,6 @@ class AppController extends ChangeNotifier {
         ..clear()
         ..addAll(dates.map(trackingDay));
       _hasTrackingDays = true;
-      try {
-        _lastCelebratedDay = await SharedPreferencesAsync().getString(
-          'livo.streak.celebrated.$personalizationUserId',
-        );
-      } catch (_) {
-        /* Counting still works when local settings are unavailable. */
-      }
     } catch (_) {
       if (!_disposed) streakError = 'Deine Serie konnte nicht geladen werden.';
     } finally {
@@ -104,27 +95,7 @@ class AppController extends ChangeNotifier {
       return; // No confirmed before-state: never invent a celebration.
     }
     ++_streakRevision;
-    final newlyTracked = _trackedDays.add(day);
-    final key = day.toIso8601String().substring(0, 10);
-    if (newlyTracked &&
-        day == trackingDay(_now()) &&
-        _lastCelebratedDay != key) {
-      _lastCelebratedDay = key;
-      try {
-        await SharedPreferencesAsync().setString(
-          'livo.streak.celebrated.$personalizationUserId',
-          key,
-        );
-      } catch (_) {
-        /* The in-session marker still prevents double celebration. */
-      }
-      if (_disposed) return;
-      pendingStreakCelebration = StreakCelebration(
-        id: '$personalizationUserId:$key',
-        date: day,
-        days: streakDays,
-      );
-    }
+    _trackedDays.add(day);
   }
 
   Future<void> _refreshTrackingAfterRemoval() async {
@@ -144,10 +115,6 @@ class AppController extends ChangeNotifier {
         streakError = 'Deine Serie konnte nicht aktualisiert werden.';
       }
     }
-  }
-
-  void consumeStreakCelebration(String id) {
-    if (pendingStreakCelebration?.id == id) pendingStreakCelebration = null;
   }
 
   Future<void> loadReminderPreferences() async {
@@ -485,6 +452,7 @@ class AppController extends ChangeNotifier {
     final requestId = ++_diaryRequestId;
     diaryDate = targetDate;
     diaryMeals.clear();
+    if (_isToday(targetDate)) meals.clear();
     diaryLoading = true;
     diaryError = null;
     notifyListeners();
@@ -1234,6 +1202,7 @@ class AppController extends ChangeNotifier {
       first.day == second.day;
 
   void _restoreOfflineDiaryPreview(DateTime date) {
+    if (personalizationUserId != null) return;
     if (_hasLoadedRemoteDiary || !_isToday(date)) return;
     diaryMeals
       ..clear()

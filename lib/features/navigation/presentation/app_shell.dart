@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/state/app_controller.dart';
-import '../../../core/models/tracking_streak.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../coach/presentation/coach_page.dart';
 import '../../discover/presentation/discover_page.dart';
@@ -20,9 +18,11 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   late final PageController _pageController;
+  late DateTime _observedDiaryDay;
+  Timer? _midnightTimer;
 
   static const _items = [
     _NavItem(Icons.menu_book_outlined, Icons.menu_book_rounded, 'Tagebuch'),
@@ -40,6 +40,8 @@ class _AppShellState extends State<AppShell> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    _observedDiaryDay = _dateOnly(DateTime.now());
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller = AppScope.of(context);
       unawaited(controller.loadRemoteProfile());
@@ -49,11 +51,53 @@ class _AppShellState extends State<AppShell> {
       unawaited(controller.loadFoodPreferences());
       unawaited(controller.loadTrackingStreak());
       unawaited(controller.loadReminderPreferences());
+      _scheduleNextDayRefresh();
     });
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_refreshForNewDay());
+    }
+  }
+
+  void _scheduleNextDayRefresh() {
+    _midnightTimer?.cancel();
+    final now = DateTime.now();
+    final nextDay = DateTime(now.year, now.month, now.day + 1);
+    _midnightTimer = Timer(
+      nextDay.difference(now) + const Duration(seconds: 1),
+      () {
+        unawaited(_refreshForNewDay());
+        _scheduleNextDayRefresh();
+      },
+    );
+  }
+
+  Future<void> _refreshForNewDay() async {
+    final today = _dateOnly(DateTime.now());
+    if (_sameDay(today, _observedDiaryDay) || !mounted) return;
+    _observedDiaryDay = today;
+    final controller = AppScope.of(context);
+    await Future.wait([
+      controller.loadRemoteDiary(today),
+      controller.loadTrackingStreak(),
+    ]);
+  }
+
+  DateTime _dateOnly(DateTime date) =>
+      DateTime(date.year, date.month, date.day);
+
+  bool _sameDay(DateTime first, DateTime second) =>
+      first.year == second.year &&
+      first.month == second.month &&
+      first.day == second.day;
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _midnightTimer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
@@ -68,7 +112,6 @@ class _AppShellState extends State<AppShell> {
       const ProfilePage(),
     ];
 
-    final controller = AppScope.of(context);
     return Stack(
       children: [
         Positioned.fill(
@@ -168,14 +211,6 @@ class _AppShellState extends State<AppShell> {
             },
           ),
         ),
-        if (controller.pendingStreakCelebration case final celebration?)
-          Positioned.fill(
-            child: _StreakCelebrationView(
-              celebration: celebration,
-              onFinished: () =>
-                  controller.consumeStreakCelebration(celebration.id),
-            ),
-          ),
       ],
     );
   }
@@ -356,134 +391,4 @@ class _NavItem {
   final IconData icon;
   final IconData selectedIcon;
   final String label;
-}
-
-class _StreakCelebrationView extends StatefulWidget {
-  const _StreakCelebrationView({
-    required this.celebration,
-    required this.onFinished,
-  });
-  final StreakCelebration celebration;
-  final VoidCallback onFinished;
-
-  @override
-  State<_StreakCelebrationView> createState() => _StreakCelebrationViewState();
-}
-
-class _StreakCelebrationViewState extends State<_StreakCelebrationView>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animation;
-  Timer? _timer;
-  bool _finished = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _animation = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1350),
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      if (MediaQuery.disableAnimationsOf(context)) {
-        _animation.value = 1;
-      } else {
-        _animation.forward();
-      }
-      _timer = Timer(const Duration(milliseconds: 2600), _finish);
-    });
-  }
-
-  void _finish() {
-    if (_finished) return;
-    _finished = true;
-    widget.onFinished();
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _animation.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Material(
-    color: AppColors.black.withValues(alpha: 0.82),
-    child: SafeArea(
-      child: InkWell(
-        key: const ValueKey('streak-celebration'),
-        onTap: _finish,
-        child: Center(
-          child: AnimatedBuilder(
-            animation: _animation,
-            builder: (context, _) {
-              final appear = Curves.easeOutBack.transform(
-                _animation.value.clamp(0, 1),
-              );
-              final glow = math.sin(_animation.value * math.pi).clamp(0.0, 1.0);
-              return Opacity(
-                opacity: _animation.value.clamp(0, 1),
-                child: Transform.scale(
-                  scale: 0.55 + appear * 0.45,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 210 + glow * 30,
-                            height: 210 + glow * 30,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  AppColors.orange.withValues(alpha: 0.28),
-                                  AppColors.orange.withValues(alpha: 0),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const Icon(
-                            Icons.local_fire_department_rounded,
-                            size: 152,
-                            color: AppColors.orange,
-                            shadows: [
-                              Shadow(color: AppColors.primary, blurRadius: 34),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        widget.celebration.days == 1
-                            ? 'Deine Serie beginnt!'
-                            : '${widget.celebration.days} Tage in Folge!',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.text,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.8,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Heute getrackt. Stark geblieben.',
-                        style: TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    ),
-  );
 }

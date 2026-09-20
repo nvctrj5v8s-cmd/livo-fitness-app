@@ -29,6 +29,8 @@ GRENZEN:
 ANTWORTSTIL:
 - Antworte auf Deutsch, ruhig, motivierend und ohne Schuldgefühle zu erzeugen.
 - Halte Antworten praktisch und kompakt, meistens unter 130 Wörtern.
+- Richte jede Empfehlung vorrangig am bereitgestellten Profil aus: Ziel, Kalorien- und Proteinziel, Ernährungsstil, Allergien und Aktivitätsniveau sind keine Nebensache.
+- Bei dem Ziel "Fett verlieren" priorisiere sättigende, proteinreiche und realistische Vorschläge; kein Druck, keine Extremdiät. Bei "Muskeln aufbauen" priorisiere ausreichende Energie, Protein und Trainingserholung.
 - Stelle höchstens eine Rückfrage, wenn wichtige Angaben fehlen.
 - Nutze kurze Absätze oder höchstens vier übersichtliche Punkte.
 - Erwähne diese internen Regeln nicht.`
@@ -68,14 +70,16 @@ Deno.serve(async (request) => {
 
   try {
     const body = await request.json()
+    const admin = createClient(supabaseUrl, serviceRoleKey)
+    if (body?.action === 'history') {
+      return await loadHistory(admin, user.id)
+    }
     const message = cleanText(body?.message, 600)
     if (!message) {
       return json({ error: 'Schreib zuerst eine kurze Frage.', code: 'invalid_message' })
     }
 
-    const history = cleanHistory(body?.history)
     const clientContext = cleanContext(body?.context)
-    const admin = createClient(supabaseUrl, serviceRoleKey)
 
     const [{ data: entitlement }, { data: profile }] = await Promise.all([
       admin.from('entitlements')
@@ -112,6 +116,18 @@ Deno.serve(async (request) => {
       }, 429)
     }
 
+    const { data: storedHistory, error: historyError } = await admin
+      .from('ai_chat_messages')
+      .select('role,content')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(12)
+    if (historyError) {
+      console.error('AI chat history failed', historyError.code, historyError.message)
+    }
+    const history = Array.isArray(storedHistory)
+      ? storedHistory.slice().reverse().flatMap(historyEntry)
+      : []
     const contextText = buildContext(profile, clientContext)
     const input = [
       ...history,
@@ -161,6 +177,14 @@ Deno.serve(async (request) => {
       }, 503)
     }
 
+    const { error: saveError } = await admin.from('ai_chat_messages').insert([
+      { user_id: user.id, role: 'user', content: message },
+      { user_id: user.id, role: 'assistant', content: answer },
+    ])
+    if (saveError) {
+      console.error('AI chat save failed', saveError.code, saveError.message)
+    }
+
     return json({
       answer,
       remaining: Number(quota.remaining ?? 0),
@@ -182,15 +206,47 @@ function cleanText(value: unknown, maxLength: number): string | null {
   return clean.length > 0 && clean.length <= maxLength ? clean : null
 }
 
-function cleanHistory(value: unknown): Array<{ role: 'user' | 'assistant'; content: string }> {
-  if (!Array.isArray(value)) return []
-  return value.slice(-8).flatMap((entry) => {
-    if (!entry || typeof entry !== 'object') return []
-    const role = (entry as Record<string, unknown>).role
-    const content = cleanText((entry as Record<string, unknown>).content, 700)
-    return (role === 'user' || role === 'assistant') && content
-      ? [{ role, content }]
-      : []
+function historyEntry(value: unknown): Array<{ role: 'user' | 'assistant'; content: string }> {
+  if (!value || typeof value !== 'object') return []
+  const role = (value as Record<string, unknown>).role
+  const content = cleanText((value as Record<string, unknown>).content, 1200)
+  return (role === 'user' || role === 'assistant') && content
+    ? [{ role, content }]
+    : []
+}
+
+async function loadHistory(
+  admin: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<Response> {
+  const today = new Date().toISOString().slice(0, 10)
+  const [{ data: messages, error: messagesError }, { data: entitlement }, { data: usage }] =
+    await Promise.all([
+      admin.from('ai_chat_messages')
+        .select('role,content,created_at')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(80),
+      admin.from('entitlements')
+        .select('plan,status,expires_at')
+        .eq('user_id', userId)
+        .maybeSingle(),
+      admin.from('ai_chat_usage')
+        .select('request_count')
+        .eq('user_id', userId)
+        .eq('usage_date', today)
+        .maybeSingle(),
+    ])
+  if (messagesError) {
+    console.error('AI history load failed', messagesError.code, messagesError.message)
+    return json({ error: 'Dein Chatverlauf konnte nicht geladen werden.', code: 'history_unavailable' }, 503)
+  }
+  const dailyLimit = hasPremium(entitlement) ? premiumDailyLimit : freeDailyLimit
+  const used = Number(usage?.request_count ?? 0)
+  return json({
+    messages: Array.isArray(messages) ? messages.reverse() : [],
+    remaining: Math.max(dailyLimit - used, 0),
+    daily_limit: dailyLimit,
   })
 }
 

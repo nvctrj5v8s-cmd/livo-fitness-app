@@ -25,6 +25,7 @@ class _CoachPageState extends State<CoachPage>
   late final AnimationController _pulse;
 
   bool _sending = false;
+  bool _historyLoading = true;
   String? _error;
   String? _lastFailedMessage;
   int? _remaining;
@@ -37,6 +38,31 @@ class _CoachPageState extends State<CoachPage>
       vsync: this,
       duration: const Duration(milliseconds: 2600),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_loadHistory());
+    });
+  }
+
+  Future<void> _loadHistory() async {
+    try {
+      final history = await _service.loadHistory();
+      if (!mounted) return;
+      setState(() {
+        _messages
+          ..clear()
+          ..addAll(history.messages);
+        _remaining = history.remaining;
+        _dailyLimit = history.dailyLimit;
+        _historyLoading = false;
+      });
+      _scrollToEnd();
+    } on AiCoachException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _historyLoading = false;
+        _error = error.message;
+      });
+    }
   }
 
   @override
@@ -70,7 +96,6 @@ class _CoachPageState extends State<CoachPage>
       return;
     }
 
-    final previousMessages = List<AiCoachMessage>.of(_messages);
     final controller = AppScope.of(context);
     final coachContext = <String, Object?>{
       'goal': controller.goal,
@@ -97,11 +122,7 @@ class _CoachPageState extends State<CoachPage>
     _scrollToEnd();
 
     try {
-      final reply = await _service.send(
-        message: text,
-        history: previousMessages,
-        context: coachContext,
-      );
+      final reply = await _service.send(message: text, context: coachContext);
       if (!mounted) return;
       setState(() {
         _messages.add(
@@ -137,15 +158,6 @@ class _CoachPageState extends State<CoachPage>
     });
   }
 
-  void _clearConversation() {
-    if (_messages.isEmpty && _error == null) return;
-    setState(() {
-      _messages.clear();
-      _error = null;
-      _lastFailedMessage = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 960;
@@ -167,12 +179,6 @@ class _CoachPageState extends State<CoachPage>
                 ),
               ),
             ),
-          if (_messages.isNotEmpty)
-            IconButton(
-              tooltip: 'Chat leeren',
-              onPressed: _clearConversation,
-              icon: const Icon(Icons.refresh_rounded),
-            ),
           const SizedBox(width: 8),
         ],
       ),
@@ -182,7 +188,15 @@ class _CoachPageState extends State<CoachPage>
           child: Column(
             children: [
               Expanded(
-                child: _messages.isEmpty
+                child: _historyLoading
+                    ? const Center(
+                        child: SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : _messages.isEmpty
                     ? _WelcomeState(
                         animation: _pulse,
                         onSuggestion: (value) => unawaited(_send(value)),
