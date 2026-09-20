@@ -1,2 +1,5 @@
 [functions.barcode-lookup]
 verify_jwt = true
+
+[functions.ai-coach]
+verify_jwt = true
