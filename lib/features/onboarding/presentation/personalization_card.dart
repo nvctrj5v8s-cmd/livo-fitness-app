@@ -50,6 +50,8 @@ class PersonalizationCard extends StatelessWidget {
                   _PreferenceTag('Bis ${profile.cookingMinutes} Min.'),
                 if (profile.activity != null)
                   _PreferenceTag(profile.activity!.label),
+                if (profile.allergies.trim().isNotEmpty)
+                  _PreferenceTag(profile.allergies.trim()),
               ],
             ),
             if (profileMode) ...[
@@ -102,7 +104,7 @@ class PersonalizationCard extends StatelessWidget {
           ),
           if (profileMode)
             const Text(
-              'Auf diesem Gerät für dein Konto gespeichert. Noch keine Übertragung an eine KI.',
+              'Deine freiwilligen Angaben helfen LIVO und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.',
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
         ],

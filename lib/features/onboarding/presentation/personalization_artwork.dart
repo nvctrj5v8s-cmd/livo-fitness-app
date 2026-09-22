@@ -25,9 +25,8 @@ class PersonalizationArtwork extends StatelessWidget {
     final selection = switch (step) {
       1 => profile.goal?.index ?? -1,
       2 => profile.activity?.index ?? -1,
-      4 => profile.nutrition?.index ?? -1,
-      5 => profile.cookingMinutes ?? 0,
-      6 => profile.focus?.index ?? -1,
+      3 => profile.nutrition?.index ?? -1,
+      4 => profile.cookingMinutes ?? 0,
       _ => 0,
     };
     final caption = switch (step) {
@@ -37,16 +36,11 @@ class PersonalizationArtwork extends StatelessWidget {
             : 'Hallo, ${profile.displayName.trim()}.',
       1 => profile.goal?.label ?? 'Du bestimmst die Richtung.',
       2 => profile.activity?.label ?? 'Jeder Alltag ist anders.',
-      3 =>
-        profile.desiredMeals == null
-            ? 'Dein Wunsch: flexibel bleiben.'
-            : 'Dein Wunsch: ${profile.desiredMeals} Mahlzeiten.',
-      4 => profile.nutrition?.label ?? 'Dein Geschmack zählt.',
-      5 =>
+      3 => profile.nutrition?.label ?? 'Was dir guttut, zählt.',
+      4 =>
         profile.cookingMinutes == null
-            ? 'So viel Zeit, wie dein Tag erlaubt.'
-            : 'Deine Kochzeit: bis zu ${profile.cookingMinutes} Min.',
-      6 => profile.focus?.label ?? 'Ein Anfang, der zu dir passt.',
+            ? profile.routineLabel
+            : '${profile.routineLabel} · bis ${profile.cookingMinutes} Min.',
       _ => 'Deine Wünsche auf einen Blick.',
     };
     final token = (
@@ -55,6 +49,7 @@ class PersonalizationArtwork extends StatelessWidget {
       profile.displayName,
       profile.usualMeals,
       profile.desiredMeals,
+      profile.allergies,
       reduced,
     );
     return ExcludeSemantics(
@@ -236,13 +231,9 @@ class _PreferenceScene extends CustomPainter {
       case 2:
         _activity(canvas);
       case 3:
-        _meals(canvas);
-      case 4:
         _nutrition(canvas);
-      case 5:
-        _clock(canvas);
-      case 6:
-        _focus(canvas);
+      case 4:
+        _routine(canvas);
       default:
         _review(canvas);
     }
@@ -405,70 +396,6 @@ class _PreferenceScene extends CustomPainter {
     }
   }
 
-  void _meals(Canvas canvas) {
-    _tinyText(canvas, 'HEUTE', const Offset(5, 20));
-    _tinyText(canvas, 'WUNSCH', const Offset(5, 85));
-    for (var row = 0; row < 2; row++) {
-      final count = row == 0 ? usualMeals : desiredMeals;
-      final y = row == 0 ? 25.0 : 92.0;
-      if (count == null) {
-        _icon(
-          canvas,
-          Icons.all_inclusive_rounded,
-          Offset(169, y),
-          46,
-          row == 0 ? AppColors.textMuted : AppColors.primary,
-        );
-        _dottedLine(canvas, Offset(101, y), Offset(128, y));
-        _dottedLine(canvas, Offset(211, y), Offset(241, y));
-        continue;
-      }
-      for (var i = 0; i < count; i++) {
-        final center = Offset(92 + i * 44.0, y);
-        final stagger = (progress * 1.4 - i * 0.08).clamp(0.0, 1.0);
-        canvas.drawCircle(
-          center,
-          16 * (0.75 + 0.25 * stagger),
-          _fill(AppColors.surfaceSoft),
-        );
-        canvas.drawCircle(
-          center,
-          16,
-          _stroke(
-            row == 0
-                ? AppColors.borderBright
-                : AppColors.primary.withValues(alpha: 0.5 + stagger * 0.5),
-          ),
-        );
-        canvas.drawCircle(
-          center,
-          10,
-          _stroke(
-            row == 0
-                ? AppColors.borderBright
-                : AppColors.primary.withValues(alpha: 0.25),
-          ),
-        );
-        canvas.drawArc(
-          Rect.fromCircle(center: center, radius: 7),
-          0,
-          math.pi * stagger,
-          true,
-          _fill(
-            row == 0
-                ? AppColors.textMuted.withValues(alpha: 0.35)
-                : AppColors.primary.withValues(alpha: 0.6),
-          ),
-        );
-      }
-    }
-    canvas.drawLine(
-      const Offset(5, 59),
-      const Offset(302, 59),
-      _stroke(AppColors.border, 1),
-    );
-  }
-
   void _nutrition(Canvas canvas) {
     const center = Offset(156, 64);
     canvas.drawCircle(
@@ -541,92 +468,46 @@ class _PreferenceScene extends CustomPainter {
     );
   }
 
-  void _clock(Canvas canvas) {
-    const center = Offset(156, 64);
-    canvas.drawCircle(center, 50, _fill(AppColors.surfaceHigh));
-    canvas.drawCircle(center, 50, _stroke(AppColors.borderBright, 2));
-    for (var i = 0; i < 12; i++) {
-      final direction = Offset(
-        math.cos(i * math.pi / 6),
-        math.sin(i * math.pi / 6),
+  void _routine(Canvas canvas) {
+    final count = desiredMeals ?? 3;
+    final startX = 156 - ((count - 1) * 22);
+    for (var i = 0; i < count; i++) {
+      final appear = (progress * 1.35 - i * 0.1).clamp(0.0, 1.0);
+      final center = Offset(startX + i * 44, 69);
+      canvas.drawCircle(
+        center,
+        17 * (0.78 + 0.22 * appear),
+        _fill(AppColors.surfaceSoft),
       );
-      canvas.drawLine(
-        center + direction * 42,
-        center + direction * (i % 3 == 0 ? 36 : 39),
-        _stroke(AppColors.textMuted, i % 3 == 0 ? 2 : 1),
+      canvas.drawCircle(
+        center,
+        17,
+        _stroke(AppColors.primary.withValues(alpha: 0.25 + 0.55 * appear)),
+      );
+      canvas.drawCircle(
+        center,
+        10,
+        _stroke(AppColors.primary.withValues(alpha: 0.18)),
       );
     }
-    if (selection > 0) {
-      final sweep = 2 * math.pi * selection / 60 * progress;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: 31),
-        -math.pi / 2,
-        sweep,
-        true,
-        _fill(AppColors.primary.withValues(alpha: 0.15)),
-      );
-      final direction = Offset(
-        math.cos(sweep - math.pi / 2),
-        math.sin(sweep - math.pi / 2),
-      );
-      canvas.drawLine(
-        center,
-        center + direction * 29,
-        _stroke(AppColors.primary, 3),
-      );
-      canvas.drawLine(
-        center,
-        center + const Offset(0, -20),
-        _stroke(AppColors.text, 3),
-      );
-      canvas.drawCircle(center, 4, _fill(AppColors.primary));
-    } else {
-      _icon(canvas, Icons.all_inclusive_rounded, center, 40, AppColors.primary);
-    }
-    _badge(canvas, const Offset(64, 85), Icons.restaurant_rounded, scale: 0.68);
     _badge(
       canvas,
-      const Offset(253, 40),
+      const Offset(63, 31),
       Icons.schedule_rounded,
       selected: selection > 0,
-      scale: 0.68,
+      scale: 0.75,
     );
-  }
-
-  void _focus(Canvas canvas) {
-    const icons = [
-      Icons.schedule_rounded,
-      Icons.lightbulb_outline_rounded,
-      Icons.event_repeat_rounded,
-      Icons.savings_outlined,
-    ];
-    for (var i = 0; i < 4; i++) {
-      final center = Offset(
-        51 + i * 70.0,
-        66 + (i.isEven ? -9 : 9) * (1 - progress),
-      );
-      if (i < 3) {
-        _dottedLine(
-          canvas,
-          center + const Offset(26, 0),
-          center + const Offset(44, 0),
-        );
-      }
-      _badge(
-        canvas,
-        center,
-        icons[i],
-        selected: i == selection,
-        scale: i == selection ? 1.16 : 0.94,
-      );
-      if (i == selection) {
-        canvas.drawCircle(
-          center + const Offset(0, 40),
-          3.5,
-          _fill(AppColors.primary),
-        );
-      }
-    }
+    _badge(
+      canvas,
+      const Offset(252, 103),
+      desiredMeals == null
+          ? Icons.all_inclusive_rounded
+          : Icons.restaurant_rounded,
+      selected: desiredMeals != null,
+      scale: 0.75,
+    );
+    _dottedLine(canvas, const Offset(86, 39), const Offset(116, 53));
+    _dottedLine(canvas, const Offset(205, 84), const Offset(229, 96));
   }
 
   void _review(Canvas canvas) {
@@ -672,23 +553,6 @@ class _PreferenceScene extends CustomPainter {
       selected: true,
       scale: 0.8 + 0.15 * progress,
     );
-  }
-
-  void _tinyText(Canvas canvas, String text, Offset position) {
-    final painter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(
-          fontFamily: fontFamily,
-          color: AppColors.textMuted,
-          fontSize: 8,
-          letterSpacing: 1,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    painter.paint(canvas, position);
   }
 
   void _dottedLine(Canvas canvas, Offset from, Offset to) {

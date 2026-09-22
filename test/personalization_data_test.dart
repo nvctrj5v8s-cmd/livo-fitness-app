@@ -17,6 +17,7 @@ const _profile = PersonalizationProfile(
   usualMeals: 2,
   desiredMeals: 4,
   nutrition: NutritionPreference.vegetarian,
+  allergies: 'Erdnüsse',
   cookingMinutes: 30,
   focus: RoutineFocus.budget,
 );
@@ -33,6 +34,7 @@ void main() {
       expect(restored.goal, PersonalGoal.buildStrength);
       expect(restored.activity, ActivityPattern.oftenMoving);
       expect(restored.nutrition, NutritionPreference.vegetarian);
+      expect(restored.allergies, 'Erdnüsse');
       expect(restored.focus, RoutineFocus.budget);
       expect(restored.usualMeals, 2);
       expect(restored.desiredMeals, 4);
@@ -49,6 +51,7 @@ void main() {
         usualMeals: null,
         desiredMeals: null,
         nutrition: null,
+        allergies: '',
         cookingMinutes: null,
         focus: null,
       );
@@ -117,6 +120,7 @@ void main() {
       expect(context.values, isNot(contains('Mina')));
       expect(context['usual_meals'], 2);
       expect(context['desired_meals'], 4);
+      expect(context['allergies'], 'Erdnüsse');
       expect(context['suitability_screening'], 'not_performed');
       expect(context['allow_medical_advice'], isFalse);
       expect(context['allow_automatic_calorie_targets'], isFalse);

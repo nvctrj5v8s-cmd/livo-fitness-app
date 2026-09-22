@@ -228,7 +228,62 @@ class AppController extends ChangeNotifier {
     await personalizationStore.save(userId, profile);
     if (_disposed || revision != _personalizationRevision) return;
     personalization = profile;
+    _applyPersonalizationToProfile(profile);
     notifyListeners();
+    try {
+      await SupabaseProfileRepository().saveCurrentProfile(
+        _personalizationProfileValues(profile),
+        expectedUserId: personalizationUserId,
+      );
+    } catch (error) {
+      profileError = error.toString();
+      notifyListeners();
+    }
+  }
+
+  void _applyPersonalizationToProfile(PersonalizationProfile profile) {
+    if (profile.displayName.trim().isNotEmpty) {
+      name = profile.displayName.trim();
+    }
+    goal = switch (profile.goal) {
+      PersonalGoal.loseWeight => 'Fett verlieren',
+      PersonalGoal.maintain => 'Gewicht halten',
+      PersonalGoal.buildStrength => 'Muskeln aufbauen',
+      PersonalGoal.balanced => 'Gesünder ernähren',
+      null => goal,
+    };
+    nutritionStyle = switch (profile.nutrition) {
+      NutritionPreference.vegetarian => 'Vegetarisch',
+      NutritionPreference.vegan => 'Vegan',
+      NutritionPreference.pescatarian => 'Pescetarisch',
+      NutritionPreference.mixed => 'Ausgewogen',
+      null => nutritionStyle,
+    };
+    activityLevel = switch (profile.activity) {
+      ActivityPattern.mostlySeated => 'Wenig aktiv',
+      ActivityPattern.mixed => 'Moderat aktiv',
+      ActivityPattern.oftenMoving => 'Aktiv',
+      ActivityPattern.veryActive => 'Sehr aktiv',
+      null => activityLevel,
+    };
+    if (profile.allergies.trim().isNotEmpty) {
+      allergies = profile.allergies.trim();
+    }
+  }
+
+  Map<String, dynamic> _personalizationProfileValues(
+    PersonalizationProfile profile,
+  ) {
+    final values = <String, dynamic>{
+      'goal': goal,
+      'nutrition_style': nutritionStyle,
+      'allergies': allergies,
+      'activity_level': activityLevel,
+    };
+    if (profile.displayName.trim().isNotEmpty) {
+      values['display_name'] = profile.displayName.trim();
+    }
+    return values;
   }
 
   Future<void> deferPersonalization() async {

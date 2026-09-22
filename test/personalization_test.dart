@@ -68,7 +68,7 @@ void main() {
     expect(find.text('App bereit'), findsOneWidget);
   });
 
-  testWidgets('Eight optional steps retain answers and save once', (
+  testWidgets('Six calm setup screens retain useful answers and save once', (
     tester,
   ) async {
     PersonalizationProfile? result;
@@ -79,31 +79,35 @@ void main() {
     await _next(tester);
     await _tap(tester, 'personal-activity-mixed');
     await _next(tester);
-    await _tap(tester, 'personal-usual-meals-3');
-    await _tap(tester, 'personal-desired-meals-4');
-    await _next(tester);
     await _tap(tester, 'personal-nutrition-vegetarian');
+    await tester.enterText(
+      find.byKey(const ValueKey('personal-allergies')),
+      'Erdnüsse',
+    );
     await _next(tester);
-    await _tap(tester, 'personal-cooking-30');
+    await _tap(tester, 'personal-desired-meals-4');
+    await tester.tap(find.byKey(const ValueKey('personal-cooking-0')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bis 30 Minuten').last);
+    await tester.pumpAndSettle();
     await _next(tester);
-    await _tap(tester, 'personal-focus-ideas');
-    await _next(tester);
-    expect(find.byKey(const ValueKey('personal-step-7')), findsOneWidget);
-    await _tap(tester, 'personal-review-edit-3');
-    expect(find.byKey(const ValueKey('personal-step-3')), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-step-5')), findsOneWidget);
+    await _tap(tester, 'personal-review-edit-4');
+    expect(find.byKey(const ValueKey('personal-step-4')), findsOneWidget);
     await _tap(tester, 'personal-desired-meals-5');
     await _next(tester);
-    expect(find.byKey(const ValueKey('personal-step-7')), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-step-5')), findsOneWidget);
     expect(result, isNull);
     await _next(tester);
     expect(result!.displayName, 'Mira');
     expect(result!.goal, PersonalGoal.balanced);
     expect(result!.activity, ActivityPattern.mixed);
-    expect(result!.usualMeals, 3);
+    expect(result!.usualMeals, isNull);
     expect(result!.desiredMeals, 5);
     expect(result!.nutrition, NutritionPreference.vegetarian);
+    expect(result!.allergies, 'Erdnüsse');
     expect(result!.cookingMinutes, 30);
-    expect(result!.focus, RoutineFocus.ideas);
+    expect(result!.focus, isNull);
     expect(tester.takeException(), isNull);
   });
 
@@ -126,7 +130,7 @@ void main() {
       find.textContaining('Deine Auswahl konnte nicht gespeichert'),
       findsOneWidget,
     );
-    expect(find.byKey(const ValueKey('personal-step-7')), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-step-5')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('personal-next')));
     await tester.pump();
     await tester.tap(find.byKey(const ValueKey('personal-next')));
@@ -203,7 +207,7 @@ void main() {
       ),
     );
     await _tap(tester, 'personalization-edit');
-    expect(find.byKey(const ValueKey('personal-step-7')), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-step-5')), findsOneWidget);
     await _tap(tester, 'personal-review-edit-0');
     await tester.enterText(
       find.byKey(const ValueKey('personal-name')),
@@ -239,7 +243,7 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
         await _page(tester, scale: scale, reduced: true);
-        for (var step = 0; step < 8; step++) {
+        for (var step = 0; step < 6; step++) {
           expect(find.byKey(ValueKey('personal-step-$step')), findsOneWidget);
           expect(
             find.byKey(const ValueKey('personal-next')).hitTestable(),
@@ -247,7 +251,7 @@ void main() {
           );
           expect(tester.takeException(), isNull, reason: 'step $step');
           expect(tester.binding.hasScheduledFrame, isFalse);
-          if (step < 7) await _next(tester);
+          if (step < 5) await _next(tester);
         }
       },
     );
@@ -303,8 +307,8 @@ void main() {
             focus: RoutineFocus.time,
           ),
         );
-        for (var step = 0; step < 8; step++) {
-          if ([0, 2, 3, 7].contains(step)) {
+        for (var step = 0; step < 6; step++) {
+          if ([0, 2, 3, 5].contains(step)) {
             await expectLater(
               find.byType(PersonalizationPage),
               matchesGoldenFile(
@@ -312,7 +316,7 @@ void main() {
               ),
             );
           }
-          if (step < 7) await _next(tester);
+          if (step < 5) await _next(tester);
         }
       }
     });

@@ -1,10 +1,10 @@
 /// Versioned preferences, separate from medical data and from UI wording.
 /// Stable enum names can also be used by a future English interface.
 enum PersonalGoal {
-  balanced('Bewusster essen'),
-  loseWeight('Gewicht verändern'),
+  balanced('Gesünder essen'),
+  loseWeight('Fett verlieren'),
   maintain('Gewicht halten'),
-  buildStrength('Stärker werden');
+  buildStrength('Muskeln aufbauen');
 
   const PersonalGoal(this.label);
   final String label;
@@ -50,6 +50,7 @@ class PersonalizationProfile {
     this.usualMeals,
     this.desiredMeals,
     this.nutrition,
+    this.allergies = '',
     this.cookingMinutes,
     this.focus,
   });
@@ -60,6 +61,7 @@ class PersonalizationProfile {
   final int? usualMeals;
   final int? desiredMeals;
   final NutritionPreference? nutrition;
+  final String allergies;
   final int? cookingMinutes;
   final RoutineFocus? focus;
 
@@ -70,6 +72,7 @@ class PersonalizationProfile {
     Object? usualMeals = _unchanged,
     Object? desiredMeals = _unchanged,
     Object? nutrition = _unchanged,
+    String? allergies,
     Object? cookingMinutes = _unchanged,
     Object? focus = _unchanged,
   }) => PersonalizationProfile(
@@ -87,6 +90,7 @@ class PersonalizationProfile {
     nutrition: identical(nutrition, _unchanged)
         ? this.nutrition
         : nutrition as NutritionPreference?,
+    allergies: allergies ?? this.allergies,
     cookingMinutes: identical(cookingMinutes, _unchanged)
         ? this.cookingMinutes
         : cookingMinutes as int?,
@@ -101,6 +105,7 @@ class PersonalizationProfile {
     'usual_meals': usualMeals,
     'desired_meals': desiredMeals,
     'nutrition': nutrition?.name,
+    'allergies': allergies.trim(),
     'cooking_minutes': cookingMinutes,
     'focus': focus?.name,
   };
@@ -112,6 +117,9 @@ class PersonalizationProfile {
     final name = json['display_name'] is String
         ? (json['display_name'] as String).trim()
         : '';
+    final allergies = json['allergies'] is String
+        ? (json['allergies'] as String).trim()
+        : '';
     return PersonalizationProfile(
       displayName: name.length <= 40 ? name : name.substring(0, 40),
       goal: _enumValue(PersonalGoal.values, json['goal']),
@@ -119,6 +127,9 @@ class PersonalizationProfile {
       usualMeals: _allowedInt(json['usual_meals'], const [2, 3, 4, 5]),
       desiredMeals: _allowedInt(json['desired_meals'], const [2, 3, 4, 5]),
       nutrition: _enumValue(NutritionPreference.values, json['nutrition']),
+      allergies: allergies.length <= 160
+          ? allergies
+          : allergies.substring(0, 160),
       cookingMinutes: _allowedInt(json['cooking_minutes'], const [15, 30, 45]),
       focus: _enumValue(RoutineFocus.values, json['focus']),
     );
@@ -141,6 +152,8 @@ class PersonalizationProfile {
           : 'Dein Tagebuch zeigt deinen Wunsch nach $desiredMeals Mahlzeiten – ohne feste Essenszeiten.',
     if (nutrition != null && nutrition != NutritionPreference.mixed)
       'Passend gekennzeichnete ${nutrition!.label.toLowerCase()} Rezeptideen erscheinen zuerst.',
+    if (allergies.trim().isNotEmpty)
+      'Dein Coach berücksichtigt: ${allergies.trim()}.',
     if (cookingMinutes != null)
       'Rezepte bis $cookingMinutes Minuten bekommen Vorrang, wenn passende vorhanden sind.',
     if (focus == RoutineFocus.budget)
@@ -164,6 +177,7 @@ class PersonalizationProfile {
     'usual_meals': usualMeals,
     'desired_meals': desiredMeals,
     'nutrition_preference': nutrition?.name,
+    'allergies': allergies.trim().isEmpty ? null : allergies.trim(),
     'cooking_minutes': cookingMinutes,
     'routine_focus': focus?.name,
     'suitability_screening': 'not_performed',

@@ -28,41 +28,39 @@ class PersonalizationPage extends StatefulWidget {
 class _PersonalizationPageState extends State<PersonalizationPage> {
   late PersonalizationProfile _draft;
   late final TextEditingController _name;
+  late final TextEditingController _allergies;
   final _scroll = ScrollController();
   late int _step;
   bool _fromReview = false;
   bool _saving = false;
   String? _error;
 
+  static const _stepCount = 6;
+  static const _lastStep = _stepCount - 1;
+
   static const _titles = [
-    'Wie dürfen wir\ndich nennen?',
-    'Was ist dir\ngerade wichtig?',
-    'Wie bewegt\nist dein Alltag?',
-    'Dein Tag.\nDeine Mahlzeiten.',
-    'Was kommt bei\ndir auf den Teller?',
-    'Wie viel Zeit\nhast du zum Kochen?',
-    'Was würde deinen\nAlltag leichter machen?',
-    'Das bist du.\nDas ist dein Start.',
+    'Ein paar Antworten.\nEin besseres LIVO.',
+    'Was möchtest du\nerreichen?',
+    'Wie aktiv ist\ndein Alltag?',
+    'Was passt zu\ndeiner Ernährung?',
+    'Wie passt Essen\nin deinen Tag?',
+    'Bereit für dein\npersönliches LIVO.',
   ];
   static const _descriptions = [
-    'Ein Vorname oder Spitzname reicht. Du kannst dieses Feld auch frei lassen.',
-    'Dein Wunsch gibt die Richtung vor. Ohne feste Vorgaben oder Leistungsdruck.',
-    'Denk an einen typischen Tag, inklusive Arbeit und Freizeit.',
-    'Erst dein heutiger Rhythmus, dann dein Wunsch. Beides darf flexibel bleiben.',
-    'Wähle, was am ehesten zu dir passt. Du kannst deine Auswahl später ändern.',
-    'Gemeint ist die Zeit für eine Mahlzeit an einem gewöhnlichen Tag.',
-    'Wähle den Punkt, der dich gerade am meisten beschäftigt.',
-    'Schau in Ruhe drüber. Jede Angabe lässt sich hier noch ändern.',
+    'Die kurzen Fragen helfen der App und deinem KI-Coach, Vorschläge besser an dich anzupassen. Alles ist freiwillig.',
+    'Dein Ziel bestimmt, welche Empfehlungen für dich zuerst kommen – ohne Druck und ohne Extrempläne.',
+    'Ein grober Eindruck reicht. So werden Hinweise und Vorschläge realistischer für deinen Alltag.',
+    'Damit Rezepte und der KI-Coach besser zu dir passen. Angaben zu Unverträglichkeiten sind ebenfalls freiwillig.',
+    'Nur dein bevorzugter Rhythmus und deine übliche Kochzeit – beides bleibt jederzeit flexibel.',
+    'Du kannst jede Antwort später im Profil ändern. LIVO funktioniert auch vollständig ohne diese Angaben.',
   ];
   static const _sections = [
-    'DEIN NAME',
-    'DEIN WUNSCH',
+    'DEIN START',
+    'DEIN ZIEL',
     'DEIN ALLTAG',
+    'DEINE ERNÄHRUNG',
     'DEIN RHYTHMUS',
-    'DEIN GESCHMACK',
-    'DEINE ZEIT',
-    'DEIN FOKUS',
-    'DEINE AUSWAHL',
+    'FÜR DICH EINGESTELLT',
   ];
 
   @override
@@ -70,12 +68,14 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     super.initState();
     _draft = widget.initial;
     _name = TextEditingController(text: _draft.displayName);
-    _step = widget.editing ? 7 : 0;
+    _allergies = TextEditingController(text: _draft.allergies);
+    _step = widget.editing ? _lastStep : 0;
   }
 
   @override
   void dispose() {
     _name.dispose();
+    _allergies.dispose();
     _scroll.dispose();
     super.dispose();
   }
@@ -86,7 +86,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       : Duration(milliseconds: milliseconds);
 
   void _goTo(int step, {bool fromReview = false}) {
-    if (_saving || step < 0 || step > 7) return;
+    if (_saving || step < 0 || step > _lastStep) return;
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       _step = step;
@@ -99,8 +99,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   void _back() {
     if (_saving) return;
     if (_fromReview) {
-      _goTo(7);
-    } else if (_step == 0 || (widget.editing && _step == 7)) {
+      _goTo(_lastStep);
+    } else if (_step == 0 || (widget.editing && _step == _lastStep)) {
       _save(later: true);
     } else {
       _goTo(_step - 1);
@@ -109,10 +109,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   void _next() {
     if (_saving) return;
-    if (_step == 7) {
+    if (_step == _lastStep) {
       _save();
     } else {
-      _goTo(_fromReview ? 7 : _step + 1);
+      _goTo(_fromReview ? _lastStep : _step + 1);
     }
   }
 
@@ -128,7 +128,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         await widget.onLater();
       } else {
         await widget.onComplete(
-          _draft.copyWith(displayName: _name.text.trim()),
+          _draft.copyWith(
+            displayName: _name.text.trim(),
+            allergies: _allergies.text.trim(),
+          ),
         );
       }
     } catch (_) {
@@ -272,7 +275,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                '${_step + 1} / 8',
+                '${_step + 1} / $_stepCount',
                 style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
@@ -289,11 +292,17 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                   key: const ValueKey('personal-later'),
                   onPressed: _saving ? null : () => _save(later: true),
                   style: TextButton.styleFrom(
-                    foregroundColor: AppColors.textMuted,
-                    minimumSize: const Size(48, 48),
+                    foregroundColor: AppColors.text,
+                    backgroundColor: AppColors.surfaceHigh,
+                    minimumSize: const Size(48, 42),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(color: AppColors.border),
+                    ),
                   ),
                   child: Text(
-                    widget.editing ? 'Schließen' : 'Später',
+                    widget.editing ? 'Schließen' : 'Überspringen',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -304,18 +313,20 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         Padding(
           padding: const EdgeInsets.only(right: 8, top: 4, bottom: 4),
           child: Semantics(
-            label: 'Einrichtung, Schritt ${_step + 1} von 8',
+            label: 'Einrichtung, Schritt ${_step + 1} von $_stepCount',
             value: _sections[_step],
             child: ExcludeSemantics(
               child: Row(
                 children: List.generate(
-                  8,
+                  _stepCount,
                   (index) => Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(right: index == 7 ? 0 : 5),
+                      padding: EdgeInsets.only(
+                        right: index == _lastStep ? 0 : 6,
+                      ),
                       child: AnimatedContainer(
                         duration: _duration(350),
-                        height: 3,
+                        height: index == _step ? 5 : 3,
                         decoration: BoxDecoration(
                           color: index <= _step
                               ? AppColors.primary
@@ -340,59 +351,77 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       profile: _draft,
       compact: !wide,
     );
-    final copy = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (_error != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Semantics(
-              liveRegion: true,
-              child: Text(
-                _error!,
-                style: const TextStyle(
-                  color: AppColors.error,
-                  fontSize: 13,
-                  height: 1.5,
+    final copy = Container(
+      padding: EdgeInsets.all(wide ? 30 : 22),
+      decoration: BoxDecoration(
+        color: Color.alphaBlend(
+          AppColors.primary.withValues(alpha: 0.025),
+          AppColors.surface,
+        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppColors.borderBright),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 32,
+            offset: const Offset(0, 16),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  _error!,
+                  style: const TextStyle(
+                    color: AppColors.error,
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
                 ),
               ),
             ),
-          ),
-        Text(
-          _sections[_step],
-          style: const TextStyle(
-            color: AppColors.primary,
-            fontSize: 10,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.7,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Semantics(
-          header: true,
-          child: Text(
-            _titles[_step],
-            style: TextStyle(
-              color: AppColors.text,
-              fontSize: wide ? 39 : 30,
-              height: 1.09,
+          Text(
+            _sections[_step],
+            style: const TextStyle(
+              color: AppColors.primary,
+              fontSize: 10,
               fontWeight: FontWeight.w800,
-              letterSpacing: -1.2,
+              letterSpacing: 1.7,
             ),
           ),
-        ),
-        const SizedBox(height: 13),
-        Text(
-          _descriptions[_step],
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 14,
-            height: 1.55,
+          const SizedBox(height: 12),
+          Semantics(
+            header: true,
+            child: Text(
+              _titles[_step],
+              style: TextStyle(
+                color: AppColors.text,
+                fontSize: wide ? 39 : 30,
+                height: 1.09,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -1.2,
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 24),
-        _answers(),
-      ],
+          const SizedBox(height: 13),
+          Text(
+            _descriptions[_step],
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 14,
+              height: 1.55,
+            ),
+          ),
+          const SizedBox(height: 24),
+          _answers(),
+        ],
+      ),
     );
     return KeyedSubtree(
       key: ValueKey('personal-step-$_step'),
@@ -401,9 +430,9 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 26, right: 40),
+                    padding: const EdgeInsets.only(top: 26, right: 32),
                     child: art,
                   ),
                 ),
@@ -443,13 +472,18 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
         const SizedBox(height: 20),
         const _InfoNote(
-          icon: Icons.tune_rounded,
-          title: 'Ein paar Wünsche. Dein eigener Start.',
+          icon: Icons.auto_awesome_rounded,
+          title: 'Freiwillig, aber hilfreich',
           text:
-              'Alle Antworten sind freiwillig. Wir richten deinen Rhythmus und deine Rezeptideen ein. Du kannst alles später ändern.',
+              'Du kannst oben überspringen. Die App funktioniert trotzdem vollständig. Mit Antworten passen sich KI-Coach, Rezepte und Tagebuch besser an dich an.',
         ),
         const SizedBox(height: 16),
-        const _StorageNote(),
+        const _InfoNote(
+          icon: Icons.manage_accounts_outlined,
+          title: 'Später jederzeit änderbar',
+          text:
+              'Wenn du jetzt überspringst, findest du diese Einrichtung später im Profil unter „Persönlich einrichten“.',
+        ),
       ],
     ),
     1 => _choiceList<PersonalGoal>(
@@ -497,90 +531,92 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     3 => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _mealChoices(
-          title: 'Wie oft isst du meistens?',
-          subtitle: 'Mahlzeiten pro Tag, so wie es gerade ist.',
-          selected: _draft.usualMeals,
-          prefix: 'usual-meals',
-          onSelect: (value) => _update(_draft.copyWith(usualMeals: value)),
+        _choiceList<NutritionPreference>(
+          values: NutritionPreference.values,
+          selected: _draft.nutrition,
+          prefix: 'nutrition',
+          label: (value) => value.label,
+          detail: (value) => switch (value) {
+            NutritionPreference.mixed =>
+              'Pflanzliche und tierische Lebensmittel',
+            NutritionPreference.vegetarian => 'Ohne Fleisch und Fisch',
+            NutritionPreference.vegan => 'Ausschließlich pflanzlich',
+            NutritionPreference.pescatarian => 'Mit Fisch, ohne Fleisch',
+          },
+          icon: (value) => switch (value) {
+            NutritionPreference.mixed => Icons.restaurant_rounded,
+            NutritionPreference.vegetarian => Icons.eco_outlined,
+            NutritionPreference.vegan => Icons.spa_outlined,
+            NutritionPreference.pescatarian => Icons.set_meal_outlined,
+          },
+          onSelect: (value) => _update(_draft.copyWith(nutrition: value)),
         ),
-        const SizedBox(height: 24),
-        const Divider(height: 1),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
+        TextField(
+          key: const ValueKey('personal-allergies'),
+          controller: _allergies,
+          enabled: !_saving,
+          maxLength: 160,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: const InputDecoration(
+            labelText: 'Allergien oder Unverträglichkeiten (optional)',
+            hintText: 'Zum Beispiel Erdnüsse oder Laktose',
+            prefixIcon: Icon(Icons.health_and_safety_outlined),
+          ),
+          onChanged: (value) =>
+              _update(_draft.copyWith(allergies: value.trim())),
+        ),
+        const _InfoNote(
+          icon: Icons.shield_outlined,
+          title: 'Wichtig für sichere Vorschläge',
+          text:
+              'LIVO berücksichtigt deine Angabe, kann aber keine medizinische Prüfung oder Diagnose ersetzen.',
+        ),
+      ],
+    ),
+    4 => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         _mealChoices(
-          title: 'Wie möchtest du deinen Tag planen?',
-          subtitle: 'Dein Wunsch ist eine Vorliebe, keine Empfehlung.',
+          title: 'Wie viele Mahlzeiten passen meist zu dir?',
+          subtitle: 'Eine Orientierung für dein Tagebuch – kein Muss.',
           selected: _draft.desiredMeals,
           prefix: 'desired-meals',
           onSelect: (value) => _update(_draft.copyWith(desiredMeals: value)),
         ),
-      ],
-    ),
-    4 => _choiceList<NutritionPreference>(
-      values: NutritionPreference.values,
-      selected: _draft.nutrition,
-      prefix: 'nutrition',
-      label: (value) => value.label,
-      detail: (value) => switch (value) {
-        NutritionPreference.mixed => 'Pflanzliche und tierische Lebensmittel',
-        NutritionPreference.vegetarian => 'Ohne Fleisch und Fisch',
-        NutritionPreference.vegan => 'Ausschließlich pflanzlich',
-        NutritionPreference.pescatarian => 'Mit Fisch, ohne Fleisch',
-      },
-      icon: (value) => switch (value) {
-        NutritionPreference.mixed => Icons.restaurant_rounded,
-        NutritionPreference.vegetarian => Icons.eco_outlined,
-        NutritionPreference.vegan => Icons.spa_outlined,
-        NutritionPreference.pescatarian => Icons.set_meal_outlined,
-      },
-      onSelect: (value) => _update(_draft.copyWith(nutrition: value)),
-    ),
-    5 => Column(
-      children: [
-        for (final minutes in <int?>[15, 30, 45, null])
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: _ChoiceTile(
-              key: ValueKey('personal-cooking-${minutes ?? 'flexible'}'),
-              title: minutes == null
-                  ? 'Ganz flexibel'
-                  : 'Bis zu $minutes Minuten',
-              detail: switch (minutes) {
-                15 => 'Schnell und unkompliziert',
-                30 => 'Zeit für ein einfaches Gericht',
-                45 => 'Gern auch etwas aufwendiger',
-                _ => 'Das entscheide ich je nach Tag',
-              },
-              icon: minutes == null
-                  ? Icons.all_inclusive_rounded
-                  : Icons.schedule_rounded,
-              selected: _draft.cookingMinutes == minutes,
-              duration: _duration(220),
-              onTap: _saving
-                  ? null
-                  : () => _update(_draft.copyWith(cookingMinutes: minutes)),
-            ),
+        const SizedBox(height: 24),
+        const Divider(height: 1),
+        const SizedBox(height: 22),
+        const Text(
+          'Wie viel Zeit möchtest du meist kochen?',
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<int>(
+          key: ValueKey('personal-cooking-${_draft.cookingMinutes ?? 0}'),
+          initialValue: _draft.cookingMinutes ?? 0,
+          isExpanded: true,
+          decoration: const InputDecoration(
+            prefixIcon: Icon(Icons.schedule_rounded),
+            labelText: 'Bevorzugte Kochzeit',
+          ),
+          items: const [
+            DropdownMenuItem(value: 0, child: Text('Flexibel')),
+            DropdownMenuItem(value: 15, child: Text('Bis 15 Minuten')),
+            DropdownMenuItem(value: 30, child: Text('Bis 30 Minuten')),
+            DropdownMenuItem(value: 45, child: Text('Bis 45 Minuten')),
+          ],
+          onChanged: _saving
+              ? null
+              : (value) => _update(
+                  _draft.copyWith(cookingMinutes: value == 0 ? null : value),
+                ),
+        ),
       ],
-    ),
-    6 => _choiceList<RoutineFocus>(
-      values: RoutineFocus.values,
-      selected: _draft.focus,
-      prefix: 'focus',
-      label: (value) => value.label,
-      detail: (value) => switch (value) {
-        RoutineFocus.time => 'Essen soll gut in meinen vollen Tag passen',
-        RoutineFocus.ideas => 'Ich möchte öfter wissen, was ich kochen kann',
-        RoutineFocus.consistency => 'Ich möchte meinen eigenen Rhythmus finden',
-        RoutineFocus.budget => 'Ich möchte meine Ausgaben im Blick behalten',
-      },
-      icon: (value) => switch (value) {
-        RoutineFocus.time => Icons.schedule_rounded,
-        RoutineFocus.ideas => Icons.lightbulb_outline_rounded,
-        RoutineFocus.consistency => Icons.event_repeat_rounded,
-        RoutineFocus.budget => Icons.savings_outlined,
-      },
-      onSelect: (value) => _update(_draft.copyWith(focus: value)),
     ),
     _ => _review(),
   };
@@ -673,15 +709,9 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (selected == count) ...[
-                      const Icon(Icons.check_rounded, size: 17),
-                      const SizedBox(width: 5),
-                    ],
-                    Text(count?.toString() ?? 'Flexibel'),
-                  ],
+                child: Text(
+                  count?.toString() ?? 'Flexibel',
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -691,25 +721,27 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   );
 
   Widget _review() {
-    final rows = <(String, String)>[
+    final rows = <(int, String, String)>[
       (
+        0,
         'Name',
         _draft.displayName.trim().isEmpty ? 'Offen' : _draft.displayName.trim(),
       ),
-      ('Wunsch', _draft.goal?.label ?? 'Offen'),
-      ('Alltag', _draft.activity?.label ?? 'Offen'),
+      (1, 'Ziel', _draft.goal?.label ?? 'Offen'),
+      (2, 'Aktivität', _draft.activity?.label ?? 'Offen'),
       (
-        'Mahlzeiten',
-        'Heute: ${_mealLabel(_draft.usualMeals)} · Wunsch: ${_mealLabel(_draft.desiredMeals)}',
+        3,
+        'Ernährung',
+        [
+          _draft.nutrition?.label ?? 'Offen',
+          if (_draft.allergies.trim().isNotEmpty) _draft.allergies.trim(),
+        ].join(' · '),
       ),
-      ('Ernährungsweise', _draft.nutrition?.label ?? 'Offen'),
       (
-        'Kochzeit',
-        _draft.cookingMinutes == null
-            ? 'Flexibel'
-            : 'Bis zu ${_draft.cookingMinutes} Minuten',
+        4,
+        'Tagesrhythmus',
+        '${_mealLabel(_draft.desiredMeals)} · ${_draft.cookingMinutes == null ? 'Kochzeit flexibel' : 'bis ${_draft.cookingMinutes} Min.'}',
       ),
-      ('Fokus', _draft.focus?.label ?? 'Offen'),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -732,7 +764,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                     key: ValueKey('personal-review-edit-$index'),
                     onTap: _saving
                         ? null
-                        : () => _goTo(index, fromReview: true),
+                        : () => _goTo(rows[index].$1, fromReview: true),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18,
@@ -745,7 +777,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  rows[index].$1,
+                                  rows[index].$2,
                                   style: const TextStyle(
                                     color: AppColors.textMuted,
                                     fontSize: 11,
@@ -753,7 +785,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  rows[index].$2,
+                                  rows[index].$3,
                                   style: const TextStyle(
                                     color: AppColors.text,
                                     fontSize: 14,
@@ -819,13 +851,20 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           ),
         const SizedBox(height: 8),
         const _InfoNote(
-          icon: Icons.tune_rounded,
-          title: 'Deine Wünsche, kein fertiger Plan.',
+          icon: Icons.auto_awesome_rounded,
+          title: 'Ab jetzt persönlicher',
           text:
-              'Diese Zusammenfassung entsteht direkt aus deinen Antworten. KI-Funktionen sind noch nicht verbunden.',
+              'Diese Angaben helfen LIVO und dem KI-Coach, Antworten und Vorschläge auf dein Ziel und deinen Alltag abzustimmen.',
         ),
         const SizedBox(height: 16),
-        const _StorageNote(),
+        const Text(
+          'Du behältst die Kontrolle: Im Profil kannst du Antworten ändern oder entfernen.',
+          style: TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 12,
+            height: 1.5,
+          ),
+        ),
       ],
     );
   }
@@ -880,17 +919,19 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                           child: Text(
                             _saving
                                 ? 'Einen Moment …'
-                                : _step == 7
-                                ? 'Meine Auswahl übernehmen'
+                                : _step == _lastStep
+                                ? 'LIVO für mich einrichten'
                                 : _fromReview
                                 ? 'Zur Übersicht'
+                                : _step == 0
+                                ? 'Kurz einrichten'
                                 : 'Weiter',
                             textAlign: TextAlign.center,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Icon(
-                          _step == 7
+                          _step == _lastStep
                               ? Icons.check_rounded
                               : Icons.arrow_forward_rounded,
                           size: 19,
@@ -1041,15 +1082,5 @@ class _InfoNote extends StatelessWidget {
         ),
       ],
     ),
-  );
-}
-
-class _StorageNote extends StatelessWidget {
-  const _StorageNote();
-
-  @override
-  Widget build(BuildContext context) => const Text(
-    'Deine Antworten werden für dein Konto auf diesem Gerät gespeichert. Du kannst sie im Profil ändern oder entfernen.',
-    style: TextStyle(color: AppColors.textMuted, fontSize: 11, height: 1.6),
   );
 }

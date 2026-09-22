@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:file_selector/file_selector.dart';
+import 'package:image/image.dart' as img;
 
 import '../../../core/data/ai_coach_service.dart';
 import '../../../core/state/app_controller.dart';
@@ -145,6 +148,93 @@ class _CoachPageState extends State<CoachPage>
     }
   }
 
+  Future<void> _analyzeImage() async {
+    if (_sending) return;
+    final file = await openFile(
+      acceptedTypeGroups: const [
+        XTypeGroup(
+          label: 'Lebensmittel-Foto',
+          extensions: ['jpg', 'jpeg', 'png', 'webp'],
+        ),
+      ],
+    );
+    if (file == null) return;
+
+    final sourceBytes = await file.readAsBytes();
+    final decoded = img.decodeImage(sourceBytes);
+    if (decoded == null) {
+      if (mounted)
+        setState(() => _error = 'Dieses Bild konnte nicht gelesen werden.');
+      return;
+    }
+    final resized = decoded.width > 1280 || decoded.height > 1280
+        ? img.copyResize(
+            decoded,
+            width: decoded.width >= decoded.height ? 1280 : null,
+            height: decoded.height > decoded.width ? 1280 : null,
+          )
+        : decoded;
+    final bytes = Uint8List.fromList(img.encodeJpg(resized, quality: 78));
+    if (bytes.length > 4 * 1024 * 1024) {
+      if (mounted)
+        setState(
+          () =>
+              _error = 'Das Foto ist zu groß. Bitte wähle ein kleineres Bild.',
+        );
+      return;
+    }
+
+    final controller = AppScope.of(context);
+    final coachContext = <String, Object?>{
+      'goal': controller.goal,
+      'calorie_goal': controller.calorieGoal,
+      'calories_today': controller.diaryConsumedCalories,
+      'remaining_calories': controller.diaryRemainingCalories,
+      'protein_goal': controller.proteinGoal,
+      'protein_today': controller.diaryConsumedProtein,
+      'carbs_today': controller.diaryConsumedCarbs,
+      'fat_today': controller.diaryConsumedFat,
+      'nutrition_style': controller.nutritionStyle,
+      'allergies': controller.allergies,
+      'activity_level': controller.activityLevel,
+    };
+
+    setState(() {
+      _messages.add(
+        const AiCoachMessage(
+          role: AiCoachRole.user,
+          text: '📷 Lebensmittel-Foto zur Analyse',
+        ),
+      );
+      _sending = true;
+      _error = null;
+      _lastFailedMessage = null;
+    });
+    _scrollToEnd();
+    try {
+      final reply = await _service.analyzeImage(
+        bytes: bytes,
+        context: coachContext,
+      );
+      if (!mounted) return;
+      setState(() {
+        _messages.add(
+          AiCoachMessage(role: AiCoachRole.assistant, text: reply.text),
+        );
+        _remaining = reply.remaining;
+        _dailyLimit = reply.dailyLimit;
+      });
+    } on AiCoachException catch (error) {
+      if (!mounted) return;
+      setState(() => _error = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => _sending = false);
+        _scrollToEnd();
+      }
+    }
+  }
+
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scrollController.hasClients) return;
@@ -234,6 +324,7 @@ class _CoachPageState extends State<CoachPage>
                 focusNode: _focusNode,
                 sending: _sending,
                 onSend: () => unawaited(_send()),
+                onImage: () => unawaited(_analyzeImage()),
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(24, 8, 24, compact ? 104 : 18),
@@ -698,12 +789,14 @@ class _Composer extends StatelessWidget {
     required this.focusNode,
     required this.sending,
     required this.onSend,
+    required this.onImage,
   });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final bool sending;
   final VoidCallback onSend;
+  final VoidCallback onImage;
 
   @override
   Widget build(BuildContext context) {
@@ -734,6 +827,17 @@ class _Composer extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                Semantics(
+                  button: true,
+                  label: 'Lebensmittel-Foto analysieren',
+                  child: IconButton(
+                    tooltip: 'Lebensmittel-Foto analysieren',
+                    onPressed: sending ? null : onImage,
+                    color: AppColors.mint,
+                    disabledColor: AppColors.textMuted,
+                    icon: const Icon(Icons.photo_camera_outlined),
+                  ),
+                ),
                 Expanded(
                   child: TextField(
                     controller: controller,

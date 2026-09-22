@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum AiCoachRole { user, assistant }
@@ -165,6 +168,77 @@ class AiCoachService {
     } catch (_) {
       throw const AiCoachException(
         'Dein Chatverlauf konnte gerade nicht geladen werden.',
+        code: 'unavailable',
+      );
+    }
+  }
+
+  Future<AiCoachReply> analyzeImage({
+    required Uint8List bytes,
+    required Map<String, Object?> context,
+    String mimeType = 'image/jpeg',
+  }) async {
+    if (bytes.isEmpty || bytes.length > 4 * 1024 * 1024) {
+      throw const AiCoachException(
+        'Das Foto ist zu groß. Bitte wähle ein kleineres Bild.',
+        code: 'image_too_large',
+      );
+    }
+    try {
+      final response = await _client.functions.invoke(
+        'ai-coach',
+        body: {
+          'action': 'vision',
+          'image_base64': base64Encode(bytes),
+          'mime_type': mimeType,
+          'context': context,
+        },
+      );
+      final data = response.data;
+      if (data is! Map) {
+        throw const AiCoachException(
+          'Die Bildanalyse hat keine gültige Antwort erhalten.',
+          code: 'invalid_response',
+        );
+      }
+      final error = data['error'];
+      if (error is String && error.trim().isNotEmpty) {
+        throw AiCoachException(error, code: data['code'] as String?);
+      }
+      final answer = data['answer'];
+      if (answer is! String || answer.trim().isEmpty) {
+        throw const AiCoachException(
+          'Auf dem Foto konnte gerade nichts sicher erkannt werden.',
+          code: 'invalid_response',
+        );
+      }
+      return AiCoachReply(
+        text: answer.trim(),
+        remaining: _integer(data['remaining']),
+        dailyLimit: _integer(data['daily_limit']),
+      );
+    } on AiCoachException {
+      rethrow;
+    } on FunctionException catch (error) {
+      if (error.status == 401 || error.status == 403) {
+        throw const AiCoachException(
+          'Bitte melde dich erneut an, um die Bildanalyse zu verwenden.',
+          code: 'unauthorized',
+        );
+      }
+      if (error.status == 429) {
+        throw const AiCoachException(
+          'Dein Nachrichtenlimit für heute ist erreicht. Morgen kannst du wieder analysieren.',
+          code: 'daily_limit',
+        );
+      }
+      throw const AiCoachException(
+        'Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.',
+        code: 'unavailable',
+      );
+    } catch (_) {
+      throw const AiCoachException(
+        'Die Bildanalyse ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.',
         code: 'unavailable',
       );
     }
