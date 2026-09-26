@@ -29,7 +29,9 @@ jobs:
       - name: Build web
         run: |
           flutter pub get
-          flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+          # Disable Flutter's deprecated service worker so phones do not keep
+          # an old app shell after a new GitHub Pages deployment.
+          flutter build web --release --pwa-strategy=none --base-href "/${{ github.event.repository.name }}/"
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
