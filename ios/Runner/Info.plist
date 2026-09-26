@@ -3,7 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>LIVO benötigt die Kamera, um Lebensmittel-Barcodes zu scannen.</string>
+	<string>LIVO benötigt die Kamera, um Lebensmittel-Barcodes und Mahlzeiten zu erfassen.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LIVO benötigt Zugriff auf ausgewählte Essensfotos für die KI-Analyse.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

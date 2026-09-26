@@ -41,6 +41,28 @@ void main() {
       expect(restored.cookingMinutes, 30);
     });
 
+    test(
+      'body data accepts metric storage and preserves the chosen display unit',
+      () {
+        final profile = PersonalizationProfile(
+          birthDate: DateTime(2000, 2, 29),
+          heightCm: 178,
+          weightKg: 74.5,
+          measurementSystem: MeasurementSystem.imperial,
+        );
+        final restored = PersonalizationProfile.fromJson(
+          jsonDecode(jsonEncode(profile.toJson())) as Map<String, dynamic>,
+        );
+
+        expect(restored.birthDate, DateTime(2000, 2, 29));
+        expect(restored.heightCm, 178);
+        expect(restored.weightKg, 74.5);
+        expect(restored.measurementSystem, MeasurementSystem.imperial);
+        expect(restored.ageOn(DateTime(2026, 2, 28)), 25);
+        expect(restored.ageOn(DateTime(2026, 3, 1)), 26);
+      },
+    );
+
     test('omitted edits preserve answers while explicit null clears them', () {
       final renamed = _profile.copyWith(displayName: 'Nora');
       expect(renamed.toJson(), {..._profile.toJson(), 'display_name': 'Nora'});

@@ -10,6 +10,31 @@ const sourceUrl = 'https://world.openfoodfacts.org'
 const sourceLicense = 'Open Database License (ODbL)'
 const sourceAttribution = 'Open Food Facts contributors'
 
+const hardForbiddenTerms = [
+  'pork', 'pig', 'swine', 'schwein', 'schweine', 'wildschwein',
+  'bacon', 'ham', 'prosciutto', 'salami', 'pepperoni', 'lard', 'speck',
+  'gelatin', 'gelatine', 'blood', 'blut',
+  'alcohol', 'alkohol', 'ethanol', 'beer', 'bier', 'wine', 'wein',
+  'rotwein', 'weisswein', 'redwine', 'whitewine',
+  'whisky', 'whiskey', 'vodka', 'rum', 'gin', 'brandy', 'cognac',
+  'champagne', 'schnapps', 'liqueur', 'liquor', 'likoer', 'sherry',
+  'sake', 'cider', 'mead',
+]
+const landAnimalMeatTerms = [
+  'meat', 'fleisch', 'chicken', 'huhn', 'haehnchen', 'hen', 'poultry',
+  'turkey', 'pute', 'truthahn', 'beef', 'rind', 'veal', 'kalb', 'lamb',
+  'lamm', 'mutton', 'goat', 'ziege', 'duck', 'ente', 'venison', 'wurst',
+  'sausage',
+]
+const halalMarkers = ['halal', 'zabiha', 'dhabiha']
+const compoundRoots = new Set([
+  'schwein', 'bacon', 'prosciutto', 'salami', 'pepperoni', 'gelatin',
+  'alkohol', 'alcohol', 'ethanol', 'beer', 'whisky', 'whiskey', 'vodka',
+  'brandy', 'cognac', 'champagne', 'schnapps', 'liqueur', 'liquor',
+  'haehnchen', 'chicken', 'fleisch', 'meat', 'rind', 'beef', 'kalb',
+  'veal', 'lamm', 'lamb', 'pute', 'turkey', 'ente', 'duck', 'sausage',
+])
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -50,6 +75,9 @@ Deno.serve(async (request) => {
     if (cacheError) {
       console.error('barcode cache read failed', cacheError.code, cacheError.message)
     } else if (cached) {
+      if (halalRestriction(catalogText(cached))) {
+        return notHalal()
+      }
       return json({ food: cached, cache: 'catalog' })
     }
 
@@ -81,7 +109,8 @@ Deno.serve(async (request) => {
     const fields = [
       'code', 'product_name', 'product_name_de', 'brands', 'nutriments',
       'serving_size', 'quantity', 'allergens_tags', 'ingredients_text',
-      'ingredients_text_de', 'nutrition_grades', 'nova_group',
+      'ingredients_text_de', 'nutrition_grades', 'nova_group', 'labels',
+      'labels_tags',
     ].join(',')
     let response: Response
     try {
@@ -134,7 +163,7 @@ Deno.serve(async (request) => {
       salt: nutrient(nutrients, 'salt_100g'),
       saturated_fat: nutrient(nutrients, 'saturated-fat_100g'),
       allergens: textList(product.allergens_tags),
-      diet_tags: [],
+      diet_tags: textList(product.labels_tags),
       ingredients_text: text(product.ingredients_text_de) ?? text(product.ingredients_text),
       nutriscore_grade: grade(product.nutrition_grades),
       nova_group: novaGroup(product.nova_group),
@@ -146,6 +175,9 @@ Deno.serve(async (request) => {
       data_quality: 'imported',
       verified_at: new Date().toISOString(),
       is_premium: false,
+    }
+    if (halalRestriction(catalogText(row, product.labels))) {
+      return notHalal()
     }
     const { data: inserted, error: insertError } = await admin
       .from('foods')
@@ -200,6 +232,51 @@ function textList(value: unknown): string[] {
     ? value.filter((item): item is string => typeof item === 'string')
       .map((item) => item.trim()).filter(Boolean).slice(0, 32)
     : []
+}
+
+function catalogText(row: Record<string, unknown>, labels?: unknown): string {
+  const tags = Array.isArray(row.diet_tags) ? row.diet_tags.join(' ') : ''
+  return [row.name, row.brand, row.ingredients_text, tags, labels]
+    .filter((value) => typeof value === 'string' && value.trim().length > 0)
+    .join(' ')
+}
+
+function halalRestriction(value: string): string | null {
+  const normalized = normalizeForHalal(value)
+  if (!normalized) return null
+  if (hardForbiddenTerms.some((term) => containsTerm(normalized, term))) {
+    return 'forbidden'
+  }
+  const hasLandAnimalMeat = landAnimalMeatTerms.some((term) =>
+    containsTerm(normalized, term)
+  )
+  const explicitlyHalal = halalMarkers.some((term) => containsTerm(normalized, term))
+  return hasLandAnimalMeat && !explicitlyHalal ? 'unverified_meat' : null
+}
+
+function normalizeForHalal(value: string): string {
+  return value.toLowerCase()
+    .replaceAll('ä', 'ae')
+    .replaceAll('ö', 'oe')
+    .replaceAll('ü', 'ue')
+    .replaceAll('ß', 'ss')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function containsTerm(normalizedValue: string, term: string): boolean {
+  const normalizedTerm = normalizeForHalal(term)
+  return normalizedValue.split(' ').some((word) =>
+    word === normalizedTerm ||
+    (compoundRoots.has(normalizedTerm) && word.startsWith(normalizedTerm))
+  )
+}
+
+function notHalal(): Response {
+  return json({
+    error: 'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+    code: 'not_halal',
+  }, 422)
 }
 
 function grade(value: unknown): string | null {

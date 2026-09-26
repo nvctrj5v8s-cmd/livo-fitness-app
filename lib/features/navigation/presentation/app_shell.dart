@@ -9,7 +9,7 @@ import '../../coach/presentation/coach_page.dart';
 import '../../discover/presentation/discover_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
-import '../../progress/presentation/progress_page.dart';
+import '../../diary/presentation/quick_add_sheet.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -32,9 +32,13 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       Icons.restaurant_menu_rounded,
       'Rezepte',
     ),
-    _NavItem(Icons.insights_outlined, Icons.insights_rounded, 'Fortschritt'),
     _NavItem(Icons.person_outline_rounded, Icons.person_rounded, 'Profil'),
   ];
+
+  static const _addNavIndex = 2;
+
+  static int _pageToNav(int page) => page >= _addNavIndex ? page + 1 : page;
+  static int _navToPage(int nav) => nav > _addNavIndex ? nav - 1 : nav;
 
   @override
   void initState() {
@@ -108,7 +112,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       HomePage(onOpenPage: _selectPage),
       const CoachPage(),
       const DiscoverPage(),
-      const ProgressPage(),
       const ProfilePage(),
     ];
 
@@ -185,25 +188,38 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       ],
                     ),
                     child: NavigationBar(
-                      selectedIndex: _selectedIndex,
-                      onDestinationSelected: _selectPage,
-                      destinations: _items
-                          .map(
-                            (item) => NavigationDestination(
-                              icon: Icon(item.icon),
-                              selectedIcon: TweenAnimationBuilder<double>(
-                                key: ValueKey('${item.label}-selected'),
-                                tween: Tween(begin: 0.88, end: 1),
-                                duration: const Duration(milliseconds: 260),
-                                curve: Curves.easeOutBack,
-                                builder: (context, value, child) =>
-                                    Transform.scale(scale: value, child: child),
-                                child: Icon(item.selectedIcon),
-                              ),
-                              label: item.label,
+                      selectedIndex: _pageToNav(_selectedIndex),
+                      onDestinationSelected: (index) {
+                        if (index == _addNavIndex) {
+                          showQuickAddSheet(context);
+                        } else {
+                          _selectPage(_navToPage(index));
+                        }
+                      },
+                      destinations: [
+                        for (var i = 0; i < _items.length; i++) ...[
+                          if (i == _addNavIndex)
+                            const NavigationDestination(
+                              key: Key('nav-quick-add'),
+                              icon: _AddNavIcon(),
+                              label: 'Hinzufügen',
+                              tooltip: 'Mahlzeit hinzufügen',
                             ),
-                          )
-                          .toList(),
+                          NavigationDestination(
+                            icon: Icon(_items[i].icon),
+                            selectedIcon: TweenAnimationBuilder<double>(
+                              key: ValueKey('${_items[i].label}-selected'),
+                              tween: Tween(begin: 0.88, end: 1),
+                              duration: const Duration(milliseconds: 260),
+                              curve: Curves.easeOutBack,
+                              builder: (context, value, child) =>
+                                  Transform.scale(scale: value, child: child),
+                              child: Icon(_items[i].selectedIcon),
+                            ),
+                            label: _items[i].label,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ),
@@ -265,7 +281,17 @@ class _DesktopNavigation extends StatelessWidget {
               height: 1.35,
             ),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 22),
+          FilledButton.icon(
+            key: const Key('desktop-quick-add'),
+            onPressed: () => showQuickAddSheet(context),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(46),
+            ),
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('Hinzufügen'),
+          ),
+          const SizedBox(height: 18),
           for (var index = 0; index < _AppShellState._items.length; index++)
             Padding(
               padding: const EdgeInsets.only(bottom: 7),
@@ -384,6 +410,33 @@ class _DesktopNavButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class _AddNavIcon extends StatelessWidget {
+  const _AddNavIcon();
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [AppColors.primary, AppColors.mint],
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: .35),
+          blurRadius: 14,
+          spreadRadius: -4,
+        ),
+      ],
+    ),
+    child: const SizedBox.square(
+      dimension: 40,
+      child: Icon(Icons.add_rounded, color: AppColors.black, size: 28),
+    ),
+  );
 }
 
 class _NavItem {

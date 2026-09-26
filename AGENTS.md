@@ -23,6 +23,15 @@
   Assets, Logs oder Git. KI-Anfragen müssen später über ein kontrolliertes
   Backend laufen.
 
+## Verbindliche Halal-Inhaltsregel
+
+- Keine bekannten Schweinefleisch-, Alkohol- oder Gelatine-Inhalte in
+  Lebensmittelkatalog, Rezepten, Barcode-Ergebnissen, Demo-Daten oder
+  KI-Empfehlungen.
+- Fleisch von Landtieren nur bei eindeutiger Halal-Kennzeichnung zulassen.
+- Bei unklaren Zutaten nicht raten, sondern blockieren oder auf die Verpackung
+  verweisen. Details: `docs/HALAL_CONTENT_POLICY.md`.
+
 ## Datenschutz und Gesundheit
 
 - Gesundheits- und Ernährungsdaten nur nach dokumentierter Datenschutzprüfung

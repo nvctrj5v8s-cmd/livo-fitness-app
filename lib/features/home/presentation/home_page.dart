@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                       controller.waterReminders ||
                       controller.weeklySummary,
                   onNotifications: () => showReminderSheet(context, controller),
-                  onProfile: () => widget.onOpenPage(4),
+                  onProfile: () => widget.onOpenPage(3),
                 ),
               ),
               const SizedBox(height: 24),

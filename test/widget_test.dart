@@ -26,12 +26,35 @@ void main() {
     expect(find.text('LIVO Coach'), findsOneWidget);
     await _openTab(tester, 'Rezepte');
     expect(find.text('Planen & vorbereiten'), findsOneWidget);
-    await _openTab(tester, 'Fortschritt');
-    expect(find.text('Ernährungs-Balance'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Fortschritt'),
+      ),
+      findsNothing,
+    );
     await _openTab(tester, 'Profil');
-    expect(find.text('Meine Ziele'), findsOneWidget);
+    expect(find.text('Meine täglichen Ziele'), findsOneWidget);
     await _openTab(tester, 'Tagebuch');
     expect(find.text('Hallo, Alex'), findsOneWidget);
+  });
+
+  testWidgets('Plus zwischen KI und Rezepte zeigt drei Eintragsoptionen', (
+    tester,
+  ) async {
+    await _pumpApp(tester);
+    await tester.tap(find.byKey(const Key('nav-quick-add')));
+    await tester.pumpAndSettle();
+    expect(find.text('Mahlzeit hinzufügen'), findsOneWidget);
+    expect(find.byKey(const Key('quick-add-photo')), findsOneWidget);
+    expect(find.byKey(const Key('quick-add-barcode')), findsOneWidget);
+    expect(find.byKey(const Key('quick-add-manual')), findsOneWidget);
+    expect(find.text('Hallo, Alex'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('quick-add-manual')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('food-search')), findsOneWidget);
+    expect(find.text('Selbst eintragen'), findsOneWidget);
   });
 
   testWidgets('Frühstück öffnet die Suche bereits richtig vorausgewählt', (
@@ -40,12 +63,13 @@ void main() {
     await _pumpApp(tester);
     await tester.tap(find.byKey(const ValueKey('add-breakfast')));
     await tester.pumpAndSettle();
-    final chip = tester.widget<ChoiceChip>(
-      find.byKey(const ValueKey('add-slot-breakfast')),
-    );
-    expect(chip.selected, isTrue);
+    expect(find.byKey(const ValueKey('add-slot-breakfast')), findsOneWidget);
+    expect(find.text('Frühstück'), findsWidgets);
     expect(find.text('Selbst eintragen'), findsOneWidget);
     expect(find.text('Barcode scannen'), findsOneWidget);
+    expect(find.text('Schnell hinzufügen'), findsNothing);
+    expect(find.text('Zuletzt'), findsOneWidget);
+    expect(find.text('Gemerkte'), findsOneWidget);
   });
 
   testWidgets('eigener Eintrag zeigt vollständige deutsche Nährwertfelder', (
@@ -81,6 +105,40 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Dein Profilbild'), findsOneWidget);
     expect(find.text('Bild auswählen'), findsOneWidget);
+  });
+
+  testWidgets('Profil zeigt neuen Kopfbereich mit Serie und Tageswerten', (
+    tester,
+  ) async {
+    await _pumpApp(tester);
+    await _openTab(tester, 'Profil');
+    expect(find.text('Einträge heute'), findsOneWidget);
+    expect(find.text('Tage Serie'), findsOneWidget);
+    expect(find.text('kcal heute'), findsOneWidget);
+    expect(find.text('Meine täglichen Ziele'), findsOneWidget);
+    expect(find.byKey(const Key('daily-goals-answer')), findsOneWidget);
+    expect(find.text('Dein Weg zum Ziel'), findsNothing);
+  });
+
+  testWidgets('Profil bleibt auf kleinem Display mit großer Schrift stabil', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(320, 568);
+    addTearDown(() {
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetPhysicalSize();
+    });
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(textScaler: TextScaler.linear(1.6)),
+        child: FitnessAiApp(useAuth: false),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _openTab(tester, 'Profil');
+    expect(tester.takeException(), isNull);
+    expect(find.text('Meine täglichen Ziele'), findsOneWidget);
   });
 
   testWidgets('Profil und Ernährungseinstellungen sind lokal bearbeitbar', (
@@ -131,9 +189,10 @@ void main() {
     await tester.pumpWidget(const FitnessAiApp(useAuth: false));
     await tester.pumpAndSettle();
     expect(find.text('LIVO'), findsOneWidget);
-    await tester.tap(find.text('Fortschritt'));
+    expect(find.text('Fortschritt'), findsNothing);
+    await tester.tap(find.byKey(const Key('desktop-quick-add')));
     await tester.pumpAndSettle();
-    expect(find.text('Ernährungs-Balance'), findsOneWidget);
+    expect(find.byKey(const Key('quick-add-photo')), findsOneWidget);
   });
 }
 

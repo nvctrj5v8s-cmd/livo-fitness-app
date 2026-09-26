@@ -1,14 +1,49 @@
 # Funktionsstatus
 
+## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
+
+- Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes
+  Fleisch von Landtieren werden im Flutter-Katalog, bei Rezepten, Barcode-
+  Ergebnissen, Selbsteinträgen und KI-Antworten blockiert.
+- Die Supabase-Migration `0007_halal_content_guard.sql` muss noch im SQL Editor
+  ausgeführt werden. Sie blendet ältere ausgeschlossene Katalogdaten per RLS
+  aus und verhindert neue ausgeschlossene Katalogeinträge.
+- Die technische Regel ist bewusst vorsichtig, aber keine religiöse
+  Zertifizierung: Unklare Produkte müssen weiterhin anhand von Verpackung und
+  Zertifizierung geprüft werden. Details: `HALAL_CONTENT_POLICY.md`.
+
 ## Aktualisierung: Neues Tagebuch, eigene Lebensmittel und Serie, 17. September 2026
 
 - Die ruhige Tagebuchansicht ist jetzt die Startseite. Kalorien und Makros
   stehen vor vier klaren Bereichen für Frühstück, Mittagessen, Abendessen und
   Snacks; Wochenkarte, Schnellaktionen und mobiler Floating-Button wurden dort
   entfernt.
-- Die Navigation enthält `Tagebuch`, `KI`, `Rezepte`, `Fortschritt` und
-  `Profil`. Der bisherige Coach ist dadurch ein eigener Bereich; er ist
-  weiterhin eine gekennzeichnete Demo ohne angebundene KI.
+- Die Navigation enthält `Tagebuch`, `KI`, ein zentrales Plus, `Rezepte` und
+  `Profil`. `Fortschritt` ist nicht mehr in der Navigation. Das Plus öffnet
+  drei Wege: `KI-Foto` (Foto wird oben angezeigt, erkannte Lebensmittel sind
+  als Schätzung markiert und vor dem Speichern in Name, Gramm und Nährwerten
+  bearbeitbar, weitere Lebensmittel per Suche oder manuell ergänzbar,
+  Mahlzeit wählbar), `Barcode scannen` und `Manuell eintragen` (Suche oder
+  eigenes Lebensmittel). Die Mahlzeit wird nach Tageszeit vorausgewählt.
+- KI-Foto-Kamera: Auf Android/iOS öffnet sich die System-Kamera
+  (`image_picker`). Im Browser und auf Desktop öffnet LIVO eine eigene
+  Live-Kamera (`camera`-Paket) mit Auslöser und Kamerawechsel; der Browser
+  fragt dafür nach der Kamera-Berechtigung (nur über HTTPS oder localhost).
+  „Aus Galerie wählen“ ist überall als getrennte Option vorhanden. Fotos
+  werden nur im Speicher verarbeitet und nicht lokal abgelegt.
+- Die Live-Kamera füllt den ganzen Bildschirm; das aufgenommene Foto wird auf
+  der Ergebnisseite randlos und groß angezeigt.
+- Das Profil zeigt zentriert Profilbild, Name und Ziel, darunter echte
+  Tageswerte (Einträge heute, Tage Serie, kcal heute). Der frühere Ziel-Ring
+  mit festem Demo-Startgewicht wurde entfernt.
+- „Meine täglichen Ziele“ (Kalorien, Protein, Fett) werden lokal als
+  Richtwert aus Alter, Größe, Gewicht, Alltag und Ziel berechnet
+  (Mifflin-St-Jeor mit geschlechtsneutraler Konstante, Abnehmen maximal
+  15 % unter Erhalt und nie unter dem Grundumsatz). Fehlen Angaben, bleiben
+  die Felder leer und ein Hinweis erklärt, dass die Fragen freiwillig sind.
+  Für Personen unter 18 Jahren werden keine Ziele berechnet; stattdessen wird
+  auf qualifizierte Beratung verwiesen. Berechnete Ziele gelten auch im
+  Tagebuch; der manuelle Kalorienregler wird dann ausgeblendet.
 - Jede Mahlzeitenkarte öffnet die Suche mit der passenden Kategorie. Eigene
   Lebensmittel akzeptieren Etikettwerte pro 100 g, 100 ml oder Portion,
   rechnen die gegessene Menge ohne Zwischenrundung und speichern die Werte im
@@ -169,7 +204,7 @@
 - Die tatsächliche Cloud-Datenbank ist erst nach diesem SQL-Schritt gefüllt.
   Barcode-Daten aus Open Food Facts und Rezepttexte bleiben getrennte Quellen
   mit eigener Lizenzprüfung.
-- `supabase/imports/curated_recipes.sql` ergänzt zwölf selbst verfasste
+- `supabase/imports/curated_recipes.sql` ergänzt zehn selbst verfasste
   Starter-Rezepte mit Zutaten und Anweisungen; daraus ergeben sich zusammen
   mit dem Seed 15 Rezepte. Ein Katalog mit tausenden Rezepten braucht weitere
   redaktionelle Arbeit oder eine separat geprüfte kommerzielle Lizenz.

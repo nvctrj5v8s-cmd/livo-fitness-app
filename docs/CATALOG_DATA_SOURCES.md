@@ -17,7 +17,7 @@ wird es nicht blind mit geschützten oder nicht weiterverteilbaren Quellen
 vermischt.
 
 Rezepte werden zunächst selbst erstellt und aus den Lebensmittelwerten
-berechnet. `supabase/imports/curated_recipes.sql` enthält 12 originale
+berechnet. `supabase/imports/curated_recipes.sql` enthält 10 originale
 Starter-Rezepte ohne fremde Texte oder Bilder. Fremde Rezepttexte und Bilder
 werden erst nach Lizenzprüfung übernommen. Die kleine Seed-Datei bleibt der
 reproduzierbare Entwicklungsstart;

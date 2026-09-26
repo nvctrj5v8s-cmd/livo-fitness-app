@@ -30,7 +30,7 @@ benötigt.
 Für den geprüften Lebensmittelimport zuerst `migrations/0002_catalog_metadata.sql`
 ausführen. Die erzeugten Dateien liegen bereits unter `imports/`: Foundation
 mit 354 generischen Lebensmitteln und FNDDS mit 5.431 zubereiteten
-Lebensmitteln. Zusätzlich enthält `imports/curated_recipes.sql` zwölf originale
+Lebensmitteln. Zusätzlich enthält `imports/curated_recipes.sql` zehn originale
 Starter-Rezepte. Einen neuen Lebensmittelimport kann man lokal so erzeugen:
 
 ```text

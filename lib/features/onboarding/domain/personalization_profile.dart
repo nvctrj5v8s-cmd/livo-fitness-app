@@ -1,5 +1,4 @@
-/// Versioned preferences, separate from medical data and from UI wording.
-/// Stable enum names can also be used by a future English interface.
+/// Stable enum names support a later English UI without changing saved data.
 enum PersonalGoal {
   balanced('Gesünder essen'),
   loseWeight('Fett verlieren'),
@@ -30,6 +29,9 @@ enum NutritionPreference {
   final String label;
 }
 
+enum MeasurementSystem { metric, imperial }
+
+/// Older optional preferences are kept so existing accounts continue to work.
 enum RoutineFocus {
   time('Wenig Zeit'),
   ideas('Neue Essensideen'),
@@ -53,6 +55,10 @@ class PersonalizationProfile {
     this.allergies = '',
     this.cookingMinutes,
     this.focus,
+    this.birthDate,
+    this.heightCm,
+    this.weightKg,
+    this.measurementSystem = MeasurementSystem.metric,
   });
 
   final String displayName;
@@ -65,6 +71,23 @@ class PersonalizationProfile {
   final int? cookingMinutes;
   final RoutineFocus? focus;
 
+  /// Optional physical data, saved only on this device with the preferences.
+  final DateTime? birthDate;
+  final int? heightCm;
+  final double? weightKg;
+  final MeasurementSystem measurementSystem;
+
+  int? ageOn(DateTime date) {
+    final birthday = birthDate;
+    if (birthday == null) return null;
+    var age = date.year - birthday.year;
+    if (date.month < birthday.month ||
+        (date.month == birthday.month && date.day < birthday.day)) {
+      age--;
+    }
+    return age < 0 ? null : age;
+  }
+
   PersonalizationProfile copyWith({
     String? displayName,
     Object? goal = _unchanged,
@@ -75,6 +98,10 @@ class PersonalizationProfile {
     String? allergies,
     Object? cookingMinutes = _unchanged,
     Object? focus = _unchanged,
+    Object? birthDate = _unchanged,
+    Object? heightCm = _unchanged,
+    Object? weightKg = _unchanged,
+    MeasurementSystem? measurementSystem,
   }) => PersonalizationProfile(
     displayName: displayName ?? this.displayName,
     goal: identical(goal, _unchanged) ? this.goal : goal as PersonalGoal?,
@@ -95,6 +122,16 @@ class PersonalizationProfile {
         ? this.cookingMinutes
         : cookingMinutes as int?,
     focus: identical(focus, _unchanged) ? this.focus : focus as RoutineFocus?,
+    birthDate: identical(birthDate, _unchanged)
+        ? this.birthDate
+        : birthDate as DateTime?,
+    heightCm: identical(heightCm, _unchanged)
+        ? this.heightCm
+        : heightCm as int?,
+    weightKg: identical(weightKg, _unchanged)
+        ? this.weightKg
+        : weightKg as double?,
+    measurementSystem: measurementSystem ?? this.measurementSystem,
   );
 
   Map<String, Object?> toJson() => {
@@ -108,6 +145,14 @@ class PersonalizationProfile {
     'allergies': allergies.trim(),
     'cooking_minutes': cookingMinutes,
     'focus': focus?.name,
+    if (birthDate != null) 'birth_date': _dateString(birthDate!),
+    if (heightCm != null) 'height_cm': heightCm,
+    if (weightKg != null) 'weight_kg': weightKg,
+    if (birthDate != null ||
+        heightCm != null ||
+        weightKg != null ||
+        measurementSystem != MeasurementSystem.metric)
+      'measurement_system': measurementSystem.name,
   };
 
   factory PersonalizationProfile.fromJson(Map<String, dynamic> json) {
@@ -132,6 +177,12 @@ class PersonalizationProfile {
           : allergies.substring(0, 160),
       cookingMinutes: _allowedInt(json['cooking_minutes'], const [15, 30, 45]),
       focus: _enumValue(RoutineFocus.values, json['focus']),
+      birthDate: _dateValue(json['birth_date']),
+      heightCm: _boundedInt(json['height_cm'], 90, 250),
+      weightKg: _boundedDouble(json['weight_kg'], 25, 400),
+      measurementSystem:
+          _enumValue(MeasurementSystem.values, json['measurement_system']) ??
+          MeasurementSystem.metric,
     );
   }
 
@@ -142,14 +193,6 @@ class PersonalizationProfile {
   List<String> get summaryLines => [
     if (goal != null) 'Dein Fokus: ${goal!.label.toLowerCase()}.',
     if (activity != null) 'Dein Alltag: ${activity!.label.toLowerCase()}.',
-    if (usualMeals != null &&
-        desiredMeals != null &&
-        usualMeals != desiredMeals)
-      'Bisher $usualMeals, künftig lieber $desiredMeals Mahlzeiten. Dein Tagebuch erinnert dich an deinen Wunsch.'
-    else
-      desiredMeals == null
-          ? 'Du entscheidest jeden Tag, wie viele Mahlzeiten dir passen.'
-          : 'Dein Tagebuch zeigt deinen Wunsch nach $desiredMeals Mahlzeiten – ohne feste Essenszeiten.',
     if (nutrition != null && nutrition != NutritionPreference.mixed)
       'Passend gekennzeichnete ${nutrition!.label.toLowerCase()} Rezeptideen erscheinen zuerst.',
     if (allergies.trim().isNotEmpty)
@@ -158,17 +201,10 @@ class PersonalizationProfile {
       'Rezepte bis $cookingMinutes Minuten bekommen Vorrang, wenn passende vorhanden sind.',
     if (focus == RoutineFocus.budget)
       'Als Budget-Rezept markierte Ideen rücken nach vorne.',
-    if (focus == RoutineFocus.time && cookingMinutes == null)
-      'Schnelle Rezepte bis 15 Minuten rücken nach vorne.',
-    if (focus == RoutineFocus.consistency)
-      'Dein Mahlzeitenrhythmus bleibt auf der Startseite sichtbar.',
-    if (focus == RoutineFocus.ideas)
-      'Deine Startseite führt dich direkt zu den Rezeptideen.',
   ];
 
-  /// Prepared context only: no network call, API key or consent is implied.
-  /// Name/account identity intentionally omitted. Any future AI integration
-  /// must request permission and establish suitability before dietary advice.
+  /// Context is prepared locally. It is only included with an AI request when
+  /// the user actively uses the in-app coach.
   Map<String, Object?> toPreferenceContext() => {
     'schema_version': 1,
     'locale': 'de',
@@ -178,6 +214,10 @@ class PersonalizationProfile {
     'desired_meals': desiredMeals,
     'nutrition_preference': nutrition?.name,
     'allergies': allergies.trim().isEmpty ? null : allergies.trim(),
+    'age': ageOn(DateTime.now()),
+    'height_cm': heightCm,
+    'weight_kg': weightKg,
+    'measurement_system': measurementSystem.name,
     'cooking_minutes': cookingMinutes,
     'routine_focus': focus?.name,
     'suitability_screening': 'not_performed',
@@ -195,3 +235,25 @@ T? _enumValue<T extends Enum>(List<T> values, Object? raw) {
 
 int? _allowedInt(Object? raw, List<int> allowed) =>
     raw is int && allowed.contains(raw) ? raw : null;
+
+int? _boundedInt(Object? raw, int min, int max) =>
+    raw is int && raw >= min && raw <= max ? raw : null;
+
+double? _boundedDouble(Object? raw, double min, double max) {
+  final value = raw is num ? raw.toDouble() : null;
+  return value != null && value >= min && value <= max ? value : null;
+}
+
+DateTime? _dateValue(Object? raw) {
+  if (raw is! String || !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(raw)) {
+    return null;
+  }
+  final parsed = DateTime.tryParse(raw);
+  if (parsed == null || parsed.year < 1900 || parsed.isAfter(DateTime.now())) {
+    return null;
+  }
+  return DateTime(parsed.year, parsed.month, parsed.day);
+}
+
+String _dateString(DateTime date) =>
+    '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

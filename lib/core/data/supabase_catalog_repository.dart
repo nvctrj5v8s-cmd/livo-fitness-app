@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'halal_content_policy.dart';
 import '../models/app_models.dart';
 
 class SupabaseCatalogRepository {
@@ -18,10 +19,15 @@ class SupabaseCatalogRepository {
         .from('recipe_ingredients')
         .select('recipe_id, food_id, amount_grams, position')
         .order('position');
-    final foods = foodRows
+    final allFoods = foodRows
         .whereType<Map>()
         .map((row) => FoodItem.fromMap(Map<String, dynamic>.from(row)))
         .toList();
+    final blockedFoodIds = allFoods
+        .where((food) => !HalalContentPolicy.isAllowedFood(food))
+        .map((food) => food.id)
+        .toSet();
+    final foods = allFoods.where(HalalContentPolicy.isAllowedFood).toList();
     final foodsById = {for (final food in foods) food.id: food};
     final ingredientsByRecipe = <String, List<Map<String, dynamic>>>{};
     for (final raw in ingredientRows.whereType<Map>()) {
@@ -30,14 +36,19 @@ class SupabaseCatalogRepository {
       if (recipeId == null) continue;
       ingredientsByRecipe.putIfAbsent(recipeId, () => []).add(row);
     }
-    final recipes = recipeRows.whereType<Map>().map((row) {
-      final recipe = Map<String, dynamic>.from(row);
-      return _recipeFromMap(
-        recipe,
-        ingredientsByRecipe[recipe['id']?.toString()] ?? const [],
-        foodsById,
+    final recipes = <Recipe>[];
+    for (final rawRecipe in recipeRows.whereType<Map>()) {
+      final row = Map<String, dynamic>.from(rawRecipe);
+      final ingredientRows =
+          ingredientsByRecipe[row['id']?.toString()] ?? const [];
+      final hasBlockedIngredient = ingredientRows.any(
+        (ingredient) =>
+            blockedFoodIds.contains(ingredient['food_id']?.toString()),
       );
-    }).toList();
+      if (hasBlockedIngredient) continue;
+      final recipe = _recipeFromMap(row, ingredientRows, foodsById);
+      if (HalalContentPolicy.isAllowedRecipe(recipe)) recipes.add(recipe);
+    }
     return CatalogData(foods: foods, recipes: recipes);
   }
 

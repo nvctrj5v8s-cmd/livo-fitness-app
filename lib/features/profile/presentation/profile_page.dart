@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../../../core/state/app_controller.dart';
@@ -8,6 +6,7 @@ import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../onboarding/presentation/personalization_card.dart';
 import '../../onboarding/presentation/personalization_entry.dart';
+import '../domain/daily_targets.dart';
 import 'avatar_editor.dart';
 import 'settings_sheets.dart';
 
@@ -22,40 +21,34 @@ class ProfilePage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
+          constraints: const BoxConstraints(maxWidth: 720),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 110),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AnimatedReveal(
-                  child: PageHeader(
-                    title: 'Profil',
-                    subtitle: 'Deine Ziele und Einstellungen an einem Ort.',
-                    trailing: IconButton.filledTonal(
-                      onPressed: () => _openEditProfile(context, controller),
-                      tooltip: 'Profil bearbeiten',
-                      icon: const Icon(Icons.edit_outlined),
-                    ),
-                  ),
+                _ProfileTopBar(
+                  onEdit: () => _openEditProfile(context, controller),
                 ),
+                const SizedBox(height: 14),
+                AnimatedReveal(child: _ProfileIdentity(controller: controller)),
                 const SizedBox(height: 22),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 70),
-                  child: _ProfileHero(controller: controller),
+                  child: _TodayStats(controller: controller),
                 ),
-                const SizedBox(height: 20),
-                const PersonalizationCard(profileMode: true),
-                const SizedBox(height: 24),
+                const SizedBox(height: 26),
                 const AnimatedReveal(
                   delay: Duration(milliseconds: 140),
-                  child: SectionHeader(title: 'Meine Ziele'),
+                  child: SectionHeader(title: 'Meine täglichen Ziele'),
                 ),
                 const SizedBox(height: 11),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 190),
-                  child: _GoalGrid(controller: controller),
+                  child: _DailyGoals(controller: controller),
                 ),
+                const SizedBox(height: 20),
+                const PersonalizationCard(profileMode: true),
                 const SizedBox(height: 25),
                 const AnimatedReveal(
                   delay: Duration(milliseconds: 250),
@@ -94,89 +87,85 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class _ProfileHero extends StatelessWidget {
-  const _ProfileHero({required this.controller});
+class _ProfileTopBar extends StatelessWidget {
+  const _ProfileTopBar({required this.onEdit});
+  final VoidCallback onEdit;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      const SizedBox(width: 48),
+      Expanded(
+        child: Text(
+          'Profil',
+          textAlign: TextAlign.center,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+      ),
+      IconButton.filledTonal(
+        onPressed: onEdit,
+        tooltip: 'Profil bearbeiten',
+        icon: const Icon(Icons.tune_rounded, size: 20),
+      ),
+    ],
+  );
+}
+
+class _ProfileIdentity extends StatelessWidget {
+  const _ProfileIdentity({required this.controller});
   final AppController controller;
 
   @override
   Widget build(BuildContext context) {
-    return SurfaceCard(
-      padding: const EdgeInsets.all(20),
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          AppColors.primary.withValues(alpha: 0.15),
-          AppColors.surfaceHigh,
-          AppColors.blue.withValues(alpha: 0.06),
-        ],
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final compact = constraints.maxWidth < 520;
-          final details = Column(
-            crossAxisAlignment: compact
-                ? CrossAxisAlignment.center
-                : CrossAxisAlignment.start,
+    final goal =
+        controller.personalization?.goal?.label ??
+        (controller.personalization == null ? controller.goal : null);
+    return Column(
+      children: [
+        const _EditableAvatar(),
+        const SizedBox(height: 16),
+        Text(
+          controller.greetingName,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(
+            context,
+          ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: 6),
+        if (goal != null)
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                controller.greetingName,
-                style: Theme.of(context).textTheme.headlineMedium,
+              const Icon(
+                Icons.flag_rounded,
+                size: 16,
+                color: AppColors.primary,
               ),
-              const SizedBox(height: 5),
-              Text(
-                controller.personalization == null
-                    ? controller.goal
-                    : controller.personalization!.goal?.label ??
-                          'Dein persönlicher Start',
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 11),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 7,
-                runSpacing: 7,
-                children: [
-                  StatusPill(
-                    label: controller.streakDays == 1
-                        ? '1 TAG SERIE'
-                        : '${controller.streakDays} TAGE SERIE',
-                    icon: Icons.local_fire_department_outlined,
-                    color: AppColors.orange,
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  goal,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
-                ],
+                ),
               ),
             ],
-          );
-          if (compact) {
-            return Column(
-              children: [
-                const _EditableAvatar(),
-                const SizedBox(height: 16),
-                details,
-                const SizedBox(height: 20),
-                _GoalRing(progress: controller.goalProgress),
-                const SizedBox(height: 6),
-                const Text(
-                  'Dein Weg zum Ziel',
-                  style: TextStyle(color: AppColors.textMuted, fontSize: 12),
-                ),
-              ],
-            );
-          }
-          return Row(
-            children: [
-              const _EditableAvatar(),
-              const SizedBox(width: 20),
-              Expanded(child: details),
-              _GoalRing(progress: controller.goalProgress),
-            ],
-          );
-        },
-      ),
+          )
+        else
+          const Text(
+            'Noch kein Ziel gewählt',
+            style: TextStyle(color: AppColors.textMuted, fontSize: 14),
+          ),
+      ],
     );
   }
 }
@@ -186,184 +175,341 @@ class _EditableAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.mint],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.2),
-            blurRadius: 24,
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.primary, AppColors.mint],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.22),
+                blurRadius: 30,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: AppAvatar(
-        radius: 42,
-        onTap: () => showAvatarEditor(context),
-        semanticLabel: 'Profilbild ändern',
-      ),
-    );
-  }
-}
-
-class _GoalRing extends StatelessWidget {
-  const _GoalRing({required this.progress});
-  final double progress;
-
-  @override
-  Widget build(BuildContext context) {
-    final reduceMotion = MediaQuery.disableAnimationsOf(context);
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: progress),
-      duration: reduceMotion
-          ? Duration.zero
-          : const Duration(milliseconds: 1000),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, _) => SizedBox.square(
-        dimension: 88,
-        child: CustomPaint(
-          painter: _GoalRingPainter(value),
-          child: Center(
-            child: Text(
-              '${(value * 100).round()}%',
-              style: const TextStyle(fontWeight: FontWeight.w800),
+          child: Container(
+            padding: const EdgeInsets.all(3),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.background,
+            ),
+            child: AppAvatar(
+              radius: 54,
+              onTap: () => showAvatarEditor(context),
+              semanticLabel: 'Profilbild ändern',
             ),
           ),
         ),
-      ),
+        Positioned(
+          right: 2,
+          bottom: 2,
+          child: ExcludeSemantics(
+            child: GestureDetector(
+              onTap: () => showAvatarEditor(context),
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primary,
+                  border: Border.all(color: AppColors.background, width: 3),
+                ),
+                child: const Icon(
+                  Icons.edit_rounded,
+                  size: 16,
+                  color: AppColors.black,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _GoalRingPainter extends CustomPainter {
-  const _GoalRingPainter(this.progress);
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = (Offset.zero & size).deflate(6);
-    canvas.drawArc(
-      rect,
-      0,
-      math.pi * 2,
-      false,
-      Paint()
-        ..color = AppColors.surfaceSoft
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 7,
-    );
-    canvas.drawArc(
-      rect,
-      -math.pi / 2,
-      math.pi * 2 * progress,
-      false,
-      Paint()
-        ..color = AppColors.primary
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 7
-        ..strokeCap = StrokeCap.round,
-    );
-  }
-
-  @override
-  bool shouldRepaint(_GoalRingPainter oldDelegate) =>
-      oldDelegate.progress != progress;
-}
-
-class _GoalGrid extends StatelessWidget {
-  const _GoalGrid({required this.controller});
+class _TodayStats extends StatelessWidget {
+  const _TodayStats({required this.controller});
   final AppController controller;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 680 ? 3 : 1;
-        const gap = 10.0;
-        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
+    final entries = controller.diaryMeals.length;
+    final streak = controller.streakDays;
+    return SurfaceCard(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 6),
+      child: IntrinsicHeight(
+        child: Row(
           children: [
-            _GoalTile(
-              width: width,
-              icon: Icons.monitor_weight_outlined,
-              color: AppColors.primary,
-              value: '${controller.targetWeight.toStringAsFixed(1)} kg',
-              label: 'Zielgewicht',
+            Expanded(
+              child: _StatColumn(
+                icon: Icons.checklist_rounded,
+                color: AppColors.mint,
+                value: '$entries',
+                label: entries == 1 ? 'Eintrag heute' : 'Einträge heute',
+              ),
             ),
-            _GoalTile(
-              width: width,
-              icon: Icons.local_fire_department_outlined,
-              color: AppColors.orange,
-              value: '${controller.calorieGoal} kcal',
-              label: 'Tagesziel',
+            const VerticalDivider(width: 1, color: AppColors.border),
+            Expanded(
+              child: _StatColumn(
+                icon: Icons.local_fire_department_rounded,
+                color: AppColors.orange,
+                value: controller.streakLoading ? '–' : '$streak',
+                label: streak == 1 ? 'Tag Serie' : 'Tage Serie',
+              ),
             ),
-            _GoalTile(
-              width: width,
-              icon: Icons.fitness_center_rounded,
-              color: AppColors.mint,
-              value: '${controller.proteinGoal} g',
-              label: 'Protein',
+            const VerticalDivider(width: 1, color: AppColors.border),
+            Expanded(
+              child: _StatColumn(
+                icon: Icons.restaurant_rounded,
+                color: AppColors.primary,
+                value: _formatThousands(controller.diaryConsumedCalories),
+                label: 'kcal heute',
+              ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
-class _GoalTile extends StatelessWidget {
-  const _GoalTile({
-    required this.width,
+class _StatColumn extends StatelessWidget {
+  const _StatColumn({
     required this.icon,
     required this.color,
     required this.value,
     required this.label,
   });
-  final double width;
   final IconData icon;
   final Color color;
   final String value;
   final String label;
 
   @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 6),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 8),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: AppColors.text,
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+        ),
+      ],
+    ),
+  );
+}
+
+String _formatThousands(int value) {
+  final digits = value.abs().toString();
+  final buffer = StringBuffer(value < 0 ? '-' : '');
+  for (var i = 0; i < digits.length; i++) {
+    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write('.');
+    buffer.write(digits[i]);
+  }
+  return buffer.toString();
+}
+
+class _DailyGoals extends StatelessWidget {
+  const _DailyGoals({required this.controller});
+  final AppController controller;
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: SurfaceCard(
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 26),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
+    final targets = controller.dailyTargets;
+    final ready = targets.isReady;
+    final note = switch (targets.status) {
+      DailyTargetsStatus.ready =>
+        'Diese Richtwerte berechnen wir aus deinem Alter, deiner Größe, '
+            'deinem Gewicht und deinem Alltag. Sie dienen zur Orientierung '
+            'und ersetzen keine ärztliche Beratung.',
+      DailyTargetsStatus.missingData =>
+        'Deine Tagesziele berechnen wir aus deinem Alter, deiner Größe, '
+            'deinem Gewicht und deinem Alltag. Wenn du möchtest, beantworte '
+            'dazu ein paar kurze Fragen. Du kannst LIVO aber auch ganz ohne '
+            'Ziele nutzen.',
+      DailyTargetsStatus.underage =>
+        'Für Personen unter 18 Jahren berechnet LIVO keine Kalorienziele. '
+            'Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen '
+            'Arzt oder eine Ernährungsfachkraft.',
+    };
+    return SurfaceCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _TargetTile(
+                  key: const Key('daily-goal-calories'),
+                  icon: Icons.local_fire_department_rounded,
+                  color: AppColors.orange,
+                  value: ready ? _formatThousands(targets.calories!) : '–',
+                  unit: 'kcal',
+                  label: 'Kalorien',
                 ),
-                const SizedBox(height: 3),
-                Text(
-                  label,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _TargetTile(
+                  key: const Key('daily-goal-protein'),
+                  icon: Icons.egg_alt_rounded,
+                  color: AppColors.mint,
+                  value: ready ? '${targets.protein}' : '–',
+                  unit: 'g',
+                  label: 'Protein',
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _TargetTile(
+                  key: const Key('daily-goal-fat'),
+                  icon: Icons.water_drop_rounded,
+                  color: AppColors.blue,
+                  value: ready ? '${targets.fat}' : '–',
+                  unit: 'g',
+                  label: 'Fett',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 1),
+                child: Icon(
+                  Icons.info_outline_rounded,
+                  size: 18,
+                  color: AppColors.textMuted,
+                ),
+              ),
+              const SizedBox(width: 9),
+              Expanded(
+                child: Text(
+                  note,
                   style: const TextStyle(
                     color: AppColors.textMuted,
-                    fontSize: 11,
+                    fontSize: 12.5,
+                    height: 1.45,
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          if (targets.status != DailyTargetsStatus.underage) ...[
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: ready
+                  ? TextButton.icon(
+                      onPressed: () => openPersonalizationEditor(context),
+                      icon: const Icon(Icons.edit_outlined, size: 18),
+                      label: const Text('Angaben ändern'),
+                    )
+                  : FilledButton.tonalIcon(
+                      key: const Key('daily-goals-answer'),
+                      onPressed: () => openPersonalizationEditor(context),
+                      icon: const Icon(Icons.quiz_outlined, size: 18),
+                      label: const Text('Fragen beantworten'),
+                    ),
             ),
           ],
-        ),
+        ],
       ),
     );
   }
+}
+
+class _TargetTile extends StatelessWidget {
+  const _TargetTile({
+    required this.icon,
+    required this.color,
+    required this.value,
+    required this.unit,
+    required this.label,
+    super.key,
+  });
+  final IconData icon;
+  final Color color;
+  final String value;
+  final String unit;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(11, 12, 8, 12),
+    decoration: BoxDecoration(
+      color: AppColors.surfaceSoft,
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(height: 9),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: value,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                if (value != '–')
+                  TextSpan(
+                    text: ' $unit',
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+              ],
+            ),
+            style: const TextStyle(color: AppColors.text),
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+        ),
+      ],
+    ),
+  );
 }
 
 class _NutritionProfile extends StatelessWidget {
@@ -642,18 +788,28 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
               ),
             ],
             const SizedBox(height: 19),
-            Text(
-              'Kalorienziel: ${_calories.round()} kcal',
-              style: const TextStyle(fontWeight: FontWeight.w700),
-            ),
-            Slider(
-              value: _calories,
-              min: 1400,
-              max: 3200,
-              divisions: 36,
-              activeColor: AppColors.primary,
-              onChanged: (value) => setState(() => _calories = value),
-            ),
+            if (widget.controller.dailyTargets.isReady)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 14),
+                child: Text(
+                  'Dein Kalorienziel wird aus deinen Angaben berechnet.',
+                  style: TextStyle(color: AppColors.textMuted, height: 1.4),
+                ),
+              )
+            else ...[
+              Text(
+                'Kalorienziel: ${_calories.round()} kcal',
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              Slider(
+                value: _calories.clamp(1400, 3200),
+                min: 1400,
+                max: 3200,
+                divisions: 36,
+                activeColor: AppColors.primary,
+                onChanged: (value) => setState(() => _calories = value),
+              ),
+            ],
             Text(
               'Zielgewicht: ${_targetWeight.toStringAsFixed(1)} kg',
               style: const TextStyle(fontWeight: FontWeight.w700),

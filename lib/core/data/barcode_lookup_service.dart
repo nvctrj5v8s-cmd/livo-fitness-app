@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'halal_content_policy.dart';
 import '../models/app_models.dart';
 
 class BarcodeLookupException implements Exception {
@@ -15,7 +16,14 @@ class BarcodeLookupException implements Exception {
   String toString() => message;
 }
 
-enum BarcodeErrorKind { invalid, notFound, rateLimited, unavailable, unknown }
+enum BarcodeErrorKind {
+  invalid,
+  notFound,
+  notAllowed,
+  rateLimited,
+  unavailable,
+  unknown,
+}
 
 /// Looks up one scanned food product through the protected Supabase function.
 /// The function enforces a per-account limit and adds Open Food Facts source
@@ -54,6 +62,7 @@ class BarcodeLookupService {
           kind: switch (data['code']) {
             'invalid_barcode' => BarcodeErrorKind.invalid,
             'not_found' => BarcodeErrorKind.notFound,
+            'not_halal' => BarcodeErrorKind.notAllowed,
             'rate_limited' => BarcodeErrorKind.rateLimited,
             'upstream_unavailable' => BarcodeErrorKind.unavailable,
             _ => BarcodeErrorKind.unknown,
@@ -67,7 +76,14 @@ class BarcodeLookupService {
           kind: BarcodeErrorKind.notFound,
         );
       }
-      return FoodItem.fromMap(Map<String, dynamic>.from(food));
+      final item = FoodItem.fromMap(Map<String, dynamic>.from(food));
+      if (!HalalContentPolicy.isAllowedFood(item)) {
+        throw const BarcodeLookupException(
+          'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+          kind: BarcodeErrorKind.notAllowed,
+        );
+      }
+      return item;
     } on BarcodeLookupException {
       rethrow;
     } on FunctionException catch (error) {

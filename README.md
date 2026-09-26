@@ -18,6 +18,15 @@ Fortschritt und persönliche Ziele. Die Quran-App ist ein getrenntes Projekt.
 Die Barcode-Verbindung benötigt die einmaligen Supabase-Schritte aus
 `docs/BARCODE_LOOKUP.md`. Geheime Schlüssel gehören nicht in die Flutter-App.
 
+## Halal-Inhaltsregel
+
+LIVO zeigt und speichert keine bekannten Schweinefleisch-, Alkohol- oder
+Gelatine-Inhalte. Fleisch von Landtieren wird nur zugelassen, wenn die
+Produktdaten eine eindeutige Halal-Kennzeichnung enthalten. Diese technische
+Sperre ist keine religiöse Zertifizierung: Bei unklaren Zutaten oder
+Zertifizierungen bitte immer die Verpackung prüfen. Details stehen in
+`docs/HALAL_CONTENT_POLICY.md`.
+
 ## Lokal starten
 
 ```powershell

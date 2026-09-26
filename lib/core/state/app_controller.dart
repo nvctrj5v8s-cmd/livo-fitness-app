@@ -9,8 +9,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
+import '../../features/profile/domain/daily_targets.dart';
 import '../data/avatar_repository.dart';
 import '../data/food_preferences_store.dart';
+import '../data/halal_content_policy.dart';
 import '../data/supabase_catalog_repository.dart';
 import '../data/supabase_diary_repository.dart';
 import '../data/supabase_favorites_repository.dart';
@@ -207,6 +209,16 @@ class AppController extends ChangeNotifier {
   List<Recipe> get personalizedRecipes =>
       prioritizeRecipes(recipes, personalization);
 
+  DailyTargets get dailyTargets => DailyTargets.fromProfile(personalization);
+
+  // Calculated targets win over stored defaults so diary and profile agree.
+  void _syncGoalsWithTargets() {
+    final targets = dailyTargets;
+    if (!targets.isReady) return;
+    calorieGoal = targets.calories!;
+    proteinGoal = targets.protein!;
+  }
+
   Future<PersonalizationRecord> loadPersonalization() async {
     final revision = ++_personalizationRevision;
     final userId = personalizationUserId;
@@ -216,6 +228,7 @@ class AppController extends ChangeNotifier {
         .timeout(const Duration(seconds: 4));
     if (!_disposed && revision == _personalizationRevision) {
       personalization = record.profile;
+      _syncGoalsWithTargets();
       notifyListeners();
     }
     return record;
@@ -269,6 +282,7 @@ class AppController extends ChangeNotifier {
     if (profile.allergies.trim().isNotEmpty) {
       allergies = profile.allergies.trim();
     }
+    _syncGoalsWithTargets();
   }
 
   Map<String, dynamic> _personalizationProfileValues(
@@ -497,6 +511,7 @@ class AppController extends ChangeNotifier {
     } catch (error) {
       profileError = error.toString();
     } finally {
+      _syncGoalsWithTargets();
       profileLoading = false;
       notifyListeners();
     }
@@ -514,14 +529,17 @@ class AppController extends ChangeNotifier {
     try {
       final remoteMeals = await _diary.loadMealsForDate(targetDate);
       if (requestId != _diaryRequestId) return;
+      final allowedMeals = remoteMeals
+          .where((meal) => HalalContentPolicy.isAllowedText(meal.name))
+          .toList();
       diaryDate = targetDate;
       diaryMeals
         ..clear()
-        ..addAll(remoteMeals);
+        ..addAll(allowedMeals);
       if (_isToday(targetDate)) {
         meals
           ..clear()
-          ..addAll(remoteMeals);
+          ..addAll(allowedMeals);
       }
       _hasLoadedRemoteDiary = true;
     } on PostgrestException catch (error) {
@@ -625,13 +643,6 @@ class AppController extends ChangeNotifier {
       (diaryConsumedCalories / calorieGoal).clamp(0, 1);
   int get diaryCarbohydrateGoal => (calorieGoal * 0.5 / 4).round();
   int get diaryFatGoal => (calorieGoal * 0.3 / 9).round();
-  double get goalProgress {
-    const startWeight = 81.2;
-    final total = startWeight - targetWeight;
-    if (total <= 0) return 0;
-    return ((startWeight - currentWeight) / total).clamp(0, 1);
-  }
-
   void addWater() {
     if (waterGlasses >= 8) return;
     waterGlasses++;
@@ -645,6 +656,12 @@ class AppController extends ChangeNotifier {
   }
 
   void addMeal(MealEntry meal) {
+    if (!HalalContentPolicy.isAllowedText(meal.name)) {
+      diaryError =
+          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+      notifyListeners();
+      return;
+    }
     meals.add(meal);
     if (_isToday(diaryDate)) diaryMeals.add(meal);
     notifyListeners();
@@ -692,6 +709,12 @@ class AppController extends ChangeNotifier {
     required double amountGrams,
     required DateTime date,
   }) async {
+    if (!HalalContentPolicy.isAllowedFood(food)) {
+      diaryError =
+          'Dieses Lebensmittel entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+      notifyListeners();
+      return false;
+    }
     if (diarySaving) return false;
     await _prepareTracking();
     diarySaving = true;
@@ -752,6 +775,12 @@ class AppController extends ChangeNotifier {
     required int fat,
     required DateTime date,
   }) async {
+    final contentError = HalalContentPolicy.restrictionReason(name);
+    if (contentError != null) {
+      diaryError = contentError;
+      notifyListeners();
+      return false;
+    }
     if (diarySaving) return false;
     await _prepareTracking();
     diarySaving = true;
@@ -788,11 +817,19 @@ class AppController extends ChangeNotifier {
     required MealSlot slot,
     required CustomFoodNutrition nutrition,
     required DateTime date,
+    bool requireLabelValues = true,
   }) async {
-    final validationError = nutrition.validate(requireLabelValues: true);
-    if (name.trim().isEmpty || validationError != null) {
+    final validationError = nutrition.validate(
+      requireLabelValues: requireLabelValues,
+    );
+    final contentError = HalalContentPolicy.restrictionReason(name);
+    if (name.trim().isEmpty ||
+        validationError != null ||
+        contentError != null) {
       diaryError =
-          validationError ?? 'Bitte gib deinem Lebensmittel einen Namen.';
+          validationError ??
+          contentError ??
+          'Bitte gib deinem Lebensmittel einen Namen.';
       notifyListeners();
       return false;
     }
@@ -841,6 +878,14 @@ class AppController extends ChangeNotifier {
     DateTime? date,
   }) async {
     final targetDate = date ?? diaryDate;
+    final contentError = name == null
+        ? null
+        : HalalContentPolicy.restrictionReason(name);
+    if (contentError != null) {
+      diaryError = contentError;
+      notifyListeners();
+      return false;
+    }
     if (diarySaving) return false;
     final isLocalPreview = entry.remoteMealId == null;
     if (isLocalPreview) {
@@ -915,6 +960,12 @@ class AppController extends ChangeNotifier {
   }
 
   Future<bool> duplicateDiaryEntry(MealEntry entry, {DateTime? date}) async {
+    if (!HalalContentPolicy.isAllowedText(entry.name)) {
+      diaryError =
+          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+      notifyListeners();
+      return false;
+    }
     final targetDate = date ?? diaryDate;
     if (entry.remoteMealId == null) {
       final duplicate = entry.copyWith();
@@ -1075,6 +1126,12 @@ class AppController extends ChangeNotifier {
     DateTime? date,
     MealSlot slot = MealSlot.dinner,
   }) async {
+    if (!HalalContentPolicy.isAllowedRecipe(recipe)) {
+      diaryError =
+          'Dieses Rezept entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+      notifyListeners();
+      return false;
+    }
     final targetDate = date ?? _now();
 
     // Bundled preview recipes use illustrative IDs. They remain available in

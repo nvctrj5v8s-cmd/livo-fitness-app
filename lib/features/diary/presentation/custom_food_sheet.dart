@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/data/halal_content_policy.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
@@ -218,7 +219,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                         ? 'Bitte deinem Lebensmittel einen Namen geben.'
                         : value.trim().length > 100
                         ? 'Bitte höchstens 100 Zeichen verwenden.'
-                        : null,
+                        : HalalContentPolicy.restrictionReason(value.trim()),
                   ),
                   const SizedBox(height: 14),
                   Text(
