@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
+import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../subscription/domain/subscription_plans.dart';
+import '../../subscription/presentation/paywall_page.dart';
+import '../../subscription/presentation/premium_widgets.dart';
 import 'add_meal_sheet.dart';
 import 'barcode_scanner_page.dart';
 import 'food_detail_page.dart';
@@ -36,6 +40,14 @@ Future<void> showQuickAddSheet(BuildContext context) async {
   final navigator = Navigator.of(context);
   switch (option) {
     case QuickAddOption.photo:
+      // KI-Foto is part of LIVO Premium; free accounts see the paywall first.
+      if (!AppScope.of(context).subscription.hasPremium) {
+        final unlocked = await showPaywall(
+          context,
+          source: PaywallSource.mealPhoto,
+        );
+        if (!unlocked || !context.mounted) return;
+      }
       await navigator.push<bool>(
         MaterialPageRoute(
           builder: (_) => MealPhotoPage(initialSlot: slot, date: now),
@@ -62,6 +74,7 @@ class _QuickAddSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final premium = AppScope.of(context).subscription.hasPremium;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(18, 10, 18, 22),
       child: Column(
@@ -86,12 +99,16 @@ class _QuickAddSheet extends StatelessWidget {
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 14),
-          const _QuickAddTile(
-            key: Key('quick-add-photo'),
+          _QuickAddTile(
+            key: const Key('quick-add-photo'),
             option: QuickAddOption.photo,
             icon: Icons.photo_camera_rounded,
             title: 'KI-Foto',
-            subtitle: 'Foto machen, KI schätzt Lebensmittel und Mengen',
+            subtitle: premium
+                ? 'Foto machen, KI schätzt Lebensmittel und Mengen'
+                : 'Premium-Funktion · ${SubscriptionPlans.trialDays} Tage '
+                      'kostenlos testen',
+            premiumBadge: !premium,
           ),
           const SizedBox(height: 10),
           const _QuickAddTile(
@@ -121,6 +138,7 @@ class _QuickAddTile extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.premiumBadge = false,
     super.key,
   });
 
@@ -128,6 +146,9 @@ class _QuickAddTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+
+  /// Marks a locked premium feature with icon and text.
+  final bool premiumBadge;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -155,13 +176,21 @@ class _QuickAddTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: AppColors.text,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                    ),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: AppColors.text,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      if (premiumBadge) const PremiumBadge(),
+                    ],
                   ),
                   const SizedBox(height: 3),
                   Text(
@@ -175,7 +204,12 @@ class _QuickAddTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+            Icon(
+              premiumBadge
+                  ? Icons.lock_outline_rounded
+                  : Icons.chevron_right_rounded,
+              color: AppColors.textMuted,
+            ),
           ],
         ),
       ),

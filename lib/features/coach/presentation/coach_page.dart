@@ -9,16 +9,36 @@ import 'package:image/image.dart' as img;
 import '../../../core/data/ai_coach_service.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../subscription/domain/subscription_plans.dart';
+import '../../subscription/presentation/paywall_page.dart';
+import '../../subscription/presentation/premium_widgets.dart';
 
-class CoachPage extends StatefulWidget {
+/// The coach chat is part of LIVO Premium. Free accounts see what it offers
+/// and a way to the paywall; the server enforces the same rule.
+class CoachPage extends StatelessWidget {
   const CoachPage({super.key});
 
   @override
-  State<CoachPage> createState() => _CoachPageState();
+  Widget build(BuildContext context) {
+    final subscription = AppScope.of(context).subscription;
+    if (subscription.hasPremium) return const _CoachChat();
+    if (!subscription.hasLoaded && !subscription.loadFailed) {
+      return const _CoachLoading();
+    }
+    return const _CoachLocked();
+  }
 }
 
-class _CoachPageState extends State<CoachPage>
+class _CoachChat extends StatefulWidget {
+  const _CoachChat();
+
+  @override
+  State<_CoachChat> createState() => _CoachChatState();
+}
+
+class _CoachChatState extends State<_CoachChat>
     with SingleTickerProviderStateMixin {
   final _composer = TextEditingController();
   final _scrollController = ScrollController();
@@ -136,6 +156,10 @@ class _CoachPageState extends State<CoachPage>
       });
     } on AiCoachException catch (error) {
       if (!mounted) return;
+      if (error.premiumRequired) {
+        _onPremiumRequired();
+        return;
+      }
       setState(() {
         _error = error.message;
         _lastFailedMessage = text;
@@ -163,8 +187,9 @@ class _CoachPageState extends State<CoachPage>
     final sourceBytes = await file.readAsBytes();
     final decoded = img.decodeImage(sourceBytes);
     if (decoded == null) {
-      if (mounted)
+      if (mounted) {
         setState(() => _error = 'Dieses Bild konnte nicht gelesen werden.');
+      }
       return;
     }
     final resized = decoded.width > 1280 || decoded.height > 1280
@@ -176,14 +201,16 @@ class _CoachPageState extends State<CoachPage>
         : decoded;
     final bytes = Uint8List.fromList(img.encodeJpg(resized, quality: 78));
     if (bytes.length > 4 * 1024 * 1024) {
-      if (mounted)
+      if (mounted) {
         setState(
           () =>
               _error = 'Das Foto ist zu groß. Bitte wähle ein kleineres Bild.',
         );
+      }
       return;
     }
 
+    if (!mounted) return;
     final controller = AppScope.of(context);
     final coachContext = <String, Object?>{
       'goal': controller.goal,
@@ -226,6 +253,10 @@ class _CoachPageState extends State<CoachPage>
       });
     } on AiCoachException catch (error) {
       if (!mounted) return;
+      if (error.premiumRequired) {
+        _onPremiumRequired();
+        return;
+      }
       setState(() => _error = error.message);
     } finally {
       if (mounted) {
@@ -233,6 +264,12 @@ class _CoachPageState extends State<CoachPage>
         _scrollToEnd();
       }
     }
+  }
+
+  /// The trial or subscription ended on the server: refresh the entitlement,
+  /// which switches this tab to the locked state.
+  void _onPremiumRequired() {
+    unawaited(AppScope.of(context).subscription.load(force: true));
   }
 
   void _scrollToEnd() {
@@ -370,24 +407,35 @@ class _CoachTitle extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'LIVO Coach',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
-            ),
-            Row(
-              children: [
-                _OnlineDot(),
-                SizedBox(width: 5),
-                Text(
-                  'KI · Ernährung & Fitness',
-                  style: TextStyle(color: AppColors.textMuted, fontSize: 10),
-                ),
-              ],
-            ),
-          ],
+        const Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'LIVO Coach',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+              ),
+              Row(
+                children: [
+                  _OnlineDot(),
+                  SizedBox(width: 5),
+                  Flexible(
+                    child: Text(
+                      'KI · Ernährung & Fitness',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -406,6 +454,342 @@ class _OnlineDot extends StatelessWidget {
       shape: BoxShape.circle,
     ),
   );
+}
+
+class _CoachLoading extends StatelessWidget {
+  const _CoachLoading();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.transparent,
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      titleSpacing: 20,
+      title: const _CoachTitle(),
+    ),
+    body: const Center(
+      child: SizedBox.square(
+        dimension: 25,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    ),
+  );
+}
+
+class _CoachLocked extends StatelessWidget {
+  const _CoachLocked();
+
+  static const _benefits = [
+    (
+      Icons.dinner_dining_rounded,
+      'Ideen, die zu deinen restlichen Kalorien passen',
+    ),
+    (Icons.fitness_center_rounded, 'Protein- und Trainingstipps für deinen Alltag'),
+    (Icons.photo_camera_rounded, 'Fotos deiner Mahlzeiten einschätzen lassen'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 960;
+    return Scaffold(
+      key: const Key('coach-locked'),
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        titleSpacing: 20,
+        title: const _CoachTitle(),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(22, 12, 22, compact ? 118 : 32),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 560),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const AnimatedReveal(child: _LockedPreview()),
+                const SizedBox(height: 28),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 90),
+                  child: Column(
+                    children: [
+                      const PremiumBadge(label: 'Premium-Funktion'),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Dein persönlicher KI-Coach',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w900),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Frag nach Mahlzeiten, Nährwerten oder Training – die '
+                        'Antworten berücksichtigen dein Ziel und deine '
+                        'Tageswerte.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 15,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 22),
+                for (final (i, (icon, label)) in _benefits.indexed) ...[
+                  if (i > 0) const SizedBox(height: 10),
+                  AnimatedReveal(
+                    delay: Duration(milliseconds: 150 + i * 60),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(icon, color: AppColors.primary, size: 20),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            label,
+                            style: const TextStyle(
+                              color: AppColors.text,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 26),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 340),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FilledButton.icon(
+                        key: const Key('coach-unlock-premium'),
+                        onPressed: () => unawaited(
+                          showPaywall(context, source: PaywallSource.coach),
+                        ),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(56),
+                        ),
+                        icon: const Icon(Icons.workspace_premium_rounded),
+                        label: const Text('Premium freischalten'),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        '${SubscriptionPlans.trialDays} Tage kostenlos testen · '
+                        'endet automatisch · keine Zahlungsdaten',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 12.5,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 22),
+                const Text(
+                  'KI kann Fehler machen · Keine medizinische Beratung',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 10.5,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A clearly labelled example of a coach conversation behind a lock.
+class _LockedPreview extends StatelessWidget {
+  const _LockedPreview();
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Beispiel eines Coach-Gesprächs, mit Premium verfügbar',
+      excludeSemantics: true,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(26),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.lerp(AppColors.surfaceHigh, AppColors.primary, 0.07)!,
+              AppColors.surface,
+            ],
+          ),
+          border: Border.all(color: AppColors.borderBright),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.35),
+              blurRadius: 30,
+              offset: const Offset(0, 14),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Row(
+              children: [
+                _CoachOrb(size: 30),
+                SizedBox(width: 9),
+                Expanded(
+                  child: Text(
+                    'Beispiel',
+                    style: TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.6,
+                    ),
+                  ),
+                ),
+                Icon(Icons.lock_rounded, color: AppColors.textMuted, size: 17),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 290),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.primarySoft],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18),
+                    topRight: Radius.circular(18),
+                    bottomLeft: Radius.circular(18),
+                    bottomRight: Radius.circular(5),
+                  ),
+                ),
+                child: const Text(
+                  'Was kann ich heute Abend noch essen?',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 330),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 11,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceHigh,
+                      border: Border.all(color: AppColors.borderBright),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(18),
+                        topRight: Radius.circular(18),
+                        bottomRight: Radius.circular(18),
+                        bottomLeft: Radius.circular(5),
+                      ),
+                    ),
+                    child: ShaderMask(
+                      blendMode: BlendMode.dstIn,
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.white, Colors.transparent],
+                        stops: [0.35, 1],
+                      ).createShader(bounds),
+                      child: const Text(
+                        'Du hast heute noch etwa 650 kcal frei. Wie wäre eine '
+                        'Lachs-Bowl mit Reis und Gemüse? Das bringt dir rund '
+                        '35 g Protein und hält lange satt.',
+                        maxLines: 3,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                          color: AppColors.text,
+                          fontSize: 13.5,
+                          height: 1.45,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 6,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.background.withValues(alpha: 0.92),
+                        borderRadius: BorderRadius.circular(99),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.lock_rounded,
+                            size: 14,
+                            color: AppColors.primary,
+                          ),
+                          SizedBox(width: 6),
+                          Text(
+                            'Mit Premium',
+                            style: TextStyle(
+                              color: AppColors.text,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _WelcomeState extends StatelessWidget {
@@ -491,13 +875,15 @@ class _WelcomeState extends StatelessWidget {
 }
 
 class _CoachOrb extends StatelessWidget {
-  const _CoachOrb();
+  const _CoachOrb({this.size = 92});
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 92,
-      height: 92,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: const LinearGradient(
@@ -509,15 +895,15 @@ class _CoachOrb extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: AppColors.primary.withValues(alpha: 0.22),
-            blurRadius: 38,
-            spreadRadius: 2,
+            blurRadius: size * 0.41,
+            spreadRadius: size * 0.02,
           ),
         ],
       ),
-      child: const Icon(
+      child: Icon(
         Icons.auto_awesome_rounded,
         color: AppColors.black,
-        size: 36,
+        size: size * 0.39,
       ),
     );
   }

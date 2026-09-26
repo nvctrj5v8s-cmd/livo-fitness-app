@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -5,6 +7,8 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../subscription/presentation/paywall_page.dart';
+import '../../subscription/presentation/premium_widgets.dart';
 import 'planning_sheets.dart';
 
 class DiscoverPage extends StatefulWidget {
@@ -56,7 +60,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 if (controller.personalization != null) ...[
                   const SizedBox(height: 14),
                   const Text(
-                    'Für dich sortiert nach deinen Vorlieben und deiner Kochzeit. Alle Rezepte bleiben zugänglich.',
+                    'Für dich sortiert nach deinen Vorlieben und deiner Kochzeit. Die Sortierung blendet keine Rezepte aus.',
                     style: TextStyle(color: AppColors.textMuted),
                   ),
                 ],
@@ -113,6 +117,20 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     ),
                   ),
                 ),
+                // Free accounts only receive free recipes (RLS); point to the
+                // rest honestly instead of showing locked placeholders.
+                if (controller.subscription.hasLoaded &&
+                    !controller.subscription.hasPremium) ...[
+                  const SizedBox(height: 18),
+                  AnimatedReveal(
+                    delay: const Duration(milliseconds: 270),
+                    child: PremiumRecipesCard(
+                      onUnlock: () => unawaited(
+                        showPaywall(context, source: PaywallSource.recipes),
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 30),
                 const AnimatedReveal(
                   delay: Duration(milliseconds: 300),

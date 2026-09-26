@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,8 @@ import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../subscription/presentation/paywall_page.dart';
+import '../../subscription/presentation/premium_widgets.dart';
 import 'camera_capture_page.dart';
 
 class MealPhotoPage extends StatefulWidget {
@@ -42,6 +46,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
   bool _takingPhoto = false;
   bool _analyzing = false;
   bool _saving = false;
+  bool _premiumRequired = false;
   String? _summary;
   String? _error;
 
@@ -126,7 +131,9 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
     setState(() {
       _takingPhoto = true;
       _error = null;
+      _premiumRequired = false;
     });
+    final Uint8List prepared;
     try {
       final sourceBytes = fromGallery
           ? await _pickFromGallery()
@@ -152,14 +159,30 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
               height: oriented.height > oriented.width ? 1280 : null,
             )
           : oriented;
-      final prepared = Uint8List.fromList(
-        image_lib.encodeJpg(resized, quality: 78),
-      );
+      prepared = Uint8List.fromList(image_lib.encodeJpg(resized, quality: 78));
+    } catch (_) {
+      if (!mounted) return;
       setState(() {
-        _imageBytes = prepared;
         _takingPhoto = false;
-        _analyzing = true;
+        _error = 'Das Foto konnte gerade nicht analysiert werden.';
       });
+      return;
+    }
+    if (!mounted) return;
+    setState(() {
+      _imageBytes = prepared;
+      _takingPhoto = false;
+    });
+    await _analyze(prepared);
+  }
+
+  Future<void> _analyze(Uint8List prepared) async {
+    setState(() {
+      _analyzing = true;
+      _error = null;
+      _premiumRequired = false;
+    });
+    try {
       final controller = AppScope.of(context);
       final analysis = await _service.analyzeMealPhoto(
         bytes: prepared,
@@ -186,19 +209,36 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       _disposeLater(previous);
     } on AiCoachException catch (error) {
       if (!mounted) return;
+      if (error.premiumRequired) {
+        // The trial or subscription ended; refresh so the app shows it.
+        unawaited(AppScope.of(context).subscription.load(force: true));
+      }
       setState(() {
-        _takingPhoto = false;
         _analyzing = false;
-        _error = error.message;
+        _premiumRequired = error.premiumRequired;
+        _error = error.premiumRequired ? null : error.message;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _takingPhoto = false;
         _analyzing = false;
         _error = 'Das Foto konnte gerade nicht analysiert werden.';
       });
     }
+  }
+
+  Future<void> _unlockPremium() async {
+    final unlocked = await showPaywall(
+      context,
+      source: PaywallSource.mealPhoto,
+    );
+    if (!mounted || !unlocked) return;
+    final photo = _imageBytes;
+    if (photo == null) {
+      setState(() => _premiumRequired = false);
+      return;
+    }
+    await _analyze(photo);
   }
 
   void _disposeLater(Iterable<MealItemDraft> items) {
@@ -391,6 +431,12 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                       message:
                           'KI erkennt Lebensmittel und schätzt die Mengen …',
                       loading: true,
+                    ),
+                    const SizedBox(height: 14),
+                  ],
+                  if (_premiumRequired) ...[
+                    _PremiumRequiredCard(
+                      onUnlock: busy ? null : _unlockPremium,
                     ),
                     const SizedBox(height: 14),
                   ],
@@ -1550,6 +1596,55 @@ class _MessageCard extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(child: Text(message)),
       ],
+    ),
+  );
+}
+
+/// Shown when the server reports that the KI photo analysis needs Premium.
+/// Manual entry on this page keeps working.
+class _PremiumRequiredCard extends StatelessWidget {
+  const _PremiumRequiredCard({required this.onUnlock});
+
+  final VoidCallback? onUnlock;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    liveRegion: true,
+    child: Container(
+      key: const Key('photo-premium-required'),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color.lerp(AppColors.surfaceHigh, AppColors.primary, .1)!,
+            AppColors.surfaceHigh,
+          ],
+        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: .4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const PremiumBadge(label: 'Premium-Funktion'),
+          const SizedBox(height: 10),
+          const Text(
+            'Die KI-Foto-Erkennung ist Teil von LIVO Premium. Du kannst die '
+            'Mahlzeit trotzdem über „Suchen“ oder „Selbst hinzufügen“ '
+            'eintragen.',
+            style: TextStyle(color: AppColors.text, height: 1.45),
+          ),
+          const SizedBox(height: 12),
+          FilledButton.icon(
+            key: const Key('photo-unlock-premium'),
+            onPressed: onUnlock,
+            icon: const Icon(Icons.workspace_premium_rounded, size: 19),
+            label: const Text('Premium ansehen'),
+          ),
+        ],
+      ),
     ),
   );
 }

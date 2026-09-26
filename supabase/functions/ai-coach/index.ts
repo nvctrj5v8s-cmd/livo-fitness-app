@@ -7,7 +7,8 @@ const corsHeaders = {
 }
 
 const model = 'gpt-5.6-luna'
-const freeDailyLimit = 5
+// All AI features (coach chat, photo analysis) are part of LIVO Premium. An
+// active subscription and a running trial ('trialing') both count as premium.
 const premiumDailyLimit = 50
 
 const instructions = `Du bist der LIVO Coach in einer deutschen Ernährungs- und Fitness-App.
@@ -100,8 +101,9 @@ Deno.serve(async (request) => {
         .maybeSingle(),
     ])
 
-    const premium = hasPremium(entitlement)
-    const dailyLimit = premium ? premiumDailyLimit : freeDailyLimit
+    // Checked before the quota so free accounts never consume AI requests.
+    if (!hasPremium(entitlement)) return premiumRequired()
+    const dailyLimit = premiumDailyLimit
     const { data: quotaRows, error: quotaError } = await admin.rpc(
       'consume_ai_chat_quota',
       { p_user_id: user.id, p_daily_limit: dailyLimit },
@@ -249,12 +251,15 @@ async function loadHistory(
     console.error('AI history load failed', messagesError.code, messagesError.message)
     return json({ error: 'Dein Chatverlauf konnte nicht geladen werden.', code: 'history_unavailable' }, 503)
   }
-  const dailyLimit = hasPremium(entitlement) ? premiumDailyLimit : freeDailyLimit
+  // Reading one's own earlier chat stays possible; new AI requests need premium.
+  const premium = hasPremium(entitlement)
+  const dailyLimit = premium ? premiumDailyLimit : 0
   const used = Number(usage?.request_count ?? 0)
   return json({
     messages: Array.isArray(messages) ? messages.reverse() : [],
     remaining: Math.max(dailyLimit - used, 0),
     daily_limit: dailyLimit,
+    premium,
   })
 }
 
@@ -276,8 +281,8 @@ async function analyzeVision(
     admin.from('entitlements').select('plan,status,expires_at').eq('user_id', userId).maybeSingle(),
     admin.from('profiles').select('goal,calorie_goal,protein_goal,nutrition_style,allergies,activity_level').eq('user_id', userId).maybeSingle(),
   ])
-  const premium = hasPremium(entitlement)
-  const dailyLimit = premium ? premiumDailyLimit : freeDailyLimit
+  if (!hasPremium(entitlement)) return premiumRequired()
+  const dailyLimit = premiumDailyLimit
   const { data: quotaRows, error: quotaError } = await admin.rpc(
     'consume_ai_chat_quota', { p_user_id: userId, p_daily_limit: dailyLimit },
   )
@@ -344,7 +349,8 @@ async function analyzeMealPhoto(
     admin.from('entitlements').select('plan,status,expires_at').eq('user_id', userId).maybeSingle(),
     admin.from('profiles').select('goal,calorie_goal,protein_goal,nutrition_style,allergies,activity_level').eq('user_id', userId).maybeSingle(),
   ])
-  const dailyLimit = hasPremium(entitlement) ? premiumDailyLimit : freeDailyLimit
+  if (!hasPremium(entitlement)) return premiumRequired()
+  const dailyLimit = premiumDailyLimit
   const { data: quotaRows, error: quotaError } = await admin.rpc(
     'consume_ai_chat_quota', { p_user_id: userId, p_daily_limit: dailyLimit },
   )
@@ -567,6 +573,16 @@ function buildContext(
     .join('\n')
 }
 
+// 402 keeps older app versions from misreading it as an expired login.
+function premiumRequired(): Response {
+  return json({
+    error: 'Der LIVO Coach und die KI-Foto-Erkennung sind Teil von LIVO Premium.',
+    code: 'premium_required',
+  }, 402)
+}
+
+// Mirrors the RLS rule in 0001_livo_schema.sql: 'active' and 'trialing'
+// premium rows count until expires_at has passed.
 function hasPremium(entitlement: Record<string, unknown> | null): boolean {
   if (!entitlement || entitlement.plan !== 'premium') return false
   if (entitlement.status !== 'active' && entitlement.status !== 'trialing') {

@@ -10,6 +10,8 @@ import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
 import '../../features/profile/domain/daily_targets.dart';
+import '../../features/subscription/application/subscription_controller.dart';
+import '../../features/subscription/data/subscription_repository.dart';
 import '../data/avatar_repository.dart';
 import '../data/food_preferences_store.dart';
 import '../data/halal_content_policy.dart';
@@ -27,9 +29,37 @@ class AppController extends ChangeNotifier {
     this.personalizationStore = const DevicePersonalizationStore(),
     this.diaryRepository,
     this.avatarRepository,
+    SubscriptionRepository? subscriptionRepository,
     DateTime Function()? now,
-  }) : _now = now ?? DateTime.now {
+  }) : _now = now ?? DateTime.now,
+       subscription = SubscriptionController(
+         // Without an account (demo/preview) premium is never available.
+         repository:
+             subscriptionRepository ??
+             (personalizationUserId == null
+                 ? const PreviewSubscriptionRepository()
+                 : SupabaseSubscriptionRepository()),
+         now: now,
+       ) {
     if (personalizationUserId != null) meals.clear();
+    subscription.addListener(_onSubscriptionChanged);
+  }
+
+  /// LIVO Premium state of this account; see `SubscriptionController`.
+  final SubscriptionController subscription;
+  bool? _premiumCatalog;
+  bool _catalogRequested = false;
+
+  void _onSubscriptionChanged() {
+    final premium = subscription.hasPremium;
+    final previous = _premiumCatalog;
+    _premiumCatalog = premium;
+    // RLS decides which recipes the catalog returns. After a trial starts or
+    // ends, reload it so recipe access matches the entitlement.
+    if (previous != null && previous != premium && _catalogRequested) {
+      unawaited(loadRemoteCatalog());
+    }
+    notifyListeners();
   }
 
   final String? personalizationUserId;
@@ -323,6 +353,9 @@ class AppController extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    subscription
+      ..removeListener(_onSubscriptionChanged)
+      ..dispose();
     super.dispose();
   }
 
@@ -430,6 +463,7 @@ class AppController extends ChangeNotifier {
 
   Future<void> loadRemoteCatalog() async {
     if (catalogLoading) return;
+    _catalogRequested = true;
     catalogLoading = true;
     catalogError = null;
     notifyListeners();

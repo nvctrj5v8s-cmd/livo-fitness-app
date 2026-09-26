@@ -9,6 +9,7 @@ import '../features/auth/presentation/auth_gate.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/presentation/introduction_gate.dart';
 import '../features/onboarding/presentation/personalization_gate.dart';
+import '../features/subscription/presentation/paywall_gate.dart';
 
 class FitnessAiApp extends StatefulWidget {
   const FitnessAiApp({this.useAuth = true, super.key});
@@ -63,9 +64,15 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
         darkTheme: AppTheme.dark,
+        // The demo/test mode without account skips all gates, including the
+        // paywall; premium features stay locked there.
         home: widget.useAuth
             ? const IntroductionGate(
-                child: AuthGate(child: PersonalizationGate(child: AppShell())),
+                child: AuthGate(
+                  child: PersonalizationGate(
+                    child: PaywallGate(child: AppShell()),
+                  ),
+                ),
               )
             : const AppShell(),
       ),

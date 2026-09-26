@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/state/app_controller.dart';
@@ -6,6 +8,10 @@ import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../onboarding/presentation/personalization_card.dart';
 import '../../onboarding/presentation/personalization_entry.dart';
+import '../../subscription/application/subscription_controller.dart';
+import '../../subscription/domain/subscription_plans.dart';
+import '../../subscription/presentation/paywall_page.dart';
+import '../../subscription/presentation/premium_format.dart';
 import '../domain/daily_targets.dart';
 import 'avatar_editor.dart';
 import 'settings_sheets.dart';
@@ -627,11 +633,12 @@ class _SettingsList extends StatelessWidget {
       child: Column(
         children: [
           _SettingsTile(
+            key: const Key('profile-premium'),
             icon: Icons.workspace_premium_outlined,
             title: 'LIVO Premium',
-            subtitle: 'Pläne und Vorteile ansehen',
+            subtitle: _premiumSubtitle(controller.subscription),
             color: AppColors.primary,
-            onTap: () => showPremiumSheet(context),
+            onTap: () => unawaited(showPaywall(context)),
           ),
           const Divider(height: 1),
           _SettingsTile(
@@ -660,6 +667,20 @@ class _SettingsList extends StatelessWidget {
   }
 }
 
+String _premiumSubtitle(SubscriptionController subscription) {
+  final expiresAt = subscription.entitlement.expiresAt;
+  if (subscription.isTrialing) {
+    return expiresAt == null
+        ? 'Testphase aktiv'
+        : 'Testphase aktiv bis ${formatPremiumShortDate(expiresAt)}';
+  }
+  if (subscription.hasPremium) return 'Premium aktiv';
+  if (subscription.canStartTrial) {
+    return '${SubscriptionPlans.trialDays} Tage kostenlos testen';
+  }
+  return 'Pläne und Vorteile ansehen';
+}
+
 class _SettingsTile extends StatelessWidget {
   const _SettingsTile({
     required this.icon,
@@ -667,6 +688,7 @@ class _SettingsTile extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.color = AppColors.textMuted,
+    super.key,
   });
   final IconData icon;
   final String title;

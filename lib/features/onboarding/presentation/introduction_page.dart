@@ -28,7 +28,7 @@ const _slides = [
     icon: Icons.add_circle_outline_rounded,
   ),
   _IntroSlide(
-    label: 'KI-FOTO',
+    label: 'KI-FOTO · PREMIUM',
     title: 'Foto machen.',
     emphasis: 'KI schätzt.',
     description:
@@ -39,7 +39,7 @@ const _slides = [
     icon: Icons.photo_camera_outlined,
   ),
   _IntroSlide(
-    label: 'LIVO COACH',
+    label: 'LIVO COACH · PREMIUM',
     title: 'Frag einfach.',
     emphasis: 'Dein KI-Coach.',
     description:

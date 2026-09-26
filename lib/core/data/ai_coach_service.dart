@@ -109,11 +109,28 @@ class AiMealPhotoAnalysis {
 class AiCoachException implements Exception {
   const AiCoachException(this.message, {this.code});
 
+  /// The server answered that LIVO Premium is required (HTTP 402).
+  static const premiumRequiredCode = 'premium_required';
+
   final String message;
   final String? code;
 
+  bool get premiumRequired => code == premiumRequiredCode;
+
   @override
   String toString() => message;
+}
+
+AiCoachException? _premiumRequired(FunctionException error) {
+  final details = error.details;
+  final code = details is Map ? details['code'] : null;
+  if (error.status != 402 && code != AiCoachException.premiumRequiredCode) {
+    return null;
+  }
+  return const AiCoachException(
+    'Diese KI-Funktion ist Teil von LIVO Premium.',
+    code: AiCoachException.premiumRequiredCode,
+  );
 }
 
 class AiCoachService {
@@ -167,6 +184,7 @@ class AiCoachService {
     } on AiCoachException {
       rethrow;
     } on FunctionException catch (error) {
+      if (_premiumRequired(error) case final premium?) throw premium;
       if (error.status == 401 || error.status == 403) {
         throw const AiCoachException(
           'Bitte melde dich erneut an, um den Coach zu verwenden.',
@@ -220,6 +238,7 @@ class AiCoachService {
     } on AiCoachException {
       rethrow;
     } on FunctionException catch (error) {
+      if (_premiumRequired(error) case final premium?) throw premium;
       if (error.status == 401 || error.status == 403) {
         throw const AiCoachException(
           'Bitte melde dich erneut an, um den Coach zu verwenden.',
@@ -285,6 +304,7 @@ class AiCoachService {
     } on AiCoachException {
       rethrow;
     } on FunctionException catch (error) {
+      if (_premiumRequired(error) case final premium?) throw premium;
       if (error.status == 401 || error.status == 403) {
         throw const AiCoachException(
           'Bitte melde dich erneut an, um die Bildanalyse zu verwenden.',
@@ -381,6 +401,7 @@ class AiCoachService {
         code: 'invalid_response',
       );
     } on FunctionException catch (error) {
+      if (_premiumRequired(error) case final premium?) throw premium;
       if (error.status == 401 || error.status == 403) {
         throw const AiCoachException(
           'Bitte melde dich erneut an, um die Fotoanalyse zu verwenden.',

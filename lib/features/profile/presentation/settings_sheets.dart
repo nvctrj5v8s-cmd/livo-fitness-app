@@ -27,15 +27,6 @@ Future<void> showNutritionProfileSheet(
   );
 }
 
-Future<void> showPremiumSheet(BuildContext context) {
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) => const _PremiumSheet(),
-  );
-}
-
 Future<void> showPrivacySheet(BuildContext context, AppController controller) {
   return showModalBottomSheet<void>(
     context: context,
@@ -293,122 +284,6 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
               Navigator.pop(context);
             },
             child: const Text('Ernährungsprofil speichern'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PremiumSheet extends StatefulWidget {
-  const _PremiumSheet();
-
-  @override
-  State<_PremiumSheet> createState() => _PremiumSheetState();
-}
-
-class _PremiumSheetState extends State<_PremiumSheet> {
-  bool _yearly = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return _SettingsSheetFrame(
-      title: 'LIVO Premium',
-      subtitle: 'Die komplette Abo-Oberfläche als Vorschau',
-      child: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withValues(alpha: 0.18),
-                  AppColors.mint.withValues(alpha: 0.05),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.28),
-              ),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                StatusPill(
-                  label: '7 TAGE KOSTENLOS',
-                  icon: Icons.workspace_premium_rounded,
-                ),
-                SizedBox(height: 18),
-                Text(
-                  'Mehr Klarheit. Weniger Grübeln.',
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Persönliche Pläne, tiefere Auswertungen und später der sichere KI-Coach.',
-                  style: TextStyle(color: AppColors.textMuted, height: 1.45),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 18),
-          for (final benefit in const [
-            'Flexible Wochen- und Einkaufsplanung',
-            'Erweiterte Ernährungs- und Gewichtstrends',
-            'Unbegrenzte Favoriten und eigene Rezepte',
-            'KI-Coach nach sicherer Backend-Anbindung',
-          ])
-            Padding(
-              padding: const EdgeInsets.only(bottom: 13),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.check_circle_rounded,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(benefit)),
-                ],
-              ),
-            ),
-          const SizedBox(height: 10),
-          SegmentedButton<bool>(
-            segments: const [
-              ButtonSegment(value: false, label: Text('Monatlich')),
-              ButtonSegment(value: true, label: Text('Jährlich · −25 %')),
-            ],
-            selected: {_yearly},
-            onSelectionChanged: (values) =>
-                setState(() => _yearly = values.first),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _yearly
-                ? '5,99 € / Monat · jährlich abgerechnet'
-                : '7,99 € / Monat',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 14),
-          FilledButton(
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Checkout bereit: Store-Produkte und Zahlungsanbieter werden später verbunden.',
-                ),
-              ),
-            ),
-            child: const Text('Kostenlos testen'),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Vorschaupreise – vor Veröffentlichung müssen Preis, Laufzeit, Kündigung und Store-Texte final geprüft werden.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 11,
-              height: 1.4,
-            ),
           ),
         ],
       ),
