@@ -33,6 +33,17 @@
   werden nur im Speicher verarbeitet und nicht lokal abgelegt.
 - Die Live-Kamera füllt den ganzen Bildschirm; das aufgenommene Foto wird auf
   der Ergebnisseite randlos und groß angezeigt.
+- KI-Foto-Ergebnis: Mahlzeit per Chip wählbar, Gesamtwerte oben, jedes
+  erkannte Lebensmittel mit Erkennungssicherheit („Gut erkannt“, „Bitte kurz
+  prüfen“, „Unsicher“), Mengen-Stepper (±10 g oder direkte Eingabe) mit
+  automatischer Umrechnung von kcal und Makros sowie aufklappbarer
+  Bearbeitung von Name und Nährwerten. Lebensmittel lassen sich per Suche
+  oder manuell ergänzen und entfernen. Schlägt das Speichern mittendrin fehl,
+  werden bereits gespeicherte Einträge aus der Liste genommen, damit ein
+  erneuter Versuch keine Duplikate erzeugt.
+- Die Edge Function `ai-coach` unterstützt `action: meal_photo` (deployt als
+  Version 5 am 2026-09-26). Fotos werden zur Analyse an OpenAI übertragen,
+  nicht gespeichert, und zählen zum täglichen KI-Limit.
 - Das Profil zeigt zentriert Profilbild, Name und Ziel, darunter echte
   Tageswerte (Einträge heute, Tage Serie, kcal heute). Der frühere Ziel-Ring
   mit festem Demo-Startgewicht wurde entfernt.
