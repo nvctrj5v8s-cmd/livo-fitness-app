@@ -6,7 +6,7 @@ Fortschritt und persönliche Ziele. Die Quran-App ist ein getrenntes Projekt.
 ## Aktueller Stand
 
 - dunkle, responsive Oberfläche für Smartphone, Tablet und Web
-- fünfseitige Einführung und Anmeldung mit Supabase
+- sechsseitige Einführung und Anmeldung mit Supabase
 - persönliches Profil mit lokalem Profilbild
 - Tagebuch für Frühstück, Mittagessen, Abendessen und Snacks
 - Kalorien- und Makroübersicht, Tracking-Serie und Flammen-Animation

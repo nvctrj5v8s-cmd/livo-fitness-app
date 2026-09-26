@@ -172,6 +172,19 @@
   Supabase gespeichert.
 - Bei einem Netzwerkfehler bleibt die lokale Sitzung nutzbar.
 
+## Aktualisierung: App-Einführung, 26. September 2026
+
+- Die Einführung hat jetzt sechs Seiten, die nur echte Funktionen zeigen:
+  Tagebuch mit vier Mahlzeiten und Makros, Plus-Menü (KI-Foto, Barcode,
+  manuell), KI-Foto mit bearbeitbarer Menge, LIVO Coach, Rezepte mit
+  Wochenplan und Einkaufsliste sowie Profil mit Serie und Tageszielen.
+  Wasser- und Fortschrittsseite wurden entfernt, weil diese Funktionen in der
+  App derzeit nicht nutzbar sind.
+- Animationen dauern 2,4 Sekunden pro Seite, bleiben endlich, wiederholbar
+  und respektieren `MediaQuery.disableAnimations`.
+- Der Marker `livo.introduction.completed.v3` zeigt die neue Einführung
+  einmal auch Geräten, die die alte Version schon gesehen haben.
+
 ## Aktualisierung: App-Einführung, 14. September 2026
 
 - Neu: fünfseitige, responsive Vorstellung vor dem bestehenden Login:

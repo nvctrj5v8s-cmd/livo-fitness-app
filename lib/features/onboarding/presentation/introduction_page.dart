@@ -6,53 +6,69 @@ import 'introduction_artwork.dart';
 
 const _slides = [
   _IntroSlide(
-    label: 'DEIN ALLTAG. EINFACHER.',
-    title: 'Dein Essen.',
-    emphasis: 'Dein Rhythmus.',
+    label: 'DEIN TAGEBUCH',
+    title: 'Dein Tag.',
+    emphasis: 'Auf einen Blick.',
     description:
-        'Mahlzeiten und Wasser an einem Ort. Für einen Alltag, der sich gut anfühlt.',
+        'Frühstück, Mittagessen, Abendessen und Snacks an einem Ort – mit '
+        'Kalorien, Kohlenhydraten, Protein und Fett.',
     accent: AppColors.primary,
-    detail: 'Weniger suchen. Mehr Überblick.',
-    icon: Icons.restaurant_rounded,
+    detail: 'Sehen, was du heute schon gegessen hast.',
+    icon: Icons.menu_book_rounded,
   ),
   _IntroSlide(
-    label: 'GUTE IDEEN FÜR DEINEN TELLER.',
-    title: 'Weniger überlegen.',
-    emphasis: 'Mehr genießen.',
+    label: 'SCHNELL EINGETRAGEN',
+    title: 'Ein Tipp aufs Plus.',
+    emphasis: 'Drei Wege.',
     description:
-        'Entdecke Rezepte, plane deine Woche und nimm deine Einkaufsliste gleich mit.',
+        'Foto machen, Barcode scannen oder selbst eintragen. Das Plus in der '
+        'Mitte ist immer nur einen Tipp entfernt.',
     accent: AppColors.primary,
-    detail: 'Deine Woche, nach deinem Geschmack.',
+    detail: 'Suchen und eigene Lebensmittel inklusive.',
+    icon: Icons.add_circle_outline_rounded,
+  ),
+  _IntroSlide(
+    label: 'KI-FOTO',
+    title: 'Foto machen.',
+    emphasis: 'KI schätzt.',
+    description:
+        'Die KI erkennt Lebensmittel und schätzt die Mengen. Du prüfst Gramm '
+        'und Nährwerte, ergänzt, was fehlt – und speicherst erst dann.',
+    accent: AppColors.primary,
+    detail: 'Schätzungen sind immer als Schätzung markiert.',
+    icon: Icons.photo_camera_outlined,
+  ),
+  _IntroSlide(
+    label: 'LIVO COACH',
+    title: 'Frag einfach.',
+    emphasis: 'Dein KI-Coach.',
+    description:
+        'Antworten zu Ernährung und Fitness, passend zu deinem Ziel und deinen '
+        'Tageswerten. Kein Ersatz für ärztlichen Rat.',
+    accent: AppColors.primary,
+    detail: 'Konzentriert auf Ernährung und Fitness.',
     icon: Icons.auto_awesome_outlined,
   ),
   _IntroSlide(
-    label: 'KLEINE ROUTINEN. GUTES GEFÜHL.',
-    title: 'Ein Schluck mehr.',
-    emphasis: 'Ein guter Anfang.',
+    label: 'REZEPTE & PLANUNG',
+    title: 'Rezepte finden.',
+    emphasis: 'Woche planen.',
     description:
-        'Wasser und Mahlzeiten bewusst im Blick. Entdecke Routinen, die in deinen Alltag passen.',
+        'Filtere nach Schnell, High Protein oder Vegetarisch, plane deine '
+        'Woche und nimm die Einkaufsliste gleich mit.',
     accent: AppColors.primary,
-    detail: 'Dein Alltag zählt. Nicht die perfekte Zahl.',
-    icon: Icons.water_drop_outlined,
+    detail: 'Mit einem Tipp ins Tagebuch.',
+    icon: Icons.restaurant_menu_rounded,
   ),
   _IntroSlide(
-    label: 'IN DEINEM TEMPO.',
-    title: 'Kleine Schritte.',
-    emphasis: 'Dein Fortschritt.',
+    label: 'DEIN PROFIL',
+    title: 'Deine Ziele.',
+    emphasis: 'Deine Serie.',
     description:
-        'Behalte deine Gewohnheiten im Blick. Dein Weg muss zu dir passen, nicht umgekehrt.',
+        'Wenn du möchtest, berechnet LIVO Richtwerte aus Alter, Größe und '
+        'Gewicht. Deine Serie zeigt, wie regelmäßig du dabei bist.',
     accent: AppColors.primary,
-    detail: 'Mehr Gefühl für dich. Ohne Druck.',
-    icon: Icons.insights_rounded,
-  ),
-  _IntroSlide(
-    label: 'SO INDIVIDUELL WIE DU.',
-    title: 'Deine Wünsche.',
-    emphasis: 'Dein eigenes Livo.',
-    description:
-        'Dein Profil, deine Vorlieben und deine Ziele bilden den Ausgangspunkt. Du bestimmst die Richtung.',
-    accent: AppColors.primary,
-    detail: 'Alles beginnt mit dir.',
+    detail: 'Ohne Angaben funktioniert LIVO genauso.',
     icon: Icons.person_outline_rounded,
   ),
 ];
@@ -309,7 +325,7 @@ class _IntroductionPageState extends State<IntroductionPage>
                                             ? null
                                             : () => _goTo(index),
                                         child: SizedBox(
-                                          width: 48,
+                                          width: 44,
                                           height: 48,
                                           child: Center(
                                             child: AnimatedContainer(
@@ -489,7 +505,7 @@ class _SlideContentState extends State<_SlideContent> {
                 tween: Tween(begin: active && !reducedMotion ? 0 : 1, end: 1),
                 duration: reducedMotion || !active
                     ? Duration.zero
-                    : const Duration(milliseconds: 1800),
+                    : const Duration(milliseconds: 2400),
                 curve: Curves.linear,
                 builder: (context, value, _) => IntroductionArtwork(
                   index: index,

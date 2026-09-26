@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Einführung führt durch fünf Seiten und speichert einmal', (
+  testWidgets('Einführung führt durch sechs Seiten und speichert einmal', (
     tester,
   ) async {
     final store = _MemoryStore();
@@ -19,7 +19,7 @@ void main() {
     expect(find.byKey(const ValueKey('intro-title-0')), findsOneWidget);
     expect(find.text('Nächster Bildschirm'), findsNothing);
 
-    for (var index = 1; index < 5; index++) {
+    for (var index = 1; index < 6; index++) {
       await tester.tap(find.byKey(const ValueKey('intro-next')));
       await tester.pumpAndSettle();
       expect(find.byKey(ValueKey('intro-title-$index')), findsOneWidget);
@@ -78,7 +78,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     try {
       await _pump(tester, _MemoryStore());
-      final indicator = find.bySemanticsLabel('Seite 5 von 5');
+      final indicator = find.bySemanticsLabel('Seite 6 von 6');
       expect(
         tester
             .getSemantics(indicator)
@@ -88,7 +88,7 @@ void main() {
       );
       tester.widget<Semantics>(indicator).properties.onTap!();
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('intro-title-4')), findsOneWidget);
+      expect(find.byKey(const ValueKey('intro-title-5')), findsOneWidget);
       expect(tester.takeException(), isNull);
     } finally {
       semantics.dispose();
@@ -185,7 +185,7 @@ void main() {
     'Sichtbare Animation auf jeder Seite ist endlich und wiederholbar',
     (tester) async {
       await _pump(tester, _MemoryStore());
-      for (var index = 0; index < 5; index++) {
+      for (var index = 0; index < 6; index++) {
         final replay = find.byKey(ValueKey('intro-replay-$index'));
         await tester.ensureVisible(replay);
         await tester.tap(replay);
@@ -199,7 +199,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(_artProgress(tester, index), 1);
         expect(tester.binding.hasScheduledFrame, isFalse);
-        if (index < 4) {
+        if (index < 5) {
           await tester.tap(find.byKey(const ValueKey('intro-next')));
           await tester.pumpAndSettle();
         }
@@ -240,7 +240,7 @@ void main() {
           size: viewport.$1,
           textScale: viewport.$2,
         );
-        for (var index = 0; index < 5; index++) {
+        for (var index = 0; index < 6; index++) {
           expect(
             find.byKey(const ValueKey('intro-next')).hitTestable(),
             findsOneWidget,

@@ -10,9 +10,9 @@ abstract interface class IntroductionStore {
 final class DeviceIntroductionStore implements IntroductionStore {
   const DeviceIntroductionStore();
 
-  // Show the revised five-page introduction once, without touching
+  // Show the revised six-page introduction once, without touching
   // the previous marker, authentication, or other app preferences.
-  static const preferenceKey = 'livo.introduction.completed.v2';
+  static const preferenceKey = 'livo.introduction.completed.v3';
 
   @override
   Future<bool> isComplete() async =>

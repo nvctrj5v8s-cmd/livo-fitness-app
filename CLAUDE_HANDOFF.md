@@ -24,7 +24,7 @@ verweisen. Diese Regel nie entfernen oder abschwächen; Details:
 
 - Flutter/Dart-App für Android, iOS, Web und Desktop
 - dunkles, responsives LIVO-Design
-- fünfseitige Einführung und Authentifizierung über Supabase
+- sechsseitige Einführung und Authentifizierung über Supabase
 - sechsstufige Personalisierung: Name, Ziel, Geburtstag, Größe, Gewicht und Alltag
 - Geburtstag und Größe sind getrennte Seiten
 - Datum- und Größenpicker sind direkt vertikal wischbar
