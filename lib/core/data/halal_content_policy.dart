@@ -140,8 +140,14 @@ class HalalContentPolicy {
       recipe.title,
       recipe.subtitle,
       ...recipe.tags,
-      ...recipe.ingredients.map((ingredient) => ingredient.name),
-      ...recipe.instructions,
+      ...recipe.equipment,
+      for (final ingredient in recipe.ingredients) ...[
+        ingredient.name,
+        ingredient.measure ?? '',
+        ingredient.note ?? '',
+      ],
+      for (final step in recipe.steps) ...[step.title ?? '', step.text],
+      ...?recipe.premiumDetails?.allTexts,
     ].join(' '),
   );
 
@@ -174,15 +180,23 @@ class HalalContentPolicy {
       .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
       .trim();
 
+  // Harmless words that merely start with a compound root: "Beeren" (berries)
+  // must not count as "beer".
+  static const _compoundRootExceptions = <String, List<String>>{
+    'beer': ['beere'],
+  };
+
   static bool _containsTerm(String normalizedValue, String term) {
     final normalizedTerm = normalize(term);
+    final exceptions = _compoundRootExceptions[normalizedTerm] ?? const [];
     return normalizedValue
         .split(' ')
         .any(
           (word) =>
               word == normalizedTerm ||
               (_compoundRoots.contains(normalizedTerm) &&
-                  word.startsWith(normalizedTerm)),
+                  word.startsWith(normalizedTerm) &&
+                  !exceptions.any(word.startsWith)),
         );
   }
 }

@@ -17,6 +17,12 @@ vegane Lebensmittel bleiben möglich.
 - Die KI darf keine ausgeschlossenen Lebensmittel empfehlen oder bewerten.
 - Migration `0007_halal_content_guard.sql` versteckt ältere ausgeschlossene
   Katalogeinträge per RLS und blockiert neue Einträge bei Importen.
+- Migration `0009_recipe_details.sql` prüft zusätzlich Schritt-Titel,
+  Utensilien, Zutatennotizen und alle Premium-Extras (Tipps, Fehler, Austausch,
+  Meal-Prep, Varianten, Serviervorschlag). Sie behebt außerdem einen Fehlalarm:
+  „Beeren“ wurde vorher als „beer“ (Bier) blockiert.
+- `tool/generate_recipe_sql.dart` prüft neue Rezeptinhalte vor dem Import mit
+  derselben Regel und bricht ab, statt Zeilen still zu überspringen.
 
 ## Wichtige Grenze
 

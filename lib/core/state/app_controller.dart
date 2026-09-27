@@ -434,10 +434,53 @@ class AppController extends ChangeNotifier {
       title: 'Lachs Power Bowl',
       subtitle: 'Sättigend, frisch und proteinreich',
       minutes: 24,
+      prepMinutes: 8,
+      cookMinutes: 16,
+      difficulty: 'Mittel',
       calories: 620,
       protein: 44,
       imageAsset: 'assets/images/salmon_bowl.webp',
       tags: ['Für dich', 'High Protein'],
+      equipment: ['Kleiner Topf mit Deckel', 'Beschichtete Pfanne'],
+      ingredients: [
+        RecipeIngredient(
+          foodId: 'preview-salmon',
+          name: 'Lachsfilet',
+          amountGrams: 150,
+          measure: '1 Filet',
+        ),
+        RecipeIngredient(
+          foodId: 'preview-rice',
+          name: 'Reis, gekocht',
+          amountGrams: 180,
+        ),
+        RecipeIngredient(
+          foodId: 'preview-avocado',
+          name: 'Avocado',
+          amountGrams: 70,
+          measure: '½ Stück',
+          note: 'in Scheiben',
+        ),
+      ],
+      steps: [
+        RecipeStep(
+          title: 'Reis erwärmen',
+          text:
+              'Den gekochten Reis mit 1 EL Wasser in einem kleinen Topf mit Deckel bei niedriger Hitze etwa 4 Minuten erwärmen.',
+          minutes: 4,
+        ),
+        RecipeStep(
+          title: 'Lachs braten',
+          text:
+              'Den Lachs trocken tupfen und mit der Hautseite nach unten bei mittlerer Hitze 5 Minuten braten. Wenden und weitere 3 Minuten garen, bis er innen nicht mehr glasig ist.',
+          minutes: 8,
+        ),
+        RecipeStep(
+          title: 'Anrichten',
+          text:
+              'Reis in eine Schüssel geben, Lachs und Avocado darauf legen und sofort servieren.',
+        ),
+      ],
     ),
     Recipe(
       id: 'protein-pasta',
@@ -448,6 +491,24 @@ class AppController extends ChangeNotifier {
       protein: 38,
       imageAsset: 'assets/images/protein_pasta.webp',
       tags: ['Für dich', 'Schnell', 'Vegetarisch'],
+      steps: [
+        RecipeStep(
+          title: 'Pasta kochen',
+          text:
+              'Reichlich Wasser mit 1 TL Salz aufkochen und die Pasta nach Packungsangabe bissfest garen.',
+          minutes: 10,
+        ),
+        RecipeStep(
+          title: 'Sauce rühren',
+          text:
+              'Skyr mit etwas Nudelwasser glatt rühren, bis eine cremige Sauce entsteht.',
+        ),
+        RecipeStep(
+          title: 'Vermengen',
+          text:
+              'Pasta abgießen, mit der Sauce vermengen und mit Pfeffer abschmecken.',
+        ),
+      ],
     ),
     Recipe(
       id: 'berry-oats',
@@ -458,6 +519,22 @@ class AppController extends ChangeNotifier {
       protein: 31,
       imageAsset: 'assets/images/berry_oats.webp',
       tags: ['Für dich', 'High Protein', 'Schnell', 'Budget'],
+      steps: [
+        RecipeStep(
+          title: 'Hafer quellen lassen',
+          text:
+              'Haferflocken mit 80 ml Wasser verrühren und 3 Minuten quellen lassen.',
+          minutes: 3,
+        ),
+        RecipeStep(
+          title: 'Skyr unterrühren',
+          text: 'Skyr unterrühren, bis alles gleichmäßig cremig ist.',
+        ),
+        RecipeStep(
+          title: 'Toppen',
+          text: 'Beeren darauf verteilen und sofort servieren.',
+        ),
+      ],
     ),
   ];
 
@@ -1179,8 +1256,12 @@ class AppController extends ChangeNotifier {
           slot: slot,
           calories: recipe.calories,
           protein: recipe.protein,
-          carbs: ((recipe.calories - recipe.protein * 4) * 0.55 / 4).round(),
-          fat: ((recipe.calories - recipe.protein * 4) * 0.45 / 9).round(),
+          carbs:
+              recipe.nutritionPerServing?.carbohydrates.round() ??
+              ((recipe.calories - recipe.protein * 4) * 0.55 / 4).round(),
+          fat:
+              recipe.nutritionPerServing?.fat.round() ??
+              ((recipe.calories - recipe.protein * 4) * 0.45 / 9).round(),
           imageAsset: recipe.imageAsset,
         ),
       );

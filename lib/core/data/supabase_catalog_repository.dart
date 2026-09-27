@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'halal_content_policy.dart';
+import 'recipe_images.dart';
 import '../models/app_models.dart';
 
 class SupabaseCatalogRepository {
@@ -17,8 +18,9 @@ class SupabaseCatalogRepository {
         .order('created_at');
     final ingredientRows = await _client
         .from('recipe_ingredients')
-        .select('recipe_id, food_id, amount_grams, position')
+        .select()
         .order('position');
+    final premiumRows = await _loadPremiumDetails();
     final allFoods = foodRows
         .whereType<Map>()
         .map((row) => FoodItem.fromMap(Map<String, dynamic>.from(row)))
@@ -39,70 +41,138 @@ class SupabaseCatalogRepository {
     final recipes = <Recipe>[];
     for (final rawRecipe in recipeRows.whereType<Map>()) {
       final row = Map<String, dynamic>.from(rawRecipe);
-      final ingredientRows =
-          ingredientsByRecipe[row['id']?.toString()] ?? const [];
+      final recipeId = row['id']?.toString();
+      final ingredientRows = ingredientsByRecipe[recipeId] ?? const [];
       final hasBlockedIngredient = ingredientRows.any(
         (ingredient) =>
             blockedFoodIds.contains(ingredient['food_id']?.toString()),
       );
       if (hasBlockedIngredient) continue;
-      final recipe = _recipeFromMap(row, ingredientRows, foodsById);
+      final recipe = recipeFromMap(
+        row,
+        ingredientRows,
+        foodsById,
+        premiumRow: premiumRows[recipeId],
+      );
       if (HalalContentPolicy.isAllowedRecipe(recipe)) recipes.add(recipe);
     }
     return CatalogData(foods: foods, recipes: recipes);
   }
 
-  Recipe _recipeFromMap(
+  /// RLS only returns rows to Premium members. Free accounts, signed-out
+  /// visitors and databases without the table simply get no extras.
+  Future<Map<String, Map<String, dynamic>>> _loadPremiumDetails() async {
+    try {
+      final rows = await _client.from('recipe_premium_details').select();
+      return {
+        for (final raw in rows.whereType<Map>())
+          raw['recipe_id'].toString(): Map<String, dynamic>.from(raw),
+      };
+    } on PostgrestException {
+      return const {};
+    }
+  }
+
+  static Recipe recipeFromMap(
     Map<String, dynamic> row,
     List<Map<String, dynamic>> ingredients,
-    Map<String, FoodItem> foodsById,
-  ) {
-    var calories = 0.0;
-    var protein = 0.0;
+    Map<String, FoodItem> foodsById, {
+    Map<String, dynamic>? premiumRow,
+  }) {
+    var total = RecipeNutrition.zero;
     final recipeIngredients = <RecipeIngredient>[];
     for (final raw in ingredients) {
       final amount = (raw['amount_grams'] as num?)?.toDouble() ?? 0;
       final food = foodsById[raw['food_id']?.toString()];
-      if (food != null) {
-        final factor = amount / food.servingGrams;
-        calories += food.calories * factor;
-        protein += food.protein * factor;
-        recipeIngredients.add(
-          RecipeIngredient(
-            foodId: food.id,
-            name: food.name,
-            amountGrams: amount,
-          ),
-        );
-      }
+      if (food == null) continue;
+      final nutrition = _nutritionFor(food, amount);
+      total += nutrition;
+      recipeIngredients.add(
+        RecipeIngredient(
+          foodId: food.id,
+          name: food.name,
+          amountGrams: amount,
+          measure: _text(raw['measure']),
+          note: _text(raw['note']),
+          nutrition: nutrition,
+        ),
+      );
     }
+    final servings = ((row['servings'] as num?)?.toInt() ?? 1).clamp(1, 24);
+    final perServing = total.scaled(1 / servings);
     final slug = row['slug'] as String? ?? '';
+    final texts = _strings(row['instructions']);
+    final titles = _strings(row['step_titles']);
+    final timers = (row['step_minutes'] as List?) ?? const [];
     return Recipe(
       id: row['id'].toString(),
+      slug: slug,
       title: row['title'] as String? ?? 'Rezept',
       subtitle: row['description'] as String? ?? '',
       minutes: (row['preparation_minutes'] as num?)?.toInt() ?? 15,
-      calories: calories.round(),
-      protein: protein.round(),
-      imageAsset: _imageForSlug(slug),
-      tags: [
-        'Für dich',
-        ...((row['tags'] as List?)?.whereType<String>() ?? const <String>[]),
-      ],
+      prepMinutes: (row['prep_minutes'] as num?)?.toInt(),
+      cookMinutes: (row['cook_minutes'] as num?)?.toInt(),
+      difficulty: _text(row['difficulty']) ?? 'Einfach',
+      servings: servings,
+      isPremium: row['access_level'] == 'premium',
+      calories: perServing.calories.round(),
+      protein: perServing.protein.round(),
+      nutritionPerServing: perServing,
+      imageAsset: RecipeImages.forSlug(slug),
+      tags: ['Für dich', ..._strings(row['tags'])],
+      equipment: _strings(row['equipment']),
       ingredients: recipeIngredients,
-      instructions:
-          (row['instructions'] as List?)?.whereType<String>().toList() ??
-          const [],
+      steps: [
+        for (var index = 0; index < texts.length; index++)
+          RecipeStep(
+            text: texts[index],
+            title: index < titles.length ? _text(titles[index]) : null,
+            minutes: index < timers.length
+                ? (timers[index] as num?)?.toInt() ?? 0
+                : 0,
+          ),
+      ],
+      premiumDetails: premiumRow == null ? null : _premiumFromMap(premiumRow),
     );
   }
 
-  String _imageForSlug(String slug) {
-    if (slug.contains('salmon')) return 'assets/images/salmon_bowl.webp';
-    if (slug.contains('berry') || slug.contains('oat')) {
-      return 'assets/images/berry_oats.webp';
-    }
-    if (slug.contains('pasta')) return 'assets/images/protein_pasta.webp';
-    return 'assets/images/berry_oats.webp';
+  static RecipePremiumDetails? _premiumFromMap(Map<String, dynamic> row) {
+    final details = RecipePremiumDetails(
+      stepTips: _strings(row['step_tips'], keepEmpty: true),
+      commonMistakes: _strings(row['common_mistakes']),
+      substitutions: _strings(row['substitutions']),
+      mealPrep: _text(row['meal_prep']) ?? '',
+      variations: _strings(row['variations']),
+      servingTip: _text(row['serving_tip']) ?? '',
+    );
+    return details.isEmpty ? null : details;
+  }
+
+  static RecipeNutrition _nutritionFor(FoodItem food, double grams) {
+    final base = food.servingGrams <= 0 ? 100 : food.servingGrams;
+    final factor = grams / base;
+    return RecipeNutrition(
+      calories: food.calories * factor,
+      protein: food.protein * factor,
+      carbohydrates: food.carbohydrates * factor,
+      fat: food.fat * factor,
+      fiber: (food.fiber ?? 0) * factor,
+      sugar: (food.sugar ?? 0) * factor,
+      salt: (food.salt ?? 0) * factor,
+    );
+  }
+
+  static List<String> _strings(Object? value, {bool keepEmpty = false}) =>
+      [
+        for (final item in (value as List?) ?? const [])
+          if (item is String && (keepEmpty || item.trim().isNotEmpty))
+            item.trim(),
+      ];
+
+  static String? _text(Object? value) {
+    if (value is! String) return null;
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 }
 

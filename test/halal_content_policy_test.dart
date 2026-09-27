@@ -19,6 +19,15 @@ void main() {
       expect(HalalContentPolicy.isAllowedText('Gelatine'), isFalse);
     });
 
+    test('does not mistake berries for beer', () {
+      expect(HalalContentPolicy.isAllowedText('Skyr mit Beeren'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Beerenmix, TK'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Heidelbeeren'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Beer battered fish'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('Beers'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('Bier'), isFalse);
+    });
+
     test('requires an explicit halal marker for land-animal meat', () {
       expect(HalalContentPolicy.isAllowedText('Hähnchenbrust'), isFalse);
       expect(HalalContentPolicy.isAllowedText('Halal Hähnchenbrust'), isTrue);
@@ -59,6 +68,39 @@ void main() {
       );
 
       expect(HalalContentPolicy.isAllowedRecipe(recipe), isFalse);
+    });
+
+    test('checks steps, ingredient notes and premium tips', () {
+      const base = Recipe(
+        id: 'recipe',
+        title: 'Gemüsepfanne',
+        subtitle: 'Schnell gekocht',
+        minutes: 20,
+        calories: 460,
+        protein: 18,
+        imageAsset: '',
+        tags: ['Vegetarisch'],
+        steps: [RecipeStep(title: 'Anbraten', text: 'Gemüse kurz anbraten.')],
+      );
+      expect(HalalContentPolicy.isAllowedRecipe(base), isTrue);
+      expect(
+        HalalContentPolicy.isAllowedRecipe(
+          base.withPremiumDetails(
+            const RecipePremiumDetails(
+              substitutions: ['Skyr durch griechischen Joghurt ersetzen'],
+            ),
+          ),
+        ),
+        isTrue,
+      );
+      expect(
+        HalalContentPolicy.isAllowedRecipe(
+          base.withPremiumDetails(
+            const RecipePremiumDetails(variations: ['Mit Weißwein ablöschen']),
+          ),
+        ),
+        isFalse,
+      );
     });
   });
 }

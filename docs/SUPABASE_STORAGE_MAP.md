@@ -8,6 +8,7 @@ angemeldeten Konto gehören sollen.
 | Anmeldung und Sitzung | Supabase Auth | Konto über mehrere Geräte hinweg |
 | Name, Ziel, Kalorien- und Proteinziele | `public.profiles` | persönliches Profil bleibt beim Gerätewechsel erhalten |
 | Lebensmittel, Rezepte, Zutaten und Quellen | Katalogtabellen | gemeinsamer, versionierbarer Datenbestand |
+| Premium-Rezeptextras (Profi-Tipps, Fehler, Austausch, Meal-Prep, Varianten) | `recipe_premium_details` | Katalogdaten; RLS gibt sie nur an Konten mit aktivem Premium oder Testphase heraus |
 | Getrackte Mahlzeiten und Mengen | `meals`, `meal_items` | Tagebuch und Serie sollen geräteübergreifend stimmen |
 | Rezeptfavoriten | `favorites` | gehören zum Konto |
 | Premium-Status | `entitlements` | später nur vom Kauf-Backend veränderbar |

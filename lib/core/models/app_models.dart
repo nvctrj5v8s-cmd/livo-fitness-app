@@ -184,20 +184,123 @@ class Recipe {
     required this.protein,
     required this.imageAsset,
     required this.tags,
+    this.slug = '',
+    this.nutritionPerServing,
+    this.servings = 1,
+    this.prepMinutes,
+    this.cookMinutes,
+    this.difficulty = 'Einfach',
+    this.isPremium = false,
+    this.equipment = const [],
     this.ingredients = const [],
-    this.instructions = const [],
+    this.steps = const [],
+    this.premiumDetails,
   });
 
   final String id;
+  final String slug;
   final String title;
   final String subtitle;
+
+  /// Total time in minutes, including cooking and resting.
   final int minutes;
+
+  /// Rounded energy and protein for one serving.
   final int calories;
   final int protein;
+
+  /// Full catalog nutrition for one serving, when ingredients are known.
+  final RecipeNutrition? nutritionPerServing;
   final String imageAsset;
   final List<String> tags;
+
+  /// Ingredient amounts are for all [servings] together.
+  final int servings;
+  final int? prepMinutes;
+  final int? cookMinutes;
+  final String difficulty;
+  final bool isPremium;
+  final List<String> equipment;
   final List<RecipeIngredient> ingredients;
-  final List<String> instructions;
+  final List<RecipeStep> steps;
+
+  /// Extra guidance for Premium members. `null` when the account may not read
+  /// it (RLS returns no row) or the recipe has none.
+  final RecipePremiumDetails? premiumDetails;
+
+  RecipeNutrition get nutrition =>
+      nutritionPerServing ??
+      RecipeNutrition(
+        calories: calories.toDouble(),
+        protein: protein.toDouble(),
+      );
+
+  List<String> get instructions => [for (final step in steps) step.text];
+
+  Recipe withPremiumDetails(RecipePremiumDetails? details) => Recipe(
+    id: id,
+    slug: slug,
+    title: title,
+    subtitle: subtitle,
+    minutes: minutes,
+    calories: calories,
+    protein: protein,
+    nutritionPerServing: nutritionPerServing,
+    imageAsset: imageAsset,
+    tags: tags,
+    servings: servings,
+    prepMinutes: prepMinutes,
+    cookMinutes: cookMinutes,
+    difficulty: difficulty,
+    isPremium: isPremium,
+    equipment: equipment,
+    ingredients: ingredients,
+    steps: steps,
+    premiumDetails: details,
+  );
+}
+
+/// Nutrition values as numbers; format them only in the UI.
+class RecipeNutrition {
+  const RecipeNutrition({
+    required this.calories,
+    required this.protein,
+    this.carbohydrates = 0,
+    this.fat = 0,
+    this.fiber = 0,
+    this.sugar = 0,
+    this.salt = 0,
+  });
+
+  static const zero = RecipeNutrition(calories: 0, protein: 0);
+
+  final double calories;
+  final double protein;
+  final double carbohydrates;
+  final double fat;
+  final double fiber;
+  final double sugar;
+  final double salt;
+
+  RecipeNutrition operator +(RecipeNutrition other) => RecipeNutrition(
+    calories: calories + other.calories,
+    protein: protein + other.protein,
+    carbohydrates: carbohydrates + other.carbohydrates,
+    fat: fat + other.fat,
+    fiber: fiber + other.fiber,
+    sugar: sugar + other.sugar,
+    salt: salt + other.salt,
+  );
+
+  RecipeNutrition scaled(double factor) => RecipeNutrition(
+    calories: calories * factor,
+    protein: protein * factor,
+    carbohydrates: carbohydrates * factor,
+    fat: fat * factor,
+    fiber: fiber * factor,
+    sugar: sugar * factor,
+    salt: salt * factor,
+  );
 }
 
 class RecipeIngredient {
@@ -205,16 +308,85 @@ class RecipeIngredient {
     required this.foodId,
     required this.name,
     required this.amountGrams,
+    this.measure,
+    this.note,
+    this.nutrition,
   });
 
   final String foodId;
   final String name;
+
+  /// Amount for the whole recipe (all servings).
   final double amountGrams;
 
-  String get amountLabel {
-    final rounded = amountGrams.round();
-    return '${rounded == amountGrams ? rounded : amountGrams.toStringAsFixed(1)} g';
+  /// Household unit for the base recipe, for example "1 EL" or "2 Zehen".
+  final String? measure;
+
+  /// Preparation state, for example "gewürfelt".
+  final String? note;
+
+  /// Nutrition of [amountGrams], when the catalog food is known.
+  final RecipeNutrition? nutrition;
+
+  String get amountLabel => formatGrams(amountGrams);
+
+  static String formatGrams(double grams) {
+    final rounded = grams.round();
+    if (rounded == grams || grams >= 20) return '$rounded g';
+    return '${grams.toStringAsFixed(1).replaceAll('.', ',')} g';
   }
+}
+
+class RecipeStep {
+  const RecipeStep({required this.text, this.title, this.minutes = 0});
+
+  final String? title;
+  final String text;
+
+  /// Suggested timer for this step; 0 when the step needs no timer.
+  final int minutes;
+}
+
+/// Premium-only depth. Loaded from `recipe_premium_details`, which RLS only
+/// returns to accounts with an active Premium entitlement.
+class RecipePremiumDetails {
+  const RecipePremiumDetails({
+    this.stepTips = const [],
+    this.commonMistakes = const [],
+    this.substitutions = const [],
+    this.mealPrep = '',
+    this.variations = const [],
+    this.servingTip = '',
+  });
+
+  /// One tip per step, aligned with [Recipe.steps]; empty strings mean none.
+  final List<String> stepTips;
+  final List<String> commonMistakes;
+  final List<String> substitutions;
+  final String mealPrep;
+  final List<String> variations;
+  final String servingTip;
+
+  String tipForStep(int index) =>
+      index >= 0 && index < stepTips.length ? stepTips[index].trim() : '';
+
+  bool get isEmpty =>
+      stepTips.every((tip) => tip.trim().isEmpty) &&
+      commonMistakes.isEmpty &&
+      substitutions.isEmpty &&
+      mealPrep.trim().isEmpty &&
+      variations.isEmpty &&
+      servingTip.trim().isEmpty;
+
+  /// Every text, for content checks.
+  Iterable<String> get allTexts => [
+    ...stepTips,
+    ...commonMistakes,
+    ...substitutions,
+    mealPrep,
+    ...variations,
+    servingTip,
+  ];
 }
 
 class ShoppingItem {

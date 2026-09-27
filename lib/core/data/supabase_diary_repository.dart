@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/app_models.dart';
 import '../models/custom_food.dart';
 import '../models/tracking_streak.dart';
+import 'recipe_images.dart';
 
 /// Stores food and recipe diary entries independently from the widgets.
 class SupabaseDiaryRepository {
@@ -143,7 +144,7 @@ class SupabaseDiaryRepository {
             protein: totals.protein.round(),
             carbs: totals.carbohydrates.round(),
             fat: totals.fat.round(),
-            imageAsset: _imageForRecipeSlug(recipe?['slug'] as String?),
+            imageAsset: RecipeImages.forSlug(recipe?['slug'] as String?),
           ),
         );
         continue;
@@ -366,9 +367,19 @@ class SupabaseDiaryRepository {
         .select('food_id, amount_grams, position')
         .eq('recipe_id', recipe.id)
         .order('position');
+    // Recipe amounts cover all servings; the diary gets one serving.
+    final servings = recipe.servings < 1 ? 1 : recipe.servings;
     final ingredients = ingredientRows
         .whereType<Map>()
         .map((row) => Map<String, dynamic>.from(row))
+        .map(
+          (row) => {
+            ...row,
+            'amount_grams':
+                ((row['amount_grams'] as num?)?.toDouble() ?? 0) / servings,
+          },
+        )
+        .where((row) => (row['amount_grams'] as double) > 0)
         .toList();
     if (ingredients.isEmpty) {
       throw StateError('Dieses Rezept hat noch keine gespeicherten Zutaten.');
@@ -528,13 +539,6 @@ class SupabaseDiaryRepository {
     num number when number >= 0 => number.round(),
     _ => 0,
   };
-
-  String _imageForRecipeSlug(String? slug) {
-    final normalized = slug?.toLowerCase() ?? '';
-    if (normalized.contains('salmon')) return 'assets/images/salmon_bowl.webp';
-    if (normalized.contains('pasta')) return 'assets/images/protein_pasta.webp';
-    return 'assets/images/berry_oats.webp';
-  }
 
   String _dateOnly(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';

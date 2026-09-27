@@ -49,3 +49,22 @@ USDA-Nutzungs- und Attributionsbedingungen müssen vor Veröffentlichung geprüf
 werden; Open-Food-Facts-Barcodedaten bleiben wegen eigener Lizenzpflichten eine
 separate Quelle. Die aktuellen USDA-Nutzungs- und Attributionsbedingungen
 müssen vor Veröffentlichung geprüft werden.
+
+## Rezeptinhalte und Premium-Extras
+
+`migrations/0009_recipe_details.sql` ergänzt Rezepte um Vorbereitungs- und
+Kochzeit, Utensilien, Schritt-Titel und Schritt-Timer, Zutaten um
+Haushaltsmaß und Notiz sowie die Tabelle `recipe_premium_details` (nur für
+Konten mit aktivem Premium oder Testphase lesbar).
+
+Die Rezepttexte selbst liegen geprüft als JSON in
+`content/livo_recipes.json`. Nach einer Änderung die Migration neu erzeugen:
+
+```text
+dart run tool/generate_recipe_sql.dart --input supabase/content/livo_recipes.json --output supabase/migrations/0010_recipe_content.sql
+```
+
+Das Werkzeug bricht ab, wenn ein Text gegen die Halal-Regel verstößt, eine
+Zutat fehlt oder „High Protein“ weniger als 20 % Energie aus Protein hat.
+Migrationen werden mit der Supabase CLI eingespielt (`supabase db push
+--linked`); alle Rezept-Migrationen sind wiederholbar.
