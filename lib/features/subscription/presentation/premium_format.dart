@@ -2,7 +2,7 @@ import '../domain/subscription_plans.dart';
 
 const _nbsp = ' ';
 
-/// German price format: `65,88 €`. The non-breaking space keeps the amount
+/// German price format: `49,88 €`. The non-breaking space keeps the amount
 /// and currency on one line.
 String formatEuro(int cents) {
   final euros = (cents ~/ 100).toString();
@@ -48,39 +48,38 @@ abstract final class PremiumCopy {
   static String purchaseLabel(PremiumPlan plan) =>
       plan.isYearly ? 'Jährlich abonnieren' : 'Monatlich abonnieren';
 
-  /// Big, billed amount.
-  static String headlinePrice(PremiumPlan plan) =>
-      formatEuro(plan.firstChargeCents);
+  /// Big amount that is charged per billing period.
+  static String headlinePrice(PremiumPlan plan) => formatEuro(plan.chargeCents);
 
-  /// Unit next to the billed amount.
-  static String headlineUnit(PremiumPlan plan) {
-    if (plan.isYearly) return plan.hasIntroOffer ? 'im 1. Jahr' : 'pro Jahr';
-    return '/ Monat';
-  }
+  /// Unit next to the charged amount.
+  static String headlineUnit(PremiumPlan plan) =>
+      plan.isYearly ? 'pro Jahr' : 'pro Monat';
 
-  /// Small line directly below the billed amount.
-  static String introDetail(PremiumPlan plan) {
-    if (plan.isYearly) {
-      return 'entspricht ${formatEuro(plan.firstPeriodMonthlyCents)} pro Monat';
-    }
-    if (!plan.hasIntroOffer) return 'monatlich kündbar';
-    return 'in den ersten ${plan.introMonths} Monaten';
-  }
+  /// Small line directly below the charged amount.
+  static String priceDetail(PremiumPlan plan) => plan.isYearly
+      ? 'entspricht ${formatEuro(plan.monthlyEquivalentCents)} pro Monat'
+      : 'monatlich kündbar';
 
-  /// Price after the introductory offer, always visible.
-  static String followUp(PremiumPlan plan) {
-    if (plan.isYearly) {
-      return 'danach ${formatEuro(plan.regularChargeCents)} pro Jahr '
-          '(${formatEuro(plan.monthlyPriceCents)} pro Monat)';
-    }
-    return 'danach ${formatEuro(plan.monthlyPriceCents)} pro Monat';
-  }
+  /// How often the plan is charged, always visible below the price.
+  static String billingNote(PremiumPlan plan) => plan.isYearly
+      ? 'einmal im Jahr berechnet – du sparst '
+            '${formatEuro(SubscriptionPlans.yearlySavingsCents)} gegenüber '
+            'monatlich'
+      : 'jeden Monat berechnet';
 
   /// Short price summary shown in purchase buttons.
-  static String purchaseSummary(PremiumPlan plan) => plan.isYearly
-      ? '${formatEuro(plan.firstChargeCents)} im 1. Jahr, danach '
-            '${formatEuro(plan.regularChargeCents)} pro Jahr'
-      : '${formatEuro(plan.introMonthlyPriceCents)} pro Monat für '
-            '${plan.introMonths} Monate, danach '
-            '${formatEuro(plan.monthlyPriceCents)}';
+  static String purchaseSummary(PremiumPlan plan) =>
+      '${headlinePrice(plan)} ${headlineUnit(plan)} (${priceDetail(plan)})';
+
+  /// Price paragraph of the paywall terms.
+  static String get priceTerms {
+    const yearly = SubscriptionPlans.yearly;
+    const monthly = SubscriptionPlans.monthly;
+    return 'Abo-Preise ($billingPending): Jährlich '
+        '${headlinePrice(yearly)} ${headlineUnit(yearly)}, einmal im Jahr '
+        'berechnet (${priceDetail(yearly)}). Monatlich '
+        '${headlinePrice(monthly)} ${headlineUnit(monthly)}. Alle Preise '
+        'inkl. MwSt. Ein Abo verlängert sich automatisch zum selben Preis und '
+        'ist jederzeit zum Ende des Abrechnungszeitraums kündbar.';
+  }
 }

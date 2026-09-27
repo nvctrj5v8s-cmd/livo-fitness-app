@@ -1433,12 +1433,14 @@ class _SoonTag extends StatelessWidget {
       children: [
         Icon(Icons.schedule_rounded, size: 13, color: AppColors.textMuted),
         SizedBox(width: 5),
-        Text(
-          'Bald verfügbar',
-          style: TextStyle(
-            color: AppColors.text,
-            fontSize: 11.5,
-            fontWeight: FontWeight.w700,
+        Flexible(
+          child: Text(
+            'Bald verfügbar',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ],
@@ -1463,8 +1465,8 @@ class _PlanCard extends StatelessWidget {
     final title = PremiumCopy.planTitle(plan);
     final price = PremiumCopy.headlinePrice(plan);
     final unit = PremiumCopy.headlineUnit(plan);
-    final intro = PremiumCopy.introDetail(plan);
-    final followUp = PremiumCopy.followUp(plan);
+    final detail = PremiumCopy.priceDetail(plan);
+    final billing = PremiumCopy.billingNote(plan);
     final savings = SubscriptionPlans.yearlySavingsPercent;
     return Semantics(
       button: true,
@@ -1472,7 +1474,7 @@ class _PlanCard extends StatelessWidget {
       inMutuallyExclusiveGroup: true,
       label:
           '$title${plan.isYearly ? ', beliebt, $savings Prozent günstiger als '
-                    'monatlich' : ''}: $price $unit, $intro, $followUp',
+                    'monatlich' : ''}: $price $unit, $detail, $billing',
       onTap: onTap,
       excludeSemantics: true,
       child: Material(
@@ -1601,7 +1603,7 @@ class _PlanCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 7),
                       Text(
-                        intro,
+                        detail,
                         style: const TextStyle(
                           color: AppColors.text,
                           fontSize: 13,
@@ -1611,7 +1613,7 @@ class _PlanCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        followUp,
+                        billing,
                         style: const TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12.5,
@@ -1802,20 +1804,11 @@ class _LegalFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const yearly = SubscriptionPlans.yearly;
-    const monthly = SubscriptionPlans.monthly;
     final terms =
         'Kostenlose Testphase: ${SubscriptionPlans.trialDays} Tage, einmal '
         'pro Konto. Sie endet automatisch – ohne Kosten und ohne '
         'automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n'
-        'Abo-Preise (Bezahlung wird gerade eingerichtet): Jährlich '
-        '${formatEuro(yearly.firstChargeCents)} im ersten Jahr, danach '
-        '${formatEuro(yearly.regularChargeCents)} pro Jahr. Monatlich '
-        '${formatEuro(monthly.introMonthlyPriceCents)} pro Monat in den '
-        'ersten ${monthly.introMonths} Monaten, danach '
-        '${formatEuro(monthly.monthlyPriceCents)} pro Monat. Alle Preise inkl. '
-        'MwSt. Ein Abo verlängert sich automatisch zum genannten Folgepreis '
-        'und ist jederzeit zum Ende des Abrechnungszeitraums kündbar.';
+        '${PremiumCopy.priceTerms}';
     final linkStyle = TextButton.styleFrom(
       foregroundColor: AppColors.textMuted,
       minimumSize: const Size(48, 44),

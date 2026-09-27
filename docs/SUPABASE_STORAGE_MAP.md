@@ -12,6 +12,7 @@ angemeldeten Konto gehören sollen.
 | Getrackte Mahlzeiten und Mengen | `meals`, `meal_items` | Tagebuch und Serie sollen geräteübergreifend stimmen |
 | Rezeptfavoriten | `favorites` | gehören zum Konto |
 | Premium-Status | `entitlements` | später nur vom Kauf-Backend veränderbar |
+| Genutzte 7-Tage-Testphase (nur Konto-ID, Start und Ende) | `premium_trials` | die kostenlose Testphase gilt einmal pro Konto; keine Zahlungs- oder Gesundheitsdaten |
 
 ## Bleibt nur auf dem Gerät
 

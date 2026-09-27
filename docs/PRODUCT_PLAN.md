@@ -115,6 +115,12 @@ Demo-Daten; nur externe Datenquellen, Konto, KI und Bezahlung fehlen.
 ### Phase 4 – Premium und Veröffentlichung
 
 - Monats- und Jahresabo mit sauberem Restore-/Kündigungsablauf
+- Preise und Testphase (entschieden am 27. September 2026): 7 Tage kostenlos
+  testen, einmal pro Konto und ohne Zahlungsdaten; danach 4,99 € pro Monat
+  oder 49,88 € einmal pro Jahr als Festpreise ohne Einführungsangebot.
+  Premium umfasst KI-Foto, LIVO Coach und alle Rezepte; Tagebuch, Suche,
+  Barcode, Profil und 30 % der Rezepte bleiben kostenlos. Maßgeblich ist
+  `lib/features/subscription/domain/subscription_plans.dart`.
 - Premium-Grenzen, Paywall und serverseitige Berechtigungsprüfung
 - optionale Benachrichtigungen
 - Store-Metadaten, Icons, Screenshots, Support und rechtliche Prüfung
@@ -140,5 +146,5 @@ Demo-Daten; nur externe Datenquellen, Konto, KI und Bezahlung fehlen.
 - Lebensmittel-Datenquelle und deren kommerzielle Lizenz
 - lokale Persistenz, Backend-Standort und Aufbewahrungsfristen
 - KI-Anbieter und Datenverarbeitung vor Übertragung echter Nutzerdaten
-- Preis, kostenlose Grenzen und Inhalt des Premium-Abos
+- Store-Anbindung (Apple, Google, Web) und rechtliche Prüfung der Abo-Texte
 - konkrete juristische Prüfung und passende Haftpflichtversicherung

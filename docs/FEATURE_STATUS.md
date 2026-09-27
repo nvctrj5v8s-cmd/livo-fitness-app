@@ -1,5 +1,36 @@
 # Funktionsstatus
 
+## Aktualisierung: Premium-Preise und 7-Tage-Test, 27. September 2026
+
+- Die kostenlose Testphase von LIVO Premium dauert jetzt 7 statt 3 Tage. Sie
+  gilt weiterhin einmal pro Konto, fragt keine Zahlungsdaten ab und endet
+  automatisch ohne Kosten und ohne Verlängerung.
+- Neue Festpreise inkl. MwSt.: monatlich 4,99 € pro Monat, jährlich 49,88 €
+  einmal pro Jahr. Die bisherigen Einführungsangebote (monatlich 7,99 € mit
+  4,99 € in den ersten 3 Monaten, jährlich 71,88 € mit 65,88 € im ersten Jahr)
+  entfallen ersatzlos.
+- Die Paywall zeigt beim Jahresabo „entspricht 4,16 € pro Monat“ (49,88 € ÷ 12
+  = 4,1567 €, auf den nächsten Cent aufgerundet, damit der Monatswert nie zu
+  niedrig wirkt) und „du sparst 10,00 € gegenüber monatlich“ (12 × 4,99 € =
+  59,88 €). Das Abzeichen „−17 %“ ist auf ganze Prozent gerundet (genau
+  16,7 %). Alle Beträge werden aus
+  `lib/features/subscription/domain/subscription_plans.dart` berechnet.
+- Bezahlung ist weiterhin nicht angebunden (`storeBillingAvailable = false`):
+  Kauf-Buttons sagen das offen, es wird nichts gekauft oder berechnet. Was
+  kostenlos und was Premium ist, bleibt unverändert.
+- Serverseitig legt die neue, wiederholbare Migration
+  `supabase/migrations/0011_premium_trial_seven_days.sql` die Länge fest. Sie
+  ist noch nicht eingespielt; bis dahin startet der Server weiterhin
+  3-Tage-Tests, obwohl die App 7 Tage nennt. Die Migration daher vor oder
+  zusammen mit dem App-Update ausführen. Bereits laufende Tests behalten ihr
+  gespeichertes Enddatum.
+- Datenschutz: unverändert. Für die Testphase speichert LIVO weiterhin nur
+  Konto-ID, Start und Ende (`premium_trials`) und keine Zahlungsdaten.
+- Geprüft: Flutter-Analyse ohne Befund; neue Tests in
+  `test/subscription_plans_test.dart` decken Preise, Monatswert, Ersparnis,
+  Paywall-Texte und die Paywall auf 390 px sowie 320 px mit doppelter
+  Schriftgröße ab.
+
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
 - Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes
