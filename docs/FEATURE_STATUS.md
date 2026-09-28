@@ -48,15 +48,15 @@
 - Die kostenlose Testphase von LIVO Premium dauert jetzt 7 statt 3 Tage. Sie
   gilt weiterhin einmal pro Konto, fragt keine Zahlungsdaten ab und endet
   automatisch ohne Kosten und ohne Verlängerung.
-- Neue Festpreise inkl. MwSt.: monatlich 4,99 € pro Monat, jährlich 49,88 €
+- Neue Festpreise inkl. MwSt.: monatlich 4,99 € pro Monat, jährlich 45,99 €
   einmal pro Jahr. Die bisherigen Einführungsangebote (monatlich 7,99 € mit
   4,99 € in den ersten 3 Monaten, jährlich 71,88 € mit 65,88 € im ersten Jahr)
   entfallen ersatzlos.
-- Die Paywall zeigt beim Jahresabo „entspricht 4,16 € pro Monat“ (49,88 € ÷ 12
-  = 4,1567 €, auf den nächsten Cent aufgerundet, damit der Monatswert nie zu
-  niedrig wirkt) und „du sparst 10,00 € gegenüber monatlich“ (12 × 4,99 € =
-  59,88 €). Das Abzeichen „−17 %“ ist auf ganze Prozent gerundet (genau
-  16,7 %). Alle Beträge werden aus
+- Die Paywall zeigt beim Jahresabo „entspricht 3,84 € pro Monat“ (45,99 € ÷ 12
+  = 3,8325 €, auf den nächsten Cent aufgerundet, damit der Monatswert nie zu
+  niedrig wirkt) und „du sparst 13,89 € gegenüber monatlich“ (12 × 4,99 € =
+  59,88 €). Das Abzeichen „−23 %“ ist auf ganze Prozent gerundet (genau
+  23,2 %). Alle Beträge werden aus
   `lib/features/subscription/domain/subscription_plans.dart` berechnet.
 - Bezahlung ist weiterhin nicht angebunden (`storeBillingAvailable = false`):
   Kauf-Buttons sagen das offen, es wird nichts gekauft oder berechnet. Was

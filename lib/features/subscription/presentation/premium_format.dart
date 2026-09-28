@@ -2,7 +2,7 @@ import '../domain/subscription_plans.dart';
 
 const _nbsp = ' ';
 
-/// German price format: `49,88 €`. The non-breaking space keeps the amount
+/// German price format: `45,99 €`. The non-breaking space keeps the amount
 /// and currency on one line.
 String formatEuro(int cents) {
   final euros = (cents ~/ 100).toString();

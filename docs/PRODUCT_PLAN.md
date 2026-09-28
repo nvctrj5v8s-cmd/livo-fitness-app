@@ -117,7 +117,7 @@ Demo-Daten; nur externe Datenquellen, Konto, KI und Bezahlung fehlen.
 - Monats- und Jahresabo mit sauberem Restore-/Kündigungsablauf
 - Preise und Testphase (entschieden am 27. September 2026): 7 Tage kostenlos
   testen, einmal pro Konto und ohne Zahlungsdaten; danach 4,99 € pro Monat
-  oder 49,88 € einmal pro Jahr als Festpreise ohne Einführungsangebot.
+  oder 45,99 € einmal pro Jahr als Festpreise ohne Einführungsangebot.
   Premium umfasst KI-Foto, LIVO Coach und alle Rezepte; Tagebuch, Suche,
   Barcode, Profil und 30 % der Rezepte bleiben kostenlos. Maßgeblich ist
   `lib/features/subscription/domain/subscription_plans.dart`.
