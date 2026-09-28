@@ -19,6 +19,9 @@ angemeldeten Konto gehören sollen.
 - Antworten aus der freiwilligen Einführung
 - Erinnerungsschalter
 - zuletzt verwendete und lokal gemerkte Lebensmittel
+- Wochenplan, Einkaufsliste, Vorräte und der Schalter „Grundzutaten sind
+  vorhanden“ (pro Konto unter `livo.kitchen.v1.<Konto-ID>`; Details:
+  `KITCHEN_LISTS_PRIVACY.md`)
 - vorübergehende UI-Zustände
 
 Diese lokalen Daten werden nicht automatisch auf ein neues Handy übertragen.

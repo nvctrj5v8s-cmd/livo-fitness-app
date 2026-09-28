@@ -389,31 +389,5 @@ class RecipePremiumDetails {
   ];
 }
 
-class ShoppingItem {
-  const ShoppingItem({
-    required this.id,
-    required this.name,
-    required this.amount,
-    this.done = false,
-  });
-
-  final String id;
-  final String name;
-  final String amount;
-  final bool done;
-
-  ShoppingItem copyWith({bool? done}) =>
-      ShoppingItem(id: id, name: name, amount: amount, done: done ?? this.done);
-}
-
-class PantryItem {
-  const PantryItem({
-    required this.id,
-    required this.name,
-    required this.amount,
-  });
-
-  final String id;
-  final String name;
-  final String amount;
-}
+// Pantry, shopping list and week plan models live in
+// `features/discover/domain/kitchen_planning.dart`.

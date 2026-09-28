@@ -2,6 +2,7 @@ import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
 import 'package:fitness_ai_app/features/discover/domain/recipe_serving.dart';
 import 'package:fitness_ai_app/features/discover/presentation/cook_mode_page.dart';
+import 'package:fitness_ai_app/features/discover/presentation/kitchen_format.dart';
 import 'package:fitness_ai_app/features/discover/presentation/recipe_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -281,19 +282,23 @@ void main() {
   ) async {
     final controller = await recipeTestController(plus: false);
     await _pumpDetail(tester, controller);
-    final before = controller.shoppingItems.length;
+    final before = controller.planning.shopping.length;
 
     await _tapVisible(tester, find.byKey(const ValueKey('ingredient-0')));
     expect(find.text('3 fehlende Zutaten auf die Einkaufsliste'), findsOneWidget);
     await _tapVisible(tester, find.byKey(const Key('recipe-add-shopping')));
 
-    final added = controller.shoppingItems.skip(before).toList();
+    final added = controller.planning.shopping.skip(before).toList();
     expect(added.map((item) => item.name), [
       'Olivenöl',
       'Zwiebel',
       'Babyspinat',
     ]);
-    expect(added.first.amount, '1 EL · 10 g');
+    expect(
+      kitchenAmountLabel(added.first.amount, added.first.note),
+      '1 EL · 10 g',
+    );
+    expect(added.first.source, curryRecipe.title);
     expect(find.textContaining('bis zum Neustart'), findsOneWidget);
   });
 }

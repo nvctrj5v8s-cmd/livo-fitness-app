@@ -1,5 +1,69 @@
 # Funktionsstatus
 
+## Aktualisierung: Wochenplan, Einkaufsliste, Vorräte und Kochen mit Vorhandenem, 27. September 2026
+
+- **Speicherort:** Wochenplan, Einkaufsliste und Vorräte werden pro
+  angemeldetem Konto **nur auf diesem Gerät** gespeichert
+  (`livo.kitchen.v1.<Konto-ID>`, SharedPreferences). Sie überstehen einen
+  Neustart, werden aber nicht in Supabase gespeichert und erscheinen nicht auf
+  anderen Geräten. Die Sheets sagen das ausdrücklich. Ohne Konto (Vorschau)
+  gelten die Listen nur bis zum Neustart. Es gibt keine Demo-Einträge mehr.
+- **Warum lokal:** Das Schema hat keine passenden Tabellen; eine neue
+  Migration müsste erst live ausgeführt werden, bevor die Funktion auf GitHub
+  Pages nutzbar wäre. Die Speicherung liegt hinter `PlanningStore`, sodass
+  später eigene Supabase-Tabellen mit RLS eingesetzt werden können.
+- **Kontowechsel/Abmeldung:** Jedes Konto hat einen eigenen Schlüssel; beim
+  Kontowechsel wird ein neuer Zustand geladen. Nicht lesbare Daten werden
+  nicht überschrieben – Änderungen sind dann gesperrt, bis „Erneut versuchen“
+  klappt oder die Listen bewusst zurückgesetzt werden. Speicherfehler werden
+  angezeigt. „Lokale Demodaten löschen“ im Profil entfernt auch diese Listen.
+  Planeinträge älter als acht Wochen werden beim Laden entfernt.
+- **Vorräte:** Zutat mit optionaler Menge („500 g“, „1,5 kg“, „2 Stück“,
+  „1 Dose“; Unklares bleibt als Text), Schnellauswahl häufiger Zutaten
+  (Kartoffeln, Reis, Nudeln, Eier, Zwiebeln, Haferflocken, Milch, Mehl,
+  Dosentomaten, Linsen …) zum An- und Abwählen, doppelte Einträge werden
+  zusammengeführt, „Alle entfernen“.
+- **Was kann ich kochen?** Prominent im Rezepte-Tab und in den Vorräten.
+  Zutaten antippen, eintippen (mit Vorschlägen aus dem Katalog) oder Vorräte
+  verwenden. Rezepte mit mindestens einer eigenen Zutat erscheinen nach Anteil
+  vorhandener Zutaten, dann nach den wenigsten fehlenden sortiert; jede Karte
+  zeigt „Hast du“, „Fehlt“ und vorausgesetzte Grundzutaten sowie „x von y
+  da“ als Text. Der Abgleich ist tolerant (Groß-/Kleinschreibung, Umlaute und
+  ae/oe/ue, Einzahl/Mehrzahl, Zusätze wie „festkochend“, Synonyme wie
+  Erdäpfel/Paradeiser/Möhren) und hält ähnliche, aber andere Zutaten getrennt
+  (Süßkartoffel, Kokosmilch, Kichererbsen, Frühlingszwiebeln). Salz, Pfeffer,
+  Öl, Wasser und gängige Gewürze zählen standardmäßig als vorhanden; der
+  Schalter ist sichtbar und wird gespeichert. Der Abgleich arbeitet mit der
+  Zutatenliste jedes Katalogrezepts, ohne feste Rezept-IDs. Premium-Rezepte
+  tragen das Plus-Abzeichen; freie Konten sehen wie im Katalog den
+  Premium-Hinweis. „Fehlende Zutaten auf die Einkaufsliste“ ist je Rezept
+  möglich. Der Abgleich ist eine Orientierung, keine Allergen- oder
+  Halal-Prüfung.
+- **Wochenplan:** echte Kalenderwochen (Montag–Sonntag) mit Vor/Zurück und
+  „Zur aktuellen Woche“; Rezepte je Tag und Mahlzeit mit Portionen einplanen
+  (auch direkt aus dem Rezept über das Kalender-Symbol), verschieben/ändern,
+  entfernen, Woche leeren. Der Plan ist nutzergesteuert – es werden keine
+  Pläne oder Kalorienvorgaben erzeugt. „Einkaufsliste aus Wochenplan
+  erstellen“ addiert die Zutaten der Woche (gleiche Zutat, Gramm), zieht
+  Vorräte (Gramm-Mengen werden verrechnet, andere Mengen gelten als
+  vorhanden) und optional Grundzutaten ab und zeigt eine Zusammenfassung.
+  Erneutes Erstellen ersetzt die Einträge derselben Woche statt sie zu
+  verdoppeln; Einträge, die schon auf der Liste stehen, werden nicht doppelt
+  angelegt.
+- **Einkaufsliste:** hinzufügen mit optionaler Menge, abhaken, löschen,
+  „Erledigte löschen“, „Liste leeren“, erledigte Artikel in die Vorräte
+  übernehmen (Mengen gleicher Einheit werden addiert); Herkunft („für
+  Linsen-Dal“) wird angezeigt.
+- Selbst eingegebene Einträge folgen der Halal-Inhaltsregel (wie beim
+  Selbsteintrag im Tagebuch).
+- Geprüft: `flutter analyze` ohne Befund; neue Unit-Tests für Abgleich,
+  Mengen, Wochenplan→Einkaufsliste, Controller und Gerätespeicher sowie
+  Widget-Tests für alle Abläufe bei 390 × 844, 320 × 568 mit doppelter
+  Schrift, 740 × 360 und 1280 × 800 mit reduzierter Bewegung. Zwei bereits
+  vorher fehlschlagende Tests in `recipe_detail_test.dart` (Profi-Tipp-Text,
+  Überlauf der Rezeptdetail-Zeilen bei großer Schrift) sind unverändert und
+  gehören nicht zu dieser Änderung. Details zu Daten: `KITCHEN_LISTS_PRIVACY.md`.
+
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
 - Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes
@@ -255,12 +319,13 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Mahlzeit hinzufügen | Lokale Textsuche in fünf Demo-Gerichten; Auswahl fügt eine Mahlzeit hinzu und berechnet Kalorien/Makros neu |
 | Tagebuch | Tagesansicht, Bilanz, Mahlzeitenliste, Entfernen per Wischgeste sowie Wasser erhöhen und verringern |
 | Rezepte | Suche nach Titel, Kategorienfilter, Favoriten, drei lokale Rezepte mit Bildern und Hero-Detailansicht |
-| Einkaufsliste | Lokales Bottom Sheet mit Demo-Artikeln, Hinzufügen, Abhaken und Löschen per Wischgeste |
+| Einkaufsliste | Hinzufügen mit optionaler Menge, Abhaken, Löschen, „Erledigte löschen“, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 27.09.2026) |
 | Fortschritt | Animierter Gewichtsgraph mit Zielmarke; sieben Punkte sind antippbar und ändern den angezeigten Wert |
 | Weitere Diagramme | Animierte Wochenbalken für Kalorien und Protein sowie lokale Statistik- und Meilensteinkarten |
 | Profil | Profilansicht mit lokalem Avatar; Name, Ziel, Kalorienziel und Zielgewicht lassen sich bearbeiten |
 | Ernährungsprofil | Stil, Allergien und Aktivitätsniveau lassen sich lokal bearbeiten |
-| Planung & Vorräte | Wochenplan, Einkaufsliste und Vorräte lassen sich lokal pflegen |
+| Planung & Vorräte | Wochenplan, Einkaufsliste und Vorräte werden pro Konto auf diesem Gerät gespeichert und überstehen einen Neustart; keine Cloud-Synchronisierung (Stand 27.09.2026) |
+| Was kann ich kochen? | Zutaten wählen oder Vorräte nutzen; Katalogrezepte nach Anteil vorhandener Zutaten sortiert, fehlende Zutaten sichtbar und auf die Einkaufsliste übertragbar (Stand 27.09.2026) |
 | Einstellungen | Premium-Vorschau, Erinnerungs-Schalter, Datenübersicht, Löschdialog und Sicherheitshinweise |
 | Animationen | Seitenwechsel, gestaffelte Reveals, Press-Feedback, Ringe, Zahlen, Balken, Favoriten und Coach-Orb |
 | Bilder | Drei lokale Food-WebPs und ein lokales Profil-WebP; keine Bilder werden zur Laufzeit aus dem Internet geladen |
@@ -272,8 +337,8 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Tagesauswahl | Sieben auswählbare Tage | Eigene Mahlzeiten und Summen je Datum; echte Kalenderdaten |
 | Mahlzeitenerfassung | Demo-Suche und schnelles Hinzufügen | Freier Eintrag, Mengen, Bearbeiten, eigene Lebensmittel und Validierung |
 | Rezeptdetails | Bild, Kennzahlen, Zutaten- und Zubereitungsansicht; Rezept kann ins Tagebuch übernommen werden | Rezeptspezifische Zutaten/Zubereitung und Portionseditor |
-| Tagesplan | Sieben Tage, Rezepte auswählen und freilassen | Verschieben per Drag & Drop und Summen pro Tag |
-| Vorräte | Zutaten hinzufügen und entfernen | Mengen, Ablaufdaten und lokaler Rezeptabgleich |
+| Wochenplan | Echte Kalenderwochen, Rezepte je Tag und Mahlzeit mit Portionen einplanen, verschieben, entfernen, Woche leeren, Einkaufsliste aus der Woche erstellen | Synchronisierung zwischen Geräten, Drag & Drop, Übernahme ins Tagebuch |
+| Vorräte | Hinzufügen/Entfernen, optionale Menge, Schnellauswahl häufiger Zutaten, Rezeptabgleich „Was kann ich kochen?“ | Ablaufdaten, automatische Verbrauchsbuchung beim Kochen, Synchronisierung zwischen Geräten |
 | Fortschrittszeiträume | Auswahl für 4 Wochen, 3 Monate und 1 Jahr | Je Zeitraum unterschiedliche Daten und Achsen |
 | Profilbild | Lokaler Avatar und Kameraindikator | Bildauswahl, Zuschneiden, Berechtigungen und Speicherung |
 | Ernährungsprofil | Ernährungsstil, Allergien, Aktivität und Mahlzeitenrhythmus sichtbar und editierbar | Nutzung in personalisierten Berechnungen |

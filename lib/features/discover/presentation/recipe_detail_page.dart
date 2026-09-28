@@ -8,7 +8,8 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../profile/domain/daily_targets.dart';
 import '../../subscription/presentation/paywall_page.dart';
-import '../domain/recipe_filter.dart' show normalizeRecipeSearch;
+import '../domain/ingredient_match.dart' show ingredientDisplayName;
+import '../domain/kitchen_planning.dart';
 import '../domain/recipe_serving.dart';
 import 'cook_mode_page.dart';
 import 'planning_sheets.dart';
@@ -107,34 +108,49 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 
   void _addToShopping(
     AppController controller,
+    Recipe recipe,
     List<ScaledIngredient> ingredients,
   ) {
-    final onList = {
-      for (final item in controller.shoppingItems)
-        if (!item.done) normalizeRecipeSearch(item.name),
-    };
-    var added = 0;
-    for (final (index, item) in ingredients.indexed) {
-      if (_checked.contains(index)) continue;
-      if (!onList.add(normalizeRecipeSearch(item.name))) continue;
-      final measure = item.measure;
-      controller.addShoppingItem(
-        item.name,
-        amount: measure == null
-            ? item.gramsLabel
-            : '$measure · ${item.gramsLabel}',
+    final merge = controller.planning.addShoppingDrafts([
+      for (final (index, item) in ingredients.indexed)
+        if (!_checked.contains(index))
+          ShoppingDraft(
+            name: ingredientDisplayName(item.name),
+            amount: item.grams > 0
+                ? KitchenAmount(item.grams.ceilToDouble(), KitchenUnit.gram)
+                : null,
+            note: item.measure,
+            source: recipe.title,
+          ),
+    ]);
+    if (merge == null) {
+      _showMessage(
+        controller.planning.loadError ?? 'Deine Listen werden noch geladen.',
       );
-      added++;
+      return;
     }
+    final added = merge.added.length;
     _showMessage(
       added == 0
           ? 'Diese Zutaten stehen schon auf deiner Einkaufsliste.'
           : '${added == 1 ? '1 Zutat' : '$added Zutaten'} auf die '
-                'Einkaufsliste gesetzt. Die Liste bleibt nur bis zum '
-                'Neustart der App erhalten.',
+                'Einkaufsliste gesetzt.'
+                '${controller.planning.persistent ? ' Gespeichert nur auf diesem Gerät.' : ' Ohne Konto bleibt die Liste nur bis zum Neustart der App erhalten.'}',
       action: SnackBarAction(
         label: 'Ansehen',
         onPressed: () => showShoppingSheet(context, controller),
+      ),
+    );
+  }
+
+  Future<void> _addToPlan(AppController controller, Recipe recipe) async {
+    final message = await planRecipeWithSheet(context, controller, recipe);
+    if (message == null || !mounted) return;
+    _showMessage(
+      message,
+      action: SnackBarAction(
+        label: 'Wochenplan',
+        onPressed: () => showWeekPlanSheet(context, controller),
       ),
     );
   }
@@ -258,7 +274,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       checked: _checked,
       onToggle: _toggleIngredient,
       onClearChecks: () => setState(_checked.clear),
-      onAddToShopping: () => _addToShopping(controller, ingredients),
+      onAddToShopping: () => _addToShopping(controller, recipe, ingredients),
     );
     final steps = RecipeStepsSection(
       recipe: recipe,
@@ -375,6 +391,13 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             ),
             actions: [
               _OverlayButton(
+                key: const Key('recipe-add-plan'),
+                icon: Icons.calendar_month_rounded,
+                tooltip: 'Zum Wochenplan hinzufügen',
+                onPressed: () => _addToPlan(controller, recipe),
+              ),
+              const SizedBox(width: 8),
+              _OverlayButton(
                 icon: favorite
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
@@ -445,6 +468,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 /// Round icon button that stays readable on top of photos.
 class _OverlayButton extends StatelessWidget {
   const _OverlayButton({
+    super.key,
     required this.icon,
     required this.tooltip,
     required this.onPressed,
