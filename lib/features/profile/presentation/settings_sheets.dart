@@ -382,7 +382,7 @@ class _PrivacySheet extends StatelessWidget {
         title: const Text('Demodaten löschen?'),
         content: Text(
           controller.personalizationUserId == null
-              ? 'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispieldaten wieder.'
+              ? 'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.'
               : 'Einkaufsliste, Vorräte, Wochenplan und Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.',
         ),
         actions: [

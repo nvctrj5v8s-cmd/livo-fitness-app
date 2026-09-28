@@ -55,6 +55,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       unawaited(controller.loadFoodPreferences());
       unawaited(controller.loadTrackingStreak());
       unawaited(controller.loadReminderPreferences());
+      unawaited(controller.planning.load());
       unawaited(controller.subscription.load());
       _scheduleNextDayRefresh();
     });
