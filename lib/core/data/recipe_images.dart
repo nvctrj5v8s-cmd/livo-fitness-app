@@ -8,7 +8,7 @@ abstract final class RecipeImages {
     'livo-arme-ritter',
     'livo-bananen-hafer-pfannkuchen',
     'livo-bratkartoffeln-spiegelei',
-    'livo-chili-sin-carne',
+    'livo-bohnen-chili',
     'livo-gefuellte-paprika-tomaten',
     'livo-halal-haehnchen-paprika-reis',
     'livo-joghurt-gurken-dip',

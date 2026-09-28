@@ -45,7 +45,7 @@ Alkohol, kein unklares Fleisch; beim Halal-Hähnchen-Rezept ist eindeutig
 Hähnchen zu sehen. Wo das Foto nur die Hauptkomponente zeigt, steht das im
 Motiv. Ohne ehrlich passendes Foto (Fallback-Bild): Overnight Oats mit Joghurt
 und Banane, Bananen-Quark mit Haferflocken, Kartoffelsalat mit Gurke und
-Joghurt, Thunfisch-Reis-Bowl mit Gurke, Linsen-Bolognese.
+Joghurt, Thunfisch-Reis-Bowl mit Gurke, Linsen-Ragout mit Spaghetti.
 
 | Datei | Motiv | Quelle (Fotoseite) | Fotograf/in | Lizenz (+ Link) | Abruf-Datum |
 | --- | --- | --- | --- | --- | --- |
@@ -69,7 +69,7 @@ Joghurt, Thunfisch-Reis-Bowl mit Gurke, Linsen-Bolognese.
 | `livo-thunfisch-nudelsalat.webp` | Nudelsalat mit Thunfisch, Paprika, Tomaten, Mais | [Pexels 6896393](https://www.pexels.com/photo/tuna-salad-on-white-bowl-6896393/) | Eiliv Aceron | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-spinat-feta-nudelauflauf.webp` | Nudelauflauf mit Spinat und Feta in Form | [Pexels 16824041](https://www.pexels.com/photo/dish-with-tortiglioni-pasta-16824041/) | Tom Wielspütz | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-kichererbsen-curry.webp` | Kichererbsen-Curry in Holzschale | [Pexels 9287035](https://www.pexels.com/photo/close-up-of-chana-masala-9287035/) | Muhammad Khawar Nazir | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
-| `livo-chili-sin-carne.webp` | Veganes Chili mit schwarzen Bohnen, Mais und Reis | [Pexels 28286173](https://www.pexels.com/photo/vegan-black-bean-chilli-28286173/) | Nic Wood | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
+| `livo-bohnen-chili.webp` | Veganes Chili mit schwarzen Bohnen, Mais und Reis | [Pexels 28286173](https://www.pexels.com/photo/vegan-black-bean-chilli-28286173/) | Nic Wood | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-ofenlachs-kartoffeln.webp` | Lachs auf Kartoffeln und Zwiebeln in Glasform (Hand sichtbar) | [Pexels 34624944](https://www.pexels.com/photo/baked-salmon-with-onions-and-potatoes-in-oven-34624944/) | Ayşe Nur | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-knusper-kichererbsen.webp` | Geröstete Kichererbsen in schwarzer Schale | [Pexels 35369047](https://www.pexels.com/photo/delicious-spiced-chickpeas-in-a-black-bowl-35369047/) | Vural Yavas | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-thunfisch-bohnen-salat.webp` | Thunfisch, gekochte Eier, grüne Bohnen, Kichererbsen | [Pexels 6544221](https://www.pexels.com/photo/tuna-and-green-bean-salad-with-egg-in-bowl-6544221/) | Alesia Kozik | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |

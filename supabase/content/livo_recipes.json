@@ -1131,7 +1131,7 @@
       "steps": [
         {"title": "Ofen vorheizen", "text": "Den Backofen auf 190 °C Ober- und Unterhitze vorheizen."},
         {"title": "Aushöhlen", "text": "Von Paprika und Tomaten einen Deckel abschneiden. Paprika entkernen, Tomaten mit einem Teelöffel aushöhlen und das Tomateninnere fein hacken."},
-        {"title": "Füllung", "text": "Die Hälfte des Öls erhitzen, Zwiebel und Knoblauch 3 Minuten dünsten. Tomatenmark, gehacktes Tomateninneres, Reis, Oregano, Petersilie, Salz und Pfeffer untermischen und 3 Minuten köcheln.", "minutes": 6},
+        {"title": "Füllung", "text": "Die Hälfte des Öls erhitzen, Zwiebel und Knoblauch 3 Minuten dünsten. Tomatenmark, das klein geschnittene Tomateninnere, Reis, Oregano, Petersilie, Salz und Pfeffer untermischen und 3 Minuten köcheln.", "minutes": 6},
         {"title": "Füllen", "text": "Das Gemüse zu drei Vierteln füllen, da der Reis aufquillt, in die Form setzen und die Deckel auflegen. Kartoffelspalten dazwischen legen."},
         {"title": "Backen", "text": "200 ml Wasser in die Form gießen, alles mit dem restlichen Öl beträufeln und zugedeckt 40 Minuten backen. Dann ohne Deckel weitere 20 Minuten backen, bis Reis und Kartoffeln weich sind.", "minutes": 60}
       ],
@@ -1179,7 +1179,7 @@
         "common_mistakes": ["Die Sauce zu kurz kochen – sie schmeckt dann wässrig und roh."],
         "substitutions": ["Nudeln durch Vollkornnudeln ersetzen.", "Oregano durch frisches Basilikum ersetzen."],
         "meal_prep": "Die Sauce hält gekühlt 4 Tage und lässt sich gut einfrieren – gleich die doppelte Menge kochen.",
-        "variations": ["Mit Thunfisch aus der Dose.", "Mit roten Linsen für eine Bolognese-Variante."],
+        "variations": ["Mit Thunfisch aus der Dose.", "Mit roten Linsen für ein sämiges Linsen-Ragout."],
         "serving_tip": "Mit etwas geriebenem Käse und Pfeffer servieren."
       }
     },
@@ -1263,9 +1263,9 @@
       }
     },
     {
-      "slug": "livo-linsen-bolognese",
-      "title": "Linsen-Bolognese",
-      "description": "Herzhafte Bolognese aus roten Linsen, Möhren und Dosentomaten – vegan und gut zum Vorkochen.",
+      "slug": "livo-linsen-ragout",
+      "title": "Linsen-Ragout mit Spaghetti",
+      "description": "Herzhaftes Tomaten-Ragout aus roten Linsen, Möhren und Dosentomaten – vegan und gut zum Vorkochen.",
       "access_level": "premium",
       "difficulty": "Einfach",
       "servings": 4,
@@ -1293,7 +1293,7 @@
         {"title": "Linsen zugeben", "text": "Die gespülten Linsen, Dosentomaten, Brühe und Oregano zugeben und aufkochen."},
         {"title": "Köcheln", "text": "Die Sauce 20 Minuten bei niedriger Hitze köcheln lassen, bis die Linsen weich sind. Regelmäßig umrühren und mit Salz und Pfeffer abschmecken.", "minutes": 20},
         {"title": "Nudeln kochen", "text": "Währenddessen die Nudeln in leicht gesalzenem Wasser bissfest kochen und abgießen.", "minutes": 10},
-        {"title": "Servieren", "text": "Die Nudeln auf Teller verteilen und die Linsen-Bolognese darüber geben."}
+        {"title": "Servieren", "text": "Die Nudeln auf Teller verteilen und das Linsen-Ragout darüber geben."}
       ],
       "premium": {
         "step_tips": ["Fein geriebene Möhre macht die Sauce süßer und sämiger.", "", "Wird die Sauce zu dick, etwas Wasser nachgießen.", "", ""],
@@ -1343,8 +1343,8 @@
       }
     },
     {
-      "slug": "livo-chili-sin-carne",
-      "title": "Chili sin Carne mit Reis",
+      "slug": "livo-bohnen-chili",
+      "title": "Bohnen-Chili mit Reis",
       "description": "Veganes Chili mit schwarzen Bohnen, Mais und Paprika, dazu Reis – ideal zum Vorkochen.",
       "access_level": "premium",
       "difficulty": "Einfach",
