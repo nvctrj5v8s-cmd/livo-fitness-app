@@ -655,11 +655,11 @@ class AppController extends ChangeNotifier {
       _hasLoadedRemoteDiary = true;
     } on PostgrestException catch (error) {
       if (requestId != _diaryRequestId) return;
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       _restoreOfflineDiaryPreview(targetDate);
     } catch (error) {
       if (requestId != _diaryRequestId) return;
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       _restoreOfflineDiaryPreview(targetDate);
     } finally {
       if (requestId == _diaryRequestId) {
@@ -779,17 +779,18 @@ class AppController extends ChangeNotifier {
   }
 
   Future<bool> removeMeal(String id) async {
+    // The home screen lists today's `meals`; the diary lists `diaryMeals`.
     MealEntry? entry;
-    for (final candidate in diaryMeals) {
+    for (final candidate in [...diaryMeals, ...meals]) {
       if (candidate.id == id) {
         entry = candidate;
         break;
       }
     }
-    if (entry == null) return false;
+    if (entry == null || diarySaving) return false;
     if (entry.remoteMealId == null) {
-      diaryMeals.remove(entry);
-      if (_isToday(diaryDate)) meals.remove(entry);
+      diaryMeals.removeWhere((meal) => meal.id == id);
+      meals.removeWhere((meal) => meal.id == id);
       notifyListeners();
       return true;
     }
@@ -798,15 +799,15 @@ class AppController extends ChangeNotifier {
     notifyListeners();
     try {
       await _diary.deleteEntry(entry);
-      diaryMeals.remove(entry);
-      if (_isToday(diaryDate)) meals.remove(entry);
+      diaryMeals.removeWhere((meal) => meal.id == id);
+      meals.removeWhere((meal) => meal.id == id);
       await _refreshTrackingAfterRemoval();
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
@@ -827,8 +828,9 @@ class AppController extends ChangeNotifier {
       return false;
     }
     if (diarySaving) return false;
-    await _prepareTracking();
+    // Claim the save before any await so a second tap cannot slip through.
     diarySaving = true;
+    await _prepareTracking();
     diaryError = null;
     notifyListeners();
     try {
@@ -862,14 +864,20 @@ class AppController extends ChangeNotifier {
             );
       if (_sameDay(date, diaryDate)) diaryMeals.add(entry);
       if (_isToday(date)) meals.add(entry);
+      // Scanned products are new catalog rows that the loaded catalog does
+      // not know yet. Without them, editing or duplicating the entry failed
+      // with "Das Lebensmittel konnte nicht mehr gefunden werden."
+      if (!food.isExternalBarcodeFallback && _foodForId(food.id) == null) {
+        foods.add(food);
+      }
       recordFoodUse(food.id);
       await _recordSavedTrackingDay(date);
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
@@ -893,8 +901,9 @@ class AppController extends ChangeNotifier {
       return false;
     }
     if (diarySaving) return false;
-    await _prepareTracking();
+    // Claim the save before any await so a second tap cannot slip through.
     diarySaving = true;
+    await _prepareTracking();
     diaryError = null;
     notifyListeners();
     try {
@@ -912,10 +921,10 @@ class AppController extends ChangeNotifier {
       await _recordSavedTrackingDay(date);
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
@@ -945,8 +954,9 @@ class AppController extends ChangeNotifier {
       return false;
     }
     if (diarySaving) return false;
-    await _prepareTracking();
+    // Claim the save before any await so a second tap cannot slip through.
     diarySaving = true;
+    await _prepareTracking();
     diaryError = null;
     notifyListeners();
     try {
@@ -965,10 +975,10 @@ class AppController extends ChangeNotifier {
       await _recordSavedTrackingDay(date);
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
@@ -1059,10 +1069,10 @@ class AppController extends ChangeNotifier {
       await _refreshTrackingAfterRemoval();
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
@@ -1268,8 +1278,9 @@ class AppController extends ChangeNotifier {
       return true;
     }
     if (diarySaving) return false;
-    await _prepareTracking();
+    // Claim the save before any await so a second tap cannot slip through.
     diarySaving = true;
+    await _prepareTracking();
     diaryError = null;
     notifyListeners();
     try {
@@ -1283,16 +1294,27 @@ class AppController extends ChangeNotifier {
       await _recordSavedTrackingDay(targetDate);
       return true;
     } on PostgrestException catch (error) {
-      diaryError = error.message;
+      diaryError = diaryErrorMessage(error);
       return false;
     } catch (error) {
-      diaryError = error.toString();
+      diaryError = diaryErrorMessage(error);
       return false;
     } finally {
       diarySaving = false;
       notifyListeners();
     }
   }
+
+  /// German text for the diary UI. LIVO's own `StateError`/`ArgumentError`
+  /// messages are shown as they are; technical errors such as network or
+  /// database messages (English, "Bad state: …") never reach the user.
+  static String diaryErrorMessage(Object error) => switch (error) {
+    StateError(:final message) => message,
+    ArgumentError(:final String message) => message,
+    _ =>
+      'Die Verbindung zu deinem Tagebuch hat gerade nicht geklappt. '
+          'Bitte prüfe dein Internet und versuche es erneut.',
+  };
 
   bool _isUuid(String value) => RegExp(
     r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$',
@@ -1337,9 +1359,14 @@ class AppController extends ChangeNotifier {
   }
 
   void clearLocalDemoData() {
-    meals.clear();
+    // Signed-in diary entries and favorites live in Supabase. Clearing only
+    // the in-memory copy would hide them until the next start without
+    // deleting anything, so they stay.
+    if (personalizationUserId == null) {
+      meals.clear();
+      favoriteRecipeIds.clear();
+    }
     waterGlasses = 0;
-    favoriteRecipeIds.clear();
     shoppingItems = [];
     pantryItems = [];
     plannedRecipeIds = List<String?>.filled(7, null);

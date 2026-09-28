@@ -25,7 +25,8 @@ final class PreviewSubscriptionRepository implements SubscriptionRepository {
 }
 
 /// Reads `public.entitlements` / `public.premium_trials` (own rows via RLS)
-/// and calls the `start_premium_trial()` RPC from migration 0008.
+/// and calls the `start_premium_trial()` RPC from migration 0008 (7-day
+/// trial since migration 0011).
 final class SupabaseSubscriptionRepository implements SubscriptionRepository {
   SupabaseSubscriptionRepository({SupabaseClient? client})
     : _providedClient = client;

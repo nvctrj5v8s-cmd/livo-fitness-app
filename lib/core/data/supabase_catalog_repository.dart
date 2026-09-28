@@ -10,16 +10,49 @@ class SupabaseCatalogRepository {
 
   final SupabaseClient _client;
 
+  /// Supabase answers at most "Max rows" (1000 by default) per request, so
+  /// the catalog with several thousand foods is read page by page. Every page
+  /// is ordered by a unique key; otherwise rows could repeat or go missing.
+  static const catalogPageSize = 1000;
+
+  Future<List<Map<String, dynamic>>> _selectAll(
+    String table,
+    List<(String, bool)> order,
+  ) async {
+    final rows = <Map<String, dynamic>>[];
+    while (true) {
+      PostgrestTransformBuilder<PostgrestList> query = _client
+          .from(table)
+          .select();
+      for (final (column, ascending) in order) {
+        query = query.order(column, ascending: ascending);
+      }
+      final page = await query.range(
+        rows.length,
+        rows.length + catalogPageSize - 1,
+      );
+      // The next page starts after the rows really received, so a server
+      // limit below [catalogPageSize] cannot skip rows either.
+      if (page.isEmpty) break;
+      rows.addAll(
+        page.whereType<Map>().map((row) => Map<String, dynamic>.from(row)),
+      );
+    }
+    return rows;
+  }
+
   Future<CatalogData> loadCatalog() async {
-    final foodRows = await _client.from('foods').select();
-    final recipeRows = await _client
-        .from('recipes')
-        .select()
-        .order('created_at');
-    final ingredientRows = await _client
-        .from('recipe_ingredients')
-        .select()
-        .order('position');
+    final foodRows = await _selectAll('foods', const [('id', true)]);
+    final recipeRows = await _selectAll('recipes', const [
+      ('created_at', false),
+      ('id', true),
+    ]);
+    // Ingredients are shown in the recipe's own order (position 1, 2, 3 …).
+    final ingredientRows = await _selectAll('recipe_ingredients', const [
+      ('recipe_id', true),
+      ('position', true),
+      ('food_id', true),
+    ]);
     final premiumRows = await _loadPremiumDetails();
     final allFoods = foodRows
         .whereType<Map>()
@@ -162,12 +195,10 @@ class SupabaseCatalogRepository {
     );
   }
 
-  static List<String> _strings(Object? value, {bool keepEmpty = false}) =>
-      [
-        for (final item in (value as List?) ?? const [])
-          if (item is String && (keepEmpty || item.trim().isNotEmpty))
-            item.trim(),
-      ];
+  static List<String> _strings(Object? value, {bool keepEmpty = false}) => [
+    for (final item in (value as List?) ?? const [])
+      if (item is String && (keepEmpty || item.trim().isNotEmpty)) item.trim(),
+  ];
 
   static String? _text(Object? value) {
     if (value is! String) return null;

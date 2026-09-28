@@ -5,6 +5,40 @@ import '../../../core/data/barcode_lookup_service.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/theme/app_colors.dart';
 
+/// The camera reports a barcode again every few hundred milliseconds while it
+/// stays in view. After a failed lookup this guard ignores the same code until
+/// it has been out of view for [quietPeriod]; otherwise the error message would
+/// be replaced at once and every repeat would use up the lookup limit.
+/// Manual entry does not go through this guard.
+class RepeatedScanGuard {
+  RepeatedScanGuard({
+    this.quietPeriod = const Duration(seconds: 4),
+    DateTime Function()? now,
+  }) : _now = now ?? DateTime.now;
+
+  final Duration quietPeriod;
+  final DateTime Function() _now;
+  String? _failedCode;
+  DateTime? _lastSeen;
+
+  bool shouldLookUp(String code) {
+    final now = _now();
+    final lastSeen = _lastSeen;
+    if (code == _failedCode &&
+        lastSeen != null &&
+        now.difference(lastSeen) < quietPeriod) {
+      _lastSeen = now;
+      return false;
+    }
+    return true;
+  }
+
+  void markFailed(String code) {
+    _failedCode = code;
+    _lastSeen = _now();
+  }
+}
+
 class BarcodeScannerPage extends StatefulWidget {
   const BarcodeScannerPage({super.key});
 
@@ -15,6 +49,7 @@ class BarcodeScannerPage extends StatefulWidget {
 class _BarcodeScannerPageState extends State<BarcodeScannerPage>
     with SingleTickerProviderStateMixin {
   final _scannerController = MobileScannerController();
+  final _scanGuard = RepeatedScanGuard();
   late final AnimationController _scanLineController;
   bool _loading = false;
   bool _manualEntryOpen = false;
@@ -42,7 +77,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
         .map((barcode) => barcode.rawValue)
         .whereType<String>()
         .firstWhere((value) => value.isNotEmpty, orElse: () => '');
-    if (code.isEmpty) return;
+    if (code.isEmpty || !_scanGuard.shouldLookUp(code)) return;
     await _lookupBarcode(code);
   }
 
@@ -57,6 +92,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
       if (!mounted) return;
       Navigator.of(context).pop<FoodItem>(food);
     } on BarcodeLookupException catch (error) {
+      _scanGuard.markFailed(code);
       if (!mounted) return;
       setState(() {
         _loading = false;
@@ -71,6 +107,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
         };
       });
     } catch (_) {
+      _scanGuard.markFailed(code);
       if (!mounted) return;
       setState(() {
         _loading = false;

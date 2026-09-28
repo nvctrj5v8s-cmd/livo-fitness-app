@@ -1,5 +1,112 @@
 # Funktionsstatus
 
+## Aktualisierung: Premium-Preise und 7-Tage-Test, 27. September 2026
+
+- Die kostenlose Testphase von LIVO Premium dauert jetzt 7 statt 3 Tage. Sie
+  gilt weiterhin einmal pro Konto, fragt keine Zahlungsdaten ab und endet
+  automatisch ohne Kosten und ohne Verlängerung.
+- Neue Festpreise inkl. MwSt.: monatlich 4,99 € pro Monat, jährlich 49,88 €
+  einmal pro Jahr. Die bisherigen Einführungsangebote (monatlich 7,99 € mit
+  4,99 € in den ersten 3 Monaten, jährlich 71,88 € mit 65,88 € im ersten Jahr)
+  entfallen ersatzlos.
+- Die Paywall zeigt beim Jahresabo „entspricht 4,16 € pro Monat“ (49,88 € ÷ 12
+  = 4,1567 €, auf den nächsten Cent aufgerundet, damit der Monatswert nie zu
+  niedrig wirkt) und „du sparst 10,00 € gegenüber monatlich“ (12 × 4,99 € =
+  59,88 €). Das Abzeichen „−17 %“ ist auf ganze Prozent gerundet (genau
+  16,7 %). Alle Beträge werden aus
+  `lib/features/subscription/domain/subscription_plans.dart` berechnet.
+- Bezahlung ist weiterhin nicht angebunden (`storeBillingAvailable = false`):
+  Kauf-Buttons sagen das offen, es wird nichts gekauft oder berechnet. Was
+  kostenlos und was Premium ist, bleibt unverändert.
+- Serverseitig legt die neue, wiederholbare Migration
+  `supabase/migrations/0011_premium_trial_seven_days.sql` die Länge fest. Sie
+  ist noch nicht eingespielt; bis dahin startet der Server weiterhin
+  3-Tage-Tests, obwohl die App 7 Tage nennt. Die Migration daher vor oder
+  zusammen mit dem App-Update ausführen. Bereits laufende Tests behalten ihr
+  gespeichertes Enddatum.
+- Datenschutz: unverändert. Für die Testphase speichert LIVO weiterhin nur
+  Konto-ID, Start und Ende (`premium_trials`) und keine Zahlungsdaten.
+- Geprüft: Flutter-Analyse ohne Befund; neue Tests in
+  `test/subscription_plans_test.dart` decken Preise, Monatswert, Ersparnis,
+  Paywall-Texte und die Paywall auf 390 px sowie 320 px mit doppelter
+  Schriftgröße ab.
+
+## Aktualisierung: KI-Coach-Chat, 27. September 2026
+
+- Chat überarbeitet: „Coach schreibt …“-Anzeige, Eingabe und Senden während
+  der Antwort gesperrt (kein Doppelsenden), Zeichenzähler bis 600 Zeichen,
+  automatisches Scrollen (lange Antworten zeigen ihren Anfang), Eingabefeld
+  sitzt auf dem Handy direkt über Tastatur bzw. Navigation.
+- Klare deutsche Hinweise mit „Erneut versuchen“ für Verbindungsfehler,
+  Zeitüberschreitung (55 s in der App, 45 s für die KI im Server) und
+  Serverfehler; Tageslimit sperrt die Eingabe bis zum nächsten Tag ohne
+  sinnlosen Wiederholen-Knopf; abgelaufenes Premium/Testphase führt zum
+  Premium-Hinweis. Eine fehlgeschlagene Frage wird beim Wiederholen nicht
+  doppelt angezeigt; nach einer Zeitüberschreitung wird eine inzwischen
+  gespeicherte Antwort übernommen statt erneut bezahlt.
+- Antworten mit Listen und **fett** werden sauber dargestellt, ohne rohe
+  Sternchen. Leere oder unlesbare KI-Antworten werden abgefangen; fehlgeschlagene
+  KI-Anfragen zählen nach Migration 0013 nicht mehr zum Tageslimit.
+- Neue, strengere Systemanweisung (LIVO-Rolle, Halal-Regel, keine Diagnosen,
+  Medikamente, Supplement-Dosierungen oder Extremdiäten, Verweis auf Hilfe
+  bei Minderjährigen, Schwangerschaft, Essstörungen und Erkrankungen).
+- Premium-Status nicht ladbar (offline): Hinweis mit „Erneut versuchen“ statt
+  fälschlich der Paywall. Nach beendeter Testphase passt der Text.
+- Verlauf: bleibt pro Konto gespeichert und wird beim Öffnen geladen (letzte
+  100 Nachrichten, höchstens 90 Tage; an die KI gehen nur die letzten 12).
+  „Neuer Chat“ bzw. „Verlauf löschen“ löscht nach Rückfrage alles endgültig
+  auf dem Server – auch ohne Premium. Lange Antworten (über 1200 Zeichen)
+  gingen bisher komplett aus dem Verlauf verloren; das ist behoben.
+- Kontext „Kalorien heute“ nutzt jetzt wirklich den heutigen Tag, nicht den
+  gerade im Tagebuch geöffneten Tag.
+- Live noch nötig: zuerst Migration `0013_ai_coach_chat.sql` ausführen, dann
+  die Edge Function `ai-coach` neu deployen. Die derzeit deployte Version
+  (Stand vor dem Premium-Umbau) kennt weder Premium-Pflicht noch „Verlauf
+  löschen“. Details: `AI_COACH_PRIVACY.md`.
+
+## Aktualisierung: Fehlerbehebungen, 27. September 2026
+
+- Lebensmittelsuche: Der Katalog wird jetzt seitenweise geladen. Bei der
+  Standardgrenze von Supabase (1.000 Zeilen pro Abfrage) kamen vorher nur etwa
+  ein Sechstel der rund 5.800 importierten Lebensmittel in der App an;
+  Rezepte, deren Zutaten dahinter lagen, zeigten zu niedrige Nährwerte.
+- Barcode: Produkte, die gegen die Halal-Regel verstoßen, zeigen wieder den
+  richtigen Hinweis statt „keine gültige Serverantwort“. Nach einem
+  Fehlschlag wird derselbe Barcode nicht mehrmals pro Sekunde erneut gesucht
+  (das verbrauchte sonst das Abfragelimit).
+- Gescannte Produkte lassen sich nach dem Eintragen wieder bearbeiten und
+  duplizieren („Lebensmittel konnte nicht mehr gefunden werden“ ist behoben).
+- Einträge lassen sich jetzt im Bearbeiten-Fenster löschen („Eintrag
+  löschen“, mit Rückfrage) – auch auf der Startseite, wo es vorher keinen Weg
+  zum Löschen gab. Gespeicherte Einträge werden auch in Supabase gelöscht.
+- Ein schneller Doppeltipp auf „Hinzufügen“ erzeugt keine doppelten
+  Tagebucheinträge mehr.
+- Einträge eines Tages erscheinen in der Reihenfolge, in der sie eingetragen
+  wurden (vorher nach dem Neuladen umgekehrt).
+- Fehlermeldungen im Tagebuch sind deutsch statt technischer englischer
+  Servertexte.
+- Datenschutz-Fenster: Der falsche Satz „Aktuell verlässt kein Profil- oder
+  Ernährungswert diese Demo“ wurde ersetzt. Es zeigt jetzt ehrlich, was im
+  Konto (Supabase) liegt, was an den KI-Dienst (OpenAI) geht und was nur auf
+  dem Gerät bleibt. „Lokale Demodaten löschen“ blendet bei angemeldeten
+  Konten keine gespeicherten Mahlzeiten und Favoriten mehr aus, die gar nicht
+  gelöscht wurden.
+- Rezeptdetail: Keine Layoutfehler mehr bei großer Systemschrift auf
+  schmalen Handys (Makro-Anteile und Zutatenmengen umbrechen jetzt).
+- Tippfehler ohne Umlaute im Tagebuch korrigiert („Nährwerte“, „Änderungen“).
+- Halal-Regel verschärft: Rund 200 weitere Katalogeinträge werden jetzt
+  gesperrt, darunter Cocktails (Daiquiri, Margarita, Martini, Tequila),
+  Wurst- und Schweineprodukte (Bologna, Bratwurst, Chorizo, Spam, Hot Dog),
+  Burger, Steaks, Innereien, Wild und Geflügel ohne Halal-Kennzeichnung sowie
+  Gummibärchen und Marshmallows. Gleichzeitig sind harmlose Einträge wieder
+  sichtbar, die vorher fälschlich gesperrt waren (z. B. Ziegenkäse,
+  Ziegenmilch, Entenei und fleischlose Gerichte mit „meatless“). Details:
+  `HALAL_CONTENT_POLICY.md`.
+- Die App-Änderungen wirken sofort. Für die Datenbank muss noch die Migration
+  `0014_halal_terms_extended.sql` ausgeführt werden, und die Edge Function
+  `barcode-lookup` muss neu deployt werden. Erst danach gelten die neuen
+  Begriffe auch serverseitig.
+
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
 - Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes

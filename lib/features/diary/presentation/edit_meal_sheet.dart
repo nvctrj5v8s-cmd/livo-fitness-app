@@ -4,6 +4,7 @@ import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import 'custom_food_sheet.dart';
+import 'delete_entry_dialog.dart';
 
 Future<void> showEditMealSheet(BuildContext context, MealEntry entry) {
   if (entry.isCustom) {
@@ -90,7 +91,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
             Text(
               entry.isRecipe
                   ? 'Die Mahlzeitenart kann angepasst werden. Zutaten und Werte bleiben mit dem Rezept verbunden.'
-                  : 'Aenderungen werden direkt in deinem Tagebuch gespeichert.',
+                  : 'Änderungen werden direkt in deinem Tagebuch gespeichert.',
               style: const TextStyle(color: AppColors.textMuted),
             ),
             const SizedBox(height: 20),
@@ -141,7 +142,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
             ],
             if (entry.isCustom) ...[
               const SizedBox(height: 18),
-              Text('Naehwerte', style: Theme.of(context).textTheme.labelLarge),
+              Text('Nährwerte', style: Theme.of(context).textTheme.labelLarge),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -205,10 +206,28 @@ class _EditMealSheetState extends State<_EditMealSheet> {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            DeleteEntryButton(onPressed: _saving ? null : _delete),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _delete() async {
+    setState(() => _saving = true);
+    final deleted = await confirmDeleteDiaryEntry(context, widget.entry);
+    if (!mounted) return;
+    setState(() => _saving = false);
+    if (!deleted) {
+      final error = AppScope.of(context).diaryError;
+      if (error != null) _showError(error);
+      return;
+    }
+    Navigator.pop(context);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Eintrag wurde gelöscht.')));
   }
 
   List<double> _amountOptions(double? current) {
@@ -234,7 +253,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
             protein < 0 ||
             carbs < 0 ||
             fat < 0)) {
-      _showError('Bitte Name und gueltige, positive Werte eintragen.');
+      _showError('Bitte Name und gültige, positive Werte eintragen.');
       return;
     }
     setState(() => _saving = true);
