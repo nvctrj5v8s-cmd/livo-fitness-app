@@ -56,24 +56,33 @@ void main(List<String> args) {
     );
   }
   final premium = recipes.where((r) => r['access_level'] == 'premium').length;
+  final free = recipes.length - premium;
   stdout.writeln(
-    '${recipes.length} Rezepte (${recipes.length - premium} frei, '
-    '$premium Premium), ${foods.length} Lebensmittel → $output',
+    '${recipes.length} Rezepte ($free frei = '
+    '${(free * 100 / recipes.length).round()} %, $premium Premium), '
+    '${foods.length} Lebensmittel → $output',
   );
 }
 
-/// Catalog foods that already exist in every LIVO database (seed values,
-/// kcal and protein per 100 g).
-const _existingFoods = <String, (num, num)>{
-  'oats': (372, 13.5),
-  'skyr': (63, 11),
-  'salmon': (208, 20),
-  'rice': (130, 2.7),
-  'wholegrain-pasta': (149, 5.8),
-  'egg': (143, 12.6),
-  'avocado': (160, 2),
-  'tomato': (18, 0.9),
-  'berries': (50, 1),
+/// The original seed foods (per 100 g): slug, name, kcal, protein, carbs,
+/// fat, fiber, sugar, salt. The migration inserts them only when they are
+/// missing (fresh database) and never overwrites existing rows, so diary
+/// entries that already reference them keep their values.
+const _baseFoods = <(String, String, num, num, num, num, num, num, num)>[
+  ('oats', 'Haferflocken', 372, 13.5, 58.7, 7, 10, 0, 0),
+  ('skyr', 'Skyr natur', 63, 11, 4, 0.2, 0, 0, 0),
+  ('salmon', 'Lachsfilet', 208, 20, 0, 13, 0, 0, 0),
+  ('rice', 'Reis, gekocht', 130, 2.7, 28, 0.3, 0.4, 0, 0),
+  ('wholegrain-pasta', 'Vollkornpasta, gekocht', 149, 5.8, 27, 1.3, 4, 0, 0),
+  ('egg', 'Ei', 143, 12.6, 0.7, 9.5, 0, 0, 0),
+  ('avocado', 'Avocado', 160, 2, 1.8, 14.7, 6.7, 0, 0),
+  ('tomato', 'Tomate', 18, 0.9, 3.9, 0.2, 1.2, 0, 0),
+  ('berries', 'Beeren-Mix', 50, 1, 8, 0.4, 4, 0, 0),
+];
+
+/// kcal and protein per 100 g of the seed foods.
+final _existingFoods = <String, (num, num)>{
+  for (final food in _baseFoods) food.$1: (food.$3, food.$4),
 };
 
 /// Energy and protein for one serving.
@@ -276,6 +285,21 @@ String _sql(
     ..writeln('-- FoodData Central (public domain); sources on each food row.')
     ..writeln('-- Catalog content only: no personal, health or payment data.')
     ..writeln('-- Idempotent: safe to run again after a partial failure.')
+    ..writeln()
+    ..writeln('-- Original seed foods: only added when missing, never changed.')
+    ..writeln('insert into public.foods')
+    ..writeln(
+      '  (slug, name, serving_grams, calories, protein, carbohydrates, fat,',
+    )
+    ..writeln('   fiber, sugar, salt, source)')
+    ..writeln('values')
+    ..writeln(
+      [
+        for (final food in _baseFoods)
+          '  (${[_text(food.$1), _text(food.$2), '100', for (final value in [food.$3, food.$4, food.$5, food.$6, food.$7, food.$8, food.$9]) _number(value), _text('curated')].join(', ')})',
+      ].join(',\n'),
+    )
+    ..writeln('on conflict (slug) do nothing;')
     ..writeln();
 
   if (foods.isNotEmpty) {
@@ -300,7 +324,7 @@ String _sql(
             _textArray(_strings(food['allergens'])),
             _textArray(_strings(food['diet_tags'])),
             _text('curated'),
-            _text(food['source_url']),
+            _text(food['source_url'] ?? 'https://fdc.nal.usda.gov/food-details/${food['fdc_id']}/nutrients'),
             _text('USDA FoodData Central (public domain, CC0 1.0)'),
             _text('USDA FoodData Central, FDC ID ${food['fdc_id']}: ${food['usda_description']}'),
             _text('imported'),

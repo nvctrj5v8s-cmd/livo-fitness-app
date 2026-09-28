@@ -1,0 +1,1537 @@
+{
+  "_hinweis": "Geprüfte LIVO-Rezeptinhalte. Nach jeder Änderung: dart run tool/generate_recipe_sql.dart --input supabase/content/livo_recipes.json --output supabase/migrations/0010_recipe_content.sql",
+  "retired_recipe_slugs": [
+    "berry-protein-oats",
+    "salmon-power-bowl",
+    "vegetable-egg-pan",
+    "livo-chicken-rice-bowl",
+    "livo-chicken-avocado-plate"
+  ],
+  "foods": [
+    {"slug": "potatoes", "name": "Kartoffeln", "fdc_id": 170026, "usda_description": "Potatoes, flesh and skin, raw", "calories": 77, "protein": 2.05, "carbohydrates": 17.49, "fat": 0.09, "fiber": 2.1, "sugar": 0.82, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "onion", "name": "Zwiebeln", "fdc_id": 170000, "usda_description": "Onions, raw", "calories": 40, "protein": 1.1, "carbohydrates": 9.34, "fat": 0.1, "fiber": 1.7, "sugar": 4.24, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "garlic", "name": "Knoblauch", "fdc_id": 169230, "usda_description": "Garlic, raw", "calories": 149, "protein": 6.36, "carbohydrates": 33.06, "fat": 0.5, "fiber": 2.1, "sugar": 1, "salt": 0.04, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "carrot", "name": "Möhren", "fdc_id": 170393, "usda_description": "Carrots, raw", "calories": 41, "protein": 0.93, "carbohydrates": 9.58, "fat": 0.24, "fiber": 2.8, "sugar": 4.74, "salt": 0.17, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "bell-pepper-red", "name": "Paprika, rot", "fdc_id": 170108, "usda_description": "Peppers, sweet, red, raw", "calories": 26, "protein": 0.99, "carbohydrates": 6.03, "fat": 0.3, "fiber": 2.1, "sugar": 4.2, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "zucchini", "name": "Zucchini", "fdc_id": 169291, "usda_description": "Squash, summer, zucchini, includes skin, raw", "calories": 17, "protein": 1.21, "carbohydrates": 3.11, "fat": 0.32, "fiber": 1, "sugar": 2.5, "salt": 0.02, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "cucumber", "name": "Gurke", "fdc_id": 168409, "usda_description": "Cucumber, with peel, raw", "calories": 15, "protein": 0.65, "carbohydrates": 3.63, "fat": 0.11, "fiber": 0.5, "sugar": 1.67, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "spring-onion", "name": "Frühlingszwiebeln", "fdc_id": 170005, "usda_description": "Onions, spring or scallions (includes tops and bulb), raw", "calories": 32, "protein": 1.83, "carbohydrates": 7.34, "fat": 0.19, "fiber": 2.6, "sugar": 2.33, "salt": 0.04, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "parsley", "name": "Petersilie, frisch", "fdc_id": 170416, "usda_description": "Parsley, fresh", "calories": 36, "protein": 2.97, "carbohydrates": 6.33, "fat": 0.79, "fiber": 3.3, "sugar": 0.85, "salt": 0.14, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "chives", "name": "Schnittlauch", "fdc_id": 169994, "usda_description": "Chives, raw", "calories": 30, "protein": 3.27, "carbohydrates": 4.35, "fat": 0.73, "fiber": 2.5, "sugar": 1.85, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "banana", "name": "Banane", "fdc_id": 173944, "usda_description": "Bananas, raw", "calories": 89, "protein": 1.09, "carbohydrates": 22.84, "fat": 0.33, "fiber": 2.6, "sugar": 12.23, "salt": 0, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "apple", "name": "Apfel", "fdc_id": 171688, "usda_description": "Apples, raw, with skin", "calories": 52, "protein": 0.26, "carbohydrates": 13.81, "fat": 0.17, "fiber": 2.4, "sugar": 10.39, "salt": 0, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "applesauce", "name": "Apfelmus, ungesüßt", "fdc_id": 171695, "usda_description": "Applesauce, canned, unsweetened, without added ascorbic acid", "calories": 42, "protein": 0.17, "carbohydrates": 11.27, "fat": 0.1, "fiber": 1.1, "sugar": 9.39, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "lemon-juice", "name": "Zitronensaft", "fdc_id": 167747, "usda_description": "Lemon juice, raw", "calories": 22, "protein": 0.35, "carbohydrates": 6.9, "fat": 0.24, "fiber": 0.3, "sugar": 2.52, "salt": 0, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "canned-tomatoes", "name": "Dosentomaten, gehackt", "fdc_id": 170051, "usda_description": "Tomatoes, red, ripe, canned, packed in tomato juice", "calories": 16, "protein": 0.79, "carbohydrates": 3.47, "fat": 0.25, "fiber": 1.9, "sugar": 2.55, "salt": 0.29, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "tomato-paste", "name": "Tomatenmark", "fdc_id": 170459, "usda_description": "Tomato products, canned, paste, without salt added", "calories": 82, "protein": 4.32, "carbohydrates": 18.91, "fat": 0.47, "fiber": 4.1, "sugar": 12.18, "salt": 0.15, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "red-lentils", "name": "Rote Linsen, getrocknet", "fdc_id": 174284, "usda_description": "Lentils, pink or red, raw (Zucker nicht analysiert, als 0 übernommen)", "calories": 358, "protein": 23.91, "carbohydrates": 63.1, "fat": 2.17, "fiber": 10.8, "sugar": 0, "salt": 0.02, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "brown-lentils", "name": "Tellerlinsen, getrocknet", "fdc_id": 172420, "usda_description": "Lentils, raw", "calories": 352, "protein": 24.63, "carbohydrates": 63.35, "fat": 1.06, "fiber": 10.7, "sugar": 2.03, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "chickpeas-canned", "name": "Kichererbsen, abgetropft", "fdc_id": 173801, "usda_description": "Chickpeas (garbanzo beans, bengal gram), mature seeds, canned, drained, rinsed in tap water", "calories": 138, "protein": 7.04, "carbohydrates": 22.87, "fat": 2.47, "fiber": 6.3, "sugar": 4, "salt": 0.53, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "black-beans-canned", "name": "Schwarze Bohnen, abgetropft", "fdc_id": 175188, "usda_description": "Beans, black turtle, mature seeds, canned", "calories": 91, "protein": 6.03, "carbohydrates": 16.55, "fat": 0.29, "fiber": 6.9, "sugar": 0.23, "salt": 0.96, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "sweetcorn-canned", "name": "Mais, abgetropft", "fdc_id": 169214, "usda_description": "Corn, sweet, yellow, canned, whole kernel, drained solids", "calories": 67, "protein": 2.29, "carbohydrates": 14.34, "fat": 1.22, "fiber": 2, "sugar": 4.44, "salt": 0.51, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "green-beans-frozen", "name": "Grüne Bohnen (TK)", "fdc_id": 169962, "usda_description": "Beans, snap, green, frozen, all styles, unprepared", "calories": 33, "protein": 1.79, "carbohydrates": 7.54, "fat": 0.21, "fiber": 2.6, "sugar": 2.21, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "peas-frozen", "name": "Erbsen (TK)", "fdc_id": 170016, "usda_description": "Peas, green, frozen, unprepared", "calories": 77, "protein": 5.22, "carbohydrates": 13.62, "fat": 0.4, "fiber": 4.5, "sugar": 5, "salt": 0.27, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "spinach-frozen", "name": "Spinat (TK)", "fdc_id": 169287, "usda_description": "Spinach, frozen, chopped or leaf, unprepared", "calories": 29, "protein": 3.63, "carbohydrates": 4.21, "fat": 0.57, "fiber": 2.9, "sugar": 0.65, "salt": 0.18, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "wheat-flour", "name": "Weizenmehl", "fdc_id": 168894, "usda_description": "Wheat flour, white, all-purpose, enriched, bleached", "calories": 364, "protein": 10.33, "carbohydrates": 76.31, "fat": 0.98, "fiber": 2.7, "sugar": 0.27, "salt": 0.01, "allergens": ["Gluten"], "diet_tags": ["vegan"]},
+    {"slug": "rice-raw", "name": "Reis, ungekocht", "fdc_id": 168877, "usda_description": "Rice, white, long-grain, regular, raw, enriched", "calories": 365, "protein": 7.13, "carbohydrates": 79.95, "fat": 0.66, "fiber": 1.3, "sugar": 0.12, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "pudding-rice-raw", "name": "Milchreis, ungekocht", "fdc_id": 168931, "usda_description": "Rice, white, short-grain, raw, unenriched (Ballaststoffe und Zucker nicht analysiert, als 0 übernommen)", "calories": 358, "protein": 6.5, "carbohydrates": 79.15, "fat": 0.52, "fiber": 0, "sugar": 0, "salt": 0, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "pasta-raw", "name": "Nudeln, ungekocht", "fdc_id": 169736, "usda_description": "Pasta, dry, enriched", "calories": 371, "protein": 13.04, "carbohydrates": 74.67, "fat": 1.51, "fiber": 3.2, "sugar": 2.67, "salt": 0.01, "allergens": ["Gluten"], "diet_tags": ["vegan"]},
+    {"slug": "wholegrain-bread", "name": "Vollkornbrot", "fdc_id": 172688, "usda_description": "Bread, whole-wheat, commercially prepared", "calories": 252, "protein": 12.45, "carbohydrates": 42.71, "fat": 3.5, "fiber": 6, "sugar": 4.34, "salt": 1.14, "allergens": ["Gluten"], "diet_tags": ["vegetarisch"]},
+    {"slug": "milk", "name": "Milch", "fdc_id": 171265, "usda_description": "Milk, whole, 3.25% milkfat, with added vitamin D", "calories": 61, "protein": 3.15, "carbohydrates": 4.8, "fat": 3.25, "fiber": 0, "sugar": 5.05, "salt": 0.11, "allergens": ["Milch"], "diet_tags": ["vegetarisch"]},
+    {"slug": "natural-yogurt", "name": "Naturjoghurt", "fdc_id": 171284, "usda_description": "Yogurt, plain, whole milk", "calories": 61, "protein": 3.47, "carbohydrates": 4.66, "fat": 3.25, "fiber": 0, "sugar": 4.66, "salt": 0.12, "allergens": ["Milch"], "diet_tags": ["vegetarisch"]},
+    {"slug": "low-fat-quark", "name": "Magerquark", "fdc_id": 170894, "usda_description": "Yogurt, Greek, plain, nonfat (Näherungswert: Quark ist in USDA nicht enthalten)", "calories": 59, "protein": 10.19, "carbohydrates": 3.6, "fat": 0.39, "fiber": 0, "sugar": 3.24, "salt": 0.09, "allergens": ["Milch"], "diet_tags": ["vegetarisch"]},
+    {"slug": "feta", "name": "Feta", "fdc_id": 173420, "usda_description": "Cheese, feta", "calories": 265, "protein": 14.21, "carbohydrates": 3.88, "fat": 21.49, "fiber": 0, "sugar": 0, "salt": 2.85, "allergens": ["Milch"], "diet_tags": ["vegetarisch"]},
+    {"slug": "butter", "name": "Butter", "fdc_id": 173430, "usda_description": "Butter, without salt", "calories": 717, "protein": 0.85, "carbohydrates": 0.06, "fat": 81.11, "fiber": 0, "sugar": 0.06, "salt": 0.03, "allergens": ["Milch"], "diet_tags": ["vegetarisch"]},
+    {"slug": "tuna-canned", "name": "Thunfisch im eigenen Saft, abgetropft", "fdc_id": 173709, "usda_description": "Fish, tuna, light, canned in water, drained solids", "calories": 86, "protein": 19.44, "carbohydrates": 0, "fat": 0.96, "fiber": 0, "sugar": 0, "salt": 0.62, "allergens": ["Fisch"], "diet_tags": ["pescetarisch"]},
+    {"slug": "chicken-breast-halal", "name": "Hähnchenbrustfilet, halal", "fdc_id": 171077, "usda_description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw", "calories": 120, "protein": 22.5, "carbohydrates": 0, "fat": 2.62, "fiber": 0, "sugar": 0, "salt": 0.11, "allergens": [], "diet_tags": ["halal"]},
+    {"slug": "olive-oil", "name": "Olivenöl", "fdc_id": 171413, "usda_description": "Oil, olive, salad or cooking", "calories": 884, "protein": 0, "carbohydrates": 0, "fat": 100, "fiber": 0, "sugar": 0, "salt": 0.01, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "canola-oil", "name": "Rapsöl", "fdc_id": 172336, "usda_description": "Oil, canola", "calories": 884, "protein": 0, "carbohydrates": 0, "fat": 100, "fiber": 0, "sugar": 0, "salt": 0, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "vegetable-broth", "name": "Gemüsebrühe, zubereitet", "fdc_id": 171583, "usda_description": "Soup, vegetable broth, ready to serve", "calories": 5, "protein": 0.24, "carbohydrates": 0.93, "fat": 0.07, "fiber": 0, "sugar": 0.55, "salt": 0.74, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "honey", "name": "Honig", "fdc_id": 169640, "usda_description": "Honey", "calories": 304, "protein": 0.3, "carbohydrates": 82.4, "fat": 0, "fiber": 0.2, "sugar": 82.12, "salt": 0.01, "allergens": [], "diet_tags": ["vegetarisch"]},
+    {"slug": "salt", "name": "Salz", "fdc_id": 173468, "usda_description": "Salt, table", "calories": 0, "protein": 0, "carbohydrates": 0, "fat": 0, "fiber": 0, "sugar": 0, "salt": 96.89, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "black-pepper", "name": "Pfeffer, schwarz", "fdc_id": 170931, "usda_description": "Spices, pepper, black", "calories": 251, "protein": 10.39, "carbohydrates": 63.95, "fat": 3.26, "fiber": 25.3, "sugar": 0.64, "salt": 0.05, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "paprika-powder", "name": "Paprikapulver, edelsüß", "fdc_id": 171329, "usda_description": "Spices, paprika", "calories": 282, "protein": 14.14, "carbohydrates": 53.99, "fat": 12.89, "fiber": 34.9, "sugar": 10.34, "salt": 0.17, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "cumin", "name": "Kreuzkümmel, gemahlen", "fdc_id": 170923, "usda_description": "Spices, cumin seed", "calories": 375, "protein": 17.81, "carbohydrates": 44.24, "fat": 22.27, "fiber": 10.5, "sugar": 2.25, "salt": 0.42, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "curry-powder", "name": "Currypulver", "fdc_id": 170924, "usda_description": "Spices, curry powder", "calories": 325, "protein": 14.29, "carbohydrates": 55.83, "fat": 14.01, "fiber": 53.2, "sugar": 2.76, "salt": 0.13, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "cinnamon", "name": "Zimt, gemahlen", "fdc_id": 171320, "usda_description": "Spices, cinnamon, ground", "calories": 247, "protein": 3.99, "carbohydrates": 80.59, "fat": 1.24, "fiber": 53.1, "sugar": 2.17, "salt": 0.03, "allergens": [], "diet_tags": ["vegan"]},
+    {"slug": "oregano", "name": "Oregano, getrocknet", "fdc_id": 171328, "usda_description": "Spices, oregano, dried", "calories": 265, "protein": 9, "carbohydrates": 68.92, "fat": 4.28, "fiber": 42.5, "sugar": 4.09, "salt": 0.06, "allergens": [], "diet_tags": ["vegan"]}
+  ],
+  "recipes": [
+    {
+      "slug": "livo-protein-oats",
+      "title": "Protein-Beeren-Oats",
+      "description": "Cremiges Frühstück aus Haferflocken, Skyr und Beeren – ganz ohne Kochen.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 8,
+      "prep_minutes": 8,
+      "cook_minutes": 0,
+      "tags": ["Frühstück", "High Protein", "Schnell", "Vegetarisch"],
+      "equipment": ["Schüssel", "Löffel"],
+      "ingredients": [
+        {"food_slug": "oats", "grams": 50, "measure": "5 EL"},
+        {"food_slug": "skyr", "grams": 200, "measure": "1 Becher"},
+        {"food_slug": "berries", "grams": 100, "measure": "1 Handvoll", "note": "frisch oder aufgetaut"}
+      ],
+      "steps": [
+        {"title": "Hafer einweichen", "text": "Die Haferflocken mit 4 EL Wasser in einer Schüssel verrühren und 3 Minuten quellen lassen.", "minutes": 3},
+        {"title": "Skyr unterrühren", "text": "Den Skyr dazugeben und alles glatt rühren, bis eine cremige Masse entsteht."},
+        {"title": "Toppen", "text": "Die Beeren darauf verteilen und die Oats sofort servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Mit warmem Wasser quellen die Flocken schneller und werden weicher.", "", "Gefrorene Beeren über Nacht im Kühlschrank auftauen, dann ziehen sie Saft."],
+        "common_mistakes": ["Zu wenig Flüssigkeit – dann wird die Masse klumpig und trocken."],
+        "substitutions": ["Skyr durch Magerquark mit einem Schuss Milch ersetzen.", "Statt Beeren eine halbe geriebene Birne oder einen Apfel verwenden."],
+        "meal_prep": "Hafer und Skyr am Vorabend mischen und abgedeckt bis zu 24 Stunden kühlen; die Beeren erst morgens darauf geben.",
+        "variations": ["Mit einer Prise Zimt und geriebenem Apfel.", "Mit 1 TL Kakao für eine schokoladige Variante."],
+        "serving_tip": "In einem Glas geschichtet lässt sich das Frühstück gut mitnehmen."
+      }
+    },
+    {
+      "slug": "livo-vegetable-egg-pan",
+      "title": "Gemüse-Ei-Pfanne",
+      "description": "Warme Pfanne mit Tomate, Paprika und Zwiebel, in der zwei Eier sanft stocken.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 15,
+      "prep_minutes": 5,
+      "cook_minutes": 10,
+      "tags": ["Abendessen", "Frühstück", "Vegetarisch", "Schnell"],
+      "equipment": ["Beschichtete Pfanne mit Deckel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "tomato", "grams": 180, "measure": "2 Tomaten", "note": "gewürfelt"},
+        {"food_slug": "bell-pepper-red", "grams": 80, "measure": "½ Paprika", "note": "in Streifen"},
+        {"food_slug": "onion", "grams": 50, "measure": "½ Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "olive-oil", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Gemüse schneiden", "text": "Zwiebel fein würfeln, Paprika in Streifen und Tomaten in Würfel schneiden.", "minutes": 0},
+        {"title": "Anbraten", "text": "Das Öl in der Pfanne bei mittlerer Hitze erwärmen. Zwiebel und Paprika darin 4 Minuten braten, bis sie weich werden.", "minutes": 4},
+        {"title": "Tomaten einkochen", "text": "Die Tomaten dazugeben, salzen und 2 Minuten sanft köcheln lassen, bis eine stückige Sauce entsteht.", "minutes": 2},
+        {"title": "Eier stocken lassen", "text": "Zwei Mulden in das Gemüse drücken, die Eier hineinschlagen und mit Deckel bei niedriger Hitze etwa 4 Minuten stocken lassen, bis das Eiweiß fest ist.", "minutes": 4},
+        {"title": "Servieren", "text": "Mit Pfeffer bestreuen und direkt aus der Pfanne servieren."}
+      ],
+      "premium": {
+        "step_tips": ["", "Die Zwiebel nur glasig werden lassen, nicht bräunen.", "", "Der Deckel sorgt dafür, dass das Eiweiß oben fest wird, während das Eigelb weich bleibt.", ""],
+        "common_mistakes": ["Zu hohe Hitze – dann brennt das Gemüse an, bevor die Eier fest sind."],
+        "substitutions": ["Frische Tomaten durch 200 g Dosentomaten ersetzen.", "Paprika durch Zucchini ersetzen."],
+        "meal_prep": "Die Gemüsesauce lässt sich 2 Tage vorher kochen; die Eier immer frisch darin garen.",
+        "variations": ["Mit ½ TL Kreuzkümmel und Paprikapulver würzen.", "Zum Schluss etwas Feta darüberbröseln."],
+        "serving_tip": "Eine Scheibe Vollkornbrot zum Auftunken passt gut dazu."
+      }
+    },
+    {
+      "slug": "livo-salmon-avocado-rice",
+      "title": "Lachs-Avocado-Reis",
+      "description": "Gebratener Lachs auf Reis mit Avocado und einem Spritzer Zitrone.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 2,
+      "preparation_minutes": 25,
+      "prep_minutes": 8,
+      "cook_minutes": 17,
+      "tags": ["Abendessen", "High Protein", "Pescetarisch"],
+      "equipment": ["Kleiner Topf mit Deckel", "Beschichtete Pfanne", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "salmon", "grams": 250, "measure": "2 Filets", "note": "mit oder ohne Haut"},
+        {"food_slug": "rice", "grams": 300, "note": "gekocht, z. B. vom Vortag"},
+        {"food_slug": "avocado", "grams": 120, "measure": "1 Avocado", "note": "in Scheiben"},
+        {"food_slug": "lemon-juice", "grams": 10, "measure": "2 TL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Reis erwärmen", "text": "Den gekochten Reis mit 2 EL Wasser in einem kleinen Topf mit Deckel bei niedriger Hitze etwa 5 Minuten erwärmen.", "minutes": 5},
+        {"title": "Lachs vorbereiten", "text": "Den Lachs trocken tupfen und von beiden Seiten mit Salz und Pfeffer würzen."},
+        {"title": "Lachs braten", "text": "Die Pfanne ohne Öl bei mittlerer Hitze erwärmen. Den Lachs mit der Hautseite nach unten 5 Minuten braten, wenden und weitere 3 Minuten garen, bis er innen nicht mehr glasig ist.", "minutes": 8},
+        {"title": "Avocado schneiden", "text": "Die Avocado halbieren, entkernen, in Scheiben schneiden und mit etwas Zitronensaft beträufeln."},
+        {"title": "Anrichten", "text": "Reis auf zwei Teller verteilen, Lachs und Avocado darauf legen und mit restlichem Zitronensaft servieren."}
+      ],
+      "premium": {
+        "step_tips": ["", "Trocken getupfter Lachs bräunt besser und klebt weniger.", "Den Lachs erst wenden, wenn er sich von selbst von der Pfanne löst.", "Zitronensaft verhindert, dass die Avocado braun wird.", ""],
+        "common_mistakes": ["Den Lachs zu lange braten – dann wird er trocken.", "Den Lachs zu oft bewegen, dann reißt die Haut."],
+        "substitutions": ["Reis durch gekochte Vollkornpasta ersetzen.", "Avocado durch Gurkenscheiben ersetzen, das spart Fett."],
+        "meal_prep": "Reis und Lachs halten gekühlt 2 Tage; Avocado erst frisch aufschneiden.",
+        "variations": ["Mit Frühlingszwiebeln und Sesam bestreuen.", "Den Lachs vor dem Braten mit Paprikapulver würzen."],
+        "serving_tip": "Mit ein paar Gurkenscheiben und Zitronenspalten servieren."
+      }
+    },
+    {
+      "slug": "livo-avocado-egg-bowl",
+      "title": "Avocado-Ei-Bowl",
+      "description": "Einfache Bowl mit wachsweichen Eiern, Avocado und Tomate.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 12,
+      "prep_minutes": 4,
+      "cook_minutes": 8,
+      "tags": ["Frühstück", "Mittagessen", "Vegetarisch", "Schnell"],
+      "equipment": ["Kleiner Topf", "Schneidebrett und Messer", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "avocado", "grams": 80, "measure": "½ Avocado"},
+        {"food_slug": "tomato", "grams": 100, "measure": "1 Tomate"},
+        {"food_slug": "lemon-juice", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Eier kochen", "text": "Die Eier in kochendes Wasser legen und 7 Minuten wachsweich kochen. Danach kalt abschrecken.", "minutes": 7},
+        {"title": "Schneiden", "text": "Avocado und Tomate würfeln und die Avocado sofort mit Zitronensaft beträufeln."},
+        {"title": "Anrichten", "text": "Die Eier pellen, halbieren und mit Avocado und Tomate in eine Schüssel geben. Mit Salz und Pfeffer würzen."}
+      ],
+      "premium": {
+        "step_tips": ["Eier aus dem Kühlschrank brauchen etwa 1 Minute länger.", "", ""],
+        "common_mistakes": ["Die Eier nicht abschrecken – dann garen sie nach und lassen sich schlecht pellen."],
+        "substitutions": ["Avocado durch Gurke ersetzen.", "Tomate durch ein paar Maiskörner ersetzen."],
+        "meal_prep": "Gekochte Eier halten ungeschält 5 Tage im Kühlschrank.",
+        "variations": ["Mit Paprikapulver und Frühlingszwiebeln.", "Mit einer Scheibe Vollkornbrot als Mittagessen."],
+        "serving_tip": "Die Eier erst kurz vor dem Essen halbieren, dann bleibt das Eigelb cremig."
+      }
+    },
+    {
+      "slug": "livo-tomato-rice-pan",
+      "title": "Tomaten-Reis-Pfanne",
+      "description": "Schnelle Resteverwertung: gekochter Reis mit Tomaten, Zwiebel und Paprikapulver.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 20,
+      "prep_minutes": 7,
+      "cook_minutes": 13,
+      "tags": ["Mittagessen", "Vegan", "Budget", "Schnell"],
+      "equipment": ["Große Pfanne", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "rice", "grams": 400, "note": "gekocht, z. B. vom Vortag"},
+        {"food_slug": "tomato", "grams": 300, "measure": "3 Tomaten", "note": "gewürfelt"},
+        {"food_slug": "onion", "grams": 80, "measure": "1 Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 5, "measure": "1 Zehe", "note": "gehackt"},
+        {"food_slug": "tomato-paste", "grams": 20, "measure": "1 EL"},
+        {"food_slug": "olive-oil", "grams": 15, "measure": "1½ EL"},
+        {"food_slug": "paprika-powder", "grams": 2, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Vorbereiten", "text": "Zwiebel und Knoblauch fein hacken, die Tomaten in kleine Würfel schneiden."},
+        {"title": "Anschwitzen", "text": "Das Öl in der Pfanne erhitzen und die Zwiebel darin 3 Minuten glasig dünsten. Knoblauch und Tomatenmark 1 Minute mitrösten.", "minutes": 4},
+        {"title": "Tomaten garen", "text": "Tomaten und Paprikapulver dazugeben und 4 Minuten köcheln lassen, bis die Tomaten zerfallen.", "minutes": 4},
+        {"title": "Reis unterheben", "text": "Den Reis unterheben und unter Wenden 5 Minuten braten, bis er heiß ist. Mit Salz und Pfeffer abschmecken.", "minutes": 5}
+      ],
+      "premium": {
+        "step_tips": ["", "Geröstetes Tomatenmark schmeckt runder und weniger sauer.", "", "Reis vom Vortag klebt weniger als frisch gekochter."],
+        "common_mistakes": ["Zu viel Rühren – dann wird der Reis matschig."],
+        "substitutions": ["Frische Tomaten durch 1 Dose gehackte Tomaten ersetzen.", "Zwiebel durch Frühlingszwiebeln ersetzen."],
+        "meal_prep": "Hält gekühlt 2 Tage; gründlich durcherhitzen.",
+        "variations": ["Mit Kichererbsen aus der Dose für mehr Eiweiß.", "Mit einem Spiegelei obendrauf."],
+        "serving_tip": "Mit Naturjoghurt und frischer Petersilie servieren."
+      }
+    },
+    {
+      "slug": "livo-skyr-berry-bowl",
+      "title": "Skyr-Beeren-Bowl",
+      "description": "Schneller Snack aus Skyr, Beeren und einem Hauch Honig.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 5,
+      "prep_minutes": 5,
+      "cook_minutes": 0,
+      "tags": ["Snack", "High Protein", "Schnell", "Vegetarisch"],
+      "equipment": ["Schüssel", "Löffel"],
+      "ingredients": [
+        {"food_slug": "skyr", "grams": 250, "measure": "1 Becher"},
+        {"food_slug": "berries", "grams": 120, "measure": "1 Handvoll", "note": "frisch oder aufgetaut"},
+        {"food_slug": "honey", "grams": 5, "measure": "1 TL"}
+      ],
+      "steps": [
+        {"title": "Skyr cremig rühren", "text": "Den Skyr in eine Schüssel geben und kurz glatt rühren, damit er cremiger wird."},
+        {"title": "Beeren verteilen", "text": "Die Beeren darauf verteilen, gefrorene Beeren vorher auftauen lassen."},
+        {"title": "Beträufeln", "text": "Den Honig darüberträufeln und die Bowl direkt servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Ein Schuss Milch macht den Skyr noch cremiger.", "", ""],
+        "common_mistakes": ["Gefrorene Beeren direkt verwenden – dann wird der Skyr wässrig und kalt."],
+        "substitutions": ["Skyr durch Magerquark ersetzen.", "Honig weglassen oder durch eine zerdrückte Banane ersetzen."],
+        "meal_prep": "In einem verschließbaren Glas hält die Bowl gekühlt bis zum nächsten Tag.",
+        "variations": ["Mit 2 EL Haferflocken für mehr Biss.", "Mit Zimt und Apfelwürfeln."],
+        "serving_tip": "Gut gekühlt schmeckt die Bowl am besten."
+      }
+    },
+    {
+      "slug": "livo-salmon-tomato-bowl",
+      "title": "Lachs-Tomaten-Bowl",
+      "description": "Lachs mit Reis, frischen Tomaten und kurz gebratener Zucchini.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 2,
+      "preparation_minutes": 25,
+      "prep_minutes": 8,
+      "cook_minutes": 17,
+      "tags": ["Abendessen", "Mittagessen", "High Protein", "Pescetarisch"],
+      "equipment": ["Kleiner Topf mit Deckel", "Beschichtete Pfanne", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "salmon", "grams": 250, "measure": "2 Filets"},
+        {"food_slug": "rice", "grams": 300, "note": "gekocht"},
+        {"food_slug": "tomato", "grams": 200, "measure": "2 Tomaten", "note": "gewürfelt"},
+        {"food_slug": "zucchini", "grams": 150, "measure": "½ Zucchini", "note": "in Halbmonden"},
+        {"food_slug": "olive-oil", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "lemon-juice", "grams": 10, "measure": "2 TL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Reis erwärmen", "text": "Den gekochten Reis mit 2 EL Wasser in einem Topf mit Deckel bei niedriger Hitze 5 Minuten erwärmen.", "minutes": 5},
+        {"title": "Zucchini braten", "text": "Das Öl in der Pfanne erhitzen und die Zucchini darin 4 Minuten braten, leicht salzen und herausnehmen.", "minutes": 4},
+        {"title": "Lachs braten", "text": "Den Lachs salzen und in derselben Pfanne bei mittlerer Hitze 5 Minuten auf der Hautseite und 3 Minuten auf der anderen Seite garen.", "minutes": 8},
+        {"title": "Anrichten", "text": "Reis, Zucchini, Tomatenwürfel und Lachs in zwei Schüsseln verteilen, mit Zitronensaft und Pfeffer abschmecken."}
+      ],
+      "premium": {
+        "step_tips": ["", "Zucchini nicht zu klein schneiden, sonst wird sie weich.", "Der Lachs ist gar, wenn er sich leicht in Lamellen teilen lässt.", ""],
+        "common_mistakes": ["Die Pfanne überladen – dann dünstet die Zucchini statt zu braten."],
+        "substitutions": ["Zucchini durch Paprika ersetzen.", "Lachs durch Thunfisch aus der Dose ersetzen (kalt servieren)."],
+        "meal_prep": "Reis und Gemüse halten 2 Tage; den Lachs am besten frisch braten.",
+        "variations": ["Mit Frühlingszwiebeln und etwas Joghurt-Dressing.", "Mit Gurke statt Tomate für eine frische Sommer-Bowl."],
+        "serving_tip": "Warm oder lauwarm servieren."
+      }
+    },
+    {
+      "slug": "livo-egg-avocado-breakfast",
+      "title": "Ei-Avocado-Frühstück",
+      "description": "Spiegeleier mit Avocado, Tomate und einer Scheibe Vollkornbrot.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 10,
+      "prep_minutes": 4,
+      "cook_minutes": 6,
+      "tags": ["Frühstück", "Vegetarisch", "Schnell"],
+      "equipment": ["Beschichtete Pfanne", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "avocado", "grams": 70, "measure": "½ Avocado", "note": "in Scheiben"},
+        {"food_slug": "tomato", "grams": 100, "measure": "1 Tomate"},
+        {"food_slug": "wholegrain-bread", "grams": 50, "measure": "1 Scheibe"},
+        {"food_slug": "olive-oil", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Spiegeleier braten", "text": "Das Öl in der Pfanne bei mittlerer Hitze erwärmen, die Eier hineinschlagen und 4 bis 5 Minuten braten, bis das Eiweiß fest ist.", "minutes": 5},
+        {"title": "Schneiden", "text": "Avocado in Scheiben und Tomate in Spalten schneiden, das Brot nach Wunsch toasten."},
+        {"title": "Anrichten", "text": "Eier, Avocado, Tomate und Brot auf einem Teller anrichten und mit Salz und Pfeffer würzen."}
+      ],
+      "premium": {
+        "step_tips": ["Mit einem Deckel wird das Eiweiß oben schneller fest.", "", ""],
+        "common_mistakes": ["Zu heiße Pfanne – dann wird der Rand zäh und braun."],
+        "substitutions": ["Avocado durch Gurke ersetzen.", "Spiegeleier durch gekochte Eier ersetzen."],
+        "meal_prep": "Nicht zum Vorbereiten geeignet – frisch schmeckt es am besten.",
+        "variations": ["Mit Paprikapulver oder Chiliflocken.", "Avocado auf dem Brot zerdrücken und die Eier darauf legen."],
+        "serving_tip": "Ein Spritzer Zitronensaft auf der Avocado macht das Frühstück frischer."
+      }
+    },
+    {
+      "slug": "livo-skyr-oat-cup",
+      "title": "Skyr-Hafer-Cup",
+      "description": "Geschichteter Becher mit gerösteten Haferflocken, Skyr und Beeren.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 8,
+      "prep_minutes": 5,
+      "cook_minutes": 3,
+      "tags": ["Frühstück", "High Protein", "Vegetarisch", "Schnell"],
+      "equipment": ["Kleine Pfanne", "Glas oder Becher"],
+      "ingredients": [
+        {"food_slug": "skyr", "grams": 200, "measure": "1 Becher"},
+        {"food_slug": "oats", "grams": 40, "measure": "4 EL"},
+        {"food_slug": "berries", "grams": 80, "measure": "1 Handvoll"},
+        {"food_slug": "honey", "grams": 5, "measure": "1 TL"}
+      ],
+      "steps": [
+        {"title": "Hafer rösten", "text": "Die Haferflocken in einer Pfanne ohne Fett unter Rühren 3 Minuten goldbraun rösten und abkühlen lassen.", "minutes": 3},
+        {"title": "Schichten", "text": "Abwechselnd Skyr, geröstete Haferflocken und Beeren in ein Glas schichten."},
+        {"title": "Vollenden", "text": "Mit Beeren abschließen, den Honig darüberträufeln und sofort servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Die Flocken ständig bewegen, sie werden schnell zu dunkel.", "", ""],
+        "common_mistakes": ["Den Cup lange stehen lassen – dann verlieren die Flocken ihren Biss."],
+        "substitutions": ["Skyr durch Naturjoghurt ersetzen (weniger Eiweiß).", "Honig durch eine halbe zerdrückte Banane ersetzen."],
+        "meal_prep": "Geröstete Haferflocken halten in einem Glas eine Woche; frisch schichten.",
+        "variations": ["Mit Zimt in den gerösteten Flocken.", "Mit Apfelwürfeln statt Beeren."],
+        "serving_tip": "In einem durchsichtigen Glas sehen die Schichten besonders schön aus."
+      }
+    },
+    {
+      "slug": "livo-rice-egg-bowl",
+      "title": "Reis-Ei-Bowl",
+      "description": "Gebratener Gemüsereis mit Erbsen und Möhren, dazu ein Spiegelei – ideal für Reis vom Vortag.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 15,
+      "prep_minutes": 5,
+      "cook_minutes": 10,
+      "tags": ["Mittagessen", "Abendessen", "Vegetarisch", "Budget", "Schnell"],
+      "equipment": ["Große beschichtete Pfanne", "Reibe", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "rice", "grams": 200, "note": "gekocht, am besten vom Vortag"},
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "peas-frozen", "grams": 80, "measure": "3 EL"},
+        {"food_slug": "carrot", "grams": 60, "measure": "1 Möhre", "note": "grob geraspelt"},
+        {"food_slug": "spring-onion", "grams": 15, "measure": "1 Frühlingszwiebel", "note": "in Ringen"},
+        {"food_slug": "tomato", "grams": 80, "measure": "1 Tomate", "note": "in Spalten"},
+        {"food_slug": "canola-oil", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "salt", "grams": 1.5, "measure": "¼ TL"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Gemüse anbraten", "text": "Das Öl in der Pfanne erhitzen. Möhre, Erbsen und den weißen Teil der Frühlingszwiebel darin 3 Minuten braten.", "minutes": 3},
+        {"title": "Reis braten", "text": "Den Reis dazugeben und unter gelegentlichem Wenden 4 Minuten braten, bis er heiß und leicht knusprig ist. Salzen und pfeffern.", "minutes": 4},
+        {"title": "Spiegelei", "text": "Den Reis an den Rand schieben, die Eier in die freie Stelle schlagen und 3 Minuten braten, bis das Eiweiß fest ist.", "minutes": 3},
+        {"title": "Anrichten", "text": "Reis in eine Schüssel geben, Spiegeleier und Tomate darauf legen und mit dem Grün der Frühlingszwiebel bestreuen."}
+      ],
+      "premium": {
+        "step_tips": ["TK-Erbsen müssen nicht aufgetaut werden.", "Den Reis zwischendurch liegen lassen, damit er Röstaromen bekommt.", "", ""],
+        "common_mistakes": ["Frisch gekochten, warmen Reis verwenden – der klebt und wird matschig."],
+        "substitutions": ["Erbsen und Möhre durch 150 g TK-Gemüsemischung ersetzen.", "Spiegelei durch Rührei ersetzen und direkt unter den Reis mischen."],
+        "meal_prep": "Gekochten Reis schnell abkühlen und höchstens 1 Tag im Kühlschrank lagern.",
+        "variations": ["Mit Paprikawürfeln und Mais.", "Mit Currypulver für eine würzige Variante."],
+        "serving_tip": "Ein paar Tropfen Zitronensaft zum Schluss machen den Reis frischer."
+      }
+    },
+    {
+      "slug": "livo-apfel-zimt-porridge",
+      "title": "Apfel-Zimt-Porridge",
+      "description": "Warmer Haferbrei mit Milch, gebratenen Apfelwürfeln und Zimt – aus fünf Vorratszutaten.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 12,
+      "prep_minutes": 3,
+      "cook_minutes": 9,
+      "tags": ["Frühstück", "Vegetarisch", "Budget", "Schnell"],
+      "equipment": ["Kleiner Topf", "Kleine Pfanne", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "oats", "grams": 50, "measure": "5 EL"},
+        {"food_slug": "milk", "grams": 250, "measure": "250 ml"},
+        {"food_slug": "apple", "grams": 120, "measure": "1 Apfel", "note": "gewürfelt"},
+        {"food_slug": "cinnamon", "grams": 1, "measure": "½ TL"},
+        {"food_slug": "honey", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Porridge kochen", "text": "Haferflocken, Milch und Salz in einem Topf aufkochen und bei niedriger Hitze unter Rühren 5 Minuten köcheln lassen.", "minutes": 5},
+        {"title": "Apfel braten", "text": "Den Apfel würfeln und in einer kleinen Pfanne mit 2 EL Wasser, Honig und Zimt 4 Minuten weich dünsten.", "minutes": 4},
+        {"title": "Anrichten", "text": "Das Porridge in eine Schale füllen und die warmen Zimtäpfel darauf verteilen."}
+      ],
+      "premium": {
+        "step_tips": ["Regelmäßig rühren, sonst setzt die Milch am Boden an.", "Säuerliche Äpfel wie Boskop behalten beim Dünsten ihre Form.", ""],
+        "common_mistakes": ["Zu hohe Hitze – Milch kocht schnell über."],
+        "substitutions": ["Milch zur Hälfte durch Wasser ersetzen, das spart Energie.", "Apfel durch eine Birne oder Banane ersetzen."],
+        "meal_prep": "Zimtäpfel für 3 Tage vorkochen und gekühlt aufbewahren; Porridge morgens frisch kochen.",
+        "variations": ["Mit 2 EL Naturjoghurt als Topping.", "Mit geriebener Möhre und Zimt als Karottenkuchen-Porridge."],
+        "serving_tip": "Etwas Zimt ganz zum Schluss darüberstäuben."
+      }
+    },
+    {
+      "slug": "livo-ruehrei-vollkornbrot",
+      "title": "Rührei auf Vollkornbrot",
+      "description": "Cremiges Rührei mit Schnittlauch auf Vollkornbrot – schnell, sättigend und mit wenigen Zutaten.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 10,
+      "prep_minutes": 4,
+      "cook_minutes": 6,
+      "tags": ["Frühstück", "High Protein", "Vegetarisch", "Schnell"],
+      "equipment": ["Beschichtete Pfanne", "Schüssel", "Schneebesen oder Gabel"],
+      "ingredients": [
+        {"food_slug": "egg", "grams": 180, "measure": "3 Eier"},
+        {"food_slug": "milk", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "butter", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "wholegrain-bread", "grams": 100, "measure": "2 Scheiben"},
+        {"food_slug": "chives", "grams": 5, "measure": "1 EL", "note": "in Röllchen, alternativ Dill"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Eier verquirlen", "text": "Eier, Milch und Salz in einer Schüssel mit einer Gabel verquirlen, bis keine Eiweißschlieren mehr zu sehen sind."},
+        {"title": "Langsam stocken", "text": "Die Butter in der Pfanne bei niedriger bis mittlerer Hitze schmelzen. Die Eier hineingießen und mit einem Pfannenwender langsam vom Rand zur Mitte schieben, bis sie gerade gestockt, aber noch feucht sind.", "minutes": 4},
+        {"title": "Brot vorbereiten", "text": "Das Brot währenddessen toasten oder frisch lassen und auf einen Teller legen.", "minutes": 2},
+        {"title": "Anrichten", "text": "Das Rührei auf dem Brot verteilen, mit Schnittlauch und Pfeffer bestreuen und sofort essen."}
+      ],
+      "premium": {
+        "step_tips": ["", "Die Pfanne vom Herd nehmen, sobald das Ei noch leicht glänzt – es gart nach.", "", ""],
+        "common_mistakes": ["Zu hohe Hitze – das Ei wird trocken und krümelig.", "Salz erst am Ende – so bleibt das Rührei weniger cremig; lieber vorher unterrühren."],
+        "substitutions": ["Milch durch Wasser ersetzen.", "Schnittlauch durch Frühlingszwiebeln ersetzen."],
+        "meal_prep": "Rührei schmeckt frisch am besten; gekochte Eier sind die bessere Vorrats-Alternative.",
+        "variations": ["Mit Tomatenwürfeln und Paprika.", "Mit etwas Feta, dann weniger salzen."],
+        "serving_tip": "Dazu passen Gurkenscheiben oder ein paar Tomaten."
+      }
+    },
+    {
+      "slug": "livo-bananen-hafer-pfannkuchen",
+      "title": "Bananen-Hafer-Pfannkuchen",
+      "description": "Kleine, saftige Pfannkuchen aus Haferflocken, Banane und Ei – ohne Mehl.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 20,
+      "prep_minutes": 6,
+      "cook_minutes": 14,
+      "tags": ["Frühstück", "Vegetarisch", "Schnell"],
+      "equipment": ["Pürierstab oder Mixer", "Beschichtete Pfanne", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "oats", "grams": 80, "measure": "8 EL"},
+        {"food_slug": "banana", "grams": 180, "measure": "1½ Bananen", "note": "reif; ½ Banane zum Belegen"},
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "milk", "grams": 60, "measure": "4 EL"},
+        {"food_slug": "cinnamon", "grams": 1, "measure": "½ TL"},
+        {"food_slug": "canola-oil", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Teig mixen", "text": "Haferflocken, eine Banane, Eier, Milch, Zimt und Salz mit dem Pürierstab zu einem glatten Teig mixen.", "minutes": 2},
+        {"title": "Quellen lassen", "text": "Den Teig 5 Minuten ruhen lassen, damit die Haferflocken Flüssigkeit aufnehmen und der Teig dicker wird.", "minutes": 5},
+        {"title": "Ausbacken", "text": "Die Pfanne mit wenig Öl bei mittlerer Hitze erwärmen. Pro Pfannkuchen 2 EL Teig hineingeben und je Seite etwa 2 Minuten goldbraun backen.", "minutes": 8},
+        {"title": "Belegen", "text": "Die Pfannkuchen stapeln und mit der restlichen, in Scheiben geschnittenen Banane belegen."}
+      ],
+      "premium": {
+        "step_tips": ["Je reifer die Banane, desto süßer der Teig.", "", "Erst wenden, wenn die Oberfläche kleine Bläschen zeigt.", ""],
+        "common_mistakes": ["Zu große Pfannkuchen – ohne Mehl zerbrechen sie beim Wenden."],
+        "substitutions": ["Milch durch Wasser ersetzen.", "Banane durch 100 g Apfelmus ersetzen."],
+        "meal_prep": "Gebackene Pfannkuchen halten gekühlt 2 Tage und lassen sich gut einfrieren.",
+        "variations": ["Mit Beeren im Teig.", "Mit 2 EL Naturjoghurt als Topping."],
+        "serving_tip": "Warm mit Joghurt und etwas Zimt servieren."
+      }
+    },
+    {
+      "slug": "livo-overnight-oats-banane",
+      "title": "Overnight Oats mit Joghurt und Banane",
+      "description": "Am Vorabend in zwei Minuten angerührt, morgens fertig: Haferflocken mit Joghurt, Milch und Banane.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 485,
+      "prep_minutes": 5,
+      "cook_minutes": 0,
+      "tags": ["Frühstück", "Vegetarisch", "Meal Prep", "Budget"],
+      "equipment": ["Schraubglas oder Schüssel mit Deckel", "Löffel"],
+      "ingredients": [
+        {"food_slug": "oats", "grams": 50, "measure": "5 EL"},
+        {"food_slug": "natural-yogurt", "grams": 150, "measure": "150 g"},
+        {"food_slug": "milk", "grams": 100, "measure": "100 ml"},
+        {"food_slug": "banana", "grams": 60, "measure": "½ Banane"},
+        {"food_slug": "cinnamon", "grams": 1, "measure": "½ TL"}
+      ],
+      "steps": [
+        {"title": "Anrühren", "text": "Haferflocken, Joghurt, Milch und Zimt in einem Glas gründlich verrühren."},
+        {"title": "Über Nacht quellen", "text": "Das Glas verschließen und mindestens 8 Stunden im Kühlschrank quellen lassen.", "minutes": 480},
+        {"title": "Toppen", "text": "Morgens kurz umrühren, die Banane in Scheiben schneiden und darauf verteilen."}
+      ],
+      "premium": {
+        "step_tips": ["Kernige Haferflocken bleiben bissfester, zarte werden cremiger.", "", "Ist die Masse zu fest, einen Schuss Milch unterrühren."],
+        "common_mistakes": ["Zu wenig Flüssigkeit – die Haferflocken saugen viel auf."],
+        "substitutions": ["Naturjoghurt durch Skyr ersetzen, das bringt mehr Eiweiß.", "Banane durch Beeren oder Apfel ersetzen."],
+        "meal_prep": "Hält gut verschlossen bis zu 2 Tage im Kühlschrank.",
+        "variations": ["Mit 1 TL Kakao.", "Mit geriebenem Apfel und extra Zimt."],
+        "serving_tip": "Direkt aus dem Glas löffeln – ideal für unterwegs."
+      }
+    },
+    {
+      "slug": "livo-pfannkuchen",
+      "title": "Pfannkuchen (Grundrezept)",
+      "description": "Dünne Pfannkuchen aus Mehl, Milch und Eiern – süß oder herzhaft zu füllen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 35,
+      "prep_minutes": 15,
+      "cook_minutes": 20,
+      "tags": ["Frühstück", "Snack", "Vegetarisch", "Budget"],
+      "equipment": ["Schüssel", "Schneebesen", "Beschichtete Pfanne", "Suppenkelle"],
+      "ingredients": [
+        {"food_slug": "wheat-flour", "grams": 200, "measure": "200 g"},
+        {"food_slug": "milk", "grams": 400, "measure": "400 ml"},
+        {"food_slug": "egg", "grams": 180, "measure": "3 Eier"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"},
+        {"food_slug": "canola-oil", "grams": 15, "measure": "1½ EL", "note": "zum Ausbacken"}
+      ],
+      "steps": [
+        {"title": "Teig rühren", "text": "Mehl und Salz in eine Schüssel geben. Nach und nach die Milch unterrühren, bis ein glatter Teig ohne Klümpchen entsteht. Dann die Eier einrühren."},
+        {"title": "Ruhen lassen", "text": "Den Teig 10 Minuten ruhen lassen, dann wird er geschmeidiger und die Pfannkuchen reißen weniger.", "minutes": 10},
+        {"title": "Ausbacken", "text": "Die Pfanne mit wenig Öl bei mittlerer Hitze erwärmen. Eine Kelle Teig hineingeben, durch Schwenken dünn verteilen und etwa 1 Minute backen, bis der Rand sich löst.", "minutes": 1},
+        {"title": "Wenden", "text": "Den Pfannkuchen wenden und noch 30 Sekunden backen. So weiterverfahren, bis der Teig aufgebraucht ist – ergibt etwa 8 Stück.", "minutes": 18}
+      ],
+      "premium": {
+        "step_tips": ["Erst die Milch zum Mehl geben, dann klumpt nichts.", "", "Der erste Pfannkuchen ist oft ein Test – danach die Hitze anpassen.", "Fertige Pfannkuchen im Ofen bei 80 °C warm halten."],
+        "common_mistakes": ["Zu viel Öl in der Pfanne – die Pfannkuchen werden fettig.", "Zu dicker Teig – dann einen Schuss Milch ergänzen."],
+        "substitutions": ["Die Hälfte des Mehls durch Vollkornmehl ersetzen.", "Milch zur Hälfte durch Mineralwasser ersetzen, das macht sie luftiger."],
+        "meal_prep": "Pfannkuchen mit Backpapier dazwischen stapeln; sie halten gekühlt 2 Tage oder eingefroren 2 Monate.",
+        "variations": ["Süß mit Apfelmus und Zimt.", "Herzhaft mit Spinat und Feta gefüllt."],
+        "serving_tip": "Warm, gerollt und mit etwas Apfelmus servieren."
+      }
+    },
+    {
+      "slug": "livo-arme-ritter",
+      "title": "Arme Ritter mit Zimt",
+      "description": "Brot vom Vortag in Eiermilch getaucht und goldbraun gebraten – mit Zimt und Honig.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 20,
+      "prep_minutes": 8,
+      "cook_minutes": 12,
+      "tags": ["Frühstück", "Snack", "Vegetarisch", "Budget"],
+      "equipment": ["Flacher Teller", "Schneebesen oder Gabel", "Große Pfanne"],
+      "ingredients": [
+        {"food_slug": "wholegrain-bread", "grams": 200, "measure": "4 Scheiben", "note": "vom Vortag"},
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "milk", "grams": 150, "measure": "150 ml"},
+        {"food_slug": "cinnamon", "grams": 2, "measure": "1 TL"},
+        {"food_slug": "butter", "grams": 15, "measure": "1 EL"},
+        {"food_slug": "honey", "grams": 20, "measure": "1 EL"},
+        {"food_slug": "salt", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Eiermilch", "text": "Eier, Milch, die Hälfte des Zimts und Salz in einem tiefen Teller verquirlen."},
+        {"title": "Einweichen", "text": "Die Brotscheiben nacheinander von beiden Seiten je 20 Sekunden in die Eiermilch legen, bis sie sich vollgesogen haben.", "minutes": 2},
+        {"title": "Braten", "text": "Die Butter in der Pfanne bei mittlerer Hitze schmelzen und die Scheiben je Seite 3 bis 4 Minuten goldbraun braten.", "minutes": 8},
+        {"title": "Servieren", "text": "Mit dem restlichen Zimt bestäuben und mit Honig beträufelt warm servieren."}
+      ],
+      "premium": {
+        "step_tips": ["", "Trockenes Brot saugt mehr auf, ohne zu zerfallen.", "Nicht zu heiß braten, sonst ist das Brot außen dunkel und innen noch nass.", ""],
+        "common_mistakes": ["Frisches, weiches Brot zu lange einweichen – es zerfällt."],
+        "substitutions": ["Honig durch Apfelmus ersetzen.", "Butter durch Rapsöl ersetzen."],
+        "meal_prep": "Gebratene Scheiben lassen sich im Toaster aufwärmen; sie halten gekühlt 1 Tag.",
+        "variations": ["Mit Beeren und Joghurt.", "Herzhaft ohne Zimt und Honig, dafür mit Salz, Pfeffer und Schnittlauch."],
+        "serving_tip": "Mit frischen Apfelscheiben oder Beeren servieren."
+      }
+    },
+    {
+      "slug": "livo-bananen-quark",
+      "title": "Bananen-Quark mit Haferflocken",
+      "description": "Cremiger Quark mit zerdrückter Banane, Haferflocken und Zimt – ein sättigender Snack ohne Kochen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 1,
+      "preparation_minutes": 5,
+      "prep_minutes": 5,
+      "cook_minutes": 0,
+      "tags": ["Snack", "Frühstück", "High Protein", "Vegetarisch", "Schnell"],
+      "equipment": ["Schüssel", "Gabel"],
+      "ingredients": [
+        {"food_slug": "low-fat-quark", "grams": 250, "measure": "1 Becher"},
+        {"food_slug": "milk", "grams": 50, "measure": "3 EL"},
+        {"food_slug": "banana", "grams": 120, "measure": "1 Banane"},
+        {"food_slug": "oats", "grams": 30, "measure": "3 EL"},
+        {"food_slug": "cinnamon", "grams": 1, "measure": "½ TL"},
+        {"food_slug": "honey", "grams": 5, "measure": "1 TL"}
+      ],
+      "steps": [
+        {"title": "Quark cremig rühren", "text": "Den Quark mit der Milch in einer Schüssel glatt rühren, bis er cremig ist."},
+        {"title": "Banane zerdrücken", "text": "Die Hälfte der Banane mit einer Gabel zerdrücken und mit dem Zimt unter den Quark rühren."},
+        {"title": "Toppen", "text": "Die restliche Banane in Scheiben schneiden, mit den Haferflocken auf den Quark geben und mit Honig beträufeln."}
+      ],
+      "premium": {
+        "step_tips": ["Mehr Milch ergibt eine luftigere, weniger feste Creme.", "Je brauner die Banane, desto süßer.", ""],
+        "common_mistakes": ["Quark ohne Flüssigkeit verwenden – er bleibt fest und trocken."],
+        "substitutions": ["Magerquark durch Skyr ersetzen.", "Haferflocken in der Pfanne rösten für mehr Aroma."],
+        "meal_prep": "Die Quarkcreme hält gekühlt 1 Tag; Haferflocken erst kurz vorher darüber geben.",
+        "variations": ["Mit Beeren statt Banane.", "Mit geriebenem Apfel und extra Zimt."],
+        "serving_tip": "Gut gekühlt als Nachmittagssnack genießen."
+      }
+    },
+    {
+      "slug": "livo-pellkartoffeln-kraeuterquark",
+      "title": "Pellkartoffeln mit Kräuterquark",
+      "description": "Der Klassiker aus dem Vorrat: in der Schale gekochte Kartoffeln mit frischem Kräuterquark.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 35,
+      "prep_minutes": 10,
+      "cook_minutes": 25,
+      "tags": ["Mittagessen", "Abendessen", "Vegetarisch", "Budget", "High Protein"],
+      "equipment": ["Großer Topf mit Deckel", "Schüssel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 800, "note": "festkochend, gleich groß"},
+        {"food_slug": "low-fat-quark", "grams": 250, "measure": "1 Becher"},
+        {"food_slug": "milk", "grams": 50, "measure": "3 EL"},
+        {"food_slug": "chives", "grams": 10, "measure": "2 EL", "note": "in Röllchen"},
+        {"food_slug": "garlic", "grams": 3, "measure": "1 Zehe", "note": "fein gerieben"},
+        {"food_slug": "salt", "grams": 4, "measure": "¾ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Kartoffeln kochen", "text": "Die Kartoffeln gründlich waschen, mit Wasser bedecken, etwas Salz zugeben und zugedeckt 20 bis 25 Minuten kochen, bis sich ein Messer leicht hineinstechen lässt.", "minutes": 25},
+        {"title": "Quark anrühren", "text": "Währenddessen Quark und Milch glatt rühren. Schnittlauch, Knoblauch, Salz und Pfeffer untermischen."},
+        {"title": "Abgießen", "text": "Die Kartoffeln abgießen und kurz ausdampfen lassen. Nach Wunsch pellen oder mit Schale essen."},
+        {"title": "Servieren", "text": "Die Kartoffeln mit dem Kräuterquark auf Tellern anrichten."}
+      ],
+      "premium": {
+        "step_tips": ["Gleich große Kartoffeln werden gleichzeitig gar.", "Den Quark 10 Minuten ziehen lassen, dann schmecken die Kräuter stärker.", "Heiße Kartoffeln lassen sich mit einer Gabel festhalten und leicht pellen.", ""],
+        "common_mistakes": ["Zu große und kleine Kartoffeln mischen – dann sind manche zerkocht."],
+        "substitutions": ["Schnittlauch durch Petersilie oder TK-Kräuter ersetzen.", "Magerquark durch Skyr oder Naturjoghurt ersetzen."],
+        "meal_prep": "Gekochte Kartoffeln halten gekühlt 3 Tage und eignen sich perfekt für Bratkartoffeln.",
+        "variations": ["Mit Gurkenwürfeln im Quark.", "Mit 1 TL Leinöl über dem Quark, wie in der Lausitz."],
+        "serving_tip": "Mit Gurkensalat oder Radieschen servieren."
+      }
+    },
+    {
+      "slug": "livo-bratkartoffeln-spiegelei",
+      "title": "Bratkartoffeln mit Spiegelei",
+      "description": "Knusprige Bratkartoffeln mit Zwiebeln und zwei Spiegeleiern – aus gekochten Kartoffeln vom Vortag.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 30,
+      "prep_minutes": 8,
+      "cook_minutes": 22,
+      "tags": ["Abendessen", "Mittagessen", "Vegetarisch", "Budget"],
+      "equipment": ["Große Pfanne, am besten Gusseisen", "Zweite Pfanne für die Eier", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 700, "note": "am Vortag gekocht und gepellt"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "in Streifen"},
+        {"food_slug": "canola-oil", "grams": 30, "measure": "3 EL"},
+        {"food_slug": "egg", "grams": 240, "measure": "4 Eier"},
+        {"food_slug": "butter", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "paprika-powder", "grams": 2, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Schneiden", "text": "Die gekochten Kartoffeln in Scheiben oder Würfel schneiden, die Zwiebel in Streifen."},
+        {"title": "Kartoffeln braten", "text": "Das Öl in der großen Pfanne stark erhitzen. Die Kartoffeln in einer Schicht hineingeben und 8 Minuten braten, ohne sie zu bewegen.", "minutes": 8},
+        {"title": "Wenden und Zwiebeln", "text": "Die Kartoffeln wenden, die Zwiebeln dazugeben und weitere 8 Minuten bei mittlerer Hitze braten, bis alles goldbraun ist. Mit Salz, Pfeffer und Paprikapulver würzen.", "minutes": 8},
+        {"title": "Spiegeleier", "text": "Währenddessen die Butter in der zweiten Pfanne schmelzen, die Eier hineinschlagen und 4 Minuten braten, bis das Eiweiß fest ist.", "minutes": 4},
+        {"title": "Anrichten", "text": "Die Bratkartoffeln auf zwei Teller verteilen und je zwei Spiegeleier darauf legen."}
+      ],
+      "premium": {
+        "step_tips": ["Kalte, gekochte Kartoffeln zerfallen nicht und werden knuspriger als rohe.", "Geduld: Erst wenden, wenn die Unterseite eine goldene Kruste hat.", "Zwiebeln erst jetzt dazugeben, sonst verbrennen sie.", "", ""],
+        "common_mistakes": ["Die Pfanne überfüllen – dann dämpfen die Kartoffeln statt zu braten.", "Zu früh salzen – das zieht Wasser und verhindert die Kruste."],
+        "substitutions": ["Spiegeleier durch Rührei ersetzen.", "Rapsöl durch Butterschmalz ersetzen."],
+        "meal_prep": "Kartoffeln am Vortag kochen und ungeschnitten kühlen.",
+        "variations": ["Mit Paprikawürfeln und Frühlingszwiebeln.", "Mit Kräuterquark statt Ei."],
+        "serving_tip": "Ein frischer Gurkensalat passt sehr gut dazu."
+      }
+    },
+    {
+      "slug": "livo-kartoffel-moehren-eintopf",
+      "title": "Kartoffel-Möhren-Eintopf",
+      "description": "Klarer, wärmender Eintopf mit Kartoffeln, Möhren und Zwiebeln – günstig und gut vorzukochen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 40,
+      "prep_minutes": 15,
+      "cook_minutes": 25,
+      "tags": ["Mittagessen", "Abendessen", "Vegan", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf mit Deckel", "Sparschäler", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 700, "note": "geschält, gewürfelt"},
+        {"food_slug": "carrot", "grams": 300, "measure": "3 Möhren", "note": "in Scheiben"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "gewürfelt"},
+        {"food_slug": "vegetable-broth", "grams": 1000, "measure": "1 l"},
+        {"food_slug": "canola-oil", "grams": 15, "measure": "1½ EL"},
+        {"food_slug": "parsley", "grams": 15, "measure": "2 EL", "note": "gehackt"},
+        {"food_slug": "salt", "grams": 2, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Gemüse schneiden", "text": "Kartoffeln schälen und in 2 cm große Würfel schneiden, Möhren in Scheiben und die Zwiebel in Würfel schneiden."},
+        {"title": "Anschwitzen", "text": "Das Öl im Topf erhitzen und die Zwiebel darin 3 Minuten glasig dünsten. Die Möhren 2 Minuten mitdünsten.", "minutes": 5},
+        {"title": "Köcheln", "text": "Kartoffeln und Brühe zugeben, aufkochen und zugedeckt 18 bis 20 Minuten köcheln lassen, bis die Kartoffeln weich sind.", "minutes": 20},
+        {"title": "Abschmecken", "text": "Mit Salz und Pfeffer abschmecken und die Petersilie unterrühren."}
+      ],
+      "premium": {
+        "step_tips": ["Gleich große Stücke garen gleichmäßig.", "", "Einige Kartoffelstücke mit dem Löffel zerdrücken, dann wird der Eintopf sämiger.", "Die Brühe ist schon salzig – erst probieren, dann salzen."],
+        "common_mistakes": ["Zu stark kochen – die Kartoffeln zerfallen und der Eintopf wird trüb."],
+        "substitutions": ["Möhren teilweise durch Erbsen (TK) ersetzen.", "Petersilie durch Schnittlauch ersetzen."],
+        "meal_prep": "Hält gekühlt 3 Tage und lässt sich portionsweise einfrieren.",
+        "variations": ["Mit 1 TL Paprikapulver und Kreuzkümmel würziger machen.", "Zum Schluss 1 Dose weiße Bohnen oder Kichererbsen für mehr Eiweiß."],
+        "serving_tip": "Mit einer Scheibe Vollkornbrot servieren."
+      }
+    },
+    {
+      "slug": "livo-ofenkartoffeln-moehren",
+      "title": "Ofenkartoffeln mit Möhren und Knoblauch-Joghurt",
+      "description": "Kartoffeln und Möhren vom Blech mit Paprika-Würze, dazu ein kühler Joghurt-Dip.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 45,
+      "prep_minutes": 12,
+      "cook_minutes": 33,
+      "tags": ["Abendessen", "Mittagessen", "Vegetarisch", "Budget"],
+      "equipment": ["Backblech mit Backpapier", "Große Schüssel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 800, "note": "gewaschen, in Spalten oder Scheiben"},
+        {"food_slug": "carrot", "grams": 400, "measure": "4 Möhren", "note": "in dicken Scheiben"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "in Spalten"},
+        {"food_slug": "olive-oil", "grams": 30, "measure": "3 EL"},
+        {"food_slug": "paprika-powder", "grams": 4, "measure": "2 TL"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"},
+        {"food_slug": "natural-yogurt", "grams": 200, "measure": "200 g", "note": "für den Dip"},
+        {"food_slug": "garlic", "grams": 3, "measure": "1 Zehe", "note": "fein gerieben"}
+      ],
+      "steps": [
+        {"title": "Ofen vorheizen", "text": "Den Backofen auf 220 °C Ober- und Unterhitze vorheizen und ein Blech mit Backpapier belegen."},
+        {"title": "Würzen", "text": "Kartoffeln, Möhren und Zwiebel in einer Schüssel mit Öl, Paprikapulver, Salz und Pfeffer gründlich vermengen."},
+        {"title": "Backen", "text": "Das Gemüse in einer Schicht auf dem Blech verteilen und 30 bis 35 Minuten backen, nach der Hälfte der Zeit einmal wenden.", "minutes": 33},
+        {"title": "Dip rühren", "text": "Währenddessen den Joghurt mit dem Knoblauch und einer Prise Salz verrühren."},
+        {"title": "Servieren", "text": "Die Ofenkartoffeln mit dem Knoblauch-Joghurt servieren."}
+      ],
+      "premium": {
+        "step_tips": ["", "Kartoffeln vorher gut trocken tupfen, dann werden sie knuspriger.", "Nicht stapeln – jedes Stück braucht Kontakt zum Blech.", "", ""],
+        "common_mistakes": ["Möhren zu dünn schneiden – sie verbrennen, bevor die Kartoffeln gar sind."],
+        "substitutions": ["Möhren durch Paprika oder Zucchini ersetzen (dann erst nach 15 Minuten dazugeben).", "Naturjoghurt durch Magerquark ersetzen."],
+        "meal_prep": "Reste halten gekühlt 3 Tage und schmecken aufgewärmt in der Pfanne.",
+        "variations": ["Mit Kichererbsen aus der Dose auf dem Blech.", "Mit Oregano und etwas Feta nach dem Backen."],
+        "serving_tip": "Mit etwas Petersilie bestreuen und direkt vom Blech servieren."
+      }
+    },
+    {
+      "slug": "livo-kartoffelpuffer-apfelmus",
+      "title": "Kartoffelpuffer mit Apfelmus",
+      "description": "Knusprige Reibekuchen aus rohen Kartoffeln und Zwiebel, klassisch mit Apfelmus.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 3,
+      "preparation_minutes": 45,
+      "prep_minutes": 20,
+      "cook_minutes": 25,
+      "tags": ["Mittagessen", "Snack", "Vegetarisch", "Budget"],
+      "equipment": ["Reibe", "Sauberes Küchentuch", "Große Schüssel", "Große Pfanne", "Küchenpapier"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 800, "note": "mehligkochend, geschält"},
+        {"food_slug": "onion", "grams": 80, "measure": "1 Zwiebel"},
+        {"food_slug": "egg", "grams": 60, "measure": "1 Ei"},
+        {"food_slug": "wheat-flour", "grams": 30, "measure": "3 EL"},
+        {"food_slug": "salt", "grams": 4, "measure": "¾ TL"},
+        {"food_slug": "canola-oil", "grams": 40, "measure": "4 EL", "note": "zum Ausbacken"},
+        {"food_slug": "applesauce", "grams": 300, "measure": "1 Glas"}
+      ],
+      "steps": [
+        {"title": "Reiben", "text": "Kartoffeln und Zwiebel fein reiben."},
+        {"title": "Ausdrücken", "text": "Die Masse in ein sauberes Küchentuch geben und kräftig ausdrücken, bis kaum noch Flüssigkeit austritt."},
+        {"title": "Teig mischen", "text": "Kartoffelmasse, Ei, Mehl und Salz in einer Schüssel gut vermengen."},
+        {"title": "Ausbacken", "text": "Etwas Öl in der Pfanne stark erhitzen. Je 2 EL Masse hineingeben, flach drücken und von jeder Seite 3 bis 4 Minuten goldbraun backen. Nach Bedarf Öl nachgießen.", "minutes": 25},
+        {"title": "Abtropfen und servieren", "text": "Die Puffer kurz auf Küchenpapier abtropfen lassen und heiß mit Apfelmus servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Zügig arbeiten, sonst werden die Kartoffeln braun.", "Je trockener die Masse, desto knuspriger die Puffer.", "", "Das Öl ist heiß genug, wenn ein Stück Kartoffel sofort brutzelt.", "Im Ofen bei 100 °C bleiben fertige Puffer knusprig warm."],
+        "common_mistakes": ["Die Masse nicht ausdrücken – die Puffer werden weich und saugen Öl.", "Zu dicke Puffer – außen dunkel, innen roh."],
+        "substitutions": ["Apfelmus durch Kräuterquark ersetzen für eine herzhafte Variante.", "Ein Drittel der Kartoffeln durch Möhren oder Zucchini ersetzen."],
+        "meal_prep": "Gebackene Puffer halten gekühlt 2 Tage; im Ofen oder in der Pfanne ohne Öl aufknuspern.",
+        "variations": ["Mit Schnittlauch und Pfeffer im Teig.", "Kleine Puffer als Snack mit Joghurt-Dip."],
+        "serving_tip": "Sofort servieren, solange sie knusprig sind."
+      }
+    },
+    {
+      "slug": "livo-kartoffel-tortilla",
+      "title": "Kartoffel-Tortilla",
+      "description": "Spanisches Kartoffelomelett aus nur fünf Zutaten: Kartoffeln, Zwiebeln, Eier, Olivenöl und Salz.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 3,
+      "preparation_minutes": 45,
+      "prep_minutes": 15,
+      "cook_minutes": 30,
+      "tags": ["Mittagessen", "Abendessen", "Vegetarisch", "Budget", "Meal Prep"],
+      "equipment": ["Beschichtete Pfanne (ca. 24 cm) mit Deckel", "Großer Teller zum Wenden", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 600, "note": "festkochend, geschält, in dünnen Scheiben"},
+        {"food_slug": "onion", "grams": 150, "measure": "2 Zwiebeln", "note": "in Streifen"},
+        {"food_slug": "egg", "grams": 360, "measure": "6 Eier"},
+        {"food_slug": "olive-oil", "grams": 40, "measure": "4 EL"},
+        {"food_slug": "salt", "grams": 4, "measure": "¾ TL"}
+      ],
+      "steps": [
+        {"title": "Kartoffeln garen", "text": "Das Öl in der Pfanne erhitzen. Kartoffeln und Zwiebeln hineingeben, salzen und zugedeckt bei mittlerer Hitze 15 Minuten weich garen, dabei gelegentlich wenden.", "minutes": 15},
+        {"title": "Eier verquirlen", "text": "Die Eier in einer großen Schüssel mit einer Prise Salz verquirlen. Die weichen Kartoffeln und Zwiebeln unterheben und 5 Minuten ziehen lassen.", "minutes": 5},
+        {"title": "Stocken lassen", "text": "Die Masse zurück in die leicht geölte Pfanne geben und bei niedriger Hitze zugedeckt 8 Minuten stocken lassen, bis der Rand fest ist.", "minutes": 8},
+        {"title": "Wenden", "text": "Einen großen Teller auf die Pfanne legen, die Tortilla vorsichtig darauf stürzen und zurück in die Pfanne gleiten lassen. Weitere 3 Minuten garen.", "minutes": 3},
+        {"title": "Ruhen lassen", "text": "Die Tortilla 5 Minuten ruhen lassen und dann in Stücke schneiden.", "minutes": 5}
+      ],
+      "premium": {
+        "step_tips": ["Die Kartoffeln sollen weich werden, nicht knusprig.", "Das Ziehenlassen verbindet Ei und Kartoffeln – so wird die Tortilla saftig.", "Niedrige Hitze verhindert einen verbrannten Boden.", "Mutig und in einer Bewegung stürzen.", ""],
+        "common_mistakes": ["Zu hohe Hitze beim Stocken – außen braun, innen flüssig.", "Kartoffelscheiben zu dick schneiden."],
+        "substitutions": ["Olivenöl durch Rapsöl ersetzen.", "Einen Teil der Kartoffeln durch Paprika ersetzen."],
+        "meal_prep": "Die Tortilla hält gekühlt 3 Tage und schmeckt auch kalt – ideal für die Brotdose.",
+        "variations": ["Mit Spinat (TK) in der Eimasse.", "Mit Paprikapulver und Frühlingszwiebeln."],
+        "serving_tip": "Lauwarm mit einem Tomatensalat servieren."
+      }
+    },
+    {
+      "slug": "livo-kartoffelsalat-gurke",
+      "title": "Kartoffelsalat mit Gurke und Joghurt",
+      "description": "Leichter Kartoffelsalat mit Gurke, Frühlingszwiebeln und Joghurt-Dressing.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 45,
+      "prep_minutes": 15,
+      "cook_minutes": 25,
+      "tags": ["Mittagessen", "Abendessen", "Vegetarisch", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf", "Große Schüssel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "potatoes", "grams": 800, "note": "festkochend"},
+        {"food_slug": "cucumber", "grams": 300, "measure": "1 Gurke", "note": "in dünnen Scheiben"},
+        {"food_slug": "spring-onion", "grams": 30, "measure": "2 Frühlingszwiebeln", "note": "in Ringen"},
+        {"food_slug": "natural-yogurt", "grams": 250, "measure": "250 g"},
+        {"food_slug": "olive-oil", "grams": 15, "measure": "1½ EL"},
+        {"food_slug": "lemon-juice", "grams": 15, "measure": "1 EL"},
+        {"food_slug": "chives", "grams": 10, "measure": "2 EL", "note": "in Röllchen"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Kartoffeln kochen", "text": "Die Kartoffeln in der Schale 20 bis 25 Minuten gar kochen, abgießen und etwas abkühlen lassen.", "minutes": 25},
+        {"title": "Gurke salzen", "text": "Die Gurke in dünne Scheiben schneiden, mit einer Prise Salz mischen und 10 Minuten ziehen lassen. Dann das Wasser abgießen.", "minutes": 10},
+        {"title": "Dressing", "text": "Joghurt, Öl, Zitronensaft, Salz und Pfeffer zu einem glatten Dressing verrühren."},
+        {"title": "Mischen", "text": "Die Kartoffeln pellen, in Scheiben schneiden und noch lauwarm mit Gurke, Frühlingszwiebeln und Dressing vermengen."},
+        {"title": "Ziehen lassen", "text": "Den Salat mindestens 15 Minuten ziehen lassen und mit Schnittlauch bestreut servieren.", "minutes": 15}
+      ],
+      "premium": {
+        "step_tips": ["", "So wird der Salat später nicht wässrig.", "", "Lauwarme Kartoffeln nehmen das Dressing besser auf.", "Vor dem Servieren nochmals abschmecken – Kartoffeln schlucken Salz."],
+        "common_mistakes": ["Mehligkochende Kartoffeln verwenden – sie zerfallen im Salat."],
+        "substitutions": ["Naturjoghurt teilweise durch Magerquark ersetzen.", "Frühlingszwiebeln durch eine halbe rote Zwiebel ersetzen."],
+        "meal_prep": "Hält gekühlt 2 Tage; Schnittlauch erst kurz vor dem Essen darüber geben.",
+        "variations": ["Mit gehackten gekochten Eiern.", "Mit Radieschen und Dill."],
+        "serving_tip": "Gut gekühlt zum Grillen oder als Mittagessen mit einem Spiegelei."
+      }
+    },
+    {
+      "slug": "livo-rote-linsen-dal",
+      "title": "Rote-Linsen-Dal mit Reis",
+      "description": "Cremiges Linsencurry aus roten Linsen und Dosentomaten, dazu Reis – vegan, günstig und sättigend.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 4,
+      "preparation_minutes": 35,
+      "prep_minutes": 10,
+      "cook_minutes": 25,
+      "tags": ["Mittagessen", "Abendessen", "Vegan", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf mit Deckel", "Topf für den Reis", "Sieb"],
+      "ingredients": [
+        {"food_slug": "red-lentils", "grams": 250, "measure": "250 g"},
+        {"food_slug": "rice-raw", "grams": 250, "measure": "250 g"},
+        {"food_slug": "canned-tomatoes", "grams": 400, "measure": "1 Dose"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 9, "measure": "3 Zehen", "note": "gehackt"},
+        {"food_slug": "canola-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "curry-powder", "grams": 8, "measure": "1 EL"},
+        {"food_slug": "cumin", "grams": 3, "measure": "1 TL"},
+        {"food_slug": "vegetable-broth", "grams": 700, "measure": "700 ml"},
+        {"food_slug": "lemon-juice", "grams": 15, "measure": "1 EL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"}
+      ],
+      "steps": [
+        {"title": "Linsen spülen", "text": "Die Linsen in einem Sieb unter kaltem Wasser spülen, bis das Wasser klar abläuft."},
+        {"title": "Reis kochen", "text": "Den Reis mit 500 ml Wasser und einer Prise Salz aufkochen und zugedeckt bei niedriger Hitze 15 Minuten garen. Danach 5 Minuten ruhen lassen.", "minutes": 20},
+        {"title": "Anschwitzen", "text": "Das Öl im großen Topf erhitzen. Zwiebel 3 Minuten glasig dünsten, dann Knoblauch, Curry und Kreuzkümmel 1 Minute mitrösten.", "minutes": 4},
+        {"title": "Dal köcheln", "text": "Linsen, Dosentomaten und Brühe zugeben, aufkochen und 15 bis 18 Minuten offen köcheln lassen, bis die Linsen zerfallen. Gelegentlich umrühren.", "minutes": 18},
+        {"title": "Abschmecken", "text": "Mit Zitronensaft und Salz abschmecken und das Dal mit dem Reis servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Spülen entfernt Stärke, dann schäumt das Dal weniger.", "", "Die Gewürze nur kurz rösten, sonst werden sie bitter.", "Wird es zu dick, einen Schuss Wasser ergänzen.", "Zitronensaft hebt den Geschmack deutlich."],
+        "common_mistakes": ["Zu wenig rühren – rote Linsen setzen schnell am Topfboden an."],
+        "substitutions": ["Dosentomaten durch 3 frische Tomaten ersetzen.", "Einen Teil der Brühe durch Kokosmilch ersetzen, wenn vorhanden."],
+        "meal_prep": "Dal hält gekühlt 4 Tage und lässt sich gut einfrieren; Reis höchstens 1 Tag lagern.",
+        "variations": ["Zum Schluss 200 g Spinat (TK) unterrühren.", "Mit Naturjoghurt als Topping (dann vegetarisch)."],
+        "serving_tip": "Mit frischer Petersilie und einem Zitronenschnitz servieren."
+      }
+    },
+    {
+      "slug": "livo-mujaddara",
+      "title": "Linsen-Reis mit Röstzwiebeln (Mujaddara)",
+      "description": "Orientalischer Klassiker aus Linsen, Reis und viel karamellisierter Zwiebel, dazu Joghurt.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 4,
+      "preparation_minutes": 55,
+      "prep_minutes": 10,
+      "cook_minutes": 45,
+      "tags": ["Abendessen", "Mittagessen", "Vegetarisch", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf mit Deckel", "Große Pfanne", "Sieb"],
+      "ingredients": [
+        {"food_slug": "brown-lentils", "grams": 200, "measure": "200 g"},
+        {"food_slug": "rice-raw", "grams": 200, "measure": "200 g"},
+        {"food_slug": "onion", "grams": 400, "measure": "4 Zwiebeln", "note": "in feinen Streifen"},
+        {"food_slug": "olive-oil", "grams": 40, "measure": "4 EL"},
+        {"food_slug": "cumin", "grams": 4, "measure": "1½ TL"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"},
+        {"food_slug": "natural-yogurt", "grams": 300, "measure": "300 g", "note": "zum Servieren"}
+      ],
+      "steps": [
+        {"title": "Linsen vorkochen", "text": "Die Linsen spülen, mit 1 l Wasser aufkochen und 15 Minuten köcheln lassen, bis sie fast gar sind. Abgießen.", "minutes": 15},
+        {"title": "Zwiebeln rösten", "text": "Währenddessen das Öl in der Pfanne erhitzen und die Zwiebeln bei mittlerer Hitze 20 bis 25 Minuten unter gelegentlichem Rühren tief goldbraun rösten. Leicht salzen.", "minutes": 25},
+        {"title": "Reis und Linsen garen", "text": "Reis, Linsen, Kreuzkümmel, Salz und die Hälfte der Zwiebeln mit 450 ml Wasser in den Topf geben, aufkochen und zugedeckt bei niedriger Hitze 15 Minuten garen.", "minutes": 15},
+        {"title": "Ruhen lassen", "text": "Den Topf vom Herd nehmen und 5 Minuten geschlossen ruhen lassen. Mit einer Gabel auflockern und pfeffern.", "minutes": 5},
+        {"title": "Servieren", "text": "Den Linsen-Reis anrichten, die übrigen Röstzwiebeln darauf verteilen und mit Joghurt servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Tellerlinsen dürfen noch leichten Biss haben – sie garen mit dem Reis weiter.", "Geduld lohnt sich: Die Süße der Zwiebeln macht das Gericht aus.", "Den Deckel während des Garens nicht öffnen.", "", ""],
+        "common_mistakes": ["Zwiebeln bei zu hoher Hitze rösten – sie werden bitter statt süß."],
+        "substitutions": ["Tellerlinsen durch braune Linsen aus der Dose ersetzen (dann Schritt 1 weglassen).", "Naturjoghurt durch Gurken-Joghurt ersetzen."],
+        "meal_prep": "Hält gekühlt 3 Tage; die Röstzwiebeln getrennt aufbewahren, damit sie knusprig bleiben.",
+        "variations": ["Mit Zimt und etwas Pfeffer in den Zwiebeln.", "Mit einem Tomaten-Gurken-Salat als Beilage."],
+        "serving_tip": "Warm oder lauwarm mit kaltem Joghurt servieren."
+      }
+    },
+    {
+      "slug": "livo-milchreis-zimt",
+      "title": "Milchreis mit Zimt",
+      "description": "Cremiger Milchreis aus dem Topf, mit Honig gesüßt und mit Zimt bestäubt.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 4,
+      "preparation_minutes": 40,
+      "prep_minutes": 5,
+      "cook_minutes": 35,
+      "tags": ["Snack", "Frühstück", "Vegetarisch", "Budget"],
+      "equipment": ["Topf mit dickem Boden und Deckel", "Kochlöffel"],
+      "ingredients": [
+        {"food_slug": "pudding-rice-raw", "grams": 125, "measure": "125 g"},
+        {"food_slug": "milk", "grams": 1000, "measure": "1 l"},
+        {"food_slug": "honey", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "cinnamon", "grams": 3, "measure": "1½ TL"},
+        {"food_slug": "salt", "grams": 1, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Aufkochen", "text": "Milch und Salz im Topf aufkochen, dabei rühren, damit nichts anbrennt.", "minutes": 5},
+        {"title": "Quellen lassen", "text": "Den Milchreis einrühren und bei niedrigster Hitze zugedeckt 30 Minuten quellen lassen. Alle 5 Minuten umrühren.", "minutes": 30},
+        {"title": "Süßen", "text": "Den Honig unterrühren. Der Milchreis ist fertig, wenn die Körner weich und cremig sind."},
+        {"title": "Servieren", "text": "Den Milchreis in Schalen füllen und mit Zimt bestäuben."}
+      ],
+      "premium": {
+        "step_tips": ["Den Topf vorher kalt ausspülen, dann setzt die Milch weniger an.", "Kurz vor Ende wird der Reis dicker – dann häufiger rühren.", "", ""],
+        "common_mistakes": ["Zu hohe Hitze – die Milch brennt an und schmeckt bitter."],
+        "substitutions": ["Honig durch Zucker oder Apfelmus ersetzen.", "Einen Teil der Milch durch Wasser ersetzen, das spart Energie."],
+        "meal_prep": "Hält gekühlt 3 Tage; kalt wird er fester, dann mit etwas Milch aufwärmen.",
+        "variations": ["Mit gedünsteten Apfelwürfeln.", "Mit Beeren oder Kirschen aus dem Glas."],
+        "serving_tip": "Warm oder kalt aus dem Kühlschrank genießen."
+      }
+    },
+    {
+      "slug": "livo-thunfisch-reis-bowl",
+      "title": "Thunfisch-Reis-Bowl mit Gurke",
+      "description": "Reis mit Thunfisch aus der Dose, Gurke, Mais und Joghurt-Zitronen-Dressing.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 25,
+      "prep_minutes": 10,
+      "cook_minutes": 15,
+      "tags": ["Mittagessen", "High Protein", "Pescetarisch", "Schnell"],
+      "equipment": ["Topf mit Deckel", "Schneidebrett und Messer", "Kleine Schüssel"],
+      "ingredients": [
+        {"food_slug": "rice-raw", "grams": 150, "measure": "150 g"},
+        {"food_slug": "tuna-canned", "grams": 140, "measure": "1 Dose", "note": "abgetropft"},
+        {"food_slug": "cucumber", "grams": 150, "measure": "½ Gurke", "note": "gewürfelt"},
+        {"food_slug": "sweetcorn-canned", "grams": 70, "measure": "½ Dose"},
+        {"food_slug": "spring-onion", "grams": 20, "measure": "1 Frühlingszwiebel", "note": "in Ringen"},
+        {"food_slug": "natural-yogurt", "grams": 100, "measure": "100 g"},
+        {"food_slug": "lemon-juice", "grams": 10, "measure": "2 TL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Reis kochen", "text": "Den Reis mit 300 ml Wasser und einer Prise Salz aufkochen und zugedeckt bei niedriger Hitze 15 Minuten garen.", "minutes": 15},
+        {"title": "Dressing", "text": "Joghurt, Zitronensaft, eine Prise Salz und Pfeffer glatt rühren."},
+        {"title": "Schneiden", "text": "Gurke würfeln, Frühlingszwiebel in Ringe schneiden, Mais abtropfen lassen und den Thunfisch mit einer Gabel zerpflücken."},
+        {"title": "Anrichten", "text": "Den Reis in zwei Schüsseln verteilen, Thunfisch, Gurke und Mais darauf legen, mit Dressing beträufeln und mit Frühlingszwiebeln bestreuen."}
+      ],
+      "premium": {
+        "step_tips": ["Reis vorher waschen, dann klebt er weniger.", "", "Thunfisch gut abtropfen lassen, sonst wird die Bowl wässrig.", ""],
+        "common_mistakes": ["Das Dressing zu früh darüber geben – der Reis saugt es auf."],
+        "substitutions": ["Reis vom Vortag verwenden, dann ist die Bowl in 10 Minuten fertig.", "Mais durch Paprikawürfel ersetzen."],
+        "meal_prep": "Reis, Gemüse und Dressing getrennt aufbewahren; hält gekühlt 1 Tag.",
+        "variations": ["Mit Avocado und Tomate.", "Mit einem gekochten Ei für noch mehr Eiweiß."],
+        "serving_tip": "Warmer Reis mit kühlem Topping ist besonders lecker."
+      }
+    },
+    {
+      "slug": "livo-halal-haehnchen-paprika-reis",
+      "title": "Halal-Hähnchen-Paprika-Reis",
+      "description": "Zartes Halal-Hähnchenbrustfilet mit Paprika und Zwiebeln, dazu locker gegarter Reis.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 3,
+      "preparation_minutes": 35,
+      "prep_minutes": 12,
+      "cook_minutes": 23,
+      "tags": ["Abendessen", "Mittagessen", "High Protein", "Meal Prep"],
+      "equipment": ["Topf mit Deckel", "Große Pfanne", "Schneidebrett und Messer (separat für rohes Geflügel)"],
+      "ingredients": [
+        {"food_slug": "chicken-breast-halal", "grams": 400, "measure": "2 Filets", "note": "halal zertifiziert, in Streifen"},
+        {"food_slug": "rice-raw", "grams": 200, "measure": "200 g"},
+        {"food_slug": "bell-pepper-red", "grams": 300, "measure": "2 Paprika", "note": "in Streifen"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "in Streifen"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "gehackt"},
+        {"food_slug": "canola-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "paprika-powder", "grams": 4, "measure": "2 TL"},
+        {"food_slug": "vegetable-broth", "grams": 450, "measure": "450 ml"},
+        {"food_slug": "parsley", "grams": 10, "measure": "1 EL", "note": "gehackt"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Reis garen", "text": "Den Reis mit 400 ml Brühe aufkochen und zugedeckt bei niedriger Hitze 15 Minuten garen, dann 5 Minuten ruhen lassen.", "minutes": 20},
+        {"title": "Halal-Hähnchen anbraten", "text": "Das Halal-Hähnchen in Streifen schneiden und trocken tupfen. Die Hälfte des Öls in der Pfanne stark erhitzen und die Streifen 5 bis 6 Minuten rundum braten, bis sie innen nicht mehr rosa sind. Herausnehmen.", "minutes": 6},
+        {"title": "Gemüse braten", "text": "Das restliche Öl erhitzen, Zwiebel und Paprika 5 Minuten braten, dann Knoblauch und Paprikapulver 1 Minute mitrösten.", "minutes": 6},
+        {"title": "Zusammenführen", "text": "Das Halal-Hähnchen zurück in die Pfanne geben, mit 50 ml Brühe ablöschen, salzen, pfeffern und 2 Minuten durchziehen lassen.", "minutes": 2},
+        {"title": "Servieren", "text": "Den Reis mit der Hähnchen-Paprika-Pfanne anrichten und mit Petersilie bestreuen."}
+      ],
+      "premium": {
+        "step_tips": ["", "Nicht zu viel auf einmal in die Pfanne geben, dann bräunt das Halal-Hähnchen statt zu kochen.", "Paprika soll noch leichten Biss haben.", "", ""],
+        "common_mistakes": ["Das Halal-Hähnchen nicht vollständig durchgaren – Geflügel muss innen weiß sein.", "Schneidebrett für rohes Geflügel nicht gründlich reinigen."],
+        "substitutions": ["Das Halal-Hähnchen durch Kichererbsen aus der Dose ersetzen für eine vegane Variante.", "Paprika teilweise durch Zucchini ersetzen."],
+        "meal_prep": "Hält gekühlt 2 Tage; beim Aufwärmen vollständig durcherhitzen.",
+        "variations": ["Mit Kreuzkümmel und etwas Zitronensaft.", "Mit Erbsen (TK) im Reis."],
+        "serving_tip": "Mit einem Klecks Naturjoghurt servieren. Beim Einkauf auf eine eindeutige Halal-Zertifizierung achten."
+      }
+    },
+    {
+      "slug": "livo-gefuellte-paprika-tomaten",
+      "title": "Gefüllte Paprika und Tomaten mit Reis",
+      "description": "Griechisch inspiriert: Paprika und Tomaten mit Kräuterreis gefüllt und mit Kartoffeln im Ofen gegart.",
+      "access_level": "premium",
+      "difficulty": "Mittel",
+      "servings": 3,
+      "preparation_minutes": 90,
+      "prep_minutes": 25,
+      "cook_minutes": 65,
+      "tags": ["Abendessen", "Vegan", "Meal Prep"],
+      "equipment": ["Auflaufform", "Teelöffel zum Aushöhlen", "Große Schüssel", "Pfanne"],
+      "ingredients": [
+        {"food_slug": "bell-pepper-red", "grams": 450, "measure": "3 Paprika"},
+        {"food_slug": "tomato", "grams": 450, "measure": "3 Tomaten", "note": "groß"},
+        {"food_slug": "rice-raw", "grams": 150, "measure": "150 g"},
+        {"food_slug": "potatoes", "grams": 400, "note": "geschält, in Spalten"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "gehackt"},
+        {"food_slug": "tomato-paste", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "olive-oil", "grams": 40, "measure": "4 EL"},
+        {"food_slug": "oregano", "grams": 2, "measure": "1 TL"},
+        {"food_slug": "parsley", "grams": 15, "measure": "2 EL", "note": "gehackt"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Ofen vorheizen", "text": "Den Backofen auf 190 °C Ober- und Unterhitze vorheizen."},
+        {"title": "Aushöhlen", "text": "Von Paprika und Tomaten einen Deckel abschneiden. Paprika entkernen, Tomaten mit einem Teelöffel aushöhlen und das Tomateninnere fein hacken."},
+        {"title": "Füllung", "text": "Die Hälfte des Öls erhitzen, Zwiebel und Knoblauch 3 Minuten dünsten. Tomatenmark, gehacktes Tomateninneres, Reis, Oregano, Petersilie, Salz und Pfeffer untermischen und 3 Minuten köcheln.", "minutes": 6},
+        {"title": "Füllen", "text": "Das Gemüse zu drei Vierteln füllen, da der Reis aufquillt, in die Form setzen und die Deckel auflegen. Kartoffelspalten dazwischen legen."},
+        {"title": "Backen", "text": "200 ml Wasser in die Form gießen, alles mit dem restlichen Öl beträufeln und zugedeckt 40 Minuten backen. Dann ohne Deckel weitere 20 Minuten backen, bis Reis und Kartoffeln weich sind.", "minutes": 60}
+      ],
+      "premium": {
+        "step_tips": ["", "Die Paprika unten nicht verletzen, sonst läuft die Füllung aus.", "Der Reis wird erst im Ofen gar.", "", "Mit einem Messer prüfen, ob die Kartoffeln weich sind."],
+        "common_mistakes": ["Zu wenig Flüssigkeit in der Form – der Reis bleibt hart."],
+        "substitutions": ["Tomaten durch weitere Paprika ersetzen.", "Mit Feta über der Füllung wird es vegetarisch statt vegan."],
+        "meal_prep": "Hält gekühlt 3 Tage und schmeckt aufgewärmt fast noch besser.",
+        "variations": ["Mit Zucchini als zusätzlichem Gefäß.", "Mit Kreuzkümmel und Zimt in der Füllung."],
+        "serving_tip": "Mit Naturjoghurt oder einem Joghurt-Gurken-Dip servieren."
+      }
+    },
+    {
+      "slug": "livo-nudeln-tomatensauce",
+      "title": "Nudeln mit Tomatensauce",
+      "description": "Schnelle Tomatensauce aus der Dose mit Zwiebel, Knoblauch und Oregano – der Vorrats-Klassiker.",
+      "access_level": "free",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 25,
+      "prep_minutes": 5,
+      "cook_minutes": 20,
+      "tags": ["Mittagessen", "Abendessen", "Vegan", "Budget", "Schnell"],
+      "equipment": ["Großer Topf", "Mittlerer Topf oder Pfanne", "Sieb"],
+      "ingredients": [
+        {"food_slug": "pasta-raw", "grams": 250, "measure": "250 g"},
+        {"food_slug": "canned-tomatoes", "grams": 400, "measure": "1 Dose"},
+        {"food_slug": "tomato-paste", "grams": 15, "measure": "1 EL"},
+        {"food_slug": "onion", "grams": 80, "measure": "1 Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "gehackt"},
+        {"food_slug": "olive-oil", "grams": 15, "measure": "1½ EL"},
+        {"food_slug": "oregano", "grams": 1, "measure": "½ TL"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL", "note": "für Nudelwasser und Sauce"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Wasser aufsetzen", "text": "Reichlich Wasser im großen Topf aufkochen und leicht salzen.", "minutes": 5},
+        {"title": "Sauce ansetzen", "text": "Das Öl im zweiten Topf erhitzen, die Zwiebel 3 Minuten glasig dünsten, dann Knoblauch und Tomatenmark 1 Minute mitrösten.", "minutes": 4},
+        {"title": "Köcheln", "text": "Dosentomaten und Oregano zugeben und die Sauce 10 Minuten offen köcheln lassen. Mit Salz und Pfeffer abschmecken.", "minutes": 10},
+        {"title": "Nudeln kochen", "text": "Währenddessen die Nudeln nach Packungsangabe bissfest kochen. Vor dem Abgießen eine Tasse Nudelwasser abnehmen.", "minutes": 10},
+        {"title": "Vermengen", "text": "Die Nudeln abgießen, mit der Sauce vermengen und bei Bedarf mit etwas Nudelwasser cremiger machen."}
+      ],
+      "premium": {
+        "step_tips": ["", "Tomatenmark kurz rösten nimmt ihm die Säure.", "Ist die Sauce zu sauer, eine Prise Zucker oder etwas geriebene Möhre zugeben.", "", "Die Stärke im Nudelwasser bindet die Sauce."],
+        "common_mistakes": ["Die Sauce zu kurz kochen – sie schmeckt dann wässrig und roh."],
+        "substitutions": ["Nudeln durch Vollkornnudeln ersetzen.", "Oregano durch frisches Basilikum ersetzen."],
+        "meal_prep": "Die Sauce hält gekühlt 4 Tage und lässt sich gut einfrieren – gleich die doppelte Menge kochen.",
+        "variations": ["Mit Thunfisch aus der Dose.", "Mit roten Linsen für eine Bolognese-Variante."],
+        "serving_tip": "Mit etwas geriebenem Käse und Pfeffer servieren."
+      }
+    },
+    {
+      "slug": "livo-thunfisch-nudelsalat",
+      "title": "Nudelsalat mit Thunfisch und Paprika",
+      "description": "Bunter Nudelsalat mit Thunfisch, Paprika, Mais und Tomaten in einem Zitronen-Olivenöl-Dressing.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 25,
+      "prep_minutes": 15,
+      "cook_minutes": 10,
+      "tags": ["Mittagessen", "High Protein", "Pescetarisch", "Meal Prep"],
+      "equipment": ["Großer Topf", "Sieb", "Große Schüssel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "pasta-raw", "grams": 250, "measure": "250 g", "note": "z. B. Fusilli"},
+        {"food_slug": "tuna-canned", "grams": 280, "measure": "2 Dosen", "note": "abgetropft"},
+        {"food_slug": "bell-pepper-red", "grams": 150, "measure": "1 Paprika", "note": "gewürfelt"},
+        {"food_slug": "tomato", "grams": 200, "measure": "2 Tomaten", "note": "gewürfelt"},
+        {"food_slug": "sweetcorn-canned", "grams": 140, "measure": "1 kleine Dose"},
+        {"food_slug": "onion", "grams": 50, "measure": "½ Zwiebel", "note": "rot, in feinen Streifen"},
+        {"food_slug": "olive-oil", "grams": 25, "measure": "2½ EL"},
+        {"food_slug": "lemon-juice", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Nudeln kochen", "text": "Die Nudeln in leicht gesalzenem Wasser bissfest kochen, abgießen und kalt abspülen.", "minutes": 10},
+        {"title": "Dressing", "text": "Olivenöl, Zitronensaft, Salz und Pfeffer in der großen Schüssel verrühren."},
+        {"title": "Schneiden", "text": "Paprika und Tomaten würfeln, Zwiebel in feine Streifen schneiden, Mais abtropfen lassen und den Thunfisch zerpflücken."},
+        {"title": "Mischen", "text": "Nudeln und alle Zutaten mit dem Dressing vermengen und 10 Minuten ziehen lassen, dann nochmals abschmecken.", "minutes": 10}
+      ],
+      "premium": {
+        "step_tips": ["Kaltes Abspülen stoppt den Garprozess und verhindert Verkleben.", "", "Rote Zwiebel kurz in kaltes Wasser legen, dann ist sie milder.", "Nudeln ziehen Dressing – vor dem Servieren eventuell noch etwas Zitrone zugeben."],
+        "common_mistakes": ["Nudeln zu weich kochen – im Salat werden sie matschig."],
+        "substitutions": ["Mais durch Gurke ersetzen.", "Thunfisch durch Kichererbsen ersetzen (dann vegan)."],
+        "meal_prep": "Hält gut verschlossen 2 Tage im Kühlschrank – ideal für die Brotdose.",
+        "variations": ["Mit Joghurt-Dressing statt Olivenöl.", "Mit Oregano und Feta griechisch abwandeln."],
+        "serving_tip": "Leicht gekühlt, aber nicht eiskalt servieren – so schmeckt er am besten."
+      }
+    },
+    {
+      "slug": "livo-spinat-feta-nudelauflauf",
+      "title": "Nudelauflauf mit Spinat und Feta",
+      "description": "Überbackene Nudeln mit TK-Spinat, Feta und einer einfachen Ei-Milch-Mischung.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 4,
+      "preparation_minutes": 50,
+      "prep_minutes": 15,
+      "cook_minutes": 35,
+      "tags": ["Abendessen", "Vegetarisch", "Meal Prep"],
+      "equipment": ["Großer Topf", "Pfanne", "Auflaufform", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "pasta-raw", "grams": 250, "measure": "250 g", "note": "z. B. Rigatoni"},
+        {"food_slug": "spinach-frozen", "grams": 450, "measure": "1 Packung", "note": "aufgetaut, ausgedrückt"},
+        {"food_slug": "feta", "grams": 200, "measure": "1 Packung", "note": "Lab-Art auf der Packung prüfen"},
+        {"food_slug": "egg", "grams": 120, "measure": "2 Eier"},
+        {"food_slug": "milk", "grams": 250, "measure": "250 ml"},
+        {"food_slug": "onion", "grams": 80, "measure": "1 Zwiebel", "note": "gewürfelt"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "gehackt"},
+        {"food_slug": "olive-oil", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Vorbereiten", "text": "Den Backofen auf 200 °C Ober- und Unterhitze vorheizen. Die Nudeln 2 Minuten kürzer als angegeben kochen und abgießen.", "minutes": 8},
+        {"title": "Spinat dünsten", "text": "Das Öl erhitzen, Zwiebel und Knoblauch 3 Minuten dünsten, den ausgedrückten Spinat zugeben und 2 Minuten mitdünsten. Leicht salzen und pfeffern.", "minutes": 5},
+        {"title": "Eiermilch", "text": "Eier und Milch verquirlen, die Hälfte des Fetas hineinbröseln."},
+        {"title": "Schichten", "text": "Nudeln und Spinat in der Form mischen, die Eiermilch darüber gießen und den restlichen Feta darüberbröseln."},
+        {"title": "Backen", "text": "Den Auflauf 20 bis 25 Minuten backen, bis die Eiermilch gestockt ist und der Feta leicht bräunt.", "minutes": 25}
+      ],
+      "premium": {
+        "step_tips": ["Die Nudeln garen im Ofen weiter.", "Spinat gut ausdrücken, sonst wird der Auflauf wässrig.", "Feta ist salzig – deshalb kaum zusätzlich salzen.", "", "Vor dem Anschneiden 5 Minuten ruhen lassen."],
+        "common_mistakes": ["Nudeln voll durchkochen – im Ofen werden sie dann zu weich."],
+        "substitutions": ["Feta durch geriebenen Käse ersetzen (Lab-Art prüfen).", "Spinat durch Brokkoli (TK) ersetzen."],
+        "meal_prep": "Hält gekühlt 3 Tage; portionsweise in der Mikrowelle oder im Ofen aufwärmen.",
+        "variations": ["Mit Tomatenwürfeln zwischen den Nudeln.", "Mit Muskat in der Eiermilch."],
+        "serving_tip": "Mit einem frischen Tomatensalat servieren."
+      }
+    },
+    {
+      "slug": "livo-linsen-bolognese",
+      "title": "Linsen-Bolognese",
+      "description": "Herzhafte Bolognese aus roten Linsen, Möhren und Dosentomaten – vegan und gut zum Vorkochen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 4,
+      "preparation_minutes": 40,
+      "prep_minutes": 10,
+      "cook_minutes": 30,
+      "tags": ["Abendessen", "Mittagessen", "Vegan", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf", "Zweiter Topf für die Nudeln", "Reibe", "Sieb"],
+      "ingredients": [
+        {"food_slug": "pasta-raw", "grams": 300, "measure": "300 g", "note": "z. B. Spaghetti"},
+        {"food_slug": "red-lentils", "grams": 150, "measure": "150 g"},
+        {"food_slug": "canned-tomatoes", "grams": 800, "measure": "2 Dosen"},
+        {"food_slug": "tomato-paste", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "carrot", "grams": 150, "measure": "1 Möhre", "note": "fein gerieben"},
+        {"food_slug": "onion", "grams": 100, "measure": "1 Zwiebel", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "gehackt"},
+        {"food_slug": "olive-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "oregano", "grams": 2, "measure": "1 TL"},
+        {"food_slug": "vegetable-broth", "grams": 300, "measure": "300 ml"},
+        {"food_slug": "salt", "grams": 5, "measure": "1 TL", "note": "für Nudelwasser und Sauce"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Anschwitzen", "text": "Das Öl im Topf erhitzen. Zwiebel und Möhre 5 Minuten dünsten, dann Knoblauch und Tomatenmark 1 Minute mitrösten.", "minutes": 6},
+        {"title": "Linsen zugeben", "text": "Die gespülten Linsen, Dosentomaten, Brühe und Oregano zugeben und aufkochen."},
+        {"title": "Köcheln", "text": "Die Sauce 20 Minuten bei niedriger Hitze köcheln lassen, bis die Linsen weich sind. Regelmäßig umrühren und mit Salz und Pfeffer abschmecken.", "minutes": 20},
+        {"title": "Nudeln kochen", "text": "Währenddessen die Nudeln in leicht gesalzenem Wasser bissfest kochen und abgießen.", "minutes": 10},
+        {"title": "Servieren", "text": "Die Nudeln auf Teller verteilen und die Linsen-Bolognese darüber geben."}
+      ],
+      "premium": {
+        "step_tips": ["Fein geriebene Möhre macht die Sauce süßer und sämiger.", "", "Wird die Sauce zu dick, etwas Wasser nachgießen.", "", ""],
+        "common_mistakes": ["Die Linsen zu kurz kochen – sie bleiben dann körnig."],
+        "substitutions": ["Rote Linsen durch Tellerlinsen ersetzen (dann 35 Minuten kochen).", "Spaghetti durch Vollkornnudeln ersetzen."],
+        "meal_prep": "Die Sauce hält gekühlt 4 Tage und lässt sich hervorragend einfrieren.",
+        "variations": ["Mit Paprikawürfeln oder Zucchini.", "Als Lasagne-Füllung verwenden."],
+        "serving_tip": "Mit frischer Petersilie und Pfeffer servieren."
+      }
+    },
+    {
+      "slug": "livo-kichererbsen-curry",
+      "title": "Kichererbsen-Tomaten-Curry",
+      "description": "Würziges Curry aus Kichererbsen und Dosentomaten, fertig in 30 Minuten.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 30,
+      "prep_minutes": 8,
+      "cook_minutes": 22,
+      "tags": ["Abendessen", "Mittagessen", "Vegan", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf", "Sieb", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "chickpeas-canned", "grams": 480, "measure": "2 Dosen", "note": "abgespült"},
+        {"food_slug": "canned-tomatoes", "grams": 400, "measure": "1 Dose"},
+        {"food_slug": "onion", "grams": 150, "measure": "2 Zwiebeln", "note": "fein gewürfelt"},
+        {"food_slug": "garlic", "grams": 9, "measure": "3 Zehen", "note": "gehackt"},
+        {"food_slug": "canola-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "curry-powder", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "cumin", "grams": 3, "measure": "1 TL"},
+        {"food_slug": "lemon-juice", "grams": 10, "measure": "2 TL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"}
+      ],
+      "steps": [
+        {"title": "Zwiebeln anbraten", "text": "Das Öl im Topf erhitzen und die Zwiebeln bei mittlerer Hitze 6 Minuten goldgelb braten.", "minutes": 6},
+        {"title": "Gewürze rösten", "text": "Knoblauch, Currypulver und Kreuzkümmel zugeben und 1 Minute unter Rühren rösten, bis es duftet.", "minutes": 1},
+        {"title": "Köcheln", "text": "Dosentomaten, Kichererbsen und 150 ml Wasser zugeben und 15 Minuten offen köcheln lassen. Einige Kichererbsen mit dem Löffel zerdrücken.", "minutes": 15},
+        {"title": "Abschmecken", "text": "Mit Zitronensaft und Salz abschmecken und servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Gut gebräunte Zwiebeln geben dem Curry Tiefe.", "Die Gewürze nur kurz rösten, sonst werden sie bitter.", "Zerdrückte Kichererbsen binden die Sauce ohne Sahne.", ""],
+        "common_mistakes": ["Die Kichererbsen nicht abspülen – das Curry wird schaumig und salzig."],
+        "substitutions": ["Einen Teil des Wassers durch Kokosmilch ersetzen, wenn vorhanden.", "Kichererbsen teilweise durch Kartoffelwürfel ersetzen (dann 20 Minuten köcheln)."],
+        "meal_prep": "Hält gekühlt 4 Tage und schmeckt am zweiten Tag noch intensiver.",
+        "variations": ["Zum Schluss 200 g Spinat (TK) unterrühren.", "Mit Naturjoghurt als Topping (dann vegetarisch)."],
+        "serving_tip": "Mit Reis oder Fladenbrot servieren."
+      }
+    },
+    {
+      "slug": "livo-chili-sin-carne",
+      "title": "Chili sin Carne mit Reis",
+      "description": "Veganes Chili mit schwarzen Bohnen, Mais und Paprika, dazu Reis – ideal zum Vorkochen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 4,
+      "preparation_minutes": 45,
+      "prep_minutes": 12,
+      "cook_minutes": 33,
+      "tags": ["Abendessen", "Mittagessen", "Vegan", "Budget", "Meal Prep"],
+      "equipment": ["Großer Topf", "Topf mit Deckel für den Reis", "Sieb", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "black-beans-canned", "grams": 480, "measure": "2 Dosen", "note": "abgespült"},
+        {"food_slug": "sweetcorn-canned", "grams": 280, "measure": "2 kleine Dosen"},
+        {"food_slug": "bell-pepper-red", "grams": 250, "measure": "2 Paprika", "note": "gewürfelt"},
+        {"food_slug": "canned-tomatoes", "grams": 800, "measure": "2 Dosen"},
+        {"food_slug": "tomato-paste", "grams": 30, "measure": "2 EL"},
+        {"food_slug": "onion", "grams": 150, "measure": "2 Zwiebeln", "note": "gewürfelt"},
+        {"food_slug": "garlic", "grams": 9, "measure": "3 Zehen", "note": "gehackt"},
+        {"food_slug": "olive-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "cumin", "grams": 4, "measure": "1½ TL"},
+        {"food_slug": "paprika-powder", "grams": 6, "measure": "1 EL"},
+        {"food_slug": "rice-raw", "grams": 250, "measure": "250 g"},
+        {"food_slug": "salt", "grams": 4, "measure": "¾ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Anbraten", "text": "Das Öl im großen Topf erhitzen. Zwiebeln und Paprika 5 Minuten braten, dann Knoblauch, Tomatenmark, Kreuzkümmel und Paprikapulver 1 Minute mitrösten.", "minutes": 6},
+        {"title": "Köcheln", "text": "Dosentomaten zugeben und 15 Minuten offen köcheln lassen.", "minutes": 15},
+        {"title": "Reis kochen", "text": "Währenddessen den Reis mit 500 ml Wasser und einer Prise Salz aufkochen und zugedeckt 15 Minuten garen.", "minutes": 15},
+        {"title": "Bohnen und Mais", "text": "Bohnen und abgetropften Mais in das Chili geben und weitere 10 Minuten köcheln lassen. Mit Salz und Pfeffer abschmecken.", "minutes": 10},
+        {"title": "Servieren", "text": "Das Chili mit dem Reis in Schalen anrichten."}
+      ],
+      "premium": {
+        "step_tips": ["Geröstete Gewürze geben mehr Aroma als nachträglich eingerührte.", "Je länger das Chili köchelt, desto runder schmeckt es.", "", "Bohnen erst spät zugeben, dann bleiben sie ganz.", ""],
+        "common_mistakes": ["Das Chili zu dünn lassen – lieber offen einkochen, bis es sämig ist."],
+        "substitutions": ["Schwarze Bohnen durch Kidneybohnen ersetzen.", "Einen Teil der Bohnen durch rote Linsen ersetzen (mit etwas mehr Wasser)."],
+        "meal_prep": "Das Chili hält gekühlt 4 Tage und lässt sich portionsweise einfrieren.",
+        "variations": ["Mit einer Prise Zimt und Chiliflocken.", "Mit Naturjoghurt und Frühlingszwiebeln als Topping."],
+        "serving_tip": "Mit frischen Kräutern und einem Zitronenschnitz servieren."
+      }
+    },
+    {
+      "slug": "livo-ofenlachs-kartoffeln",
+      "title": "Ofenlachs auf Kartoffeln und Zwiebeln",
+      "description": "Lachsfilets auf Kartoffelscheiben und Zwiebeln aus einer Form – wenig Aufwand, viel Geschmack.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 50,
+      "prep_minutes": 12,
+      "cook_minutes": 38,
+      "tags": ["Abendessen", "High Protein", "Pescetarisch"],
+      "equipment": ["Große Auflaufform", "Schneidebrett und Messer", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "salmon", "grams": 450, "measure": "3 Filets", "note": "frisch oder aufgetaut"},
+        {"food_slug": "potatoes", "grams": 700, "note": "festkochend, in 5 mm Scheiben"},
+        {"food_slug": "onion", "grams": 200, "measure": "2 Zwiebeln", "note": "halbiert, in dicken Scheiben"},
+        {"food_slug": "olive-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "lemon-juice", "grams": 20, "measure": "1½ EL"},
+        {"food_slug": "paprika-powder", "grams": 3, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 4, "measure": "¾ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Ofen vorheizen", "text": "Den Backofen auf 200 °C Ober- und Unterhitze vorheizen."},
+        {"title": "Kartoffeln vorbacken", "text": "Kartoffelscheiben und Zwiebeln in der Form mit Öl, Salz und Pfeffer mischen und 25 Minuten backen.", "minutes": 25},
+        {"title": "Lachs würzen", "text": "Den Lachs trocken tupfen, mit Paprikapulver, Salz und etwas Zitronensaft würzen."},
+        {"title": "Zusammen garen", "text": "Den Lachs auf die Kartoffeln legen und alles weitere 12 bis 15 Minuten backen, bis der Lachs innen nicht mehr glasig ist.", "minutes": 13},
+        {"title": "Servieren", "text": "Mit dem restlichen Zitronensaft beträufeln und direkt aus der Form servieren."}
+      ],
+      "premium": {
+        "step_tips": ["", "Dünne, gleich dicke Scheiben garen gleichmäßig.", "", "Der Lachs ist gar, wenn er sich mit einer Gabel leicht teilen lässt.", ""],
+        "common_mistakes": ["Den Lachs von Anfang an mitbacken – er wird trocken, bevor die Kartoffeln weich sind."],
+        "substitutions": ["Lachs durch Seelachs (TK) ersetzen, dann 2 Minuten kürzer garen.", "Zwiebeln teilweise durch Möhrenscheiben ersetzen."],
+        "meal_prep": "Reste halten gekühlt 1 Tag und schmecken kalt mit Joghurt-Dip.",
+        "variations": ["Mit Oregano und Tomatenscheiben.", "Mit Brokkoli (TK) für die letzten 12 Minuten."],
+        "serving_tip": "Mit Joghurt-Gurken-Dip oder einem grünen Salat servieren."
+      }
+    },
+    {
+      "slug": "livo-knusper-kichererbsen",
+      "title": "Knusprige Paprika-Kichererbsen",
+      "description": "Geröstete Kichererbsen aus dem Ofen – ein würziger Snack aus nur fünf Zutaten.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 2,
+      "preparation_minutes": 35,
+      "prep_minutes": 8,
+      "cook_minutes": 27,
+      "tags": ["Snack", "Vegan", "Budget"],
+      "equipment": ["Backblech mit Backpapier", "Sieb", "Küchentuch", "Schüssel"],
+      "ingredients": [
+        {"food_slug": "chickpeas-canned", "grams": 240, "measure": "1 Dose", "note": "abgespült"},
+        {"food_slug": "olive-oil", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "paprika-powder", "grams": 3, "measure": "1 TL"},
+        {"food_slug": "cumin", "grams": 1, "measure": "½ TL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"}
+      ],
+      "steps": [
+        {"title": "Vorheizen", "text": "Den Backofen auf 200 °C Umluft vorheizen und ein Blech mit Backpapier belegen."},
+        {"title": "Trocknen", "text": "Die Kichererbsen abspülen, abtropfen lassen und mit einem Küchentuch sehr gründlich trocken reiben. Lose Häutchen entfernen."},
+        {"title": "Würzen", "text": "Die Kichererbsen mit Öl, Paprikapulver, Kreuzkümmel und Salz in einer Schüssel vermengen."},
+        {"title": "Rösten", "text": "Auf dem Blech verteilen und 25 bis 30 Minuten rösten, nach 15 Minuten einmal durchschütteln, bis sie knusprig sind.", "minutes": 27},
+        {"title": "Abkühlen", "text": "Auf dem Blech abkühlen lassen – dabei werden sie noch knuspriger."}
+      ],
+      "premium": {
+        "step_tips": ["", "Je trockener die Kichererbsen, desto knuspriger das Ergebnis.", "", "Bei dunklen Stellen die Temperatur etwas senken.", ""],
+        "common_mistakes": ["Nasse Kichererbsen rösten – sie bleiben weich und zäh."],
+        "substitutions": ["Paprikapulver durch Currypulver ersetzen.", "Olivenöl durch Rapsöl ersetzen."],
+        "meal_prep": "Offen oder in einer Papiertüte halten sie 2 Tage knusprig; luftdicht werden sie weich.",
+        "variations": ["Süß mit Zimt und etwas Honig nach dem Rösten.", "Mit Oregano und Knoblauchpulver."],
+        "serving_tip": "Als Snack oder als Topping für Salate und Suppen."
+      }
+    },
+    {
+      "slug": "livo-thunfisch-bohnen-salat",
+      "title": "Thunfisch-Salat mit Ei, grünen Bohnen und Kichererbsen",
+      "description": "Sättigender Salat mit Thunfisch aus der Dose, gekochten Eiern, grünen Bohnen und Kichererbsen.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 25,
+      "prep_minutes": 12,
+      "cook_minutes": 13,
+      "tags": ["Mittagessen", "Abendessen", "High Protein", "Pescetarisch", "Meal Prep"],
+      "equipment": ["Zwei Töpfe", "Sieb", "Große Schüssel"],
+      "ingredients": [
+        {"food_slug": "tuna-canned", "grams": 280, "measure": "2 Dosen", "note": "abgetropft"},
+        {"food_slug": "egg", "grams": 240, "measure": "4 Eier"},
+        {"food_slug": "green-beans-frozen", "grams": 300, "measure": "300 g"},
+        {"food_slug": "chickpeas-canned", "grams": 240, "measure": "1 Dose", "note": "abgespült"},
+        {"food_slug": "onion", "grams": 60, "measure": "½ Zwiebel", "note": "rot, fein gewürfelt"},
+        {"food_slug": "olive-oil", "grams": 20, "measure": "2 EL"},
+        {"food_slug": "lemon-juice", "grams": 20, "measure": "1½ EL"},
+        {"food_slug": "salt", "grams": 3, "measure": "½ TL"},
+        {"food_slug": "black-pepper", "grams": 0.5, "measure": "1 Prise"}
+      ],
+      "steps": [
+        {"title": "Eier kochen", "text": "Die Eier 9 Minuten hart kochen, kalt abschrecken und pellen.", "minutes": 9},
+        {"title": "Bohnen garen", "text": "Die grünen Bohnen in kochendem Salzwasser 5 Minuten garen und in kaltem Wasser abschrecken.", "minutes": 5},
+        {"title": "Dressing", "text": "Olivenöl, Zitronensaft, Salz und Pfeffer in der großen Schüssel verrühren und die Zwiebel untermischen."},
+        {"title": "Anrichten", "text": "Bohnen und Kichererbsen im Dressing wenden, auf Teller verteilen und mit zerpflücktem Thunfisch und geviertelten Eiern belegen."}
+      ],
+      "premium": {
+        "step_tips": ["Abschrecken verhindert einen grauen Rand am Eigelb.", "Abschrecken erhält die grüne Farbe.", "", ""],
+        "common_mistakes": ["Die Bohnen zu weich kochen – sie sollen noch knacken."],
+        "substitutions": ["Grüne Bohnen durch Gurke und Tomate ersetzen (dann ohne Kochen).", "Kichererbsen durch weiße Bohnen ersetzen."],
+        "meal_prep": "Bestandteile getrennt aufbewahren; Eier und Bohnen halten gekühlt 3 Tage.",
+        "variations": ["Mit gekochten Kartoffeln für eine sättigendere Variante.", "Mit Joghurt-Dressing statt Öl und Zitrone."],
+        "serving_tip": "Mit einer Scheibe Vollkornbrot servieren."
+      }
+    },
+    {
+      "slug": "livo-joghurt-gurken-dip",
+      "title": "Joghurt-Gurken-Dip mit Möhrensticks",
+      "description": "Frischer Dip nach Tzatziki-Art aus Joghurt, geriebener Gurke und Knoblauch, dazu knackige Möhren.",
+      "access_level": "premium",
+      "difficulty": "Einfach",
+      "servings": 3,
+      "preparation_minutes": 15,
+      "prep_minutes": 15,
+      "cook_minutes": 0,
+      "tags": ["Snack", "Vegetarisch", "Budget", "Schnell"],
+      "equipment": ["Reibe", "Sieb", "Schüssel", "Schneidebrett und Messer"],
+      "ingredients": [
+        {"food_slug": "natural-yogurt", "grams": 300, "measure": "300 g"},
+        {"food_slug": "cucumber", "grams": 200, "measure": "½ Gurke"},
+        {"food_slug": "garlic", "grams": 6, "measure": "2 Zehen", "note": "fein gerieben"},
+        {"food_slug": "olive-oil", "grams": 10, "measure": "1 EL"},
+        {"food_slug": "lemon-juice", "grams": 5, "measure": "1 TL"},
+        {"food_slug": "salt", "grams": 2, "measure": "2 Prisen"},
+        {"food_slug": "black-pepper", "grams": 0.3, "measure": "1 Prise"},
+        {"food_slug": "carrot", "grams": 300, "measure": "3 Möhren", "note": "in Stiften"}
+      ],
+      "steps": [
+        {"title": "Gurke reiben", "text": "Die Gurke grob reiben, mit einer Prise Salz mischen und 5 Minuten in einem Sieb abtropfen lassen. Dann gut ausdrücken.", "minutes": 5},
+        {"title": "Dip rühren", "text": "Joghurt mit Knoblauch, Zitronensaft, Salz und Pfeffer verrühren und die Gurke untermischen."},
+        {"title": "Möhren schneiden", "text": "Die Möhren schälen und in fingerdicke Stifte schneiden."},
+        {"title": "Servieren", "text": "Den Dip in eine Schale füllen, mit Olivenöl beträufeln und mit den Möhrensticks servieren."}
+      ],
+      "premium": {
+        "step_tips": ["Gut ausgedrückte Gurke verhindert, dass der Dip wässrig wird.", "10 Minuten Ziehzeit machen den Knoblauch milder.", "", ""],
+        "common_mistakes": ["Zu viel Knoblauch – er wird beim Stehen immer schärfer."],
+        "substitutions": ["Naturjoghurt teilweise durch Skyr ersetzen, dann wird der Dip fester.", "Möhren durch Paprika- oder Gurkensticks ersetzen."],
+        "meal_prep": "Der Dip hält gekühlt 2 Tage, Möhrensticks in Wasser gelagert 3 Tage.",
+        "variations": ["Mit frischem Dill oder Minze.", "Als Beilage zu Ofenkartoffeln oder gefüllter Paprika."],
+        "serving_tip": "Gut gekühlt mit Vollkornbrot oder Gemüsesticks servieren."
+      }
+    }
+  ]
+}
