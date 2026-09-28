@@ -1,5 +1,48 @@
 # Funktionsstatus
 
+## Aktualisierung: Neue Alltagsrezepte, 27. September 2026
+
+- 30 neue, selbst verfasste Rezepte mit Zutaten, die fast jeder zu Hause hat:
+  Kartoffeln (8 Rezepte), Reis (7), Nudeln (4), Eier, Haferflocken, Linsen,
+  Kichererbsen, Bohnen, Dosentomaten, Mehl, Milch, Joghurt/Quark, Brot,
+  TK-Gemüse und Thunfisch. Mehrere kommen mit 3–6 Zutaten aus (z. B.
+  Kartoffel-Tortilla, Pfannkuchen, Milchreis, geröstete Kichererbsen).
+  Der Katalog umfasst damit 40 Rezepte.
+- Kostenlos sind 12 von 40 Rezepten (30 %, wie in der App angegeben), darunter
+  Pellkartoffeln mit Kräuterquark, Bratkartoffeln mit Spiegelei,
+  Rote-Linsen-Dal mit Reis, Nudeln mit Tomatensauce, Apfel-Zimt-Porridge,
+  Rührei auf Vollkornbrot und die Reis-Ei-Bowl (vorher Premium). Die beinahe
+  doppelten Rezepte „Ei-Avocado-Frühstück“ und „Skyr-Hafer-Cup“ sind dafür
+  jetzt Premium.
+- Die zehn bisherigen Rezepte haben ausführliche Schritte, Timer, Utensilien,
+  Haushaltsmaße und Premium-Extras bekommen. Fünf alte, doppelte bzw. wegen
+  fehlender Halal-Kennzeichnung ohnehin ausgeblendete Einträge werden
+  entfernt (`berry-protein-oats`, `salmon-power-bowl`, `vegetable-egg-pan`,
+  `livo-chicken-rice-bowl`, `livo-chicken-avocado-plate`).
+- Halal: kein Schweinefleisch, kein Alkohol (auch kein Essig, keine Sojasauce,
+  kein Vanilleextrakt), keine Gelatine. Einziges Fleischrezept ist der
+  „Halal-Hähnchen-Paprika-Reis“ mit ausdrücklich halal gekennzeichnetem
+  Hähnchen. Bei Käse (Feta) weist die Zutat auf die Lab-Art auf der Packung
+  hin. Alle Texte bestehen die erweiterte Halal-Prüfung (App und Migration
+  `0014`).
+- Nährwerte werden wie bisher aus den Zutatenmengen berechnet. Neue
+  Lebensmittel (47, z. B. „Kartoffeln“, „Zwiebeln“, „Dosentomaten, gehackt“,
+  „Paprikapulver, edelsüß“) stammen aus USDA FoodData Central mit FDC-ID an
+  jedem Datensatz. „Magerquark“ ist ein Näherungswert (USDA fettarmer
+  griechischer Joghurt), weil USDA keinen Quark führt; das steht in der
+  Quellenangabe. „High Protein“ nur ab 20 % Energie aus Protein.
+- Fotos: 25 neue echte Food-Fotos von Pexels (Lizenz auf jeder Fotoseite
+  geprüft, Quellen in `assets/ASSET_SOURCES.md`). Fünf Rezepte ohne ehrlich
+  passendes Foto nutzen vorerst das Standardbild.
+- Technisch: Die Rezepte stehen jetzt geprüft in
+  `supabase/content/livo_recipes.json`; daraus erzeugt
+  `tool/generate_recipe_sql.dart` die wiederholbare Migration
+  `supabase/migrations/0010_recipe_content.sql`. Die veraltete Datei
+  `supabase/imports/curated_recipes.sql` wurde entfernt.
+- **Noch nicht live:** Die Migration ist nicht eingespielt. Bis dahin zeigt
+  die App die bisherigen zehn Kurzrezepte. Kein Einfluss auf Datenschutz:
+  reine Kataloginhalte, keine Nutzer- oder Gesundheitsdaten.
+
 ## Aktualisierung: Premium-Preise und 7-Tage-Test, 27. September 2026
 
 - Die kostenlose Testphase von LIVO Premium dauert jetzt 7 statt 3 Tage. Sie

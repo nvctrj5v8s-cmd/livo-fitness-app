@@ -17,8 +17,10 @@ wird es nicht blind mit geschützten oder nicht weiterverteilbaren Quellen
 vermischt.
 
 Rezepte werden zunächst selbst erstellt und aus den Lebensmittelwerten
-berechnet. `supabase/imports/curated_recipes.sql` enthält 10 originale
-Starter-Rezepte ohne fremde Texte oder Bilder. Fremde Rezepttexte und Bilder
+berechnet. `supabase/content/livo_recipes.json` enthält alle 40 originalen
+LIVO-Rezepte ohne fremde Texte (Fotos: Pexels, siehe
+`assets/ASSET_SOURCES.md`) und erzeugt die Migration
+`supabase/migrations/0010_recipe_content.sql`. Fremde Rezepttexte und Bilder
 werden erst nach Lizenzprüfung übernommen. Die kleine Seed-Datei bleibt der
 reproduzierbare Entwicklungsstart;
 `supabase/imports/usda_foundation.sql` und `supabase/imports/usda_fndds.sql`

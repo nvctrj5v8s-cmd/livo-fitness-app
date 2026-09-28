@@ -30,8 +30,8 @@ benötigt.
 Für den geprüften Lebensmittelimport zuerst `migrations/0002_catalog_metadata.sql`
 ausführen. Die erzeugten Dateien liegen bereits unter `imports/`: Foundation
 mit 354 generischen Lebensmitteln und FNDDS mit 5.431 zubereiteten
-Lebensmitteln. Zusätzlich enthält `imports/curated_recipes.sql` zehn originale
-Starter-Rezepte. Einen neuen Lebensmittelimport kann man lokal so erzeugen:
+Lebensmitteln. Die Rezepte kommen aus `content/livo_recipes.json` (siehe unten).
+Einen neuen Lebensmittelimport kann man lokal so erzeugen:
 
 ```text
 dart run tool/import_usda_foundation.dart --input <foundation.json> --output supabase/imports/usda_foundation.sql
@@ -68,3 +68,25 @@ Das Werkzeug bricht ab, wenn ein Text gegen die Halal-Regel verstößt, eine
 Zutat fehlt oder „High Protein“ weniger als 20 % Energie aus Protein hat.
 Migrationen werden mit der Supabase CLI eingespielt (`supabase db push
 --linked`); alle Rezept-Migrationen sind wiederholbar.
+
+Die JSON-Datei ist die einzige Quelle für alle Rezepte (aktuell 40, davon 12
+kostenlos = 30 %). Sie enthält:
+
+- `foods`: neue Katalog-Lebensmittel mit Werten je 100 g aus USDA FoodData
+  Central (FDC-ID und USDA-Bezeichnung werden als Quelle gespeichert). Die neun
+  ursprünglichen Seed-Lebensmittel (`oats`, `skyr`, `salmon`, `rice`, …) legt
+  die Migration nur an, wenn sie fehlen, und verändert sie nie – so bleiben
+  bestehende Tagebucheinträge unverändert.
+- `recipes`: Titel, Beschreibung, Zeiten, Tags, Utensilien, Zutaten (Slug,
+  Gramm für alle Portionen, Haushaltsmaß, Notiz), Schritte mit Titel und
+  Timer sowie die Premium-Extras. Nährwerte werden nicht eingetragen, sondern
+  in der App aus den Zutatenmengen berechnet.
+- `retired_recipe_slugs`: alte Rezepte, die die Migration löscht.
+
+Zutatennamen sind die Namen der Lebensmittel und werden vom Abgleich „Was
+habe ich zu Hause?“ genutzt; deshalb einheitlich benennen (z. B. immer
+„Kartoffeln“, Gewürzpaprika als „Paprikapulver, edelsüß“). Die Migration
+prüft am Ende, dass alle Rezepte, Zutaten und Premium-Extras gespeichert
+wurden, und bricht sonst ab. Fotos liegen lokal in
+`../assets/images/recipes/livo-<slug>.webp` und werden in
+`lib/core/data/recipe_images.dart` eingetragen.

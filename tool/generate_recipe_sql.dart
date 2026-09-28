@@ -296,7 +296,13 @@ String _sql(
     ..writeln(
       [
         for (final food in _baseFoods)
-          '  (${[_text(food.$1), _text(food.$2), '100', for (final value in [food.$3, food.$4, food.$5, food.$6, food.$7, food.$8, food.$9]) _number(value), _text('curated')].join(', ')})',
+          '  (${[
+            _text(food.$1),
+            _text(food.$2),
+            '100',
+            for (final value in [food.$3, food.$4, food.$5, food.$6, food.$7, food.$8, food.$9]) _number(value),
+            _text('curated'),
+          ].join(', ')})',
       ].join(',\n'),
     )
     ..writeln('on conflict (slug) do nothing;')
