@@ -9,7 +9,10 @@ import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
+import '../domain/kitchen_planning.dart' show weekStartOf;
 import '../domain/recipe_filter.dart';
+import 'cook_from_pantry_page.dart';
+import 'kitchen_format.dart' show countText;
 import 'planning_sheets.dart';
 import 'recipe_card.dart';
 import 'recipe_filters.dart';
@@ -103,7 +106,15 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     style: TextStyle(color: AppColors.textMuted),
                   ),
                 ],
-                const SizedBox(height: 22),
+                const SizedBox(height: 18),
+                AnimatedReveal(
+                  delay: const Duration(milliseconds: 40),
+                  child: CookFromPantryBanner(
+                    pantryCount: controller.planning.pantry.length,
+                    onOpen: () => openCookFromPantry(context),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 70),
                   child: Row(
@@ -401,6 +412,8 @@ class _PlanningGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final planning = controller.planning;
+    final planned = planning.entriesForWeek(weekStartOf(DateTime.now())).length;
     return LayoutBuilder(
       builder: (context, constraints) {
         final columns = constraints.maxWidth >= 760 ? 3 : 1;
@@ -415,7 +428,9 @@ class _PlanningGrid extends StatelessWidget {
               icon: Icons.calendar_month_rounded,
               color: AppColors.mint,
               title: 'Wochenplan',
-              subtitle: '7 Tage vorbereiten',
+              subtitle: planned == 0
+                  ? 'Rezepte auf Tage verteilen'
+                  : '${countText(planned, 'Mahlzeit', 'Mahlzeiten')} diese Woche',
               onTap: () => showWeekPlanSheet(context, controller),
             ),
             _PlanningCard(
@@ -424,7 +439,7 @@ class _PlanningGrid extends StatelessWidget {
               color: AppColors.orange,
               title: 'Einkaufsliste',
               subtitle:
-                  '${controller.shoppingItems.where((item) => !item.done).length} Artikel offen',
+                  '${countText(planning.openShoppingCount, 'Artikel', 'Artikel')} offen',
               onTap: () => showShoppingSheet(context, controller),
             ),
             _PlanningCard(
@@ -432,7 +447,8 @@ class _PlanningGrid extends StatelessWidget {
               icon: Icons.kitchen_outlined,
               color: AppColors.purple,
               title: 'Vorräte',
-              subtitle: '${controller.pantryItems.length} Zutaten verfügbar',
+              subtitle:
+                  '${countText(planning.pantry.length, 'Zutat', 'Zutaten')} zu Hause',
               onTap: () => showPantrySheet(context, controller),
             ),
           ],

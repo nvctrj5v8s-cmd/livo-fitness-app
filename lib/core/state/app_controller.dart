@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../features/discover/application/planning_controller.dart';
+import '../../features/discover/data/planning_store.dart';
 import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
@@ -30,8 +32,14 @@ class AppController extends ChangeNotifier {
     this.diaryRepository,
     this.avatarRepository,
     SubscriptionRepository? subscriptionRepository,
+    PlanningStore? planningStore,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
+       planning = PlanningController(
+         userId: personalizationUserId,
+         store: planningStore,
+         now: now,
+       ),
        subscription = SubscriptionController(
          // Without an account (demo/preview) premium is never available.
          repository:
@@ -43,10 +51,14 @@ class AppController extends ChangeNotifier {
        ) {
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
+    planning.addListener(notifyListeners);
   }
 
   /// LIVO Premium state of this account; see `SubscriptionController`.
   final SubscriptionController subscription;
+
+  /// Week plan, shopping list and pantry of this account (device-local).
+  final PlanningController planning;
   bool? _premiumCatalog;
   bool _catalogRequested = false;
 
@@ -355,6 +367,9 @@ class AppController extends ChangeNotifier {
     _disposed = true;
     subscription
       ..removeListener(_onSubscriptionChanged)
+      ..dispose();
+    planning
+      ..removeListener(notifyListeners)
       ..dispose();
     super.dispose();
   }
@@ -710,31 +725,6 @@ class AppController extends ChangeNotifier {
   }
 
   final Set<String> favoriteRecipeIds = {'berry-oats'};
-
-  List<ShoppingItem> shoppingItems = const [
-    ShoppingItem(id: '1', name: 'Skyr', amount: '500 g'),
-    ShoppingItem(id: '2', name: 'Beeren', amount: '300 g'),
-    ShoppingItem(id: '3', name: 'Lachsfilet', amount: '2 Stück'),
-    ShoppingItem(id: '4', name: 'Avocado', amount: '2 Stück'),
-    ShoppingItem(id: '5', name: 'Vollkornpasta', amount: '1 Packung'),
-  ];
-
-  List<PantryItem> pantryItems = const [
-    PantryItem(id: 'oats', name: 'Haferflocken', amount: '450 g'),
-    PantryItem(id: 'skyr', name: 'Skyr', amount: '500 g'),
-    PantryItem(id: 'pasta', name: 'Vollkornpasta', amount: '1 Packung'),
-    PantryItem(id: 'tomatoes', name: 'Tomaten', amount: '5 Stück'),
-  ];
-
-  List<String?> plannedRecipeIds = const [
-    'berry-oats',
-    'protein-pasta',
-    null,
-    'salmon-bowl',
-    null,
-    null,
-    null,
-  ];
 
   int get consumedCalories => meals.fold(0, (sum, meal) => sum + meal.calories);
   int get consumedProtein => meals.fold(0, (sum, meal) => sum + meal.protein);
@@ -1191,57 +1181,6 @@ class AppController extends ChangeNotifier {
     unawaited(FoodPreferencesStore().saveRecentIds(recentFoodIds));
   }
 
-  void toggleShoppingItem(String id) {
-    shoppingItems = shoppingItems
-        .map((item) => item.id == id ? item.copyWith(done: !item.done) : item)
-        .toList();
-    notifyListeners();
-  }
-
-  void addShoppingItem(String name, {String amount = '1 Stück'}) {
-    final trimmed = name.trim();
-    if (trimmed.isEmpty) return;
-    shoppingItems = [
-      ...shoppingItems,
-      ShoppingItem(
-        id: 'shopping-${DateTime.now().microsecondsSinceEpoch}',
-        name: trimmed,
-        amount: amount,
-      ),
-    ];
-    notifyListeners();
-  }
-
-  void removeShoppingItem(String id) {
-    shoppingItems = shoppingItems.where((item) => item.id != id).toList();
-    notifyListeners();
-  }
-
-  void addPantryItem(String name, {String amount = 'Vorrätig'}) {
-    final trimmed = name.trim();
-    if (trimmed.isEmpty) return;
-    pantryItems = [
-      ...pantryItems,
-      PantryItem(
-        id: 'pantry-${DateTime.now().microsecondsSinceEpoch}',
-        name: trimmed,
-        amount: amount,
-      ),
-    ];
-    notifyListeners();
-  }
-
-  void removePantryItem(String id) {
-    pantryItems = pantryItems.where((item) => item.id != id).toList();
-    notifyListeners();
-  }
-
-  void planRecipe(int dayIndex, String? recipeId) {
-    if (dayIndex < 0 || dayIndex >= plannedRecipeIds.length) return;
-    plannedRecipeIds = [...plannedRecipeIds]..[dayIndex] = recipeId;
-    notifyListeners();
-  }
-
   Future<bool> addRecipeToDiary(
     Recipe recipe, {
     DateTime? date,
@@ -1367,9 +1306,9 @@ class AppController extends ChangeNotifier {
       favoriteRecipeIds.clear();
     }
     waterGlasses = 0;
-    shoppingItems = [];
-    pantryItems = [];
-    plannedRecipeIds = List<String?>.filled(7, null);
+    // Also removes the week plan, shopping list and pantry of this account
+    // from this device.
+    unawaited(planning.clearAll());
     notifyListeners();
   }
 
