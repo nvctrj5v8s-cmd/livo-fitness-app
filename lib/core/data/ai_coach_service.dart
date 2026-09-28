@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -107,19 +108,57 @@ class AiMealPhotoAnalysis {
 }
 
 class AiCoachException implements Exception {
-  const AiCoachException(this.message, {this.code});
+  const AiCoachException(
+    this.message, {
+    this.code,
+    this.remaining,
+    this.dailyLimit,
+  });
 
   /// The server answered that LIVO Premium is required (HTTP 402).
   static const premiumRequiredCode = 'premium_required';
 
+  /// Today's AI requests are used up (HTTP 429 with `daily_limit`).
+  static const dailyLimitCode = 'daily_limit';
+
+  /// The login expired or is missing (HTTP 401/403).
+  static const unauthorizedCode = 'unauthorized';
+
+  /// The request never reached the server (offline, DNS, CORS, …).
+  static const networkCode = 'network';
+
+  /// No answer within the app's waiting time.
+  static const timeoutCode = 'timeout';
+
+  /// The server or the AI service failed; trying again may help.
+  static const unavailableCode = 'unavailable';
+
+  /// The server answered with something the app cannot read.
+  static const invalidResponseCode = 'invalid_response';
+
+  /// The question was rejected (empty or too long).
+  static const invalidMessageCode = 'invalid_message';
+
   final String message;
   final String? code;
 
+  /// Quota values the server sent along with the error, if any.
+  final int? remaining;
+  final int? dailyLimit;
+
   bool get premiumRequired => code == premiumRequiredCode;
+  bool get dailyLimitReached => code == dailyLimitCode;
 
   @override
   String toString() => message;
 }
+
+/// Sends one request to the `ai-coach` Edge Function. Replaceable in tests.
+typedef AiCoachInvoker =
+    Future<FunctionResponse> Function(
+      Map<String, Object?> body, {
+      Duration? timeout,
+    });
 
 AiCoachException? _premiumRequired(FunctionException error) {
   final details = error.details;
@@ -133,11 +172,59 @@ AiCoachException? _premiumRequired(FunctionException error) {
   );
 }
 
+/// Talks to the `ai-coach` Edge Function. All AI requests go through the
+/// backend; the app never holds a provider key.
 class AiCoachService {
-  AiCoachService({SupabaseClient? client}) : _providedClient = client;
+  AiCoachService({SupabaseClient? client, AiCoachInvoker? invoker})
+    : _providedClient = client,
+      _providedInvoker = invoker;
+
+  /// How long the app waits for a coach answer before offering a retry. The
+  /// Edge Function itself stops waiting for the AI after 45 seconds.
+  static const chatTimeout = Duration(seconds: 55);
+  static const historyTimeout = Duration(seconds: 20);
+  static const photoTimeout = Duration(seconds: 70);
+
+  /// Longest question the coach accepts; the server checks the same limit.
+  static const maxMessageLength = 600;
 
   final SupabaseClient? _providedClient;
+  final AiCoachInvoker? _providedInvoker;
   SupabaseClient get _client => _providedClient ?? Supabase.instance.client;
+
+  Future<FunctionResponse> _invoke(
+    Map<String, Object?> body, {
+    Duration? timeout,
+  }) {
+    final invoker = _providedInvoker;
+    if (invoker != null) return invoker(body, timeout: timeout);
+    return _invokeFunction(body, timeout: timeout);
+  }
+
+  Future<FunctionResponse> _invokeFunction(
+    Map<String, Object?> body, {
+    Duration? timeout,
+  }) async {
+    if (timeout == null) {
+      return _client.functions.invoke('ai-coach', body: body);
+    }
+    // Aborting frees the browser connection instead of letting it hang.
+    final abort = Completer<void>();
+    final timer = Timer(timeout, () {
+      if (!abort.isCompleted) abort.complete();
+    });
+    try {
+      return await _client.functions.invoke(
+        'ai-coach',
+        body: body,
+        abortSignal: abort.future,
+      );
+    } on RequestAbortedException {
+      throw TimeoutException('ai-coach', timeout);
+    } finally {
+      timer.cancel();
+    }
+  }
 
   Future<AiCoachReply> send({
     required String message,
@@ -145,81 +232,57 @@ class AiCoachService {
   }) async {
     final cleanMessage = message.trim();
     if (cleanMessage.isEmpty) {
-      throw const AiCoachException('Schreib zuerst eine kurze Frage.');
-    }
-    if (cleanMessage.length > 600) {
       throw const AiCoachException(
-        'Deine Nachricht ist zu lang. Bitte kürze sie auf höchstens 600 Zeichen.',
+        'Schreib zuerst eine kurze Frage.',
+        code: AiCoachException.invalidMessageCode,
+      );
+    }
+    if (cleanMessage.length > maxMessageLength) {
+      throw const AiCoachException(
+        'Deine Nachricht ist zu lang. Bitte kürze sie auf höchstens '
+        '$maxMessageLength Zeichen.',
+        code: AiCoachException.invalidMessageCode,
       );
     }
 
     try {
-      final response = await _client.functions.invoke(
-        'ai-coach',
-        body: {'message': cleanMessage, 'context': context},
+      final response = await _invoke({
+        'message': cleanMessage,
+        'context': context,
+      }, timeout: chatTimeout);
+      return _replyFrom(
+        response.data,
+        emptyMessage:
+            'Der Coach konnte gerade keine Antwort formulieren. Bitte '
+            'versuche es noch einmal.',
       );
-      final data = response.data;
-      if (data is! Map) {
-        throw const AiCoachException(
-          'Der Coach hat keine gültige Antwort erhalten.',
-          code: 'invalid_response',
-        );
-      }
-      final error = data['error'];
-      if (error is String && error.trim().isNotEmpty) {
-        throw AiCoachException(error, code: data['code'] as String?);
-      }
-      final answer = data['answer'];
-      if (answer is! String || answer.trim().isEmpty) {
-        throw const AiCoachException(
-          'Der Coach konnte gerade keine Antwort formulieren.',
-          code: 'invalid_response',
-        );
-      }
-      return AiCoachReply(
-        text: answer.trim(),
-        remaining: _integer(data['remaining']),
-        dailyLimit: _integer(data['daily_limit']),
-      );
-    } on AiCoachException {
-      rethrow;
-    } on FunctionException catch (error) {
-      if (_premiumRequired(error) case final premium?) throw premium;
-      if (error.status == 401 || error.status == 403) {
-        throw const AiCoachException(
-          'Bitte melde dich erneut an, um den Coach zu verwenden.',
-          code: 'unauthorized',
-        );
-      }
-      if (error.status == 429) {
-        throw const AiCoachException(
-          'Dein Nachrichtenlimit für heute ist erreicht. Morgen kannst du wieder schreiben.',
-          code: 'daily_limit',
-        );
-      }
-      throw const AiCoachException(
-        'Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich noch einmal.',
-        code: 'unavailable',
-      );
-    } catch (_) {
-      throw const AiCoachException(
-        'Der Coach ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.',
-        code: 'unavailable',
+    } catch (error) {
+      throw _chatError(
+        error,
+        fallback:
+            'Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich '
+            'noch einmal.',
       );
     }
   }
 
   Future<AiCoachHistory> loadHistory() async {
     try {
-      final response = await _client.functions.invoke(
-        'ai-coach',
-        body: const {'action': 'history'},
-      );
+      final response = await _invoke(const {
+        'action': 'history',
+      }, timeout: historyTimeout);
       final data = response.data;
       if (data is! Map) {
         throw const AiCoachException(
           'Dein Chatverlauf konnte nicht geladen werden.',
-          code: 'invalid_response',
+          code: AiCoachException.invalidResponseCode,
+        );
+      }
+      final error = data['error'];
+      if (error is String && error.trim().isNotEmpty) {
+        throw AiCoachException(
+          'Dein Chatverlauf konnte gerade nicht geladen werden.',
+          code: data['code'] as String? ?? AiCoachException.unavailableCode,
         );
       }
       final rawMessages = data['messages'];
@@ -235,25 +298,36 @@ class AiCoachService {
         remaining: _nullableInteger(data['remaining']),
         dailyLimit: _nullableInteger(data['daily_limit']),
       );
-    } on AiCoachException {
-      rethrow;
-    } on FunctionException catch (error) {
-      if (_premiumRequired(error) case final premium?) throw premium;
-      if (error.status == 401 || error.status == 403) {
+    } catch (error) {
+      throw _chatError(
+        error,
+        fallback: 'Dein Chatverlauf konnte gerade nicht geladen werden.',
+      );
+    }
+  }
+
+  /// Deletes every stored coach message of this account on the server.
+  /// Returns the number of deleted messages. Throws unless the server
+  /// confirms the deletion, so the app never claims a deletion that did not
+  /// happen (for example with an outdated Edge Function).
+  Future<int> clearHistory() async {
+    const notDeleted =
+        'Dein Chatverlauf konnte gerade nicht gelöscht werden. Bitte '
+        'versuche es gleich noch einmal.';
+    try {
+      final response = await _invoke(const {
+        'action': 'clear_history',
+      }, timeout: historyTimeout);
+      final data = response.data;
+      if (data is! Map || data['cleared'] != true) {
         throw const AiCoachException(
-          'Bitte melde dich erneut an, um den Coach zu verwenden.',
-          code: 'unauthorized',
+          notDeleted,
+          code: AiCoachException.invalidResponseCode,
         );
       }
-      throw const AiCoachException(
-        'Dein Chatverlauf konnte gerade nicht geladen werden.',
-        code: 'unavailable',
-      );
-    } catch (_) {
-      throw const AiCoachException(
-        'Dein Chatverlauf konnte gerade nicht geladen werden.',
-        code: 'unavailable',
-      );
+      return _integer(data['deleted']);
+    } catch (error) {
+      throw _chatError(error, fallback: notDeleted);
     }
   }
 
@@ -269,62 +343,23 @@ class AiCoachService {
       );
     }
     try {
-      final response = await _client.functions.invoke(
-        'ai-coach',
-        body: {
-          'action': 'vision',
-          'image_base64': base64Encode(bytes),
-          'mime_type': mimeType,
-          'context': context,
-        },
+      final response = await _invoke({
+        'action': 'vision',
+        'image_base64': base64Encode(bytes),
+        'mime_type': mimeType,
+        'context': context,
+      }, timeout: photoTimeout);
+      return _replyFrom(
+        response.data,
+        emptyMessage:
+            'Auf dem Foto konnte gerade nichts sicher erkannt werden.',
       );
-      final data = response.data;
-      if (data is! Map) {
-        throw const AiCoachException(
-          'Die Bildanalyse hat keine gültige Antwort erhalten.',
-          code: 'invalid_response',
-        );
-      }
-      final error = data['error'];
-      if (error is String && error.trim().isNotEmpty) {
-        throw AiCoachException(error, code: data['code'] as String?);
-      }
-      final answer = data['answer'];
-      if (answer is! String || answer.trim().isEmpty) {
-        throw const AiCoachException(
-          'Auf dem Foto konnte gerade nichts sicher erkannt werden.',
-          code: 'invalid_response',
-        );
-      }
-      return AiCoachReply(
-        text: answer.trim(),
-        remaining: _integer(data['remaining']),
-        dailyLimit: _integer(data['daily_limit']),
-      );
-    } on AiCoachException {
-      rethrow;
-    } on FunctionException catch (error) {
-      if (_premiumRequired(error) case final premium?) throw premium;
-      if (error.status == 401 || error.status == 403) {
-        throw const AiCoachException(
-          'Bitte melde dich erneut an, um die Bildanalyse zu verwenden.',
-          code: 'unauthorized',
-        );
-      }
-      if (error.status == 429) {
-        throw const AiCoachException(
-          'Dein Nachrichtenlimit für heute ist erreicht. Morgen kannst du wieder analysieren.',
-          code: 'daily_limit',
-        );
-      }
-      throw const AiCoachException(
-        'Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.',
-        code: 'unavailable',
-      );
-    } catch (_) {
-      throw const AiCoachException(
-        'Die Bildanalyse ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.',
-        code: 'unavailable',
+    } catch (error) {
+      throw _chatError(
+        error,
+        fallback:
+            'Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es '
+            'erneut.',
       );
     }
   }
@@ -341,15 +376,12 @@ class AiCoachService {
       );
     }
     try {
-      final response = await _client.functions.invoke(
-        'ai-coach',
-        body: {
-          'action': 'meal_photo',
-          'image_base64': base64Encode(bytes),
-          'mime_type': mimeType,
-          'context': context,
-        },
-      );
+      final response = await _invoke({
+        'action': 'meal_photo',
+        'image_base64': base64Encode(bytes),
+        'mime_type': mimeType,
+        'context': context,
+      });
       final data = response.data;
       if (data is! Map) {
         throw const AiCoachException(
@@ -426,26 +458,143 @@ class AiCoachService {
     }
   }
 
+  AiCoachReply _replyFrom(Object? data, {required String emptyMessage}) {
+    if (data is! Map) {
+      throw const AiCoachException(
+        'Der Coach hat keine gültige Antwort geschickt. Bitte versuche es '
+        'noch einmal.',
+        code: AiCoachException.invalidResponseCode,
+      );
+    }
+    final error = data['error'];
+    if (error is String && error.trim().isNotEmpty) {
+      throw AiCoachException(
+        error.trim(),
+        code: data['code'] as String?,
+        remaining: _nullableInteger(data['remaining']),
+        dailyLimit: _nullableInteger(data['daily_limit']),
+      );
+    }
+    final answer = data['answer'];
+    final text = answer is String ? cleanCoachText(answer) : '';
+    if (text.isEmpty) {
+      throw AiCoachException(
+        emptyMessage,
+        code: AiCoachException.invalidResponseCode,
+      );
+    }
+    return AiCoachReply(
+      text: text,
+      remaining: _integer(data['remaining']),
+      dailyLimit: _integer(data['daily_limit']),
+    );
+  }
+
+  /// Maps every failure of a coach request to a clear German message.
+  AiCoachException _chatError(Object error, {required String fallback}) {
+    if (error is AiCoachException) return error;
+    if (error is TimeoutException) {
+      return const AiCoachException(
+        'Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.',
+        code: AiCoachException.timeoutCode,
+      );
+    }
+    if (error is FunctionsFetchException) {
+      return const AiCoachException(
+        'Keine Verbindung zum Coach. Bitte prüfe deine Internetverbindung '
+        'und versuche es erneut.',
+        code: AiCoachException.networkCode,
+      );
+    }
+    if (error is FunctionException) {
+      if (_premiumRequired(error) case final premium?) return premium;
+      final details = error.details;
+      final code = details is Map ? details['code'] : null;
+      final serverMessage = details is Map ? details['error'] : null;
+      final message = serverMessage is String && serverMessage.trim().isNotEmpty
+          ? serverMessage.trim()
+          : null;
+      if (error.status == 401 || error.status == 403) {
+        return const AiCoachException(
+          'Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.',
+          code: AiCoachException.unauthorizedCode,
+        );
+      }
+      if (error.status == 429 && code != 'openai_unavailable') {
+        return AiCoachException(
+          message ??
+              'Dein KI-Tageslimit ist erreicht. Morgen kannst du wieder '
+                  'schreiben.',
+          code: AiCoachException.dailyLimitCode,
+          remaining: 0,
+          dailyLimit: details is Map
+              ? _nullableInteger(details['daily_limit'])
+              : null,
+        );
+      }
+      if (error.status == 400 &&
+          (code == 'invalid_message' || code == 'message_too_long')) {
+        return AiCoachException(
+          message ?? 'Bitte formuliere deine Frage etwas anders.',
+          code: AiCoachException.invalidMessageCode,
+        );
+      }
+      if (code == 'openai_timeout' || error.status == 504) {
+        return const AiCoachException(
+          'Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.',
+          code: AiCoachException.timeoutCode,
+        );
+      }
+      // Server messages of the ai-coach function are short German texts.
+      return AiCoachException(
+        message != null && message.length <= 200 ? message : fallback,
+        code: AiCoachException.unavailableCode,
+      );
+    }
+    return AiCoachException(fallback, code: AiCoachException.unavailableCode);
+  }
+
   AiCoachMessage? _messageFromJson(Map value) {
     final role = value['role'];
     final content = value['content'];
-    if (content is! String || content.trim().isEmpty) return null;
+    if (content is! String) return null;
+    final text = cleanCoachText(content);
+    if (text.isEmpty) return null;
     if (role == 'user') {
-      return AiCoachMessage(role: AiCoachRole.user, text: content.trim());
+      return AiCoachMessage(role: AiCoachRole.user, text: text);
     }
     if (role == 'assistant') {
-      return AiCoachMessage(role: AiCoachRole.assistant, text: content.trim());
+      return AiCoachMessage(role: AiCoachRole.assistant, text: text);
     }
     return null;
   }
 
   int _integer(Object? value) {
     if (value is int) return value;
+    if (value is num && value.isFinite) return value.round();
     return int.tryParse('$value') ?? 0;
   }
 
   int? _nullableInteger(Object? value) {
     if (value is int) return value;
+    if (value is num && value.isFinite) return value.round();
     return int.tryParse('$value');
   }
+}
+
+/// Removes control characters and surplus blank lines from coach text. An
+/// answer without any letter or digit counts as empty (garbled output).
+String cleanCoachText(String value) {
+  final text = value
+      .replaceAll('\r\n', '\n')
+      .replaceAll('\r', '\n')
+      .replaceAll(
+        RegExp('[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F�​]'),
+        '',
+      )
+      .replaceAll(RegExp(r'[ \t]+\n'), '\n')
+      .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+      .trim();
+  if (!RegExp(r'[\p{L}\p{N}]', unicode: true).hasMatch(text)) return '';
+  return text;
 }
