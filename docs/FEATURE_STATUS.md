@@ -30,8 +30,18 @@
 - Rezeptdetail: Keine Layoutfehler mehr bei großer Systemschrift auf
   schmalen Handys (Makro-Anteile und Zutatenmengen umbrechen jetzt).
 - Tippfehler ohne Umlaute im Tagebuch korrigiert („Nährwerte“, „Änderungen“).
-- Kein Deploy und keine neue Migration nötig; alle Änderungen liegen in der
-  App.
+- Halal-Regel verschärft: Rund 200 weitere Katalogeinträge werden jetzt
+  gesperrt, darunter Cocktails (Daiquiri, Margarita, Martini, Tequila),
+  Wurst- und Schweineprodukte (Bologna, Bratwurst, Chorizo, Spam, Hot Dog),
+  Burger, Steaks, Innereien, Wild und Geflügel ohne Halal-Kennzeichnung sowie
+  Gummibärchen und Marshmallows. Gleichzeitig sind harmlose Einträge wieder
+  sichtbar, die vorher fälschlich gesperrt waren (z. B. Ziegenkäse,
+  Ziegenmilch, Entenei und fleischlose Gerichte mit „meatless“). Details:
+  `HALAL_CONTENT_POLICY.md`.
+- Die App-Änderungen wirken sofort. Für die Datenbank muss noch die Migration
+  `0014_halal_terms_extended.sql` ausgeführt werden, und die Edge Function
+  `barcode-lookup` muss neu deployt werden. Erst danach gelten die neuen
+  Begriffe auch serverseitig.
 
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
