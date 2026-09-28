@@ -305,16 +305,28 @@ class _PrivacySheet extends StatelessWidget {
           const SurfaceCard(
             child: Column(
               children: [
-                _DataRow(icon: Icons.person_outline, label: 'Profil & Ziele'),
+                _DataRow(
+                  icon: Icons.person_outline,
+                  label: 'Profil & Ziele',
+                  place: 'IM KONTO',
+                ),
                 Divider(height: 25),
                 _DataRow(
                   icon: Icons.restaurant_outlined,
                   label: 'Mahlzeiten & Nährwerte',
+                  place: 'IM KONTO',
                 ),
                 Divider(height: 25),
                 _DataRow(
-                  icon: Icons.insights_outlined,
-                  label: 'Fortschrittsdaten',
+                  icon: Icons.photo_camera_outlined,
+                  label: 'KI-Foto & KI-Chat',
+                  place: 'KI-DIENST',
+                ),
+                Divider(height: 25),
+                _DataRow(
+                  icon: Icons.account_circle_outlined,
+                  label: 'Profilbild & Erinnerungen',
+                  place: 'NUR GERÄT',
                 ),
               ],
             ),
@@ -348,7 +360,10 @@ class _PrivacySheet extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           const Text(
-            'Aktuell verlässt kein Profil- oder Ernährungswert diese Demo. Vor dem Backend folgen Einwilligung, Verschlüsselung, Export und ein vollständiger Löschprozess.',
+            'Profil, Ziele und Tagebuch werden in deinem LIVO-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '
+            'Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. '
+            'Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. '
+            'Export und vollständige Kontolöschung in der App folgen noch.',
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,
@@ -365,8 +380,10 @@ class _PrivacySheet extends StatelessWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Demodaten löschen?'),
-        content: const Text(
-          'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispieldaten wieder.',
+        content: Text(
+          controller.personalizationUserId == null
+              ? 'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispieldaten wieder.'
+              : 'Einkaufsliste, Vorräte, Wochenplan und Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.',
         ),
         actions: [
           TextButton(
@@ -388,9 +405,14 @@ class _PrivacySheet extends StatelessWidget {
 }
 
 class _DataRow extends StatelessWidget {
-  const _DataRow({required this.icon, required this.label});
+  const _DataRow({
+    required this.icon,
+    required this.label,
+    required this.place,
+  });
   final IconData icon;
   final String label;
+  final String place;
 
   @override
   Widget build(BuildContext context) {
@@ -399,7 +421,7 @@ class _DataRow extends StatelessWidget {
         Icon(icon, color: AppColors.primary),
         const SizedBox(width: 12),
         Expanded(child: Text(label)),
-        const StatusPill(label: 'NUR LOKAL'),
+        StatusPill(label: place),
       ],
     );
   }

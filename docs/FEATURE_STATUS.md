@@ -1,5 +1,38 @@
 # Funktionsstatus
 
+## Aktualisierung: Fehlerbehebungen, 27. September 2026
+
+- Lebensmittelsuche: Der Katalog wird jetzt seitenweise geladen. Bei der
+  Standardgrenze von Supabase (1.000 Zeilen pro Abfrage) kamen vorher nur etwa
+  ein Sechstel der rund 5.800 importierten Lebensmittel in der App an;
+  Rezepte, deren Zutaten dahinter lagen, zeigten zu niedrige Nährwerte.
+- Barcode: Produkte, die gegen die Halal-Regel verstoßen, zeigen wieder den
+  richtigen Hinweis statt „keine gültige Serverantwort“. Nach einem
+  Fehlschlag wird derselbe Barcode nicht mehrmals pro Sekunde erneut gesucht
+  (das verbrauchte sonst das Abfragelimit).
+- Gescannte Produkte lassen sich nach dem Eintragen wieder bearbeiten und
+  duplizieren („Lebensmittel konnte nicht mehr gefunden werden“ ist behoben).
+- Einträge lassen sich jetzt im Bearbeiten-Fenster löschen („Eintrag
+  löschen“, mit Rückfrage) – auch auf der Startseite, wo es vorher keinen Weg
+  zum Löschen gab. Gespeicherte Einträge werden auch in Supabase gelöscht.
+- Ein schneller Doppeltipp auf „Hinzufügen“ erzeugt keine doppelten
+  Tagebucheinträge mehr.
+- Einträge eines Tages erscheinen in der Reihenfolge, in der sie eingetragen
+  wurden (vorher nach dem Neuladen umgekehrt).
+- Fehlermeldungen im Tagebuch sind deutsch statt technischer englischer
+  Servertexte.
+- Datenschutz-Fenster: Der falsche Satz „Aktuell verlässt kein Profil- oder
+  Ernährungswert diese Demo“ wurde ersetzt. Es zeigt jetzt ehrlich, was im
+  Konto (Supabase) liegt, was an den KI-Dienst (OpenAI) geht und was nur auf
+  dem Gerät bleibt. „Lokale Demodaten löschen“ blendet bei angemeldeten
+  Konten keine gespeicherten Mahlzeiten und Favoriten mehr aus, die gar nicht
+  gelöscht wurden.
+- Rezeptdetail: Keine Layoutfehler mehr bei großer Systemschrift auf
+  schmalen Handys (Makro-Anteile und Zutatenmengen umbrechen jetzt).
+- Tippfehler ohne Umlaute im Tagebuch korrigiert („Nährwerte“, „Änderungen“).
+- Kein Deploy und keine neue Migration nötig; alle Änderungen liegen in der
+  App.
+
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
 - Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes

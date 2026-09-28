@@ -5,6 +5,7 @@ import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import 'delete_entry_dialog.dart';
 
 Future<void> showCustomMealSheet(
   BuildContext context, {
@@ -437,6 +438,10 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                       ),
                     ),
                   ),
+                  if (widget.entry != null) ...[
+                    const SizedBox(height: 8),
+                    DeleteEntryButton(onPressed: _saving ? null : _delete),
+                  ],
                 ],
               ),
             ),
@@ -493,6 +498,25 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
       ],
     ),
   );
+
+  Future<void> _delete() async {
+    final entry = widget.entry;
+    if (_saving || entry == null) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    final deleted = await confirmDeleteDiaryEntry(context, entry);
+    if (!mounted) return;
+    if (deleted) {
+      Navigator.pop(context);
+      return;
+    }
+    setState(() {
+      _saving = false;
+      _error = AppScope.of(context).diaryError;
+    });
+  }
 
   Future<void> _save() async {
     if (_saving) return;
