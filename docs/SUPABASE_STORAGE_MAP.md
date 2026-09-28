@@ -11,6 +11,7 @@ angemeldeten Konto gehören sollen.
 | Premium-Rezeptextras (Profi-Tipps, Fehler, Austausch, Meal-Prep, Varianten) | `recipe_premium_details` | Katalogdaten; RLS gibt sie nur an Konten mit aktivem Premium oder Testphase heraus |
 | Getrackte Mahlzeiten und Mengen | `meals`, `meal_items` | Tagebuch und Serie sollen geräteübergreifend stimmen |
 | Rezeptfavoriten | `favorites` | gehören zum Konto |
+| LIVO-Coach-Verlauf (höchstens 100 Nachrichten, 90 Tage, jederzeit löschbar) und KI-Tageszähler | `ai_chat_messages`, `ai_chat_usage` | Chat bleibt beim Gerätewechsel erhalten; Details `AI_COACH_PRIVACY.md` |
 | Premium-Status | `entitlements` | später nur vom Kauf-Backend veränderbar |
 
 ## Bleibt nur auf dem Gerät

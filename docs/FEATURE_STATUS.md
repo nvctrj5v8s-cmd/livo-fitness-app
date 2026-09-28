@@ -1,5 +1,38 @@
 # Funktionsstatus
 
+## Aktualisierung: KI-Coach-Chat, 27. September 2026
+
+- Chat überarbeitet: „Coach schreibt …“-Anzeige, Eingabe und Senden während
+  der Antwort gesperrt (kein Doppelsenden), Zeichenzähler bis 600 Zeichen,
+  automatisches Scrollen (lange Antworten zeigen ihren Anfang), Eingabefeld
+  sitzt auf dem Handy direkt über Tastatur bzw. Navigation.
+- Klare deutsche Hinweise mit „Erneut versuchen“ für Verbindungsfehler,
+  Zeitüberschreitung (55 s in der App, 45 s für die KI im Server) und
+  Serverfehler; Tageslimit sperrt die Eingabe bis zum nächsten Tag ohne
+  sinnlosen Wiederholen-Knopf; abgelaufenes Premium/Testphase führt zum
+  Premium-Hinweis. Eine fehlgeschlagene Frage wird beim Wiederholen nicht
+  doppelt angezeigt; nach einer Zeitüberschreitung wird eine inzwischen
+  gespeicherte Antwort übernommen statt erneut bezahlt.
+- Antworten mit Listen und **fett** werden sauber dargestellt, ohne rohe
+  Sternchen. Leere oder unlesbare KI-Antworten werden abgefangen; fehlgeschlagene
+  KI-Anfragen zählen nach Migration 0013 nicht mehr zum Tageslimit.
+- Neue, strengere Systemanweisung (LIVO-Rolle, Halal-Regel, keine Diagnosen,
+  Medikamente, Supplement-Dosierungen oder Extremdiäten, Verweis auf Hilfe
+  bei Minderjährigen, Schwangerschaft, Essstörungen und Erkrankungen).
+- Premium-Status nicht ladbar (offline): Hinweis mit „Erneut versuchen“ statt
+  fälschlich der Paywall. Nach beendeter Testphase passt der Text.
+- Verlauf: bleibt pro Konto gespeichert und wird beim Öffnen geladen (letzte
+  100 Nachrichten, höchstens 90 Tage; an die KI gehen nur die letzten 12).
+  „Neuer Chat“ bzw. „Verlauf löschen“ löscht nach Rückfrage alles endgültig
+  auf dem Server – auch ohne Premium. Lange Antworten (über 1200 Zeichen)
+  gingen bisher komplett aus dem Verlauf verloren; das ist behoben.
+- Kontext „Kalorien heute“ nutzt jetzt wirklich den heutigen Tag, nicht den
+  gerade im Tagebuch geöffneten Tag.
+- Live noch nötig: zuerst Migration `0013_ai_coach_chat.sql` ausführen, dann
+  die Edge Function `ai-coach` neu deployen. Die derzeit deployte Version
+  (Stand vor dem Premium-Umbau) kennt weder Premium-Pflicht noch „Verlauf
+  löschen“. Details: `AI_COACH_PRIVACY.md`.
+
 ## Aktualisierung: Halal-Inhaltsregel, 26. September 2026
 
 - Schweinefleisch, Alkohol, Gelatine und nicht eindeutig halal gekennzeichnetes
