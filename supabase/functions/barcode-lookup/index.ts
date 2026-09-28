@@ -10,30 +10,98 @@ const sourceUrl = 'https://world.openfoodfacts.org'
 const sourceLicense = 'Open Database License (ODbL)'
 const sourceAttribution = 'Open Food Facts contributors'
 
+// Same lists and rules as lib/core/data/halal_content_policy.dart and
+// supabase/migrations/0014_halal_terms_extended.sql; keep all three in sync.
 const hardForbiddenTerms = [
-  'pork', 'pig', 'swine', 'schwein', 'schweine', 'wildschwein',
-  'bacon', 'ham', 'prosciutto', 'salami', 'pepperoni', 'lard', 'speck',
-  'gelatin', 'gelatine', 'blood', 'blut',
-  'alcohol', 'alkohol', 'ethanol', 'beer', 'bier', 'wine', 'wein',
-  'rotwein', 'weisswein', 'redwine', 'whitewine',
-  'whisky', 'whiskey', 'vodka', 'rum', 'gin', 'brandy', 'cognac',
-  'champagne', 'schnapps', 'liqueur', 'liquor', 'likoer', 'sherry',
-  'sake', 'cider', 'mead',
+  'pork', 'pig', 'swine', 'boar', 'schwein', 'schweine', 'wildschwein',
+  'bacon', 'ham', 'prosciutto', 'salami', 'pepperoni', 'lard', 'lardo',
+  'lardon', 'speck', 'spam', 'scrapple', 'chitterling', 'chitterlings',
+  'mortadella', 'pancetta', 'guanciale', 'capicola', 'liverwurst',
+  'schinken', 'schmalz', 'kassler', 'kasseler', 'eisbein', 'saumagen',
+  'leberkaese', 'blutwurst', 'black pudding', 'eggs benedict',
+  'egg benedict', 'blood', 'blut', 'gelatin',
+  'gelatine', 'collagen', 'kollagen', 'aspic', 'aspik', 'suelze', 'gummy',
+  'gummies', 'gummi', 'fruchtgummi', 'weingummi', 'marshmallow', 'jellybean',
+  'jelly bean', 'jelly beans', 'jelly candy', 'jelly candies', 'jello',
+  'jell o', 'panna cotta', 'alcohol', 'alkohol', 'ethanol', 'beer', 'bier',
+  'radler', 'wine', 'wein', 'rotwein', 'weisswein', 'redwine', 'whitewine',
+  'gluehwein', 'weinbrand', 'sekt', 'prosecco', 'champagne', 'vermouth',
+  'wermut', 'sherry', 'sake', 'cider', 'hard seltzer', 'mead', 'whisky',
+  'whiskey', 'bourbon', 'scotch', 'vodka', 'rum', 'rumtopf', 'rumkugel',
+  'rumkugeln', 'gin', 'brandy', 'cognac', 'armagnac', 'calvados', 'grappa',
+  'ouzo', 'raki', 'absinth', 'absinthe', 'pisco', 'mezcal', 'tequila',
+  'kirschwasser', 'obstler', 'schnapps', 'schnaps', 'liqueur', 'liquor',
+  'likoer', 'amaretto', 'kahlua', 'baileys', 'aperol', 'campari', 'daiquiri',
+  'margarita', 'martini', 'mojito', 'mimosa', 'manhattan', 'negroni',
+  'cosmopolitan', 'caipirinha', 'screwdriver', 'sangria', 'eggnog', 'punsch',
+  'bowle', 'bloody mary', 'long island', 'pina colada', 'irish coffee',
+  'white russian', 'black russian', 'mai tai', 'hot toddy', 'rum punch',
+  'mint julep', 'tom collins', 'cuba libre', 'cocktail',
 ]
 const landAnimalMeatTerms = [
   'meat', 'fleisch', 'chicken', 'huhn', 'haehnchen', 'hen', 'poultry',
   'turkey', 'pute', 'truthahn', 'beef', 'rind', 'veal', 'kalb', 'lamb',
-  'lamm', 'mutton', 'goat', 'ziege', 'duck', 'ente', 'venison', 'wurst',
-  'sausage',
+  'lamm', 'mutton', 'goat', 'ziege', 'duck', 'ente', 'goose', 'gans',
+  'gaense', 'quail', 'wachtel', 'pheasant', 'fasan', 'venison', 'deer',
+  'elk', 'moose', 'hirsch', 'reh', 'bison', 'ostrich', 'rabbit', 'hare',
+  'kaninchen', 'frog', 'froschschenkel', 'wurst', 'sausage', 'bratwurst',
+  'knockwurst', 'knackwurst', 'bologna', 'frankfurter', 'frankfurters',
+  'franks', 'hot dog', 'hot dogs', 'hotdog', 'chorizo', 'kielbasa',
+  'andouille', 'pastrami', 'jerky', 'mett', 'steak', 'steaks', 'ribeye',
+  'sirloin', 'tenderloin', 'porterhouse', 'brisket', 'rib', 'ribs',
+  'sparerib', 'oxtail', 'ochsenschwanz', 'tongue', 'tripe', 'kutteln',
+  'pansen', 'gizzard', 'sweetbread', 'giblet', 'offal', 'innereien', 'liver',
+  'livers', 'leber', 'hamburger', 'cheeseburger', 'chiliburger', 'whopper',
+  'big mac', 'salisbury', 'sloppy joe', 'pot roast', 'meatball', 'meatloaf',
+  'frikadelle', 'bulette', 'buletten', 'hackfleisch', 'gehacktes',
+  'kotelett', 'schnitzel', 'gulasch', 'goulash', 'bolognese', 'gyro',
+  'gyros', 'doener', 'doner', 'kebab', 'kebap', 'shawarma', 'schawarma',
+  'carne', 'carnitas', 'barbacoa', 'birria', 'pozole', 'menudo', 'tamale',
+  'tamales', 'reuben', 'club sandwich', 'italian sandwich', 'cuban sandwich',
+  'french dip', 'shepherd s pie', 'shepherds pie', 'wonton soup',
+  'soup wonton', 'wonton dumpling', 'pot sticker', 'pot stickers',
+  'barbecue sandwich', 'frito pie',
 ]
 const halalMarkers = ['halal', 'zabiha', 'dhabiha']
-const compoundRoots = new Set([
-  'schwein', 'bacon', 'prosciutto', 'salami', 'pepperoni', 'gelatin',
-  'alkohol', 'alcohol', 'ethanol', 'beer', 'whisky', 'whiskey', 'vodka',
-  'brandy', 'cognac', 'champagne', 'schnapps', 'liqueur', 'liquor',
-  'haehnchen', 'chicken', 'fleisch', 'meat', 'rind', 'beef', 'kalb',
-  'veal', 'lamm', 'lamb', 'pute', 'turkey', 'ente', 'duck', 'sausage',
+// Words starting with these roots match ("schweinefleisch").
+const prefixRoots = new Set([
+  'schwein', 'bacon', 'prosciutto', 'salami', 'pepperoni', 'lardon',
+  'mortadella', 'pancetta', 'chitterling', 'liverwurst', 'schinken',
+  'schmalz', 'gelatin', 'gummi', 'gummy', 'fruchtgummi', 'marshmallow',
+  'jellybean', 'alkohol', 'alcohol', 'ethanol', 'beer', 'whisky', 'whiskey',
+  'bourbon', 'vodka', 'brandy', 'cognac', 'champagne', 'prosecco',
+  'vermouth', 'tequila', 'schnapps', 'liqueur', 'liquor', 'amaretto',
+  'daiquiri', 'margarita', 'martini', 'mojito', 'sangria', 'eggnog',
+  'haehnchen', 'chicken', 'fleisch', 'meat', 'rind', 'beef', 'kalb', 'veal',
+  'lamm', 'lamb', 'pute', 'turkey', 'ente', 'duck', 'sausage', 'bratwurst',
+  'frankfurter', 'hotdog', 'chorizo', 'pastrami', 'kielbasa', 'hamburger',
+  'cheeseburger', 'sparerib', 'gizzard', 'sweetbread', 'giblet', 'liver',
+  'leber', 'kaninchen', 'frikadelle', 'hackfleisch', 'kotelett', 'schnitzel',
+  'gulasch', 'goulash',
 ])
+// Longer words ending with these roots match ("leberwurst").
+const suffixRoots = new Set([
+  'fleisch', 'wurst', 'schinken', 'schmalz', 'steak', 'schnitzel',
+  'kotelett', 'gulasch', 'likoer',
+])
+// "Beeren" (berries) is not "beer".
+const prefixExceptions: Record<string, string[]> = { beer: ['beere'] }
+// Removed before any check: harmless foods containing a listed word.
+const harmlessPhrases = [
+  'blood orange', 'blood oranges', 'hamburger bun', 'hamburger buns',
+  'hamburger roll', 'hamburger rolls', 'hot dog bun', 'hot dog buns',
+  'hot dog roll', 'hot dog rolls', 'quail egg', 'quail eggs', 'goose egg',
+  'goose eggs', 'duck egg', 'duck eggs', 'goat cheese', 'cheese goat',
+  'goat milk', 'goats milk', 'goat s milk', 'milk goat', 'cod liver',
+  'steak sauce', 'salmon steak', 'tuna steak', 'fish steak',
+  'swordfish steak', 'halibut steak', 'cauliflower steak', 'sweet tamale',
+  'tamale sweet', 'fruchtfleisch', 'kokosfleisch', 'butterschmalz',
+  'lebertran', 'lachssteak', 'thunfischsteak', 'fischsteak',
+  'blumenkohlsteak', 'tofusteak', 'sellerieschnitzel', 'tofuschnitzel',
+  'fruit cocktail', 'cocktail sauce', 'shrimp cocktail', 'prawn cocktail',
+  'juice cocktail', 'cocktail tomato', 'cocktail tomatoes',
+  'meatless',
+]
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
@@ -242,7 +310,7 @@ function catalogText(row: Record<string, unknown>, labels?: unknown): string {
 }
 
 function halalRestriction(value: string): string | null {
-  const normalized = normalizeForHalal(value)
+  const normalized = withoutHarmlessPhrases(normalizeForHalal(value))
   if (!normalized) return null
   if (hardForbiddenTerms.some((term) => containsTerm(normalized, term))) {
     return 'forbidden'
@@ -264,11 +332,29 @@ function normalizeForHalal(value: string): string {
     .trim()
 }
 
+function withoutHarmlessPhrases(normalized: string): string {
+  let padded = ` ${normalized} `
+  for (const phrase of harmlessPhrases) {
+    // Repeat: adjacent matches share their separating space.
+    while (padded.includes(` ${phrase} `)) {
+      padded = padded.replaceAll(` ${phrase} `, ' ')
+    }
+  }
+  return padded.trim()
+}
+
+// Phrases match as whole words; single words match exactly, or as prefix /
+// suffix of a compound for the listed roots ("gin" never matches "ginger").
 function containsTerm(normalizedValue: string, term: string): boolean {
-  const normalizedTerm = normalizeForHalal(term)
+  if (term.includes(' ')) return ` ${normalizedValue} `.includes(` ${term} `)
+  const exceptions = prefixExceptions[term] ?? []
+  const prefix = prefixRoots.has(term)
+  const suffix = suffixRoots.has(term)
   return normalizedValue.split(' ').some((word) =>
-    word === normalizedTerm ||
-    (compoundRoots.has(normalizedTerm) && word.startsWith(normalizedTerm))
+    word === term ||
+    (prefix && word.startsWith(term) &&
+      !exceptions.some((exception) => word.startsWith(exception))) ||
+    (suffix && word.length > term.length && word.endsWith(term))
   )
 }
 

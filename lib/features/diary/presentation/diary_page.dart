@@ -207,7 +207,7 @@ class _WeekSelector extends StatelessWidget {
             ),
             IconButton.filledTonal(
               onPressed: onNext,
-              tooltip: 'Naechste Woche',
+              tooltip: 'Nächste Woche',
               icon: const Icon(Icons.chevron_right_rounded),
             ),
           ],
@@ -363,7 +363,7 @@ class _DiarySummary extends StatelessWidget {
             const _DiaryHint(
               icon: Icons.info_outline_rounded,
               text:
-                  'Du liegst ueber deinem Tagesziel. Das ist eine Orientierung, keine Bewertung.',
+                  'Du liegst über deinem Tagesziel. Das ist eine Orientierung, keine Bewertung.',
             ),
           ],
         ],

@@ -23,6 +23,39 @@ vegane Lebensmittel bleiben möglich.
   „Beeren“ wurde vorher als „beer“ (Bier) blockiert.
 - `tool/generate_recipe_sql.dart` prüft neue Rezeptinhalte vor dem Import mit
   derselben Regel und bricht ab, statt Zeilen still zu überspringen.
+- Migration `0014_halal_terms_extended.sql` (27. September 2026) erweitert die
+  Begriffslisten deutlich: Cocktails und Spirituosen (z. B. Daiquiri,
+  Margarita, Martini, Tequila, Scotch, Bourbon, Sangria, Eggnog, Glühwein,
+  Eierlikör), Schweine- und Wurstprodukte (z. B. Bologna, Bratwurst, Chorizo,
+  Spam, Mortadella, Pancetta, Schinken, Schmalz, Leberwurst, Hot Dog),
+  Fleischgerichte und Innereien (z. B. Hamburger, Cheeseburger, Steak, Ribs,
+  Zunge, Kutteln, Leber, Kaninchen, Wachtel, Fasan, Gans, Bison, Frikadellen,
+  Gyros, Döner) sowie Süßwaren, die meist Gelatine enthalten (Gummibärchen,
+  Fruchtgummi, Marshmallows, Jelly Beans, Aspik, Panna cotta).
+- Dieselben Listen stehen in `lib/core/data/halal_content_policy.dart`, in
+  der Migration 0014 und in `supabase/functions/barcode-lookup/index.ts`. Ein
+  Test (`test/halal_content_policy_test.dart`) prüft, dass alle drei gleich
+  sind.
+
+## Wie die Wortsuche funktioniert
+
+- Text wird kleingeschrieben, Umlaute werden ersetzt (ä → ae, ö → oe,
+  ü → ue, ß → ss), alle anderen Zeichen werden zu Leerzeichen.
+- Harmlose Ausdrücke werden zuerst entfernt, z. B. „blood orange“,
+  „goat cheese“, „hamburger bun“, „quail egg“, „cod liver“, „steak sauce“,
+  „Fruchtfleisch“, „Butterschmalz“, „meatless“.
+- Begriffe gelten nur als ganzes Wort: „gin“ sperrt nicht „ginger“, „rum“
+  nicht „drum“ oder „serum“. Mehrwortbegriffe („bloody mary“, „hot dog“)
+  müssen genau so vorkommen.
+- Einige Wortstämme gelten auch am Wortanfang („Schweinefleisch“,
+  „Gummibärchen“, „Tequila-Sunrise“) und einige deutsche Endungen auch am
+  Wortende („Leberwurst“, „Hackfleisch“, „Rumpsteak“, „Eierlikör“).
+- Im Zweifel wird gesperrt. Dadurch werden auch einige eigentlich harmlose
+  Einträge blockiert, etwa „Hot dog, vegetarian“ oder „Margarita mix,
+  nonalcoholic“. Das ist gewollt, bis eine geprüfte Ausnahme ergänzt wird.
+- Bekannte Grauzonen ohne eindeutiges Wort bleiben erlaubt, zum Beispiel
+  „Gravy, NFS“, „Burrito, NFS“ oder „Enchilada, NFS“. Hier müssen Nutzer die
+  Zutaten selbst prüfen.
 
 ## Wichtige Grenze
 

@@ -516,12 +516,15 @@ class _MacroSplit extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  Text(
-                    '$label ${percent(energy)} %',
-                    style: const TextStyle(
-                      color: AppColors.text,
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
+                  // Large system fonts must wrap instead of overflowing.
+                  Flexible(
+                    child: Text(
+                      '$label ${percent(energy)} %',
+                      style: const TextStyle(
+                        color: AppColors.text,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -930,28 +933,39 @@ class _IngredientRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        measure ?? grams,
-                        style: TextStyle(
-                          color: checked ? AppColors.textMuted : AppColors.text,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      if (measure != null) ...[
-                        const SizedBox(height: 2),
+                  // With large system fonts the amount may wrap, but must
+                  // never push the row beyond the screen edge.
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.sizeOf(context).width * 0.38,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
                         Text(
-                          grams,
-                          style: const TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 12.5,
+                          measure ?? grams,
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: checked
+                                ? AppColors.textMuted
+                                : AppColors.text,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
+                        if (measure != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            grams,
+                            textAlign: TextAlign.end,
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12.5,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ],
               ),

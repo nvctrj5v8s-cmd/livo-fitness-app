@@ -51,7 +51,8 @@ void main() {
     expect(find.byKey(const Key('recipe-plus-area')), findsNothing);
     expect(find.byKey(const Key('cook-mode-start')), findsNothing);
     expect(find.byKey(const Key('goal-open')), findsNothing);
-    expect(find.textContaining('Profi-Tipp'), findsNothing);
+    // The teaser may name the benefit, but no actual step tip is shown.
+    expect(find.textContaining('Profi-Tipp:'), findsNothing);
     expect(find.text('Darauf achten'), findsNothing);
     expect(find.textContaining(curryTips.first), findsNothing);
     expect(find.text('Woher kommen die Nährwerte?'), findsNothing);

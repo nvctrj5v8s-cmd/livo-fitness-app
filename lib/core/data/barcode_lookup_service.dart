@@ -55,20 +55,8 @@ class BarcodeLookupService {
           kind: BarcodeErrorKind.unavailable,
         );
       }
-      final error = data['error'];
-      if (error is String) {
-        throw BarcodeLookupException(
-          error,
-          kind: switch (data['code']) {
-            'invalid_barcode' => BarcodeErrorKind.invalid,
-            'not_found' => BarcodeErrorKind.notFound,
-            'not_halal' => BarcodeErrorKind.notAllowed,
-            'rate_limited' => BarcodeErrorKind.rateLimited,
-            'upstream_unavailable' => BarcodeErrorKind.unavailable,
-            _ => BarcodeErrorKind.unknown,
-          },
-        );
-      }
+      final error = errorFromPayload(data);
+      if (error != null) throw error;
       final food = data['food'];
       if (food is! Map) {
         throw const BarcodeLookupException(
@@ -87,6 +75,11 @@ class BarcodeLookupService {
     } on BarcodeLookupException {
       rethrow;
     } on FunctionException catch (error) {
+      // The function answers some results with an error status, for example
+      // 422 for products outside the halal rule. Its JSON body still says
+      // what happened and must not be replaced by a generic server error.
+      final fromBody = errorFromPayload(error.details);
+      if (fromBody != null) throw fromBody;
       if (error.status == 401 || error.status == 403) {
         throw const BarcodeLookupException(
           'Bitte melde dich erneut an und versuche den Scan danach noch einmal.',
@@ -109,5 +102,22 @@ class BarcodeLookupService {
         kind: BarcodeErrorKind.unavailable,
       );
     }
+  }
+
+  /// Reads the `{error, code}` body of the Edge Function, whatever the HTTP
+  /// status was. Returns `null` when the body carries no error.
+  static BarcodeLookupException? errorFromPayload(Object? data) {
+    if (data is! Map) return null;
+    final message = data['error'];
+    if (message is! String || message.trim().isEmpty) return null;
+    final kind = switch (data['code']) {
+      'invalid_barcode' => BarcodeErrorKind.invalid,
+      'not_found' => BarcodeErrorKind.notFound,
+      'not_halal' => BarcodeErrorKind.notAllowed,
+      'rate_limited' => BarcodeErrorKind.rateLimited,
+      'upstream_unavailable' => BarcodeErrorKind.unavailable,
+      _ => BarcodeErrorKind.unknown,
+    };
+    return BarcodeLookupException(message, kind: kind);
   }
 }

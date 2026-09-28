@@ -58,7 +58,10 @@ class SupabaseDiaryRepository {
         .select('id, meal_type, created_at, note')
         .eq('user_id', user.id)
         .eq('meal_date', day)
-        .order('created_at');
+        // Oldest first, like entries added during the session. The client's
+        // `order` sorts descending unless told otherwise.
+        .order('created_at', ascending: true)
+        .order('id', ascending: true);
     final meals = mealRows
         .whereType<Map>()
         .map((row) => Map<String, dynamic>.from(row))
@@ -273,7 +276,7 @@ class SupabaseDiaryRepository {
   }) async {
     final mealId = entry.remoteMealId;
     if (mealId == null || entry.foodId == null || amountGrams <= 0) {
-      throw ArgumentError('Der Lebensmitteleintrag ist unvollstaendig.');
+      throw ArgumentError('Der Lebensmitteleintrag ist unvollständig.');
     }
     await _client
         .from('meals')
