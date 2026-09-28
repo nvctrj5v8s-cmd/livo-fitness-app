@@ -46,10 +46,22 @@ abstract final class RecipeImages {
     if (_slugsWithPhoto.contains(normalized)) {
       return '$_folder/$normalized.webp';
     }
-    if (normalized.contains('salmon') || normalized.contains('lachs')) {
+    // Closest-matching fallback for recipes without their own photo, so a
+    // savoury dish never shows the sweet oats picture.
+    if (normalized.contains('salmon') ||
+        normalized.contains('lachs') ||
+        normalized.contains('thunfisch')) {
       return 'assets/images/salmon_bowl.webp';
     }
-    if (normalized.contains('pasta')) return 'assets/images/protein_pasta.webp';
+    if (normalized.contains('pasta') ||
+        normalized.contains('nudel') ||
+        normalized.contains('spaghetti') ||
+        normalized.contains('ragout')) {
+      return 'assets/images/protein_pasta.webp';
+    }
+    if (normalized.contains('kartoffel')) {
+      return '$_folder/livo-pellkartoffeln-kraeuterquark.webp';
+    }
     return 'assets/images/berry_oats.webp';
   }
 
