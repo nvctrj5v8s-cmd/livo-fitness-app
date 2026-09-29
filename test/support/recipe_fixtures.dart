@@ -29,11 +29,7 @@ Future<AppController> recipeTestController({required bool plus}) async {
   return controller;
 }
 
-void setTestScreen(
-  WidgetTester tester,
-  Size size, {
-  double textScale = 1,
-}) {
+void setTestScreen(WidgetTester tester, Size size, {double textScale = 1}) {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = size;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;

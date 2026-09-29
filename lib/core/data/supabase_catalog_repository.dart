@@ -128,6 +128,8 @@ class SupabaseCatalogRepository {
           measure: _text(raw['measure']),
           note: _text(raw['note']),
           nutrition: nutrition,
+          allergens: food.allergens,
+          ingredientsText: food.ingredientsText,
         ),
       );
     }

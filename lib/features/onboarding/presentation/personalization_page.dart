@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 import '../domain/personalization_profile.dart';
 
 /// A short, optional setup. Each question owns one fixed screen so the user
@@ -49,7 +50,6 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   late PersonalizationProfile _draft;
   late final TextEditingController _name;
-  late final TextEditingController _allergies;
   late DateTime _birthDate;
   late int _heightCm;
   late double _weightKg;
@@ -71,7 +71,6 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     super.initState();
     _draft = widget.initial;
     _name = TextEditingController(text: _draft.displayName);
-    _allergies = TextEditingController(text: _draft.allergies);
     final now = DateTime.now();
     _birthDate = _draft.birthDate ?? DateTime(now.year - 25, 1, 1);
     _heightCm = _draft.heightCm ?? 175;
@@ -96,7 +95,6 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   @override
   void dispose() {
     _name.dispose();
-    _allergies.dispose();
     _dayWheel.dispose();
     _monthWheel.dispose();
     _yearWheel.dispose();
@@ -170,7 +168,6 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         await widget.onComplete(
           _draft.copyWith(
             displayName: _name.text.trim(),
-            allergies: _allergies.text.trim(),
             birthDate: _birthDate,
             heightCm: _heightCm,
             weightKg: _weightKg,
@@ -537,16 +534,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               : (item) => _update(_draft.copyWith(nutrition: item)),
         ),
         const SizedBox(height: 12),
-        TextField(
-          key: const ValueKey('personal-allergies'),
-          controller: _allergies,
+        AllergyProfileField(
+          key: const ValueKey('allergy-options'),
+          value: _draft.allergies,
           enabled: !_saving,
-          maxLength: 160,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(
-            labelText: 'Allergien',
-            hintText: 'z. B. Nüsse',
-          ),
           onChanged: (value) => _update(_draft.copyWith(allergies: value)),
         ),
       ],

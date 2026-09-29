@@ -13,6 +13,8 @@ import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/domain/allergy_safety.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
 import 'camera_capture_page.dart';
@@ -298,11 +300,39 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
         return;
       }
     }
+    final controller = AppScope.of(context);
+    final allergyCheck = AllergySafety.assessText(
+      _items.map((item) => item.name.text).join(' '),
+      controller.allergies,
+      hasData: _items.isNotEmpty,
+    );
+    if (allergyCheck.hasConflict) {
+      final conflicts = allergyCheck.conflicts.join(', ');
+      final proceed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Allergiehinweis'),
+          content: Text(
+            'Die erkannten Namen k\u00F6nnen zu deinem Profil passen: $conflicts. KI-Fotos k\u00F6nnen versteckte Zutaten und Spuren nicht erkennen. Nur fortfahren, wenn du die Mahlzeit dokumentieren m\u00F6chtest.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Abbrechen'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Trotzdem protokollieren'),
+            ),
+          ],
+        ),
+      );
+      if (proceed != true || !mounted) return;
+    }
     setState(() {
       _saving = true;
       _error = null;
     });
-    final controller = AppScope.of(context);
     final saved = <MealItemDraft>[];
     for (final item in List.of(_items)) {
       final amount = item.grams!;
@@ -349,6 +379,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppScope.of(context);
     final hasPhoto = _imageBytes != null;
     final busy = _takingPhoto || _analyzing || _saving;
     final totalCalories = _total((item) => item.calories);
@@ -422,6 +453,25 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                       style: const TextStyle(
                         color: AppColors.textMuted,
                         height: 1.45,
+                      ),
+                    ),
+                  ],
+                  if (controller.hasAllergyProfile) ...[
+                    const SizedBox(height: 12),
+                    AllergySafetyNotice(
+                      assessment: AllergySafety.assessText(
+                        _items.map((item) => item.name.text).join(' '),
+                        controller.allergies,
+                        hasData: _items.isNotEmpty,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Die Foto-KI kann Allergene, die man nicht sieht, oder Spuren nicht zuverl\u00E4ssig erkennen. Zutatenliste und Verpackung selbst pr\u00FCfen.',
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 12,
+                        height: 1.4,
                       ),
                     ),
                   ],

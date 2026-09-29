@@ -4,6 +4,8 @@ import '../../../core/data/food_search_service.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/domain/allergy_safety.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 import '../../../shared/widgets/ui_components.dart';
 
 class FoodDetailPage extends StatefulWidget {
@@ -163,6 +165,15 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   const SectionHeader(title: 'Nährwerte'),
                   const SizedBox(height: 9),
                   _NutrientGrid(food: food, factor: factor),
+                  if (controller.hasAllergyProfile) ...[
+                    const SizedBox(height: 14),
+                    AllergySafetyNotice(
+                      assessment: AllergySafety.assessFood(
+                        food,
+                        controller.allergies,
+                      ),
+                    ),
+                  ],
                   if (food.hasBarcodeDetails) ...[
                     const SizedBox(height: 26),
                     _BarcodeProductFacts(food: food),
@@ -242,8 +253,36 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   }
 
   Future<void> _save() async {
+    final controller = AppScope.of(context);
+    final assessment = AllergySafety.assessFood(
+      widget.food,
+      controller.allergies,
+    );
+    if (assessment.hasConflict) {
+      final conflicts = assessment.conflicts.join(', ');
+      final proceed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Allergiehinweis'),
+          content: Text(
+            'Die Produktdaten nennen m\u00F6glicherweise: $conflicts. Nur fortfahren, wenn du das Lebensmittel bereits gegessen hast und es lediglich dokumentieren m\u00F6chtest. Pr\u00FCfe die Verpackung.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Abbrechen'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Trotzdem protokollieren'),
+            ),
+          ],
+        ),
+      );
+      if (proceed != true || !mounted) return;
+    }
     setState(() => _saving = true);
-    final saved = await AppScope.of(context).addFoodToDiary(
+    final saved = await controller.addFoodToDiary(
       food: widget.food,
       slot: _slot,
       amountGrams: _amountGrams,
@@ -367,9 +406,7 @@ class _BarcodeProductFacts extends StatelessWidget {
 
   final FoodItem food;
 
-  String _cleanTag(String value) => value.contains(':')
-      ? value.substring(value.indexOf(':') + 1).replaceAll('-', ' ')
-      : value.replaceAll('-', ' ');
+  String _cleanTag(String value) => AllergySafety.displayTag(value);
 
   @override
   Widget build(BuildContext context) {

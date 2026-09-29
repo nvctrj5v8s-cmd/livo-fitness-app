@@ -1,5 +1,6 @@
 import 'package:fitness_ai_app/core/data/ai_coach_service.dart';
 import 'package:fitness_ai_app/core/models/app_models.dart';
+import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
 import 'package:fitness_ai_app/features/diary/presentation/meal_photo_page.dart';
 import 'package:flutter/foundation.dart';
@@ -108,18 +109,23 @@ Future<void> _pumpPage(
   final photo = Uint8List.fromList(
     image_lib.encodePng(image_lib.Image(width: 4, height: 4)),
   );
+  final controller = AppController();
+  addTearDown(controller.dispose);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: AppTheme.dark,
-      home: MediaQuery(
-        data: MediaQueryData(
-          size: size,
-          textScaler: TextScaler.linear(textScale),
-        ),
-        child: MealPhotoPage(
-          initialSlot: MealSlot.lunch,
-          initialPhoto: photo,
-          initialItems: const [_rice],
+    AppScope(
+      controller: controller,
+      child: MaterialApp(
+        theme: AppTheme.dark,
+        home: MediaQuery(
+          data: MediaQueryData(
+            size: size,
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: MealPhotoPage(
+            initialSlot: MealSlot.lunch,
+            initialPhoto: photo,
+            initialItems: const [_rice],
+          ),
         ),
       ),
     ),

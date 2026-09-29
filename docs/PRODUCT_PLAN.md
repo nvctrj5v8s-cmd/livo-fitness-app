@@ -51,8 +51,8 @@ KI-unterstützte Erfassung hinzu.
 ### Rezepte und Planung
 
 Suche, Kategorien, Favoriten, bebilderte Rezeptkarten, Detailansicht und
-Einkaufsliste. Ein vollständiger Wochenplan, individuelle Zutaten und Vorräte
-werden als lokale Flows ergänzt, bevor eine KI personalisierte Pläne erstellt.
+„Was kann ich kochen?“. Wochenplan, Einkaufsliste und Vorräte wurden am
+29.09.2026 wieder aus der App entfernt.
 
 ### Fortschritt
 
@@ -82,7 +82,6 @@ Der verbindliche Ist-Stand steht in [FEATURE_STATUS.md](FEATURE_STATUS.md).
 - Onboarding für Alterseignung, Ziel, Aktivität und Ernährungsvorlieben
 - freie manuelle Mahlzeiteneingabe und Bearbeiten vorhandener Einträge
 - echte Tages- und Datumsauswahl mit getrennten lokalen Tagesdaten
-- lokale Wochenplanung und Vorratsverwaltung
 - Profilbildauswahl sowie bearbeitbare Vorlieben, Allergien und Aktivität
 - lokale Erinnerungseinstellungen ohne Cloud-Abhängigkeit
 - vollständige Reduced-Motion-, Semantics- und Textskalierungsprüfung

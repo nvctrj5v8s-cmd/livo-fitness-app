@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 
 Future<void> showReminderSheet(BuildContext context, AppController controller) {
   return showModalBottomSheet<void>(
@@ -192,24 +193,18 @@ class _NutritionProfileSheet extends StatefulWidget {
 class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
   late String _style;
   late String _activity;
-  late final TextEditingController _allergiesController;
+
+  /// Allergies as stored text; edited in the allergy picker.
+  late String _allergies;
 
   @override
   void initState() {
     super.initState();
     _style = widget.controller.nutritionStyle;
     _activity = widget.controller.activityLevel;
-    _allergiesController = TextEditingController(
-      text: widget.controller.allergies == 'Keine angegeben'
-          ? ''
-          : widget.controller.allergies,
-    );
-  }
-
-  @override
-  void dispose() {
-    _allergiesController.dispose();
-    super.dispose();
+    _allergies = widget.controller.hasAllergyProfile
+        ? widget.controller.allergies
+        : '';
   }
 
   @override
@@ -243,13 +238,10 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
             ),
             const SizedBox(height: 20),
           ],
-          TextField(
-            controller: _allergiesController,
-            decoration: const InputDecoration(
-              labelText: 'Allergien oder Unverträglichkeiten',
-              hintText: 'z. B. Erdnüsse, Laktose',
-              prefixIcon: Icon(Icons.no_food_outlined),
-            ),
+          AllergyProfileField(
+            key: const ValueKey('profile-allergy-options'),
+            value: _allergies,
+            onChanged: (value) => setState(() => _allergies = value),
           ),
           const SizedBox(height: 20),
           if (widget.controller.personalization == null) ...[
@@ -278,7 +270,7 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
             onPressed: () {
               widget.controller.updateNutritionProfile(
                 newNutritionStyle: _style,
-                newAllergies: _allergiesController.text,
+                newAllergies: _allergies,
                 newActivityLevel: _activity,
               );
               Navigator.pop(context);

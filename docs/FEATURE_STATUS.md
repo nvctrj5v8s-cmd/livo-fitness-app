@@ -1,22 +1,45 @@
 # Funktionsstatus
 
-## Aktualisierung: Wochenplan, Einkaufsliste und Vorräte ausgeblendet, 29. September 2026
+## Aktualisierung: Allergien und Unverträglichkeiten, 29. September 2026
 
-- Wochenplan, Einkaufsliste und Vorräte sind vorerst **nicht mehr in der App
-  erreichbar**. Gesteuert über den Schalter `kitchenPlanningEnabled` in
-  `lib/core/config/feature_flags.dart` (aktuell `false`).
-- Ausgeblendet: der Bereich „Planen & vorbereiten“ im Rezepte-Tab, der
-  Wochenplan-Knopf und „Zutaten auf die Einkaufsliste“ in der Rezeptansicht
-  sowie in „Was kann ich kochen?“ der Schalter „Meine Vorräte verwenden“,
-  „Auswahl in Vorräte übernehmen“ und „Fehlende Zutaten auf die
-  Einkaufsliste“. Die Einführung und der Löschdialog erwähnen die Funktionen
-  nicht mehr.
-- **Weiterhin aktiv:** „Was kann ich kochen?“ mit selbst gewählten Zutaten
-  (ohne Vorräte) und die Haken „schon da“ in der Zutatenliste eines Rezepts.
-- Code, gespeicherte Daten und Tests bleiben erhalten. Bereits auf dem Gerät
-  gespeicherte Listen werden nicht angezeigt, aber auch nicht gelöscht; „Demodaten
-  löschen“ in den Einstellungen leert sie weiterhin. Die Beschreibungen der
-  Abschnitte darunter gelten wieder, sobald der Schalter auf `true` steht.
+- **Auswahl im Profil:** 14 EU-Allergene plus Laktose (Unverträglichkeit)
+  als Chips, dazu freie Angaben. In der Einrichtung (letzter Schritt) und
+  unter Profil → Ernährungsprofil; Änderungen landen in Cloud-Profil und
+  lokaler Einrichtung gleichermaßen. Ältere Freitext-Angaben („Erdnüsse,
+  Laktose“) werden automatisch zugeordnet.
+- **Rezepte:** Rezepte mit erkanntem Auslöser werden im Rezepte-Tab und in
+  „Was kann ich kochen?“ nicht angezeigt; der Tab nennt die Anzahl.
+  Direkt geöffnete Rezepte zeigen einen Warnhinweis, Eintragen ins Tagebuch
+  nur nach Bestätigung.
+- **Lebensmittel:** Warnhinweis in Suche, Detailseite, Barcode-Produkt,
+  eigenem Eintrag und KI-Fotoanalyse; vor dem Speichern eines Treffers eine
+  Rückfrage. Fehlen Zutatenangaben, heißt es „Allergieangaben fehlen“.
+- **KI-Coach:** Allergien gelten im Prompt als feste Ausschlusskriterien;
+  der Coach bestätigt nie Sicherheit bei unklaren Zutaten. Die geänderte
+  Edge Function `ai-coach` ist deployt.
+- **Erkennung** (`features/allergies/domain/allergy_safety.dart`): Wortlisten
+  je Allergen inkl. zusammengesetzter Wörter (Käse, Sahne, Nudeln, Hafer,
+  Erdnussbutter, Rührei …) und Ausnahmen (Kokosmilch, Buchweizen,
+  Muskatnuss, veganer Käse, glutenfrei). 43 Unit-Tests.
+- **Grenzen:** Textprüfung, keine Sicherheitsgarantie und keine medizinische
+  Beratung; Spuren und Kreuzkontamination werden nicht erfasst. Details und
+  offene Datenschutzpunkte (Art. 9 DSGVO): `ALLERGY_SAFETY.md`.
+
+## Aktualisierung: Wochenplan, Einkaufsliste und Vorräte entfernt, 29. September 2026
+
+- Wochenplan, Einkaufsliste und Vorräte sind **komplett aus der App
+  gelöscht** (Code, Tests und `KITCHEN_LISTS_PRIVACY.md`). Die folgenden
+  älteren Abschnitte zu diesen Funktionen gelten nicht mehr.
+- Entfernt: Bereich „Planen & vorbereiten“ im Rezepte-Tab, Wochenplan-Knopf
+  und „Zutaten auf die Einkaufsliste“ in der Rezeptansicht, in „Was kann ich
+  kochen?“ Vorräte und Einkaufsliste. Einführung und Löschdialog erwähnen
+  die Funktionen nicht mehr.
+- **Weiterhin aktiv:** „Was kann ich kochen?“ mit selbst gewählten Zutaten;
+  der Schalter „Grundzutaten sind vorhanden“ gilt nur noch für die geöffnete
+  Seite. Die Haken „schon da“ in der Zutatenliste eines Rezepts bleiben.
+- **Datenminimierung:** Beim App-Start werden Listen, die frühere Versionen
+  unter `livo.kitchen.v1.<Konto-ID>` auf dem Gerät gespeichert haben, für das
+  angemeldete Konto gelöscht.
 
 ## Aktualisierung: Neue Einkaufsliste, 29. September 2026
 
@@ -520,12 +543,12 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Mahlzeit hinzufügen | Lokale Textsuche in fünf Demo-Gerichten; Auswahl fügt eine Mahlzeit hinzu und berechnet Kalorien/Makros neu |
 | Tagebuch | Tagesansicht, Bilanz, Mahlzeitenliste, Entfernen per Wischgeste sowie Wasser erhöhen und verringern |
 | Rezepte | Suche nach Titel, Kategorienfilter, Favoriten, drei lokale Rezepte mit Bildern und Hero-Detailansicht |
-| Einkaufsliste | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Ein Eingabefeld für Name und Menge („500 g Reis“), Schnellauswahl und Vorschläge, Sortierung nach Supermarkt-Abteilung, Abhaken mit Fortschrittsring und Bereich „Im Wagen“, Bearbeiten, Löschen mit Rückgängig, Liste als Text kopieren, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 29.09.2026) |
+| Einkaufsliste | **Entfernt am 29.09.2026.** Ein Eingabefeld für Name und Menge („500 g Reis“), Schnellauswahl und Vorschläge, Sortierung nach Supermarkt-Abteilung, Abhaken mit Fortschrittsring und Bereich „Im Wagen“, Bearbeiten, Löschen mit Rückgängig, Liste als Text kopieren, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 29.09.2026) |
 | Fortschritt | Animierter Gewichtsgraph mit Zielmarke; sieben Punkte sind antippbar und ändern den angezeigten Wert |
 | Weitere Diagramme | Animierte Wochenbalken für Kalorien und Protein sowie lokale Statistik- und Meilensteinkarten |
 | Profil | Profilansicht mit lokalem Avatar; Name, Ziel, Kalorienziel und Zielgewicht lassen sich bearbeiten |
 | Ernährungsprofil | Stil, Allergien und Aktivitätsniveau lassen sich lokal bearbeiten |
-| Planung & Vorräte | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Wochenplan, Einkaufsliste und Vorräte werden pro Konto auf diesem Gerät gespeichert und überstehen einen Neustart; keine Cloud-Synchronisierung (Stand 27.09.2026) |
+| Planung & Vorräte | **Entfernt am 29.09.2026.** Wochenplan, Einkaufsliste und Vorräte werden pro Konto auf diesem Gerät gespeichert und überstehen einen Neustart; keine Cloud-Synchronisierung (Stand 27.09.2026) |
 | Was kann ich kochen? | Zutaten wählen oder Vorräte nutzen; Katalogrezepte nach Anteil vorhandener Zutaten sortiert, fehlende Zutaten sichtbar und auf die Einkaufsliste übertragbar (Stand 27.09.2026) |
 | Einstellungen | Premium-Vorschau, Erinnerungs-Schalter, Datenübersicht, Löschdialog und Sicherheitshinweise |
 | Animationen | Seitenwechsel, gestaffelte Reveals, Press-Feedback, Ringe, Zahlen, Balken, Favoriten und Coach-Orb |
@@ -538,8 +561,8 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Tagesauswahl | Sieben auswählbare Tage | Eigene Mahlzeiten und Summen je Datum; echte Kalenderdaten |
 | Mahlzeitenerfassung | Demo-Suche und schnelles Hinzufügen | Freier Eintrag, Mengen, Bearbeiten, eigene Lebensmittel und Validierung |
 | Rezeptdetails | Bild, Kennzahlen, Zutaten- und Zubereitungsansicht; Rezept kann ins Tagebuch übernommen werden | Rezeptspezifische Zutaten/Zubereitung und Portionseditor |
-| Wochenplan | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Echte Kalenderwochen, Rezepte je Tag und Mahlzeit mit Portionen einplanen, verschieben, entfernen, Woche leeren, Einkaufsliste aus der Woche erstellen | Synchronisierung zwischen Geräten, Drag & Drop, Übernahme ins Tagebuch |
-| Vorräte | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Hinzufügen/Entfernen, optionale Menge, Schnellauswahl häufiger Zutaten, Rezeptabgleich „Was kann ich kochen?“ | Ablaufdaten, automatische Verbrauchsbuchung beim Kochen, Synchronisierung zwischen Geräten |
+| Wochenplan | **Entfernt am 29.09.2026.** Echte Kalenderwochen, Rezepte je Tag und Mahlzeit mit Portionen einplanen, verschieben, entfernen, Woche leeren, Einkaufsliste aus der Woche erstellen | Synchronisierung zwischen Geräten, Drag & Drop, Übernahme ins Tagebuch |
+| Vorräte | **Entfernt am 29.09.2026.** Hinzufügen/Entfernen, optionale Menge, Schnellauswahl häufiger Zutaten, Rezeptabgleich „Was kann ich kochen?“ | Ablaufdaten, automatische Verbrauchsbuchung beim Kochen, Synchronisierung zwischen Geräten |
 | Fortschrittszeiträume | Auswahl für 4 Wochen, 3 Monate und 1 Jahr | Je Zeitraum unterschiedliche Daten und Achsen |
 | Profilbild | Lokaler Avatar und Kameraindikator | Bildauswahl, Zuschneiden, Berechtigungen und Speicherung |
 | Ernährungsprofil | Ernährungsstil, Allergien, Aktivität und Mahlzeitenrhythmus sichtbar und editierbar | Nutzung in personalisierten Berechnungen |

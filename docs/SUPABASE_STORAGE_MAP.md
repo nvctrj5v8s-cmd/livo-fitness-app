@@ -6,7 +6,7 @@ angemeldeten Konto gehören sollen.
 | Bereich | Speicherort | Warum |
 | --- | --- | --- |
 | Anmeldung und Sitzung | Supabase Auth | Konto über mehrere Geräte hinweg |
-| Name, Ziel, Kalorien- und Proteinziele | `public.profiles` | persönliches Profil bleibt beim Gerätewechsel erhalten |
+| Name, Ziel, Kalorien- und Proteinziele, freiwillige Allergien/Unverträglichkeiten | `public.profiles` | persönliches Profil bleibt beim Gerätewechsel erhalten; Allergien: `ALLERGY_SAFETY.md` |
 | Lebensmittel, Rezepte, Zutaten und Quellen | Katalogtabellen | gemeinsamer, versionierbarer Datenbestand |
 | Premium-Rezeptextras (Profi-Tipps, Fehler, Austausch, Meal-Prep, Varianten) | `recipe_premium_details` | Katalogdaten; RLS gibt sie nur an Konten mit aktivem Premium oder Testphase heraus |
 | Getrackte Mahlzeiten und Mengen | `meals`, `meal_items` | Tagebuch und Serie sollen geräteübergreifend stimmen |
@@ -21,9 +21,6 @@ angemeldeten Konto gehören sollen.
 - Antworten aus der freiwilligen Einführung
 - Erinnerungsschalter
 - zuletzt verwendete und lokal gemerkte Lebensmittel
-- Wochenplan, Einkaufsliste, Vorräte und der Schalter „Grundzutaten sind
-  vorhanden“ (pro Konto unter `livo.kitchen.v1.<Konto-ID>`; Details:
-  `KITCHEN_LISTS_PRIVACY.md`)
 - vorübergehende UI-Zustände
 
 Diese lokalen Daten werden nicht automatisch auf ein neues Handy übertragen.

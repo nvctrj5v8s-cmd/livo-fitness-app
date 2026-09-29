@@ -55,7 +55,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       unawaited(controller.loadFoodPreferences());
       unawaited(controller.loadTrackingStreak());
       unawaited(controller.loadReminderPreferences());
-      unawaited(controller.planning.load());
+      unawaited(controller.deleteRemovedKitchenLists());
       unawaited(controller.subscription.load());
       _scheduleNextDayRefresh();
     });
@@ -66,7 +66,9 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       unawaited(_refreshForNewDay());
       // A trial may have ended while the app was in the background.
-      if (mounted) unawaited(AppScope.of(context).subscription.load(force: true));
+      if (mounted) {
+        unawaited(AppScope.of(context).subscription.load(force: true));
+      }
     }
   }
 

@@ -737,8 +737,7 @@ class _StepButton extends StatelessWidget {
   );
 }
 
-/// Ingredient list with local check marks and, when [onAddToShopping] is
-/// set, the shopping-list action.
+/// Ingredient list with local check marks.
 class RecipeIngredientsSection extends StatelessWidget {
   const RecipeIngredientsSection({
     required this.ingredients,
@@ -746,7 +745,6 @@ class RecipeIngredientsSection extends StatelessWidget {
     required this.checked,
     required this.onToggle,
     required this.onClearChecks,
-    this.onAddToShopping,
     super.key,
   });
 
@@ -755,18 +753,9 @@ class RecipeIngredientsSection extends StatelessWidget {
   final Set<int> checked;
   final ValueChanged<int> onToggle;
   final VoidCallback onClearChecks;
-  final VoidCallback? onAddToShopping;
 
   @override
   Widget build(BuildContext context) {
-    final missing = ingredients.length - checked.length;
-    final shoppingLabel = checked.isEmpty
-        ? 'Zutaten auf die Einkaufsliste'
-        : missing == 0
-        ? 'Alles da – nichts fehlt'
-        : missing == 1
-        ? '1 fehlende Zutat auf die Einkaufsliste'
-        : '$missing fehlende Zutaten auf die Einkaufsliste';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -838,30 +827,6 @@ class RecipeIngredientsSection extends StatelessWidget {
                 ),
             ],
           ),
-          if (onAddToShopping != null) ...[
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                key: const Key('recipe-add-shopping'),
-                onPressed: missing == 0 ? null : onAddToShopping,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(52, 52),
-                  foregroundColor: AppColors.text,
-                  side: const BorderSide(color: AppColors.borderBright),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                ),
-                icon: Icon(
-                  missing == 0
-                      ? Icons.check_circle_outline_rounded
-                      : Icons.shopping_bag_outlined,
-                ),
-                label: Text(shoppingLabel, textAlign: TextAlign.center),
-              ),
-            ),
-          ],
         ],
       ],
     );

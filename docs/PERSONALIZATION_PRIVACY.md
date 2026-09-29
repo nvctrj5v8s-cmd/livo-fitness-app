@@ -9,7 +9,9 @@ Alle Fragen sind freiwillig: optionaler Rufname/Spitzname (maximal 40 Zeichen),
 Wunsch, selbst beschriebenes Aktivitätsmuster, bisherige und gewünschte Zahl
 der Mahlzeiten, Ernährungsweise, verfügbare Kochzeit und aktueller Fokus.
 „Flexibel“ und unbeantwortete Fragen erzeugen keine geschätzten Ersatzwerte.
-Gewicht, Alter, Erkrankungen und Allergien werden hier nicht neu abgefragt.
+Erkrankungen werden nicht abgefragt. Allergien und Unverträglichkeiten können
+im letzten Schritt freiwillig ausgewählt werden (seit 29.09.2026; Details
+`ALLERGY_SAFETY.md`).
 
 Die Antworten werden erst bei „Meine Auswahl übernehmen“ als versioniertes
 JSON mit SharedPreferencesAsync unter `livo.personalization.v1.<userId>`
@@ -24,8 +26,10 @@ bestehende Auth-, Profil- und Tagebuch-Daten haben eigene Speicherwege.
 - Persönliche Begrüßung und nachvollziehbare Zusammenfassung in Home/Profil.
 - Gewünschter Mahlzeitenrhythmus als Orientierung im Tagebuch, ohne Sperren.
 - Reproduzierbare Sortierung von Rezepten nach expliziten Ernährungs-Tags,
-  Kochzeit und Budget-Tag. Keine Allergiefreiheitsprüfung oder medizinische
-  Eignungsprüfung. Bei fehlenden Tags werden Eigenschaften nicht erfunden.
+  Kochzeit und Budget-Tag. Rezepte mit erkanntem Allergenkonflikt werden
+  ausgeblendet; das ist eine Textprüfung, keine Allergiefreiheits- oder
+  medizinische Eignungsprüfung. Bei fehlenden Tags werden Eigenschaften nicht
+  erfunden.
 - Aktivität und Wunsch werden angezeigt, aber nicht zur automatischen
   Berechnung von Kalorien oder Trainings-/Diätplänen verwendet.
 

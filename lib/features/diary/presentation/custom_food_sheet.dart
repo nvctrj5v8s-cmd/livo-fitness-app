@@ -5,6 +5,8 @@ import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/domain/allergy_safety.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 import 'delete_entry_dialog.dart';
 
 Future<void> showCustomMealSheet(
@@ -157,6 +159,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = AppScope.of(context);
     final preview = _readNutrition();
     final previewValid = preview != null && preview.validate() == null;
     final reducedMotion = MediaQuery.disableAnimationsOf(context);
@@ -221,7 +224,18 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                         : value.trim().length > 100
                         ? 'Bitte höchstens 100 Zeichen verwenden.'
                         : HalalContentPolicy.restrictionReason(value.trim()),
+                    onChanged: (_) => setState(() {}),
                   ),
+                  if (controller.hasAllergyProfile) ...[
+                    const SizedBox(height: 10),
+                    AllergySafetyNotice(
+                      assessment: AllergySafety.assessText(
+                        _name.text,
+                        controller.allergies,
+                        hasData: false,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 14),
                   Text(
                     'Für welche Mahlzeit?',
@@ -530,12 +544,40 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
       setState(() => _error = error);
       return;
     }
+    final controller = AppScope.of(context);
+    final assessment = AllergySafety.assessText(
+      _name.text,
+      controller.allergies,
+      hasData: false,
+    );
+    if (assessment.hasConflict) {
+      final proceed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Allergiehinweis'),
+          content: Text(
+            'Der eingegebene Name deutet auf einen m\u00F6glichen Konflikt: ${assessment.conflicts.join(', ')}. '
+            'Die N\u00E4hrwertangaben enthalten keine verl\u00E4ssliche Zutatenpr\u00FCfung.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Abbrechen'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Trotzdem protokollieren'),
+            ),
+          ],
+        ),
+      );
+      if (proceed != true || !mounted) return;
+    }
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       _saving = true;
       _error = null;
     });
-    final controller = AppScope.of(context);
     try {
       final saved = widget.entry == null
           ? await controller.addCustomFoodToDiary(

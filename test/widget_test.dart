@@ -1,5 +1,4 @@
 import 'package:fitness_ai_app/app/app.dart';
-import 'package:fitness_ai_app/core/config/feature_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,10 +25,7 @@ void main() {
     await _openTab(tester, 'KI');
     expect(find.text('LIVO Coach'), findsOneWidget);
     await _openTab(tester, 'Rezepte');
-    expect(
-      find.text('Planen & vorbereiten'),
-      kitchenPlanningEnabled ? findsOneWidget : findsNothing,
-    );
+    expect(find.text('Planen & vorbereiten'), findsNothing);
     expect(
       find.descendant(
         of: find.byType(NavigationBar),

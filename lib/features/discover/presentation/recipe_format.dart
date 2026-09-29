@@ -71,3 +71,7 @@ String spokenDuration(Duration duration) {
   ];
   return parts.join(' ');
 }
+
+/// "1 Zutat", "3 Zutaten".
+String countText(int count, String singular, String plural) =>
+    count == 1 ? '1 $singular' : '$count $plural';

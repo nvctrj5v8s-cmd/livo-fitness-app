@@ -4,6 +4,7 @@ import '../../../core/data/food_search_service.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/domain/allergy_safety.dart';
 import 'barcode_scanner_page.dart';
 import 'custom_food_sheet.dart';
 import 'food_detail_page.dart';
@@ -265,8 +266,13 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                           itemBuilder: (context, index) {
                             final food = results[index];
                             final factor = _amountGrams / food.servingGrams;
+                            final allergyConflicts = AllergySafety.assessFood(
+                              food,
+                              controller.allergies,
+                            ).conflicts;
                             return _FoodResultTile(
                               food: food,
+                              allergyConflicts: allergyConflicts,
                               calories: (food.calories * factor).round(),
                               protein: food.protein * factor,
                               amountGrams: _amountGrams,
@@ -317,6 +323,31 @@ class _AddMealSheetState extends State<_AddMealSheet> {
   }
 
   Future<void> _saveFood(FoodItem food) async {
+    final controller = AppScope.of(context);
+    final assessment = AllergySafety.assessFood(food, controller.allergies);
+    if (assessment.hasConflict) {
+      final conflicts = assessment.conflicts.join(', ');
+      final proceed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Allergiehinweis'),
+          content: Text(
+            'Die verf\u00FCgbaren Angaben nennen m\u00F6glicherweise: $conflicts. Bei einer Allergie nicht als Empfehlung verstehen. Nur fortfahren, wenn du das Essen dokumentieren m\u00F6chtest.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Abbrechen'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Trotzdem protokollieren'),
+            ),
+          ],
+        ),
+      );
+      if (proceed != true || !mounted) return;
+    }
     if (_savingFoodId != null) return;
     if (food.id.startsWith('demo-')) {
       final factor = _amountGrams / food.servingGrams;
@@ -628,6 +659,7 @@ class _EmptyFoodResults extends StatelessWidget {
 class _FoodResultTile extends StatelessWidget {
   const _FoodResultTile({
     required this.food,
+    required this.allergyConflicts,
     required this.calories,
     required this.protein,
     required this.amountGrams,
@@ -640,6 +672,7 @@ class _FoodResultTile extends StatelessWidget {
   });
 
   final FoodItem food;
+  final List<String> allergyConflicts;
   final int calories;
   final double protein;
   final double amountGrams;
@@ -649,6 +682,7 @@ class _FoodResultTile extends StatelessWidget {
   final MealSlot slot;
   final VoidCallback onOpen;
   final VoidCallback onAdd;
+  String get _allergySummary => allergyConflicts.join(', ');
 
   @override
   Widget build(BuildContext context) => Material(
@@ -665,6 +699,19 @@ class _FoodResultTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (allergyConflicts.isNotEmpty) ...[
+                    Text(
+                      'Allergiehinweis: $_allergySummary',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                  ],
                   Row(
                     children: [
                       Flexible(

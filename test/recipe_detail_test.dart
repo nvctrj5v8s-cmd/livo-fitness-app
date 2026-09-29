@@ -1,9 +1,7 @@
-import 'package:fitness_ai_app/core/config/feature_flags.dart';
 import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
 import 'package:fitness_ai_app/features/discover/domain/recipe_serving.dart';
 import 'package:fitness_ai_app/features/discover/presentation/cook_mode_page.dart';
-import 'package:fitness_ai_app/features/discover/presentation/kitchen_format.dart';
 import 'package:fitness_ai_app/features/discover/presentation/recipe_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +29,7 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
+  _allergyTests();
   testWidgets('Freies Konto: ausführliche Schritte, volle Nährwerte, '
       'ein Hinweis statt Plus-Inhalten', (tester) async {
     final controller = await recipeTestController(plus: false);
@@ -283,36 +282,51 @@ void main() {
     expect(find.textContaining('Mittagessen'), findsOneWidget);
   });
 
-  testWidgets('Fehlende Zutaten landen auf der lokalen Einkaufsliste', (
+  testWidgets('Zutaten abhaken, ohne Wochenplan und Einkaufsliste', (
     tester,
   ) async {
     final controller = await recipeTestController(plus: false);
     await _pumpDetail(tester, controller);
-    final before = controller.planning.shopping.length;
-
     await _tapVisible(tester, find.byKey(const ValueKey('ingredient-0')));
-    if (!kitchenPlanningEnabled) {
-      // The shopping list is switched off; only the check marks remain.
-      expect(find.byKey(const Key('recipe-add-shopping')), findsNothing);
-      return;
-    }
-    expect(
-      find.text('3 fehlende Zutaten auf die Einkaufsliste'),
-      findsOneWidget,
-    );
-    await _tapVisible(tester, find.byKey(const Key('recipe-add-shopping')));
+    expect(find.text('Zurücksetzen'), findsOneWidget);
+    expect(find.byKey(const Key('recipe-add-shopping')), findsNothing);
+    expect(find.byKey(const Key('recipe-add-plan')), findsNothing);
+    expect(find.textContaining('Einkaufsliste'), findsNothing);
+  });
+}
 
-    final added = controller.planning.shopping.skip(before).toList();
-    expect(added.map((item) => item.name), [
-      'Olivenöl',
-      'Zwiebel',
-      'Babyspinat',
-    ]);
-    expect(
-      kitchenAmountLabel(added.first.amount, added.first.note),
-      '1 EL · 10 g',
-    );
-    expect(added.first.source, curryRecipe.title);
-    expect(find.textContaining('bis zum Neustart'), findsOneWidget);
+void _allergyTests() {
+  testWidgets('Allergiekonflikt: Hinweis und Rückfrage vor dem Eintragen', (
+    tester,
+  ) async {
+    final controller = await recipeTestController(plus: false);
+    controller.allergies = 'Kichererbsen';
+    await _pumpDetail(tester, controller);
+    final before = controller.meals.length;
+
+    expect(find.byKey(const Key('allergy-safety-notice')), findsOneWidget);
+    expect(find.text('Möglicher Allergenkonflikt'), findsOneWidget);
+
+    await _tapVisible(tester, find.byKey(const Key('recipe-add-diary')));
+    expect(find.text('Allergiehinweis'), findsOneWidget);
+    await _tapVisible(tester, find.text('Abbrechen'));
+    expect(controller.meals.length, before);
+
+    await _tapVisible(tester, find.byKey(const Key('recipe-add-diary')));
+    await _tapVisible(tester, find.text('Trotzdem protokollieren'));
+    expect(find.text('Zu welcher Mahlzeit?'), findsOneWidget);
+    await _tapVisible(tester, find.byKey(const ValueKey('meal-slot-lunch')));
+    expect(controller.meals.length, before + 1);
+  });
+
+  testWidgets('Ohne Allergieangaben kein Hinweis und keine Rückfrage', (
+    tester,
+  ) async {
+    final controller = await recipeTestController(plus: false);
+    await _pumpDetail(tester, controller);
+    expect(find.byKey(const Key('allergy-safety-notice')), findsNothing);
+    await _tapVisible(tester, find.byKey(const Key('recipe-add-diary')));
+    expect(find.text('Allergiehinweis'), findsNothing);
+    expect(find.text('Zu welcher Mahlzeit?'), findsOneWidget);
   });
 }

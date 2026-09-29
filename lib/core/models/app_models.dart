@@ -311,6 +311,8 @@ class RecipeIngredient {
     this.measure,
     this.note,
     this.nutrition,
+    this.allergens = const [],
+    this.ingredientsText,
   });
 
   final String foodId;
@@ -327,6 +329,8 @@ class RecipeIngredient {
 
   /// Nutrition of [amountGrams], when the catalog food is known.
   final RecipeNutrition? nutrition;
+  final List<String> allergens;
+  final String? ingredientsText;
 
   String get amountLabel => formatGrams(amountGrams);
 
@@ -388,6 +392,3 @@ class RecipePremiumDetails {
     servingTip,
   ];
 }
-
-// Pantry, shopping list and week plan models live in
-// `features/discover/domain/kitchen_planning.dart`.

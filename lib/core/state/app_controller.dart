@@ -6,8 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../features/discover/application/planning_controller.dart';
-import '../../features/discover/data/planning_store.dart';
+import '../../features/allergies/domain/allergy_safety.dart';
 import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
@@ -32,14 +31,8 @@ class AppController extends ChangeNotifier {
     this.diaryRepository,
     this.avatarRepository,
     SubscriptionRepository? subscriptionRepository,
-    PlanningStore? planningStore,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
-       planning = PlanningController(
-         userId: personalizationUserId,
-         store: planningStore,
-         now: now,
-       ),
        subscription = SubscriptionController(
          // Without an account (demo/preview) premium is never available.
          repository:
@@ -51,14 +44,11 @@ class AppController extends ChangeNotifier {
        ) {
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
-    planning.addListener(notifyListeners);
   }
 
   /// LIVO Premium state of this account; see `SubscriptionController`.
   final SubscriptionController subscription;
 
-  /// Week plan, shopping list and pantry of this account (device-local).
-  final PlanningController planning;
   bool? _premiumCatalog;
   bool _catalogRequested = false;
 
@@ -248,8 +238,40 @@ class AppController extends ChangeNotifier {
   String get greetingName => personalization?.displayName.isNotEmpty == true
       ? personalization!.displayName
       : name;
+
+  /// Whether the profile names at least one allergy or intolerance.
+  bool get hasAllergyProfile => AllergySafety.hasEntries(allergies);
+
+  /// Recipes without a detected conflict with the allergy profile, sorted
+  /// for the personalization. Recipes with a conflict are never suggested.
   List<Recipe> get personalizedRecipes =>
-      prioritizeRecipes(recipes, personalization);
+      prioritizeRecipes(_allergySafeRecipes, personalization);
+
+  /// Recipes hidden because of a detected allergen conflict.
+  int get recipesExcludedForAllergies =>
+      recipes.length - _allergySafeRecipes.length;
+
+  // Screening every recipe on each rebuild is wasteful; the result only
+  // changes with the catalog or the allergy profile.
+  List<Recipe>? _safeRecipesCache;
+  List<Recipe>? _safeRecipesSource;
+  String? _safeRecipesAllergies;
+
+  List<Recipe> get _allergySafeRecipes {
+    final cached = _safeRecipesCache;
+    if (cached != null &&
+        identical(_safeRecipesSource, recipes) &&
+        _safeRecipesSource!.length == recipes.length &&
+        _safeRecipesAllergies == allergies) {
+      return cached;
+    }
+    _safeRecipesSource = recipes;
+    _safeRecipesAllergies = allergies;
+    return _safeRecipesCache = [
+      for (final recipe in recipes)
+        if (!AllergySafety.assessRecipe(recipe, allergies).hasConflict) recipe,
+    ];
+  }
 
   DailyTargets get dailyTargets => DailyTargets.fromProfile(personalization);
 
@@ -321,9 +343,9 @@ class AppController extends ChangeNotifier {
       ActivityPattern.veryActive => 'Sehr aktiv',
       null => activityLevel,
     };
-    if (profile.allergies.trim().isNotEmpty) {
-      allergies = profile.allergies.trim();
-    }
+    allergies = profile.allergies.trim().isEmpty
+        ? 'Keine angegeben'
+        : profile.allergies.trim();
     _syncGoalsWithTargets();
   }
 
@@ -367,9 +389,6 @@ class AppController extends ChangeNotifier {
     _disposed = true;
     subscription
       ..removeListener(_onSubscriptionChanged)
-      ..dispose();
-    planning
-      ..removeListener(notifyListeners)
       ..dispose();
     super.dispose();
   }
@@ -1269,6 +1288,16 @@ class AppController extends ChangeNotifier {
         ? 'Keine angegeben'
         : newAllergies.trim();
     activityLevel = newActivityLevel;
+    final preferences = personalization;
+    if (preferences != null) {
+      unawaited(
+        savePersonalization(
+          preferences.copyWith(
+            allergies: allergies == 'Keine angegeben' ? '' : allergies,
+          ),
+        ),
+      );
+    }
     notifyListeners();
     unawaited(
       _saveProfileSilently({
@@ -1297,6 +1326,20 @@ class AppController extends ChangeNotifier {
     unawaited(_saveReminders());
   }
 
+  /// Week plan, shopping list and pantry were removed from the app. Deletes
+  /// what earlier versions kept for this account on this device.
+  Future<void> deleteRemovedKitchenLists() async {
+    final userId = personalizationUserId;
+    if (userId == null || userId.trim().isEmpty) return;
+    try {
+      await SharedPreferencesAsync().remove(
+        'livo.kitchen.v1.${Uri.encodeComponent(userId)}',
+      );
+    } catch (_) {
+      // Nothing stored or storage unavailable; retried on the next start.
+    }
+  }
+
   void clearLocalDemoData() {
     // Signed-in diary entries and favorites live in Supabase. Clearing only
     // the in-memory copy would hide them until the next start without
@@ -1306,9 +1349,7 @@ class AppController extends ChangeNotifier {
       favoriteRecipeIds.clear();
     }
     waterGlasses = 0;
-    // Also removes the week plan, shopping list and pantry of this account
-    // from this device.
-    unawaited(planning.clearAll());
+    unawaited(deleteRemovedKitchenLists());
     notifyListeners();
   }
 

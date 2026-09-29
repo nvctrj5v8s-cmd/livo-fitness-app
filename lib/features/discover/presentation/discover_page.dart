@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -10,13 +9,11 @@ import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
-import '../domain/kitchen_planning.dart' show weekStartOf;
 import '../domain/recipe_filter.dart';
 import 'cook_from_pantry_page.dart';
-import 'kitchen_format.dart' show countText;
-import 'planning_sheets.dart';
 import 'recipe_card.dart';
 import 'recipe_filters.dart';
+import 'recipe_format.dart';
 
 export 'recipe_detail_page.dart' show RecipeDetailPage;
 
@@ -62,6 +59,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   Widget build(BuildContext context) {
     final controller = AppScope.of(context);
     final recipes = controller.personalizedRecipes;
+    final allergyExcluded = controller.recipesExcludedForAllergies;
     final favoriteIds = controller.favoriteRecipeIds;
     final results = applyRecipeFilter(
       recipes,
@@ -100,6 +98,31 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         'Ideen, die zu deinem Ziel und deinem Alltag passen.',
                   ),
                 ),
+                if (allergyExcluded > 0) ...[
+                  const SizedBox(height: 9),
+                  Row(
+                    key: const Key('recipes-allergy-hidden'),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.no_food_outlined,
+                        size: 16,
+                        color: AppColors.orange,
+                      ),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          '${countText(allergyExcluded, 'Rezept', 'Rezepte')} '
+                          'wegen deiner Allergieangaben ausgeblendet.',
+                          style: const TextStyle(
+                            color: AppColors.orange,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 if (controller.personalization != null) ...[
                   const SizedBox(height: 14),
                   const Text(
@@ -111,9 +134,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 40),
                   child: CookFromPantryBanner(
-                    pantryCount: kitchenPlanningEnabled
-                        ? controller.planning.pantry.length
-                        : 0,
                     onOpen: () => openCookFromPantry(context),
                   ),
                 ),
@@ -231,18 +251,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         showPaywall(context, source: PaywallSource.recipes),
                       ),
                     ),
-                  ),
-                ],
-                const SizedBox(height: 30),
-                if (kitchenPlanningEnabled) ...[
-                  const AnimatedReveal(
-                    delay: Duration(milliseconds: 300),
-                    child: SectionHeader(title: 'Planen & vorbereiten'),
-                  ),
-                  const SizedBox(height: 11),
-                  AnimatedReveal(
-                    delay: const Duration(milliseconds: 350),
-                    child: _PlanningGrid(controller: controller),
                   ),
                 ],
               ],
@@ -405,124 +413,6 @@ class _EmptyResults extends StatelessWidget {
               label: const Text('Alle Filter zurücksetzen'),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PlanningGrid extends StatelessWidget {
-  const _PlanningGrid({required this.controller});
-  final AppController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final planning = controller.planning;
-    final planned = planning.entriesForWeek(weekStartOf(DateTime.now())).length;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 760 ? 3 : 1;
-        const gap = 12.0;
-        final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            _PlanningCard(
-              width: width,
-              icon: Icons.calendar_month_rounded,
-              color: AppColors.mint,
-              title: 'Wochenplan',
-              subtitle: planned == 0
-                  ? 'Rezepte auf Tage verteilen'
-                  : '${countText(planned, 'Mahlzeit', 'Mahlzeiten')} diese Woche',
-              onTap: () => showWeekPlanSheet(context, controller),
-            ),
-            _PlanningCard(
-              width: width,
-              icon: Icons.shopping_bag_outlined,
-              color: AppColors.orange,
-              title: 'Einkaufsliste',
-              subtitle:
-                  '${countText(planning.openShoppingCount, 'Artikel', 'Artikel')} offen',
-              onTap: () => showShoppingSheet(context, controller),
-            ),
-            _PlanningCard(
-              width: width,
-              icon: Icons.kitchen_outlined,
-              color: AppColors.purple,
-              title: 'Vorräte',
-              subtitle:
-                  '${countText(planning.pantry.length, 'Zutat', 'Zutaten')} zu Hause',
-              onTap: () => showPantrySheet(context, controller),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _PlanningCard extends StatelessWidget {
-  const _PlanningCard({
-    required this.width,
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-  final double width;
-  final IconData icon;
-  final Color color;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: PressableScale(
-        onTap: onTap,
-        child: SurfaceCard(
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Icon(icon, color: color),
-              ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.textMuted,
-              ),
-            ],
-          ),
         ),
       ),
     );

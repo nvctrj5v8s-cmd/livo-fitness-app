@@ -260,11 +260,11 @@ void main() {
       suggestedMealSlot(mains, DateTime(2026, 9, 27, 19)),
       MealSlot.dinner,
     );
+    expect(suggestedMealSlot(mains, DateTime(2026, 9, 27, 8)), MealSlot.lunch);
     expect(
-      suggestedMealSlot(mains, DateTime(2026, 9, 27, 8)),
-      MealSlot.lunch,
+      suggestedMealSlot(open, DateTime(2026, 9, 27, 8)),
+      MealSlot.breakfast,
     );
-    expect(suggestedMealSlot(open, DateTime(2026, 9, 27, 8)), MealSlot.breakfast);
     expect(suggestedMealSlot(open, DateTime(2026, 9, 27, 15)), MealSlot.snack);
   });
 }

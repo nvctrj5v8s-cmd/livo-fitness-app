@@ -172,9 +172,9 @@ class PersonalizationProfile {
       usualMeals: _allowedInt(json['usual_meals'], const [2, 3, 4, 5]),
       desiredMeals: _allowedInt(json['desired_meals'], const [2, 3, 4, 5]),
       nutrition: _enumValue(NutritionPreference.values, json['nutrition']),
-      allergies: allergies.length <= 160
+      allergies: allergies.length <= 500
           ? allergies
-          : allergies.substring(0, 160),
+          : allergies.substring(0, 500),
       cookingMinutes: _allowedInt(json['cooking_minutes'], const [15, 30, 45]),
       focus: _enumValue(RoutineFocus.values, json['focus']),
       birthDate: _dateValue(json['birth_date']),

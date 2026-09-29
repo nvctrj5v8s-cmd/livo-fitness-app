@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -10,9 +9,6 @@ import '../../../shared/widgets/ui_components.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
 import '../domain/ingredient_match.dart';
-import '../domain/kitchen_planning.dart';
-import 'kitchen_format.dart';
-import 'planning_sheets.dart';
 import 'recipe_card.dart';
 import 'recipe_format.dart';
 
@@ -29,22 +25,17 @@ Route<void> buildCookFromPantryRoute(BuildContext context, Widget page) {
       : MaterialPageRoute<void>(builder: (_) => page);
 }
 
-Future<void> openCookFromPantry(
-  BuildContext context, {
-  bool usePantry = true,
-}) => Navigator.of(context).push(
-  buildCookFromPantryRoute(context, CookFromPantryPage(usePantry: usePantry)),
-);
+/// Longest ingredient name that can be typed in.
+const _maxNameLength = 60;
+
+Future<void> openCookFromPantry(BuildContext context) => Navigator.of(
+  context,
+).push(buildCookFromPantryRoute(context, const CookFromPantryPage()));
 
 /// Prominent entry in the recipe tab.
 class CookFromPantryBanner extends StatelessWidget {
-  const CookFromPantryBanner({
-    required this.pantryCount,
-    required this.onOpen,
-    super.key,
-  });
+  const CookFromPantryBanner({required this.onOpen, super.key});
 
-  final int pantryCount;
   final VoidCallback onOpen;
 
   @override
@@ -87,15 +78,9 @@ class CookFromPantryBanner extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                   ),
                   const SizedBox(height: 3),
-                  Text(
-                    pantryCount == 0
-                        ? 'Rezepte mit dem, was du zu Hause hast'
-                        : 'Rezepte passend zu deinen Vorräten '
-                              '(${countText(pantryCount, 'Zutat', 'Zutaten')})',
-                    style: const TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13,
-                    ),
+                  const Text(
+                    'Rezepte mit dem, was du zu Hause hast',
+                    style: TextStyle(color: AppColors.textMuted, fontSize: 13),
                   ),
                 ],
               ),
@@ -108,13 +93,10 @@ class CookFromPantryBanner extends StatelessWidget {
   }
 }
 
-/// "Was kann ich kochen?": pick what is at home (or use the pantry) and get
+/// "Was kann ich kochen?": pick what is at home and get
 /// catalog recipes ranked by how much of them is already there.
 class CookFromPantryPage extends StatefulWidget {
-  const CookFromPantryPage({this.usePantry = true, super.key});
-
-  /// Whether the pantry counts as "at home" when the page opens.
-  final bool usePantry;
+  const CookFromPantryPage({super.key});
 
   @override
   State<CookFromPantryPage> createState() => _CookFromPantryPageState();
@@ -124,7 +106,9 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
   final _input = TextEditingController();
   final _focus = FocusNode();
   final List<String> _extra = [];
-  late bool _usePantry = kitchenPlanningEnabled && widget.usePantry;
+
+  /// Whether salt, pepper, oil, water and common spices count as available.
+  bool _assumeBasics = true;
   String _query = '';
 
   @override
@@ -136,7 +120,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
 
   void _addExtra(String raw) {
     final name = raw.trim().replaceAll(RegExp(r'\s+'), ' ');
-    if (name.isEmpty || name.length > kitchenNameMaxLength) return;
+    if (name.isEmpty || name.length > _maxNameLength) return;
     setState(() {
       if (!IngredientInventory(_extra).has(name)) _extra.add(name);
       _input.clear();
@@ -158,66 +142,18 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
     });
   }
 
-  void _showMessage(String text, {SnackBarAction? action}) {
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(SnackBar(content: Text(text), action: action));
-  }
-
-  void _addMissing(AppController controller, RecipeMatch match) {
-    final merge = controller.planning.addShoppingDrafts(
-      shoppingDraftsForIngredients(match.recipe, match.missing),
-    );
-    if (merge == null) {
-      _showMessage(
-        controller.planning.loadError ?? 'Deine Listen werden noch geladen.',
-      );
-      return;
-    }
-    final added = merge.added.length;
-    _showMessage(
-      added == 0
-          ? 'Die fehlenden Zutaten stehen schon auf deiner Einkaufsliste.'
-          : '${countText(added, 'Zutat', 'Zutaten')} auf die Einkaufsliste '
-                'gesetzt.${controller.planning.persistent ? '' : ' Ohne Konto nur bis zum Neustart.'}',
-      action: SnackBarAction(
-        label: 'Ansehen',
-        onPressed: () => unawaited(showShoppingSheet(context, controller)),
-      ),
-    );
-  }
-
-  void _saveExtrasToPantry(AppController controller) {
-    var added = 0;
-    for (final name in _extra) {
-      if (controller.planning.addPantryItem(name).changed) added++;
-    }
-    setState(() {
-      _extra.clear();
-      _usePantry = true;
-    });
-    _showMessage(
-      added == 0
-          ? 'Diese Zutaten sind schon in deinen Vorräten.'
-          : '${countText(added, 'Zutat', 'Zutaten')} in deine Vorräte '
-                'übernommen.',
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final controller = AppScope.of(context);
-    final planning = controller.planning;
-    final pantryNames = planning.pantryNames;
-    final have = [if (_usePantry) ...pantryNames, ..._extra];
+    final have = _extra;
     final matches = matchRecipesToInventory(
       controller.personalizedRecipes,
       have,
-      assumeBasics: planning.assumeBasics,
+      assumeBasics: _assumeBasics,
     );
     final cookNow = matches.where((match) => match.canCookNow).length;
     final suggestions = ingredientSuggestions(
-      controller.recipes,
+      controller.personalizedRecipes,
       _query,
       exclude: have,
     );
@@ -271,7 +207,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                                 key: const Key('cook-input'),
                                 controller: _input,
                                 focusNode: _focus,
-                                maxLength: kitchenNameMaxLength,
+                                maxLength: _maxNameLength,
                                 textInputAction: TextInputAction.done,
                                 onChanged: (value) =>
                                     setState(() => _query = value),
@@ -317,25 +253,6 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                             ],
                           ),
                         ],
-                        if (kitchenPlanningEnabled &&
-                            pantryNames.isNotEmpty) ...[
-                          const SizedBox(height: 8),
-                          SwitchListTile(
-                            key: const Key('cook-use-pantry'),
-                            contentPadding: EdgeInsets.zero,
-                            value: _usePantry,
-                            onChanged: (value) =>
-                                setState(() => _usePantry = value),
-                            title: Text(
-                              'Meine Vorräte verwenden (${pantryNames.length})',
-                            ),
-                            subtitle: Text(
-                              pantryNames.join(', '),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
                         if (_extra.isNotEmpty) ...[
                           const SizedBox(height: 10),
                           Wrap(
@@ -352,23 +269,6 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                                 ),
                             ],
                           ),
-                          if (kitchenPlanningEnabled)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton.icon(
-                                key: const Key('cook-save-to-pantry'),
-                                onPressed: planning.ready
-                                    ? () => _saveExtrasToPantry(controller)
-                                    : null,
-                                icon: const Icon(
-                                  Icons.kitchen_outlined,
-                                  size: 18,
-                                ),
-                                label: const Text(
-                                  'Auswahl in Vorräte übernehmen',
-                                ),
-                              ),
-                            ),
                         ],
                         const SizedBox(height: 12),
                         const Text(
@@ -406,10 +306,9 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                         SwitchListTile(
                           key: const Key('cook-basics'),
                           contentPadding: EdgeInsets.zero,
-                          value: planning.assumeBasics,
-                          onChanged: planning.ready
-                              ? planning.setAssumeBasics
-                              : null,
+                          value: _assumeBasics,
+                          onChanged: (value) =>
+                              setState(() => _assumeBasics = value),
                           title: const Text('Grundzutaten sind vorhanden'),
                           subtitle: const Text(kitchenBasicsLabel),
                         ),
@@ -444,10 +343,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                             'Namen, zum Beispiel „Nudeln“ statt „Spaghetti“.',
                       )
                     else
-                      _MatchList(
-                        matches: matches,
-                        onAddMissing: (match) => _addMissing(controller, match),
-                      ),
+                      _MatchList(matches: matches),
                   ],
                   if (showPremium) ...[
                     const SizedBox(height: 18),
@@ -500,10 +396,9 @@ class _Hint extends StatelessWidget {
 }
 
 class _MatchList extends StatelessWidget {
-  const _MatchList({required this.matches, required this.onAddMissing});
+  const _MatchList({required this.matches});
 
   final List<RecipeMatch> matches;
-  final ValueChanged<RecipeMatch> onAddMissing;
 
   @override
   Widget build(BuildContext context) {
@@ -520,10 +415,7 @@ class _MatchList extends StatelessWidget {
             for (final match in matches)
               SizedBox(
                 width: width,
-                child: _MatchCard(
-                  match: match,
-                  onAddMissing: () => onAddMissing(match),
-                ),
+                child: _MatchCard(match: match),
               ),
           ],
         );
@@ -533,10 +425,9 @@ class _MatchList extends StatelessWidget {
 }
 
 class _MatchCard extends StatelessWidget {
-  const _MatchCard({required this.match, required this.onAddMissing});
+  const _MatchCard({required this.match});
 
   final RecipeMatch match;
-  final VoidCallback onAddMissing;
 
   String _names(List<RecipeIngredient> ingredients) => [
     for (final ingredient in ingredients)
@@ -681,18 +572,6 @@ class _MatchCard extends StatelessWidget {
                 text: _names(match.assumedBasics),
                 color: AppColors.textMuted,
               ),
-            if (kitchenPlanningEnabled && match.missing.isNotEmpty) ...[
-              const SizedBox(height: 6),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: OutlinedButton.icon(
-                  key: ValueKey('cook-missing-to-shopping-${recipe.id}'),
-                  onPressed: onAddMissing,
-                  icon: const Icon(Icons.add_shopping_cart_rounded, size: 18),
-                  label: const Text('Fehlende Zutaten auf die Einkaufsliste'),
-                ),
-              ),
-            ],
           ],
         ),
       ),

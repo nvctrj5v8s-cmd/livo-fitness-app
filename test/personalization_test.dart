@@ -45,10 +45,14 @@ void main() {
     expect(find.textContaining('lb'), findsWidgets);
     await _next(tester);
     await _tap(tester, 'personal-activity-mixed');
-    await tester.enterText(
-      find.byKey(const ValueKey('personal-allergies')),
-      'Erdnüsse',
-    );
+    await tester.ensureVisible(find.byKey(const Key('edit-allergies')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('edit-allergies')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('peanuts')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('save-allergies')));
+    await tester.pumpAndSettle();
     await _next(tester);
 
     expect(result, isNotNull);

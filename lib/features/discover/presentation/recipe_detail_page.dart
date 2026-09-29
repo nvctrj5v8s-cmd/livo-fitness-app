@@ -3,17 +3,15 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../allergies/domain/allergy_safety.dart';
+import '../../allergies/presentation/allergy_profile_field.dart';
 import '../../profile/domain/daily_targets.dart';
 import '../../subscription/presentation/paywall_page.dart';
-import '../domain/ingredient_match.dart' show ingredientDisplayName;
-import '../domain/kitchen_planning.dart';
 import '../domain/recipe_serving.dart';
 import 'cook_mode_page.dart';
-import 'planning_sheets.dart';
 import 'recipe_card.dart';
 import 'recipe_detail_sections.dart';
 import 'recipe_sheets.dart';
@@ -91,6 +89,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   }
 
   Future<void> _addToDiary(AppController controller, Recipe recipe) async {
+    if (!await _confirmAllergyOverride(controller, recipe, 'protokollieren')) {
+      return;
+    }
+    if (!mounted) return;
     final slot = await showMealSlotSheet(
       context,
       recipe: recipe,
@@ -107,53 +109,36 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     );
   }
 
-  void _addToShopping(
+  Future<bool> _confirmAllergyOverride(
     AppController controller,
     Recipe recipe,
-    List<ScaledIngredient> ingredients,
-  ) {
-    final merge = controller.planning.addShoppingDrafts([
-      for (final (index, item) in ingredients.indexed)
-        if (!_checked.contains(index))
-          ShoppingDraft(
-            name: ingredientDisplayName(item.name),
-            amount: item.grams > 0
-                ? KitchenAmount(item.grams.ceilToDouble(), KitchenUnit.gram)
-                : null,
-            note: item.measure,
-            source: recipe.title,
+    String action,
+  ) async {
+    final assessment = AllergySafety.assessRecipe(recipe, controller.allergies);
+    if (!assessment.hasConflict) return true;
+    final conflicts = assessment.conflicts.join(', ');
+    return await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Allergiehinweis'),
+            content: Text(
+              'Die Zutatenangaben nennen m\u00F6glicherweise: $conflicts. '
+              'Pr\u00FCfe die Packungen und m\u00F6gliche Kreuzkontamination. '
+              'M\u00F6chtest du das Rezept trotzdem $action?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Abbrechen'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: Text('Trotzdem $action'),
+              ),
+            ],
           ),
-    ]);
-    if (merge == null) {
-      _showMessage(
-        controller.planning.loadError ?? 'Deine Listen werden noch geladen.',
-      );
-      return;
-    }
-    final added = merge.added.length;
-    _showMessage(
-      added == 0
-          ? 'Diese Zutaten stehen schon auf deiner Einkaufsliste.'
-          : '${added == 1 ? '1 Zutat' : '$added Zutaten'} auf die '
-                'Einkaufsliste gesetzt.'
-                '${controller.planning.persistent ? ' Gespeichert nur auf diesem Gerät.' : ' Ohne Konto bleibt die Liste nur bis zum Neustart der App erhalten.'}',
-      action: SnackBarAction(
-        label: 'Ansehen',
-        onPressed: () => showShoppingSheet(context, controller),
-      ),
-    );
-  }
-
-  Future<void> _addToPlan(AppController controller, Recipe recipe) async {
-    final message = await planRecipeWithSheet(context, controller, recipe);
-    if (message == null || !mounted) return;
-    _showMessage(
-      message,
-      action: SnackBarAction(
-        label: 'Wochenplan',
-        onPressed: () => showWeekPlanSheet(context, controller),
-      ),
-    );
+        ) ??
+        false;
   }
 
   Future<void> _openGoal(AppController controller, Recipe recipe) async {
@@ -256,6 +241,15 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
         RecipeIntro(recipe: recipe),
         const SizedBox(height: 18),
         RecipeFactsCard(recipe: recipe),
+        if (controller.hasAllergyProfile) ...[
+          const SizedBox(height: 14),
+          AllergySafetyNotice(
+            assessment: AllergySafety.assessRecipe(
+              recipe,
+              controller.allergies,
+            ),
+          ),
+        ],
       ],
     );
     final nutrition = RecipeNutritionCard(
@@ -275,9 +269,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       checked: _checked,
       onToggle: _toggleIngredient,
       onClearChecks: () => setState(_checked.clear),
-      onAddToShopping: kitchenPlanningEnabled
-          ? () => _addToShopping(controller, recipe, ingredients)
-          : null,
     );
     final steps = RecipeStepsSection(
       recipe: recipe,
@@ -393,15 +384,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               ),
             ),
             actions: [
-              if (kitchenPlanningEnabled) ...[
-                _OverlayButton(
-                  key: const Key('recipe-add-plan'),
-                  icon: Icons.calendar_month_rounded,
-                  tooltip: 'Zum Wochenplan hinzufügen',
-                  onPressed: () => _addToPlan(controller, recipe),
-                ),
-                const SizedBox(width: 8),
-              ],
               _OverlayButton(
                 icon: favorite
                     ? Icons.favorite_rounded
@@ -473,7 +455,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
 /// Round icon button that stays readable on top of photos.
 class _OverlayButton extends StatelessWidget {
   const _OverlayButton({
-    super.key,
     required this.icon,
     required this.tooltip,
     required this.onPressed,
