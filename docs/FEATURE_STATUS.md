@@ -1,5 +1,23 @@
 # Funktionsstatus
 
+## Aktualisierung: Wochenplan, Einkaufsliste und Vorräte ausgeblendet, 29. September 2026
+
+- Wochenplan, Einkaufsliste und Vorräte sind vorerst **nicht mehr in der App
+  erreichbar**. Gesteuert über den Schalter `kitchenPlanningEnabled` in
+  `lib/core/config/feature_flags.dart` (aktuell `false`).
+- Ausgeblendet: der Bereich „Planen & vorbereiten“ im Rezepte-Tab, der
+  Wochenplan-Knopf und „Zutaten auf die Einkaufsliste“ in der Rezeptansicht
+  sowie in „Was kann ich kochen?“ der Schalter „Meine Vorräte verwenden“,
+  „Auswahl in Vorräte übernehmen“ und „Fehlende Zutaten auf die
+  Einkaufsliste“. Die Einführung und der Löschdialog erwähnen die Funktionen
+  nicht mehr.
+- **Weiterhin aktiv:** „Was kann ich kochen?“ mit selbst gewählten Zutaten
+  (ohne Vorräte) und die Haken „schon da“ in der Zutatenliste eines Rezepts.
+- Code, gespeicherte Daten und Tests bleiben erhalten. Bereits auf dem Gerät
+  gespeicherte Listen werden nicht angezeigt, aber auch nicht gelöscht; „Demodaten
+  löschen“ in den Einstellungen leert sie weiterhin. Die Beschreibungen der
+  Abschnitte darunter gelten wieder, sobald der Schalter auf `true` steht.
+
 ## Aktualisierung: Neue Einkaufsliste, 29. September 2026
 
 - **Ein Eingabefeld für Name und Menge:** „500 g Reis“, „Reis 500g“,
@@ -502,12 +520,12 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Mahlzeit hinzufügen | Lokale Textsuche in fünf Demo-Gerichten; Auswahl fügt eine Mahlzeit hinzu und berechnet Kalorien/Makros neu |
 | Tagebuch | Tagesansicht, Bilanz, Mahlzeitenliste, Entfernen per Wischgeste sowie Wasser erhöhen und verringern |
 | Rezepte | Suche nach Titel, Kategorienfilter, Favoriten, drei lokale Rezepte mit Bildern und Hero-Detailansicht |
-| Einkaufsliste | Ein Eingabefeld für Name und Menge („500 g Reis“), Schnellauswahl und Vorschläge, Sortierung nach Supermarkt-Abteilung, Abhaken mit Fortschrittsring und Bereich „Im Wagen“, Bearbeiten, Löschen mit Rückgängig, Liste als Text kopieren, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 29.09.2026) |
+| Einkaufsliste | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Ein Eingabefeld für Name und Menge („500 g Reis“), Schnellauswahl und Vorschläge, Sortierung nach Supermarkt-Abteilung, Abhaken mit Fortschrittsring und Bereich „Im Wagen“, Bearbeiten, Löschen mit Rückgängig, Liste als Text kopieren, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 29.09.2026) |
 | Fortschritt | Animierter Gewichtsgraph mit Zielmarke; sieben Punkte sind antippbar und ändern den angezeigten Wert |
 | Weitere Diagramme | Animierte Wochenbalken für Kalorien und Protein sowie lokale Statistik- und Meilensteinkarten |
 | Profil | Profilansicht mit lokalem Avatar; Name, Ziel, Kalorienziel und Zielgewicht lassen sich bearbeiten |
 | Ernährungsprofil | Stil, Allergien und Aktivitätsniveau lassen sich lokal bearbeiten |
-| Planung & Vorräte | Wochenplan, Einkaufsliste und Vorräte werden pro Konto auf diesem Gerät gespeichert und überstehen einen Neustart; keine Cloud-Synchronisierung (Stand 27.09.2026) |
+| Planung & Vorräte | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Wochenplan, Einkaufsliste und Vorräte werden pro Konto auf diesem Gerät gespeichert und überstehen einen Neustart; keine Cloud-Synchronisierung (Stand 27.09.2026) |
 | Was kann ich kochen? | Zutaten wählen oder Vorräte nutzen; Katalogrezepte nach Anteil vorhandener Zutaten sortiert, fehlende Zutaten sichtbar und auf die Einkaufsliste übertragbar (Stand 27.09.2026) |
 | Einstellungen | Premium-Vorschau, Erinnerungs-Schalter, Datenübersicht, Löschdialog und Sicherheitshinweise |
 | Animationen | Seitenwechsel, gestaffelte Reveals, Press-Feedback, Ringe, Zahlen, Balken, Favoriten und Coach-Orb |
@@ -520,8 +538,8 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Tagesauswahl | Sieben auswählbare Tage | Eigene Mahlzeiten und Summen je Datum; echte Kalenderdaten |
 | Mahlzeitenerfassung | Demo-Suche und schnelles Hinzufügen | Freier Eintrag, Mengen, Bearbeiten, eigene Lebensmittel und Validierung |
 | Rezeptdetails | Bild, Kennzahlen, Zutaten- und Zubereitungsansicht; Rezept kann ins Tagebuch übernommen werden | Rezeptspezifische Zutaten/Zubereitung und Portionseditor |
-| Wochenplan | Echte Kalenderwochen, Rezepte je Tag und Mahlzeit mit Portionen einplanen, verschieben, entfernen, Woche leeren, Einkaufsliste aus der Woche erstellen | Synchronisierung zwischen Geräten, Drag & Drop, Übernahme ins Tagebuch |
-| Vorräte | Hinzufügen/Entfernen, optionale Menge, Schnellauswahl häufiger Zutaten, Rezeptabgleich „Was kann ich kochen?“ | Ablaufdaten, automatische Verbrauchsbuchung beim Kochen, Synchronisierung zwischen Geräten |
+| Wochenplan | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Echte Kalenderwochen, Rezepte je Tag und Mahlzeit mit Portionen einplanen, verschieben, entfernen, Woche leeren, Einkaufsliste aus der Woche erstellen | Synchronisierung zwischen Geräten, Drag & Drop, Übernahme ins Tagebuch |
+| Vorräte | **Derzeit ausgeblendet (29.09.2026), siehe oben.** Hinzufügen/Entfernen, optionale Menge, Schnellauswahl häufiger Zutaten, Rezeptabgleich „Was kann ich kochen?“ | Ablaufdaten, automatische Verbrauchsbuchung beim Kochen, Synchronisierung zwischen Geräten |
 | Fortschrittszeiträume | Auswahl für 4 Wochen, 3 Monate und 1 Jahr | Je Zeitraum unterschiedliche Daten und Achsen |
 | Profilbild | Lokaler Avatar und Kameraindikator | Bildauswahl, Zuschneiden, Berechtigungen und Speicherung |
 | Ernährungsprofil | Ernährungsstil, Allergien, Aktivität und Mahlzeitenrhythmus sichtbar und editierbar | Nutzung in personalisierten Berechnungen |
