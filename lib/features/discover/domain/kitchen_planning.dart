@@ -228,6 +228,22 @@ class ShoppingItem {
     addedAt: addedAt,
   );
 
+  /// Same entry with a new name and amount; `null` clears amount or note.
+  ShoppingItem withDetails({
+    required String name,
+    KitchenAmount? amount,
+    String? note,
+  }) => ShoppingItem(
+    id: id,
+    name: name,
+    amount: amount,
+    note: note,
+    done: done,
+    source: source,
+    planKey: planKey,
+    addedAt: addedAt,
+  );
+
   Map<String, Object?> toJson() => {
     'id': id,
     'name': name,

@@ -320,6 +320,43 @@ void main() {
   });
 
   group('PlanningController', () {
+    test('Einkaufsartikel bearbeiten: Menge ändern, behalten, Halal', () {
+      final planning = PlanningController(now: () => _now);
+      planning
+        ..addShoppingItem('Reis', amountText: '500 g')
+        ..addShoppingItem('Milch');
+      final rice = planning.shopping.first;
+      planning.toggleShoppingItem(rice.id);
+      expect(
+        planning
+            .updateShoppingItem(
+              rice.id,
+              name: 'Basmatireis',
+              amountText: '1 kg',
+            )
+            .status,
+        KitchenEditStatus.merged,
+      );
+      final edited = planning.shopping.first;
+      expect(edited.name, 'Basmatireis');
+      expect(edited.amount, const KitchenAmount(1000, KitchenUnit.gram));
+      expect(edited.done, isTrue);
+      planning.updateShoppingItem(rice.id, name: 'Reis', keepAmount: true);
+      expect(planning.shopping.first.amount, edited.amount);
+      planning.updateShoppingItem(rice.id, name: 'Reis');
+      expect(planning.shopping.first.amount, isNull);
+      expect(
+        planning.updateShoppingItem(rice.id, name: 'milch').status,
+        KitchenEditStatus.duplicate,
+      );
+      expect(
+        planning.updateShoppingItem(rice.id, name: 'Weißwein').status,
+        KitchenEditStatus.invalid,
+      );
+      expect(planning.shopping.first.name, 'Reis');
+      planning.dispose();
+    });
+
     test('ohne Konto: nur im Speicher, sofort nutzbar', () {
       final planning = PlanningController(now: () => _now);
       expect(planning.persistent, isFalse);

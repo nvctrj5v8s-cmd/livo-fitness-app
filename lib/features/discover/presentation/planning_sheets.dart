@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -14,8 +13,12 @@ import '../domain/recipe_filter.dart' show recipeMatchesQuery;
 import '../domain/recipe_serving.dart';
 import 'cook_from_pantry_page.dart';
 import 'kitchen_format.dart';
+import 'kitchen_widgets.dart';
 import 'recipe_card.dart';
 import 'recipe_format.dart';
+import 'shopping_list_sheet.dart';
+
+export 'shopping_list_sheet.dart' show showShoppingSheet;
 
 Future<void> showWeekPlanSheet(BuildContext context, AppController controller) {
   return showModalBottomSheet<void>(
@@ -23,15 +26,6 @@ Future<void> showWeekPlanSheet(BuildContext context, AppController controller) {
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => _WeekPlanSheet(controller: controller),
-  );
-}
-
-Future<void> showShoppingSheet(BuildContext context, AppController controller) {
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) => _ShoppingSheet(controller: controller),
   );
 }
 
@@ -126,36 +120,6 @@ Recipe? _recipeById(AppController controller, String id) {
   return null;
 }
 
-Future<bool> _confirm(
-  BuildContext context, {
-  required String title,
-  required String body,
-  required String action,
-}) async {
-  final confirmed = await showDialog<bool>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text('Abbrechen'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(dialogContext, true),
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.error,
-            foregroundColor: AppColors.black,
-          ),
-          child: Text(action),
-        ),
-      ],
-    ),
-  );
-  return confirmed == true;
-}
-
 // --- Week plan ---------------------------------------------------------------
 
 class _WeekPlanSheet extends StatefulWidget {
@@ -238,7 +202,7 @@ class _WeekPlanSheetState extends State<_WeekPlanSheet> {
   }
 
   Future<void> _clearWeek() async {
-    final confirmed = await _confirm(
+    final confirmed = await confirmKitchenAction(
       context,
       title: 'Woche leeren?',
       body:
@@ -338,7 +302,7 @@ class _WeekPlanSheetState extends State<_WeekPlanSheet> {
         final entries = _planning.entriesForWeek(_monday);
         final today = kitchenDay(DateTime.now());
         final isCurrentWeek = sameKitchenDay(_monday, weekStartOf(today));
-        return _SheetFrame(
+        return KitchenSheetFrame(
           title: 'Wochenplan',
           subtitle: entries.isEmpty
               ? 'Noch nichts geplant'
@@ -357,12 +321,12 @@ class _WeekPlanSheetState extends State<_WeekPlanSheet> {
               ),
               if (_message != null) ...[
                 const SizedBox(height: 8),
-                _Feedback(text: _message!),
+                KitchenFeedback(text: _message!),
               ],
             ],
           ),
           children: [
-            _StorageStatus(planning: _planning),
+            KitchenStorageStatus(planning: _planning),
             if (_planning.ready) ...[
               for (final (index, day) in weekDays(_monday).indexed) ...[
                 _DayCard(
@@ -867,7 +831,7 @@ class _RecipePickerSheetState extends State<_RecipePickerSheet> {
       for (final recipe in widget.controller.personalizedRecipes)
         if (recipeMatchesQuery(recipe, _query)) recipe,
     ];
-    return _SheetFrame(
+    return KitchenSheetFrame(
       title: 'Rezept wählen',
       subtitle: countText(recipes.length, 'Rezept', 'Rezepte'),
       top: TextField(
@@ -954,225 +918,6 @@ class _RecipePickerSheetState extends State<_RecipePickerSheet> {
   }
 }
 
-// --- Shopping list -------------------------------------------------------------
-
-class _ShoppingSheet extends StatefulWidget {
-  const _ShoppingSheet({required this.controller});
-  final AppController controller;
-
-  @override
-  State<_ShoppingSheet> createState() => _ShoppingSheetState();
-}
-
-class _ShoppingSheetState extends State<_ShoppingSheet> {
-  final _name = TextEditingController();
-  final _amount = TextEditingController();
-  String? _message;
-
-  PlanningController get _planning => widget.controller.planning;
-
-  @override
-  void dispose() {
-    _name.dispose();
-    _amount.dispose();
-    super.dispose();
-  }
-
-  void _add() {
-    final name = _name.text.trim();
-    if (name.isEmpty) return;
-    final result = _planning.addShoppingItem(name, amountText: _amount.text);
-    setState(() {
-      _message = switch (result.status) {
-        KitchenEditStatus.added || KitchenEditStatus.merged => null,
-        KitchenEditStatus.duplicate => '„$name“ steht schon auf der Liste.',
-        _ => result.message,
-      };
-      if (result.changed) {
-        _name.clear();
-        _amount.clear();
-      }
-    });
-  }
-
-  void _moveToPantry() {
-    final moved = _planning.moveCheckedToPantryItems();
-    setState(
-      () => _message = moved == 0
-          ? null
-          : '${countText(moved, 'Artikel', 'Artikel')} in deine Vorräte '
-                'übernommen.',
-    );
-  }
-
-  Future<void> _clearAll() async {
-    final confirmed = await _confirm(
-      context,
-      title: 'Einkaufsliste leeren?',
-      body: 'Alle Einträge werden entfernt, auch noch offene.',
-      action: 'Leeren',
-    );
-    if (!confirmed || !mounted) return;
-    _planning.clearShopping();
-    setState(() => _message = 'Die Einkaufsliste ist leer.');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: _planning,
-      builder: (context, _) {
-        final items = _planning.shopping;
-        final open = _planning.openShoppingCount;
-        final checked = _planning.checkedShoppingCount;
-        return _SheetFrame(
-          title: 'Einkaufsliste',
-          subtitle: '${countText(open, 'Artikel', 'Artikel')} offen',
-          top: _planning.ready
-              ? _NameAmountInput(
-                  nameController: _name,
-                  amountController: _amount,
-                  nameHint: 'Artikel hinzufügen',
-                  nameIcon: Icons.shopping_bag_outlined,
-                  keyPrefix: 'shopping',
-                  onSubmit: _add,
-                  message: _message,
-                )
-              : null,
-          children: [
-            _StorageStatus(planning: _planning),
-            if (_planning.ready && items.isEmpty)
-              const _EmptyHint(
-                icon: Icons.shopping_bag_outlined,
-                text:
-                    'Deine Einkaufsliste ist leer. Füge Artikel hinzu, setze '
-                    'fehlende Zutaten aus einem Rezept darauf oder erstelle '
-                    'sie aus deinem Wochenplan.',
-              ),
-            if (checked > 0) ...[
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  FilledButton.tonalIcon(
-                    key: const Key('shopping-move-to-pantry'),
-                    onPressed: _moveToPantry,
-                    icon: const Icon(Icons.kitchen_outlined, size: 19),
-                    label: Text('$checked erledigte in Vorräte'),
-                  ),
-                  TextButton.icon(
-                    key: const Key('shopping-clear-checked'),
-                    onPressed: () {
-                      final removed = _planning.clearCheckedShopping();
-                      setState(
-                        () => _message =
-                            '${countText(removed, 'erledigter Artikel', 'erledigte Artikel')} '
-                            'entfernt.',
-                      );
-                    },
-                    icon: const Icon(Icons.done_all_rounded, size: 19),
-                    label: const Text('Erledigte löschen'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-            ],
-            for (final item in items)
-              _ShoppingRow(
-                item: item,
-                onToggle: () => _planning.toggleShoppingItem(item.id),
-                onRemove: () {
-                  _planning.removeShoppingItem(item.id);
-                  setState(() => _message = '„${item.name}“ entfernt.');
-                },
-              ),
-            if (items.isNotEmpty)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  key: const Key('shopping-clear-all'),
-                  onPressed: _clearAll,
-                  style: TextButton.styleFrom(foregroundColor: AppColors.error),
-                  icon: const Icon(Icons.delete_outline_rounded),
-                  label: const Text('Liste leeren'),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _ShoppingRow extends StatelessWidget {
-  const _ShoppingRow({
-    required this.item,
-    required this.onToggle,
-    required this.onRemove,
-  });
-
-  final ShoppingItem item;
-  final VoidCallback onToggle;
-  final VoidCallback onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    final amount = kitchenAmountLabel(item.amount, item.note);
-    final details = [
-      ?amount,
-      if (item.source != null) 'für ${item.source}',
-    ].join(' · ');
-    return Dismissible(
-      key: ValueKey('shopping-dismiss-${item.id}'),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) => onRemove(),
-      background: const Align(
-        alignment: Alignment.centerRight,
-        child: Padding(
-          padding: EdgeInsets.only(right: 18),
-          child: Icon(Icons.delete_outline, color: AppColors.error),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: CheckboxListTile(
-              key: ValueKey('shopping-item-${item.id}'),
-              value: item.done,
-              activeColor: AppColors.primary,
-              checkColor: AppColors.black,
-              controlAffinity: ListTileControlAffinity.leading,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 3),
-              title: Text(
-                item.name,
-                style: TextStyle(
-                  decoration: item.done ? TextDecoration.lineThrough : null,
-                  color: item.done ? AppColors.textMuted : AppColors.text,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              subtitle: details.isEmpty
-                  ? null
-                  : Text(
-                      details,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: AppColors.textMuted),
-                    ),
-              onChanged: (_) => onToggle(),
-            ),
-          ),
-          IconButton(
-            onPressed: onRemove,
-            tooltip: '${item.name} entfernen',
-            icon: const Icon(Icons.close_rounded, color: AppColors.textMuted),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 // --- Pantry --------------------------------------------------------------------
 
 class _PantrySheet extends StatefulWidget {
@@ -1220,7 +965,7 @@ class _PantrySheetState extends State<_PantrySheet> {
   }
 
   Future<void> _clearAll() async {
-    final confirmed = await _confirm(
+    final confirmed = await confirmKitchenAction(
       context,
       title: 'Alle Vorräte entfernen?',
       body: 'Alle Zutaten in deinen Vorräten werden entfernt.',
@@ -1248,7 +993,7 @@ class _PantrySheetState extends State<_PantrySheet> {
       listenable: _planning,
       builder: (context, _) {
         final items = _planning.pantry;
-        return _SheetFrame(
+        return KitchenSheetFrame(
           title: 'Meine Vorräte',
           subtitle: '${countText(items.length, 'Zutat', 'Zutaten')} zu Hause',
           top: _planning.ready
@@ -1263,7 +1008,7 @@ class _PantrySheetState extends State<_PantrySheet> {
                 )
               : null,
           children: [
-            _StorageStatus(planning: _planning),
+            KitchenStorageStatus(planning: _planning),
             if (_planning.ready) ...[
               FilledButton.icon(
                 key: const Key('pantry-cook'),
@@ -1467,156 +1212,10 @@ class _NameAmountInput extends StatelessWidget {
       children: [
         fields,
         const SizedBox(height: 8),
-        _Feedback(text: text),
+        KitchenFeedback(text: text),
       ],
     );
   }
-}
-
-/// Honest storage note plus load/save problems.
-class _StorageStatus extends StatelessWidget {
-  const _StorageStatus({required this.planning});
-
-  final PlanningController planning;
-
-  @override
-  Widget build(BuildContext context) {
-    final loadError = planning.loadError;
-    final saveError = planning.saveError;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (planning.loading)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(child: Text('Deine Listen werden geladen …')),
-                ],
-              ),
-            ),
-          if (loadError != null)
-            _ErrorBox(
-              text: loadError,
-              actions: [
-                TextButton(
-                  onPressed: () => unawaited(planning.load()),
-                  child: const Text('Erneut versuchen'),
-                ),
-                TextButton(
-                  key: const Key('kitchen-reset'),
-                  onPressed: () async {
-                    final confirmed = await _confirm(
-                      context,
-                      title: 'Gespeicherte Listen zurücksetzen?',
-                      body:
-                          'Wochenplan, Einkaufsliste und Vorräte dieses Kontos '
-                          'werden auf diesem Gerät gelöscht.',
-                      action: 'Zurücksetzen',
-                    );
-                    if (confirmed) unawaited(planning.clearAll());
-                  },
-                  child: const Text('Zurücksetzen'),
-                ),
-              ],
-            ),
-          if (saveError != null) _ErrorBox(text: saveError),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                planning.persistent
-                    ? Icons.phone_android_rounded
-                    : Icons.info_outline_rounded,
-                size: 16,
-                color: AppColors.textMuted,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  planning.persistent
-                      ? 'Nur auf diesem Gerät gespeichert – nicht in der Cloud '
-                            'und nicht auf deinen anderen Geräten.'
-                      : 'Ohne Konto gilt diese Liste nur bis zum Neustart der '
-                            'App.',
-                  key: const Key('kitchen-storage-note'),
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ErrorBox extends StatelessWidget {
-  const _ErrorBox({required this.text, this.actions = const []});
-
-  final String text;
-  final List<Widget> actions;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: 10),
-    padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
-    decoration: BoxDecoration(
-      color: AppColors.error.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(
-              Icons.error_outline_rounded,
-              color: AppColors.error,
-              size: 19,
-            ),
-            const SizedBox(width: 8),
-            Expanded(child: Text(text)),
-          ],
-        ),
-        if (actions.isNotEmpty) Wrap(spacing: 4, children: actions),
-        if (actions.isEmpty) const SizedBox(height: 4),
-      ],
-    ),
-  );
-}
-
-class _Feedback extends StatelessWidget {
-  const _Feedback({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 4),
-    child: Semantics(
-      liveRegion: true,
-      child: Text(
-        text,
-        key: const Key('kitchen-feedback'),
-        style: const TextStyle(color: AppColors.primary, fontSize: 13),
-      ),
-    ),
-  );
 }
 
 class _EmptyHint extends StatelessWidget {
@@ -1642,90 +1241,4 @@ class _EmptyHint extends StatelessWidget {
       ],
     ),
   );
-}
-
-/// Sheet with a title, an optional pinned [top] area (input, week switcher,
-/// feedback) and a lazily built list. On short screens or with large text
-/// the top area scrolls together with the list so nothing overflows.
-class _SheetFrame extends StatelessWidget {
-  const _SheetFrame({
-    required this.title,
-    required this.subtitle,
-    required this.children,
-    this.top,
-  });
-
-  final String title;
-  final String subtitle;
-  final List<Widget> children;
-  final Widget? top;
-
-  @override
-  Widget build(BuildContext context) {
-    final height = math.min(MediaQuery.sizeOf(context).height * 0.9, 760.0);
-    final compact =
-        height < 560 || MediaQuery.textScalerOf(context).scale(10) > 13;
-    final list = ListView(
-      padding: const EdgeInsets.only(bottom: 8),
-      children: [
-        if (compact && top != null) ...[top!, const SizedBox(height: 14)],
-        ...children,
-      ],
-    );
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 720),
-        child: SizedBox(
-          height: height,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              20,
-              4,
-              20,
-              16 + MediaQuery.viewInsetsOf(context).bottom,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            subtitle,
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      tooltip: 'Schließen',
-                      icon: const Icon(Icons.close_rounded),
-                    ),
-                  ],
-                ),
-                if (!compact && top != null) ...[
-                  const SizedBox(height: 14),
-                  top!,
-                ],
-                const SizedBox(height: 14),
-                Expanded(child: list),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

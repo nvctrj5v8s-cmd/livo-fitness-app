@@ -258,6 +258,48 @@ class PlanningController extends ChangeNotifier {
     return merge;
   }
 
+  /// Renames an entry or changes its amount. An empty [amountText] removes
+  /// the amount; [keepAmount] leaves amount and note as they are. The entry
+  /// keeps its place, check mark and recipe source.
+  KitchenEdit updateShoppingItem(
+    String id, {
+    required String name,
+    String amountText = '',
+    bool keepAmount = false,
+  }) {
+    final problem = _checkName(name) ?? _checkReady();
+    if (problem != null) return problem;
+    final index = shopping.indexWhere((item) => item.id == id);
+    if (index < 0) {
+      return const KitchenEdit(
+        KitchenEditStatus.invalid,
+        'Dieser Artikel ist nicht mehr auf der Liste.',
+      );
+    }
+    final cleaned = _cleanName(name);
+    final clash = shopping.any(
+      (item) =>
+          item.id != id &&
+          !item.done &&
+          ingredientNamesMatch(item.name, cleaned),
+    );
+    if (clash && !ingredientNamesMatch(shopping[index].name, cleaned)) {
+      return const KitchenEdit(KitchenEditStatus.duplicate);
+    }
+    final current = shopping[index];
+    final (amount, note) = keepAmount
+        ? (current.amount, current.note)
+        : _amountFrom(amountText);
+    final next = [...shopping]
+      ..[index] = shopping[index].withDetails(
+        name: cleaned,
+        amount: amount,
+        note: note,
+      );
+    _commit(_state.copyWith(shopping: next));
+    return const KitchenEdit(KitchenEditStatus.merged);
+  }
+
   void toggleShoppingItem(String id) {
     if (!_loaded) return;
     _commit(

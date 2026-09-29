@@ -1,4 +1,5 @@
 import '../domain/kitchen_planning.dart';
+import '../domain/shopping_aisles.dart';
 
 /// German number without trailing zeros: 1.5 → "1,5", 2.0 → "2".
 String formatKitchenNumber(double value) {
@@ -97,3 +98,38 @@ String portionsText(int portions) =>
 
 String countText(int count, String singular, String plural) =>
     count == 1 ? '1 $singular' : '$count $plural';
+
+String shoppingAisleLabel(ShoppingAisle aisle) => switch (aisle) {
+  ShoppingAisle.produce => 'Obst & Gemüse',
+  ShoppingAisle.bakery => 'Brot & Backwaren',
+  ShoppingAisle.dairy => 'Kühlregal & Eier',
+  ShoppingAisle.meatFish => 'Fleisch & Fisch',
+  ShoppingAisle.dryGoods => 'Nudeln, Reis & Vorrat',
+  ShoppingAisle.canned => 'Konserven & Gläser',
+  ShoppingAisle.oilsSpices => 'Öl, Gewürze & Soßen',
+  ShoppingAisle.frozen => 'Tiefkühl',
+  ShoppingAisle.drinks => 'Getränke',
+  ShoppingAisle.other => 'Sonstiges',
+};
+
+/// The open entries as plain text by section, for pasting into a chat.
+String shoppingListAsText(Iterable<ShoppingItem> items) {
+  final open = [
+    for (final item in items)
+      if (!item.done) item,
+  ];
+  final buffer = StringBuffer('Einkaufsliste');
+  for (final (aisle, entries) in groupShoppingByAisle(open)) {
+    buffer
+      ..writeln()
+      ..writeln()
+      ..write(shoppingAisleLabel(aisle));
+    for (final item in entries) {
+      final amount = kitchenAmountLabel(item.amount, item.note);
+      buffer
+        ..writeln()
+        ..write('• ${item.name}${amount == null ? '' : ' – $amount'}');
+    }
+  }
+  return buffer.toString();
+}

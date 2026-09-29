@@ -1,5 +1,38 @@
 # Funktionsstatus
 
+## Aktualisierung: Neue Einkaufsliste, 29. September 2026
+
+- **Ein Eingabefeld für Name und Menge:** „500 g Reis“, „Reis 500g“,
+  „Milch, 1 l“, „2 Eier“ oder „3x Joghurt“ werden in Artikel und Menge
+  zerlegt; eine Vorschau zeigt vorher, wie der Eintrag gelesen wird. Was nicht
+  eindeutig eine Menge ist („7-Korn Brot“, „Mehl Type 405“), bleibt
+  unverändert Teil des Namens. Die Tastatur bleibt für den nächsten Artikel
+  offen. Beim Tippen erscheinen Vorschläge aus Grundzutaten und Katalog,
+  bei leerem Feld Schnellauswahl-Chips häufiger Artikel.
+- **Nach Supermarkt-Abteilung sortiert:** Obst & Gemüse, Brot & Backwaren,
+  Kühlregal & Eier, Fleisch & Fisch, Nudeln/Reis/Vorrat, Konserven & Gläser,
+  Öl/Gewürze/Soßen, Tiefkühl, Getränke, Sonstiges. Die Zuordnung ist eine
+  lokale Stichwortregel (`domain/shopping_aisles.dart`), keine KI und kein
+  externer Dienst; Unbekanntes landet unter „Sonstiges“ statt geraten zu
+  werden.
+- **Abhaken und Fortschritt:** Fortschrittsring im Kopf, kurze Abhak-
+  Animation, danach wandert der Artikel in den einklappbaren Bereich
+  „Im Wagen“. Wenn alles abgehakt ist, erscheint ein Hinweis; eine feste
+  Leiste bietet „In Vorräte übernehmen“ und „Erledigte löschen“.
+- **Bearbeiten, Löschen mit Rückgängig, Teilen:** Name und Menge lassen sich
+  nachträglich ändern (Halal-Prüfung wie beim Hinzufügen). Löschen per
+  Wischen oder im Bearbeiten-Dialog, danach 5 Sekunden „Rückgängig“.
+  „Liste als Text kopieren“ legt die offenen Artikel nach Abteilung in die
+  Zwischenablage, z. B. zum Einfügen in einen Chat – die App sendet dabei
+  selbst nichts.
+- **Barrierefreiheit:** Bei „Bewegung reduzieren“ wird sofort abgehakt, ohne
+  Einblend- oder Größenanimationen. Status steht immer auch als Text da
+  („2 Artikel offen · 1 im Wagen“), nicht nur als Farbe. Auf kleinen Displays
+  oder mit großer Schrift scrollen Untertitel und Eingabe mit der Liste.
+- **Unverändert:** Speicherung wie bisher nur auf diesem Gerät (mit Konto)
+  bzw. bis zum Neustart (ohne Konto); keine neuen Daten, Berechtigungen oder
+  externen Dienste. Vorräte und Wochenplan folgen als nächste Schritte.
+
 ## Aktualisierung: Neue Alltagsrezepte, 27. September 2026
 
 - 30 neue, selbst verfasste Rezepte mit Zutaten, die fast jeder zu Hause hat:
@@ -469,7 +502,7 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 | Mahlzeit hinzufügen | Lokale Textsuche in fünf Demo-Gerichten; Auswahl fügt eine Mahlzeit hinzu und berechnet Kalorien/Makros neu |
 | Tagebuch | Tagesansicht, Bilanz, Mahlzeitenliste, Entfernen per Wischgeste sowie Wasser erhöhen und verringern |
 | Rezepte | Suche nach Titel, Kategorienfilter, Favoriten, drei lokale Rezepte mit Bildern und Hero-Detailansicht |
-| Einkaufsliste | Hinzufügen mit optionaler Menge, Abhaken, Löschen, „Erledigte löschen“, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 27.09.2026) |
+| Einkaufsliste | Ein Eingabefeld für Name und Menge („500 g Reis“), Schnellauswahl und Vorschläge, Sortierung nach Supermarkt-Abteilung, Abhaken mit Fortschrittsring und Bereich „Im Wagen“, Bearbeiten, Löschen mit Rückgängig, Liste als Text kopieren, erledigte Artikel in die Vorräte übernehmen, fehlende Zutaten aus Rezepten und „Was kann ich kochen?“ sowie aus dem Wochenplan übernehmen; mit Konto nur auf diesem Gerät gespeichert (Stand 29.09.2026) |
 | Fortschritt | Animierter Gewichtsgraph mit Zielmarke; sieben Punkte sind antippbar und ändern den angezeigten Wert |
 | Weitere Diagramme | Animierte Wochenbalken für Kalorien und Protein sowie lokale Statistik- und Meilensteinkarten |
 | Profil | Profilansicht mit lokalem Avatar; Name, Ziel, Kalorienziel und Zielgewicht lassen sich bearbeiten |

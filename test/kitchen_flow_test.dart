@@ -260,26 +260,97 @@ void main() {
     await _tap(tester, find.byKey(const Key('launch')));
     expect(find.textContaining('Deine Einkaufsliste ist leer'), findsOneWidget);
 
-    for (final (name, amount) in [('Reis', '500 g'), ('Milch', '1 l')]) {
-      await tester.enterText(find.byKey(const ValueKey('shopping-name')), name);
-      await tester.enterText(
-        find.byKey(const ValueKey('shopping-amount')),
-        amount,
-      );
-      await _tap(tester, find.byKey(const ValueKey('shopping-add')));
-    }
+    // One field: name and amount are read from the text.
+    final input = find.byKey(const Key('shopping-input'));
+    await tester.enterText(input, '500 g Reis');
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Reis · 500 g · Nudeln, Reis & Vorrat', findRichText: true),
+      findsOneWidget,
+    );
+    await _tap(tester, find.byKey(const Key('shopping-add')));
+    await tester.enterText(input, 'Milch 1 l');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
     expect(find.text('2 Artikel offen'), findsOneWidget);
     expect(find.text('1 l'), findsOneWidget);
+    expect(
+      controller.planning.shopping.first.amount,
+      const KitchenAmount(500, KitchenUnit.gram),
+    );
+    // Sorted by supermarket section.
+    expect(find.text('Kühlregal & Eier'), findsOneWidget);
+    expect(find.text('Nudeln, Reis & Vorrat'), findsOneWidget);
+
+    // Quick pick adds a staple right away.
+    await _tap(tester, find.byKey(const ValueKey('shopping-quick-Eier')));
+    expect(controller.planning.shopping.map((i) => i.name), [
+      'Reis',
+      'Milch',
+      'Eier',
+    ]);
+    expect(find.byKey(const ValueKey('shopping-quick-Eier')), findsNothing);
 
     final rice = controller.planning.shopping.first;
     await _tap(tester, find.byKey(ValueKey('shopping-item-${rice.id}')));
-    expect(find.text('1 Artikel offen'), findsOneWidget);
-    await _tap(tester, find.byKey(const Key('shopping-move-to-pantry')));
+    expect(controller.planning.shopping.first.done, isTrue);
+    expect(find.text('2 Artikel offen · 1 im Wagen'), findsOneWidget);
+    expect(find.text('Im Wagen · 1'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('shopping-move-to-pantry')));
+    await tester.pump(const Duration(milliseconds: 400));
     expect(controller.planning.pantryNames, ['Reis']);
-    expect(controller.planning.shopping.map((i) => i.name), ['Milch']);
+    expect(find.textContaining('in deine Vorräte übernommen'), findsOneWidget);
+    // The message disappears on its own.
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('shopping-toast')), findsNothing);
 
-    await _tap(tester, find.byTooltip('Milch entfernen'));
-    expect(controller.planning.shopping, isEmpty);
+    // Edit amount, then delete and undo.
+    final milk = controller.planning.shopping.first;
+    await _tap(tester, find.byTooltip('Milch bearbeiten'));
+    await tester.enterText(
+      find.byKey(const Key('shopping-edit-amount')),
+      '2 l',
+    );
+    await _tap(tester, find.byKey(const Key('shopping-edit-save')));
+    expect(
+      controller.planning.shopping.first.amount,
+      const KitchenAmount(2000, KitchenUnit.milliliter),
+    );
+    expect(find.text('2 l'), findsOneWidget);
+
+    await _tap(tester, find.byTooltip('Milch bearbeiten'));
+    await tester.tap(find.byKey(const Key('shopping-edit-delete')));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(controller.planning.shopping.map((i) => i.name), ['Eier']);
+    await tester.tap(find.byKey(const Key('shopping-undo')));
+    await tester.pumpAndSettle();
+    expect(controller.planning.shopping.first.id, milk.id);
+
+    // Duplicates are reported under the field.
+    await tester.enterText(input, 'eier');
+    await _tap(tester, find.byKey(const Key('shopping-add')));
+    expect(find.text('„eier“ steht schon auf der Liste.'), findsOneWidget);
+    expect(controller.planning.shopping, hasLength(2));
+  });
+
+  testWidgets('Einkaufsliste: ohne Animation sofort abgehakt', (tester) async {
+    final controller = await _controller();
+    controller.planning.addShoppingItem('Tomaten');
+    await _pump(
+      tester,
+      controller,
+      _launcher((context) => showShoppingSheet(context, controller)),
+      reduceMotion: true,
+    );
+    await _tap(tester, find.byKey(const Key('launch')));
+    final item = controller.planning.shopping.single;
+    await tester.tap(find.byKey(ValueKey('shopping-item-${item.id}')));
+    await tester.pump();
+    expect(controller.planning.shopping.single.done, isTrue);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('shopping-all-done')), findsOneWidget);
+    expect(find.text('Alles im Wagen'), findsOneWidget);
   });
 
   testWidgets('Wochenplan: Rezept planen, verschieben, Liste erstellen', (
@@ -411,7 +482,7 @@ void main() {
     );
     await _tap(tester, find.byKey(const Key('launch')));
     expect(find.textContaining('nicht gelesen werden'), findsOneWidget);
-    expect(find.byKey(const ValueKey('shopping-name')), findsNothing);
+    expect(find.byKey(const Key('shopping-input')), findsNothing);
     expect(find.byKey(const Key('kitchen-reset')), findsOneWidget);
   });
 
@@ -424,7 +495,11 @@ void main() {
       final controller = await _controller();
       controller.planning
         ..addPantryItem('Kartoffeln', amountText: '1,5 kg')
-        ..addShoppingItem('Haferflocken, zart', amountText: '500 g');
+        ..addShoppingItem('Haferflocken, zart', amountText: '500 g')
+        ..addShoppingItem('Mineralwasser, still', amountText: '6 Flaschen');
+      controller.planning.toggleShoppingItem(
+        controller.planning.shopping.last.id,
+      );
       controller.planning.addPlanEntry(
         recipe: _testRecipes[1],
         day: DateTime.now(),
