@@ -49,8 +49,8 @@ class IntroductionArtwork extends StatelessWidget {
       ),
       4 => (
         Icons.restaurant_menu_rounded,
-        Icons.shopping_basket_outlined,
-        'Wochenplan und Einkaufsliste',
+        Icons.soup_kitchen_outlined,
+        'Kochen mit dem, was da ist',
       ),
       _ => (
         Icons.person_rounded,
@@ -1532,9 +1532,9 @@ class _RecipesPreview extends StatelessWidget {
                   start: 0.62,
                   end: 0.86,
                   child: _MiniPlanCard(
-                    icon: Icons.calendar_month_rounded,
-                    title: 'Wochenplan',
-                    items: const ['Mo · Oats', 'Di · Reis-Bowl'],
+                    icon: Icons.soup_kitchen_outlined,
+                    title: 'Zu Hause',
+                    items: const ['Kartoffeln', 'Eier'],
                     checked: _linear(progress, 0.8, 0.95),
                     accent: accent,
                   ),
@@ -1547,9 +1547,9 @@ class _RecipesPreview extends StatelessWidget {
                   start: 0.7,
                   end: 0.94,
                   child: _MiniPlanCard(
-                    icon: Icons.shopping_basket_rounded,
-                    title: 'Einkaufsliste',
-                    items: const ['Lachs', 'Avocado'],
+                    icon: Icons.tune_rounded,
+                    title: 'Filter',
+                    items: const ['Schnell', 'High Protein'],
                     checked: _linear(progress, 0.86, 1),
                     accent: accent,
                   ),

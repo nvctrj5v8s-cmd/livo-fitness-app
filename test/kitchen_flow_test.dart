@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/core/config/feature_flags.dart';
 import 'package:fitness_ai_app/core/models/app_models.dart';
 import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/features/discover/domain/kitchen_planning.dart';
@@ -154,16 +155,21 @@ void main() {
     // Free account: the premium pointer instead of locked recipes.
     expect(find.byKey(const Key('premium-recipes-card')), findsOneWidget);
 
-    await _tap(
-      tester,
-      find.byKey(const ValueKey('cook-missing-to-shopping-bratkartoffeln')),
+    final missingToShopping = find.byKey(
+      const ValueKey('cook-missing-to-shopping-bratkartoffeln'),
     );
-    expect(controller.planning.shopping.map((i) => i.name), ['Zwiebel']);
-    expect(controller.planning.shopping.single.source, 'Bratkartoffeln');
-    expect(
-      find.textContaining('auf die Einkaufsliste gesetzt'),
-      findsOneWidget,
-    );
+    if (kitchenPlanningEnabled) {
+      await _tap(tester, missingToShopping);
+      expect(controller.planning.shopping.map((i) => i.name), ['Zwiebel']);
+      expect(controller.planning.shopping.single.source, 'Bratkartoffeln');
+      expect(
+        find.textContaining('auf die Einkaufsliste gesetzt'),
+        findsOneWidget,
+      );
+    } else {
+      expect(missingToShopping, findsNothing);
+      expect(find.byKey(const Key('cook-use-pantry')), findsNothing);
+    }
 
     // Switching off the basics makes salt a missing ingredient.
     await _tap(tester, find.byKey(const Key('cook-basics')));
@@ -194,9 +200,14 @@ void main() {
     await _tap(tester, find.byKey(const ValueKey('cook-suggestion-Sahne')));
     expect(find.byKey(const ValueKey('cook-chip-Sahne')), findsOneWidget);
 
-    await _tap(tester, find.byKey(const Key('cook-save-to-pantry')));
-    expect(controller.planning.pantryNames, ['erdäpfel', 'Sahne']);
-    expect(find.byKey(const Key('cook-use-pantry')), findsOneWidget);
+    final saveToPantry = find.byKey(const Key('cook-save-to-pantry'));
+    if (kitchenPlanningEnabled) {
+      await _tap(tester, saveToPantry);
+      expect(controller.planning.pantryNames, ['erdäpfel', 'Sahne']);
+      expect(find.byKey(const Key('cook-use-pantry')), findsOneWidget);
+    } else {
+      expect(saveToPantry, findsNothing);
+    }
   });
 
   testWidgets('Vorräte: Schnellauswahl, eigene Menge und Kochen damit', (
@@ -238,6 +249,8 @@ void main() {
     expect(controller.planning.pantryNames, ['Kartoffeln']);
     await _tap(tester, find.byKey(const ValueKey('pantry-staple-Zwiebeln')));
 
+    // Cooking with the pantry is only offered while planning is enabled.
+    if (!kitchenPlanningEnabled) return;
     await _reveal(tester, find.byKey(const Key('pantry-cook')), up: true);
     await _tap(tester, find.byKey(const Key('pantry-cook')));
     expect(find.byKey(const Key('cook-use-pantry')), findsOneWidget);
@@ -426,13 +439,20 @@ void main() {
     expect(controller.planning.plan, isEmpty);
   });
 
-  testWidgets('Rezeptdetail: direkt in den Wochenplan', (tester) async {
+  testWidgets('Rezeptdetail: Wochenplan nur wenn freigeschaltet', (
+    tester,
+  ) async {
     final controller = await recipeTestController(plus: false);
     await _pump(
       tester,
       controller,
       const RecipeDetailPage(recipe: curryRecipe),
     );
+    if (!kitchenPlanningEnabled) {
+      expect(find.byKey(const Key('recipe-add-plan')), findsNothing);
+      expect(find.byKey(const Key('recipe-add-shopping')), findsNothing);
+      return;
+    }
     await _tap(tester, find.byKey(const Key('recipe-add-plan')));
     expect(find.text('Einplanen'), findsOneWidget);
     expect(find.text('2 Portionen'), findsOneWidget);
@@ -514,8 +534,10 @@ void main() {
         reduceMotion: true,
       );
       expect(tester.takeException(), isNull);
-      expect(find.text('Alles da'), findsOneWidget);
-      expect(find.text('Salzkartoffeln'), findsOneWidget);
+      if (kitchenPlanningEnabled) {
+        expect(find.text('Alles da'), findsOneWidget);
+        expect(find.text('Salzkartoffeln'), findsOneWidget);
+      }
 
       for (final open in [
         showPantrySheet,
@@ -545,7 +567,10 @@ void main() {
         reduceMotion: true,
       );
       expect(tester.takeException(), isNull);
-      expect(find.text('1 Zutat zu Hause'), findsOneWidget);
+      expect(
+        find.text('1 Zutat zu Hause'),
+        kitchenPlanningEnabled ? findsOneWidget : findsNothing,
+      );
     });
   }
 }

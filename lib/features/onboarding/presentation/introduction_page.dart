@@ -50,12 +50,12 @@ const _slides = [
     icon: Icons.auto_awesome_outlined,
   ),
   _IntroSlide(
-    label: 'REZEPTE & PLANUNG',
+    label: 'REZEPTE',
     title: 'Rezepte finden.',
-    emphasis: 'Woche planen.',
+    emphasis: 'Einfach kochen.',
     description:
-        'Filtere nach Schnell, High Protein oder Vegetarisch, plane deine '
-        'Woche und nimm die Einkaufsliste gleich mit.',
+        'Filtere nach Schnell, High Protein oder Vegetarisch und finde '
+        'Rezepte mit dem, was du zu Hause hast.',
     accent: AppColors.primary,
     detail: 'Mit einem Tipp ins Tagebuch.',
     icon: Icons.restaurant_menu_rounded,

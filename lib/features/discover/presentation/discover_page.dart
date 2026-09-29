@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -110,7 +111,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 40),
                   child: CookFromPantryBanner(
-                    pantryCount: controller.planning.pantry.length,
+                    pantryCount: kitchenPlanningEnabled
+                        ? controller.planning.pantry.length
+                        : 0,
                     onOpen: () => openCookFromPantry(context),
                   ),
                 ),
@@ -231,15 +234,17 @@ class _DiscoverPageState extends State<DiscoverPage> {
                   ),
                 ],
                 const SizedBox(height: 30),
-                const AnimatedReveal(
-                  delay: Duration(milliseconds: 300),
-                  child: SectionHeader(title: 'Planen & vorbereiten'),
-                ),
-                const SizedBox(height: 11),
-                AnimatedReveal(
-                  delay: const Duration(milliseconds: 350),
-                  child: _PlanningGrid(controller: controller),
-                ),
+                if (kitchenPlanningEnabled) ...[
+                  const AnimatedReveal(
+                    delay: Duration(milliseconds: 300),
+                    child: SectionHeader(title: 'Planen & vorbereiten'),
+                  ),
+                  const SizedBox(height: 11),
+                  AnimatedReveal(
+                    delay: const Duration(milliseconds: 350),
+                    child: _PlanningGrid(controller: controller),
+                  ),
+                ],
               ],
             ),
           ),

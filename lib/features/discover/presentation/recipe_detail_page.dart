@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -274,7 +275,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       checked: _checked,
       onToggle: _toggleIngredient,
       onClearChecks: () => setState(_checked.clear),
-      onAddToShopping: () => _addToShopping(controller, recipe, ingredients),
+      onAddToShopping: kitchenPlanningEnabled
+          ? () => _addToShopping(controller, recipe, ingredients)
+          : null,
     );
     final steps = RecipeStepsSection(
       recipe: recipe,
@@ -390,13 +393,15 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               ),
             ),
             actions: [
-              _OverlayButton(
-                key: const Key('recipe-add-plan'),
-                icon: Icons.calendar_month_rounded,
-                tooltip: 'Zum Wochenplan hinzufügen',
-                onPressed: () => _addToPlan(controller, recipe),
-              ),
-              const SizedBox(width: 8),
+              if (kitchenPlanningEnabled) ...[
+                _OverlayButton(
+                  key: const Key('recipe-add-plan'),
+                  icon: Icons.calendar_month_rounded,
+                  tooltip: 'Zum Wochenplan hinzufügen',
+                  onPressed: () => _addToPlan(controller, recipe),
+                ),
+                const SizedBox(width: 8),
+              ],
               _OverlayButton(
                 icon: favorite
                     ? Icons.favorite_rounded

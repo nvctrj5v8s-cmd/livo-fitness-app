@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/config/feature_flags.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -123,7 +124,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
   final _input = TextEditingController();
   final _focus = FocusNode();
   final List<String> _extra = [];
-  late bool _usePantry = widget.usePantry;
+  late bool _usePantry = kitchenPlanningEnabled && widget.usePantry;
   String _query = '';
 
   @override
@@ -316,7 +317,8 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                             ],
                           ),
                         ],
-                        if (pantryNames.isNotEmpty) ...[
+                        if (kitchenPlanningEnabled &&
+                            pantryNames.isNotEmpty) ...[
                           const SizedBox(height: 8),
                           SwitchListTile(
                             key: const Key('cook-use-pantry'),
@@ -350,22 +352,23 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                                 ),
                             ],
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
-                              key: const Key('cook-save-to-pantry'),
-                              onPressed: planning.ready
-                                  ? () => _saveExtrasToPantry(controller)
-                                  : null,
-                              icon: const Icon(
-                                Icons.kitchen_outlined,
-                                size: 18,
-                              ),
-                              label: const Text(
-                                'Auswahl in Vorräte übernehmen',
+                          if (kitchenPlanningEnabled)
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                key: const Key('cook-save-to-pantry'),
+                                onPressed: planning.ready
+                                    ? () => _saveExtrasToPantry(controller)
+                                    : null,
+                                icon: const Icon(
+                                  Icons.kitchen_outlined,
+                                  size: 18,
+                                ),
+                                label: const Text(
+                                  'Auswahl in Vorräte übernehmen',
+                                ),
                               ),
                             ),
-                          ),
                         ],
                         const SizedBox(height: 12),
                         const Text(
@@ -678,7 +681,7 @@ class _MatchCard extends StatelessWidget {
                 text: _names(match.assumedBasics),
                 color: AppColors.textMuted,
               ),
-            if (match.missing.isNotEmpty) ...[
+            if (kitchenPlanningEnabled && match.missing.isNotEmpty) ...[
               const SizedBox(height: 6),
               Align(
                 alignment: Alignment.centerLeft,

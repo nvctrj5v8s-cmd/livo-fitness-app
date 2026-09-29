@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/core/config/feature_flags.dart';
 import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
 import 'package:fitness_ai_app/features/discover/domain/recipe_serving.dart';
@@ -117,7 +118,10 @@ void main() {
       expect(find.textContaining(tip), findsOneWidget);
     }
     expect(find.text('Darauf achten'), findsOneWidget);
-    expect(find.text('Die Kokosmilch sprudelnd kochen lassen.'), findsOneWidget);
+    expect(
+      find.text('Die Kokosmilch sprudelnd kochen lassen.'),
+      findsOneWidget,
+    );
 
     expect(find.text('Spinat durch Grünkohl ersetzen.'), findsNothing);
     await _tapVisible(tester, find.text('Austausch-Möglichkeiten'));
@@ -151,40 +155,41 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Kochmodus öffnet bei Schritt 1 und stoppt Timer beim Verlassen', (
-    tester,
-  ) async {
-    final controller = await recipeTestController(plus: true);
-    await _pumpDetail(tester, controller);
+  testWidgets(
+    'Kochmodus öffnet bei Schritt 1 und stoppt Timer beim Verlassen',
+    (tester) async {
+      final controller = await recipeTestController(plus: true);
+      await _pumpDetail(tester, controller);
 
-    await _tapVisible(tester, find.byKey(const Key('cook-mode-start')));
-    expect(find.text('Schritt 1 von 6'), findsOneWidget);
-    expect(find.text('Zwiebel anschwitzen'), findsOneWidget);
-    expect(find.textContaining(curryTips.first), findsOneWidget);
-    expect(find.text('Timer starten'), findsOneWidget);
+      await _tapVisible(tester, find.byKey(const Key('cook-mode-start')));
+      expect(find.text('Schritt 1 von 6'), findsOneWidget);
+      expect(find.text('Zwiebel anschwitzen'), findsOneWidget);
+      expect(find.textContaining(curryTips.first), findsOneWidget);
+      expect(find.text('Timer starten'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('cook-timer-toggle')));
-    await tester.pump();
-    expect(find.text('Pausieren'), findsOneWidget);
-    expect(find.text('Läuft'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('cook-timer-toggle')));
+      await tester.pump();
+      expect(find.text('Pausieren'), findsOneWidget);
+      expect(find.text('Läuft'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('cook-next')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Schritt 2 von 6'), findsOneWidget);
-    expect(find.text('Gewürze rösten'), findsOneWidget);
-    expect(find.textContaining('Schritt 1 ·'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('cook-next')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.text('Schritt 2 von 6'), findsOneWidget);
+      expect(find.text('Gewürze rösten'), findsOneWidget);
+      expect(find.textContaining('Schritt 1 ·'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('cook-close')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Kochmodus beenden?'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('cook-leave-confirm')));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 600));
-    expect(find.byType(CookModePage), findsNothing);
-    expect(find.byType(RecipeDetailPage), findsOneWidget);
-  });
+      await tester.tap(find.byKey(const Key('cook-close')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Kochmodus beenden?'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('cook-leave-confirm')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.byType(CookModePage), findsNothing);
+      expect(find.byType(RecipeDetailPage), findsOneWidget);
+    },
+  );
 
   testWidgets('Kochmodus-Timer zählt herunter, pausiert und meldet das Ende', (
     tester,
@@ -286,7 +291,15 @@ void main() {
     final before = controller.planning.shopping.length;
 
     await _tapVisible(tester, find.byKey(const ValueKey('ingredient-0')));
-    expect(find.text('3 fehlende Zutaten auf die Einkaufsliste'), findsOneWidget);
+    if (!kitchenPlanningEnabled) {
+      // The shopping list is switched off; only the check marks remain.
+      expect(find.byKey(const Key('recipe-add-shopping')), findsNothing);
+      return;
+    }
+    expect(
+      find.text('3 fehlende Zutaten auf die Einkaufsliste'),
+      findsOneWidget,
+    );
     await _tapVisible(tester, find.byKey(const Key('recipe-add-shopping')));
 
     final added = controller.planning.shopping.skip(before).toList();
