@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -89,6 +90,7 @@ class _AuthPageState extends State<AuthPage>
   }
 
   Future<void> _resetPassword() async {
+    if (_loading) return;
     final email = _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       setState(() {
@@ -97,8 +99,18 @@ class _AuthPageState extends State<AuthPage>
       });
       return;
     }
+    setState(() {
+      _loading = true;
+      _message = null;
+    });
     try {
-      await Supabase.instance.client.auth.resetPasswordForEmail(email);
+      await Supabase.instance.client.auth.resetPasswordForEmail(
+        email,
+        // On the web the link must lead back to this page (also under a
+        // sub-path such as GitHub Pages). Not allow-listed URLs fall back to
+        // the Site URL configured in Supabase Auth.
+        redirectTo: kIsWeb ? '${Uri.base.origin}${Uri.base.path}' : null,
+      );
       if (!mounted) return;
       setState(() {
         _message = 'Wir haben dir einen Link zum Zurücksetzen geschickt.';
@@ -110,6 +122,14 @@ class _AuthPageState extends State<AuthPage>
         _message = _friendlyAuthError(error.message);
         _messageIsError = true;
       });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+        _messageIsError = true;
+      });
+    } finally {
+      if (mounted) setState(() => _loading = false);
     }
   }
 

@@ -47,6 +47,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     _observedDiaryDay = _dateOnly(DateTime.now());
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final controller = AppScope.of(context);
       unawaited(controller.loadRemoteProfile());
       unawaited(controller.loadRemoteCatalog());

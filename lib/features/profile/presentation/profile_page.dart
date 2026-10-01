@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/data/account_data_repository.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
@@ -661,9 +662,51 @@ class _SettingsList extends StatelessWidget {
             subtitle: 'Hinweise und Kontakt',
             onTap: () => showHelpSheet(context),
           ),
+          const Divider(height: 1),
+          _SettingsTile(
+            key: const Key('profile-sign-out'),
+            icon: Icons.logout_rounded,
+            title: 'Abmelden',
+            subtitle: 'Dieses Konto auf dem Gerät verlassen',
+            onTap: () => unawaited(_confirmSignOut(context)),
+          ),
         ],
       ),
     );
+  }
+}
+
+Future<void> _confirmSignOut(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Abmelden?'),
+      content: const Text(
+        'Deine gespeicherten Kontodaten bleiben erhalten. Du kannst dich später wieder anmelden.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: const Text('Abbrechen'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          child: const Text('Abmelden'),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  try {
+    await AccountDataRepository().signOut();
+  } catch (_) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Abmelden fehlgeschlagen. Bitte versuche es erneut.'),
+        ),
+      );
+    }
   }
 }
 

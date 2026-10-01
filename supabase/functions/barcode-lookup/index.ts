@@ -146,6 +146,26 @@ Deno.serve(async (request) => {
       if (halalRestriction(catalogText(cached))) {
         return notHalal()
       }
+      // Cache reads use the service role. Never let a barcode bypass the
+      // premium food RLS policy that applies to normal catalog reads.
+      if (cached.is_premium === true) {
+        const { data: entitlement, error: entitlementError } = await userClient
+          .from('entitlements')
+          .select('plan,status,expires_at')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        if (entitlementError) {
+          console.error('barcode entitlement read failed', entitlementError.code)
+          return json({ error: 'Zugriff konnte nicht geprüft werden.', code: 'unavailable' }, 503)
+        }
+        const allowed = entitlement?.plan === 'premium' &&
+          ['active', 'trialing'].includes(entitlement.status) &&
+          (entitlement.expires_at == null ||
+            new Date(entitlement.expires_at).getTime() > Date.now())
+        if (!allowed) {
+          return json({ error: 'Dieses Produkt gehört zu LIVO Premium.', code: 'premium_required' }, 403)
+        }
+      }
       return json({ food: cached, cache: 'catalog' })
     }
 

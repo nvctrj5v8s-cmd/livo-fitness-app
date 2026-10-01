@@ -6,6 +6,7 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
+import 'account_data_actions.dart';
 
 Future<void> showReminderSheet(BuildContext context, AppController controller) {
   return showModalBottomSheet<void>(
@@ -350,12 +351,14 @@ class _PrivacySheet extends StatelessWidget {
             icon: const Icon(Icons.delete_outline_rounded),
             label: const Text('Lokale Demodaten löschen'),
           ),
+          const SizedBox(height: 14),
+          const AccountDataActions(),
           const SizedBox(height: 15),
           const Text(
             'Profil, Ziele und Tagebuch werden in deinem LIVO-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '
             'Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. '
             'Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. '
-            'Export und vollständige Kontolöschung in der App folgen noch.',
+            'Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.',
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,

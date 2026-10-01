@@ -3,3 +3,8 @@ verify_jwt = true
 
 [functions.ai-coach]
 verify_jwt = true
+
+[functions.account-data]
+# The function verifies the bearer token with Auth.getUser itself. The legacy
+# gateway JWT check can reject tokens signed by newer Supabase signing keys.
+verify_jwt = false

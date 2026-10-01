@@ -730,7 +730,11 @@ class AppController extends ChangeNotifier {
     foodPreferencesError = null;
     notifyListeners();
     try {
-      final values = await FoodPreferencesStore().load();
+      // Pre-account shortcuts cannot safely be assigned to any account.
+      await FoodPreferencesStore.clearUnscopedLegacyValues();
+      final values = await FoodPreferencesStore(
+        userId: personalizationUserId,
+      ).load();
       foodFavoriteIds
         ..clear()
         ..addAll(values.favoriteIds);
@@ -1188,7 +1192,11 @@ class AppController extends ChangeNotifier {
   void toggleFoodFavorite(String id) {
     if (!foodFavoriteIds.add(id)) foodFavoriteIds.remove(id);
     notifyListeners();
-    unawaited(FoodPreferencesStore().saveFavoriteIds(foodFavoriteIds));
+    unawaited(
+      FoodPreferencesStore(
+        userId: personalizationUserId,
+      ).saveFavoriteIds(foodFavoriteIds),
+    );
   }
 
   void recordFoodUse(String id) {
@@ -1197,7 +1205,11 @@ class AppController extends ChangeNotifier {
       ...recentFoodIds.where((item) => item != id),
     ].take(18).toList();
     notifyListeners();
-    unawaited(FoodPreferencesStore().saveRecentIds(recentFoodIds));
+    unawaited(
+      FoodPreferencesStore(
+        userId: personalizationUserId,
+      ).saveRecentIds(recentFoodIds),
+    );
   }
 
   Future<bool> addRecipeToDiary(

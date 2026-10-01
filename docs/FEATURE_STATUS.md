@@ -1,5 +1,35 @@
 # Funktionsstatus
 
+## Aktualisierung: Kontodaten, Login und Sicherheitsprüfung, 1. Oktober 2026
+
+- **Lokal umgesetzt, noch nicht live geschaltet:** Unter Profil -> Datenschutz
+  kann ein angemeldeter Nutzer seine eigenen Konto- und Gerätedaten als JSON
+  exportieren oder sein Konto nach erneuter Passworteingabe löschen. Dafür muss
+  die neue Supabase Edge Function `account-data` noch bereitgestellt werden.
+  Der Server prüft das Zugriffstoken selbst und verwendet die Konto-ID aus
+  Supabase Auth, nicht aus einer Nutzereingabe. Die Löschung entfernt alle
+  zugeordneten Tabellenzeilen per Foreign-Key-Cascade und die lokalen Daten
+  dieses Kontos. Store-Abos müssen später separat gekündigt werden.
+- **Login:** Abmelden im Profil; neuer Passwort-Setzen-Bildschirm für
+  Supabase-Recovery-Links. Die Auth-Redirect-URLs müssen im Supabase-Dashboard
+  zur tatsächlichen Web-/Mobiladresse passen. Ein echter Ende-zu-Ende-Test mit
+  E-Mail-Link steht noch aus.
+- **Lokale Essens-Shortcuts:** Favoriten und zuletzt genutzte Lebensmittel sind
+  nun pro Konto bzw. Vorschau getrennt. Alte globale Shortcut-Werte können
+  keinem Konto sicher zugeordnet werden und werden deshalb verworfen.
+- **Sicherheitsmigration:** `0015_security_definer_search_paths.sql` setzt den
+  Suchpfad älterer privilegierter Funktionen auf leer. Die Migration muss
+  noch auf der produktiven Datenbank ausgeführt werden.
+- **Barcode-Zugriff:** Ein bereits gecachtes Premium-Lebensmittel wurde durch
+  die Service-Role-Cache-Abfrage ohne Premium-Prüfung ausgegeben. Die
+  `barcode-lookup` Function prüft jetzt das eigene Entitlement vor der
+  Ausgabe. Auch diese Function muss für die Live-Wirkung neu deployt werden.
+- **Grenze der Prüfung:** Dies war eine Prüfung von Quellcode und Migrationen,
+  keine Live-Prüfung der Supabase-Konfiguration oder veröffentlichter Builds.
+  Rechtstexte, ausdrückliche Einwilligung für Gesundheitsdaten, echte
+  Bezahlung, Store-Freigabe und Benachrichtigungen sind dadurch nicht erledigt.
+  Details: `ACCOUNT_DATA_PRIVACY.md`.
+
 ## Aktualisierung: Allergien und Unverträglichkeiten, 29. September 2026
 
 - **Auswahl im Profil:** 14 EU-Allergene plus Laktose (Unverträglichkeit)
