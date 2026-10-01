@@ -1,6 +1,14 @@
 import '../../onboarding/domain/personalization_profile.dart';
 
-enum DailyTargetsStatus { ready, missingData, underage }
+enum DailyTargetsStatus {
+  ready,
+  missingData,
+  underage,
+
+  /// Pregnancy, eating disorder or a medically guided diet: no automatic
+  /// targets, see `HealthNote`.
+  professionalGuidance,
+}
 
 /// Orientation values only; not a medical or dietary prescription.
 class DailyTargets {
@@ -14,6 +22,8 @@ class DailyTargets {
   const DailyTargets.missingData()
     : this._(status: DailyTargetsStatus.missingData);
   const DailyTargets.underage() : this._(status: DailyTargetsStatus.underage);
+  const DailyTargets.professionalGuidance()
+    : this._(status: DailyTargetsStatus.professionalGuidance);
 
   final DailyTargetsStatus status;
   final int? calories;
@@ -22,12 +32,23 @@ class DailyTargets {
 
   bool get isReady => status == DailyTargetsStatus.ready;
 
-  /// Mifflin-St Jeor with a sex-neutral constant (midpoint of +5 and -161),
-  /// because LIVO does not ask for sex.
+  /// Whether LIVO deliberately calculates no targets for this person.
+  bool get isPaused =>
+      status == DailyTargetsStatus.underage ||
+      status == DailyTargetsStatus.professionalGuidance;
+
+  /// Largest daily deficit LIVO suggests, whatever pace was chosen.
+  static const maxDeficitShare = 0.2;
+
+  /// Mifflin-St Jeor. Without a stated sex LIVO uses the midpoint of the
+  /// female (-161) and male (+5) constants.
   static DailyTargets fromProfile(
     PersonalizationProfile? profile, {
     DateTime? today,
   }) {
+    if (profile != null && profile.needsProfessionalGuidance) {
+      return const DailyTargets.professionalGuidance();
+    }
     final age = profile?.ageOn(today ?? DateTime.now());
     final height = profile?.heightCm;
     final weight = profile?.weightKg;
@@ -36,7 +57,12 @@ class DailyTargets {
     }
     if (age < 18) return const DailyTargets.underage();
 
-    final bmr = 10 * weight + 6.25 * height - 5 * age - 78;
+    final sexConstant = switch (profile.sex) {
+      BodySex.female => -161,
+      BodySex.male => 5,
+      BodySex.unspecified || null => -78,
+    };
+    final bmr = 10 * weight + 6.25 * height - 5 * age + sexConstant;
     final activityFactor = switch (profile.activity) {
       ActivityPattern.mostlySeated => 1.2,
       ActivityPattern.mixed || null => 1.375,
@@ -45,7 +71,7 @@ class DailyTargets {
     };
     final maintenance = bmr * activityFactor;
     final rawCalories = switch (profile.goal) {
-      PersonalGoal.loseWeight => (maintenance * 0.85).clamp(bmr, maintenance),
+      PersonalGoal.loseWeight => _reduced(maintenance, bmr, profile.pace),
       PersonalGoal.buildStrength => maintenance * 1.1,
       PersonalGoal.maintain || PersonalGoal.balanced || null => maintenance,
     };
@@ -64,5 +90,14 @@ class DailyTargets {
       protein: protein,
       fat: fat,
     );
+  }
+
+  /// About 7700 kcal per kg of body fat, spread over a week. Never more than
+  /// [maxDeficitShare] below maintenance and never below the basal rate.
+  static double _reduced(double maintenance, double bmr, WeightPace? pace) {
+    if (pace == null) return (maintenance * 0.85).clamp(bmr, maintenance);
+    final deficit = pace.kgPerWeek * 7700 / 7;
+    final capped = deficit.clamp(0, maintenance * maxDeficitShare);
+    return (maintenance - capped).clamp(bmr, maintenance);
   }
 }

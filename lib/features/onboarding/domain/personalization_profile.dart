@@ -42,6 +42,74 @@ enum RoutineFocus {
   final String label;
 }
 
+/// Only used for the energy estimate (Mifflin-St Jeor). Without an answer
+/// LIVO keeps the sex-neutral midpoint.
+enum BodySex {
+  female('Weiblich'),
+  male('Männlich'),
+  unspecified('Möchte ich nicht angeben');
+
+  const BodySex(this.label);
+  final String label;
+}
+
+/// How fast a weight goal may be approached. Deliberately no faster option
+/// than about 0.5 kg per week.
+enum WeightPace {
+  gentle('Sanft', 0.25),
+  steady('Ausgewogen', 0.5);
+
+  const WeightPace(this.label, this.kgPerWeek);
+  final String label;
+  final double kgPerWeek;
+}
+
+enum Motivation {
+  health('Gesünder leben'),
+  energy('Mehr Energie im Alltag'),
+  wellbeing('Wohler im eigenen Körper'),
+  fitness('Sportlich stärker werden'),
+  habits('Bessere Gewohnheiten'),
+  rolemodel('Vorbild für Familie & Kinder');
+
+  const Motivation(this.label);
+  final String label;
+}
+
+enum Obstacle {
+  cravings('Heißhunger & Naschen'),
+  time('Wenig Zeit zum Kochen'),
+  irregular('Unregelmäßige Mahlzeiten'),
+  eatingOut('Viel unterwegs essen'),
+  motivation('Motivation hält nicht lange'),
+  knowledge('Unsicher, was gut für mich ist'),
+  stress('Essen bei Stress');
+
+  const Obstacle(this.label);
+  final String label;
+}
+
+enum TrackingExperience {
+  none('Noch nie'),
+  some('Schon mal ausprobiert'),
+  regular('Ja, regelmäßig');
+
+  const TrackingExperience(this.label);
+  final String label;
+}
+
+/// Situations in which LIVO must not calculate calorie targets on its own
+/// (project rule: pregnancy, eating disorders, relevant illnesses). Stored
+/// only on this device and never sent to the coach in detail.
+enum HealthNote {
+  pregnantOrNursing('Schwanger oder stillend'),
+  eatingDisorder('Essstörung – aktuell oder früher'),
+  medicalDiet('Erkrankung, bei der die Ernährung ärztlich begleitet wird');
+
+  const HealthNote(this.label);
+  final String label;
+}
+
 const _unchanged = Object();
 
 class PersonalizationProfile {
@@ -59,6 +127,13 @@ class PersonalizationProfile {
     this.heightCm,
     this.weightKg,
     this.measurementSystem = MeasurementSystem.metric,
+    this.sex,
+    this.targetWeightKg,
+    this.pace,
+    this.motivations = const {},
+    this.obstacles = const {},
+    this.experience,
+    this.healthNotes = const {},
   });
 
   final String displayName;
@@ -76,6 +151,46 @@ class PersonalizationProfile {
   final int? heightCm;
   final double? weightKg;
   final MeasurementSystem measurementSystem;
+
+  final BodySex? sex;
+
+  /// Only asked for weight goals; never below a BMI of 18.5 (see
+  /// [lowestHealthyWeightKg]).
+  final double? targetWeightKg;
+  final WeightPace? pace;
+  final Set<Motivation> motivations;
+  final Set<Obstacle> obstacles;
+  final TrackingExperience? experience;
+
+  /// Any entry pauses automatic calorie targets.
+  final Set<HealthNote> healthNotes;
+
+  bool get needsProfessionalGuidance => healthNotes.isNotEmpty;
+
+  bool get hasWeightGoal =>
+      goal == PersonalGoal.loseWeight || goal == PersonalGoal.buildStrength;
+
+  /// Weight at a BMI of 18.5 for [heightCm], rounded up to 0.5 kg.
+  double? get lowestHealthyWeightKg {
+    final height = heightCm;
+    if (height == null) return null;
+    final meters = height / 100;
+    return (18.5 * meters * meters * 2).ceil() / 2;
+  }
+
+  /// Rough number of weeks to the target weight at the chosen pace, or
+  /// `null` without enough data. An estimate, never a promise.
+  int? weeksToTarget() {
+    final current = weightKg;
+    final target = targetWeightKg;
+    final rate = (pace ?? WeightPace.gentle).kgPerWeek;
+    if (current == null || target == null || !hasWeightGoal) return null;
+    final difference = (current - target).abs();
+    if (difference < 0.5) return 0;
+    // Muscle gain is much slower than fat loss; halve the pace.
+    final weekly = goal == PersonalGoal.buildStrength ? rate / 2 : rate;
+    return (difference / weekly).ceil();
+  }
 
   int? ageOn(DateTime date) {
     final birthday = birthDate;
@@ -102,7 +217,25 @@ class PersonalizationProfile {
     Object? heightCm = _unchanged,
     Object? weightKg = _unchanged,
     MeasurementSystem? measurementSystem,
+    Object? sex = _unchanged,
+    Object? targetWeightKg = _unchanged,
+    Object? pace = _unchanged,
+    Set<Motivation>? motivations,
+    Set<Obstacle>? obstacles,
+    Object? experience = _unchanged,
+    Set<HealthNote>? healthNotes,
   }) => PersonalizationProfile(
+    sex: identical(sex, _unchanged) ? this.sex : sex as BodySex?,
+    targetWeightKg: identical(targetWeightKg, _unchanged)
+        ? this.targetWeightKg
+        : targetWeightKg as double?,
+    pace: identical(pace, _unchanged) ? this.pace : pace as WeightPace?,
+    motivations: motivations ?? this.motivations,
+    obstacles: obstacles ?? this.obstacles,
+    experience: identical(experience, _unchanged)
+        ? this.experience
+        : experience as TrackingExperience?,
+    healthNotes: healthNotes ?? this.healthNotes,
     displayName: displayName ?? this.displayName,
     goal: identical(goal, _unchanged) ? this.goal : goal as PersonalGoal?,
     activity: identical(activity, _unchanged)
@@ -153,6 +286,16 @@ class PersonalizationProfile {
         weightKg != null ||
         measurementSystem != MeasurementSystem.metric)
       'measurement_system': measurementSystem.name,
+    if (sex != null) 'sex': sex!.name,
+    if (targetWeightKg != null) 'target_weight_kg': targetWeightKg,
+    if (pace != null) 'pace': pace!.name,
+    if (motivations.isNotEmpty)
+      'motivations': [for (final value in motivations) value.name],
+    if (obstacles.isNotEmpty)
+      'obstacles': [for (final value in obstacles) value.name],
+    if (experience != null) 'experience': experience!.name,
+    if (healthNotes.isNotEmpty)
+      'health_notes': [for (final value in healthNotes) value.name],
   };
 
   factory PersonalizationProfile.fromJson(Map<String, dynamic> json) {
@@ -180,6 +323,13 @@ class PersonalizationProfile {
       birthDate: _dateValue(json['birth_date']),
       heightCm: _boundedInt(json['height_cm'], 90, 250),
       weightKg: _boundedDouble(json['weight_kg'], 25, 400),
+      sex: _enumValue(BodySex.values, json['sex']),
+      targetWeightKg: _boundedDouble(json['target_weight_kg'], 25, 400),
+      pace: _enumValue(WeightPace.values, json['pace']),
+      motivations: _enumSet(Motivation.values, json['motivations']),
+      obstacles: _enumSet(Obstacle.values, json['obstacles']),
+      experience: _enumValue(TrackingExperience.values, json['experience']),
+      healthNotes: _enumSet(HealthNote.values, json['health_notes']),
       measurementSystem:
           _enumValue(MeasurementSystem.values, json['measurement_system']) ??
           MeasurementSystem.metric,
@@ -232,6 +382,12 @@ T? _enumValue<T extends Enum>(List<T> values, Object? raw) {
   }
   return null;
 }
+
+Set<T> _enumSet<T extends Enum>(List<T> values, Object? raw) => {
+  if (raw is List)
+    for (final item in raw)
+      if (_enumValue(values, item) case final T value) value,
+};
 
 int? _allowedInt(Object? raw, List<int> allowed) =>
     raw is int && allowed.contains(raw) ? raw : null;

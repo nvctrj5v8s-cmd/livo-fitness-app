@@ -7,6 +7,25 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
 import '../domain/personalization_profile.dart';
+import '../../profile/domain/daily_targets.dart';
+
+/// The questions in order. [target] only appears for weight goals.
+enum _Step {
+  name,
+  goal,
+  motivation,
+  sex,
+  birthday,
+  height,
+  weight,
+  target,
+  activity,
+  food,
+  kitchen,
+  obstacles,
+  health,
+  summary,
+}
 
 /// A short, optional setup. Each question owns one fixed screen so the user
 /// never needs to scroll through a long form.
@@ -16,6 +35,7 @@ class PersonalizationPage extends StatefulWidget {
     required this.onComplete,
     required this.onLater,
     this.editing = false,
+    this.onSignIn,
     super.key,
   });
 
@@ -24,12 +44,14 @@ class PersonalizationPage extends StatefulWidget {
   final Future<void> Function() onLater;
   final bool editing;
 
+  /// Before sign-up: "Schon ein Konto? Anmelden" on the first question.
+  final VoidCallback? onSignIn;
+
   @override
   State<PersonalizationPage> createState() => _PersonalizationPageState();
 }
 
 class _PersonalizationPageState extends State<PersonalizationPage> {
-  static const _stepCount = 6;
   static const _months = [
     'Jan',
     'Feb',
@@ -61,8 +83,19 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   late final FixedExtentScrollController _feetWheel;
   late final FixedExtentScrollController _inchWheel;
   late final ScrollController _weightRuler;
+  late final ScrollController _targetRuler = ScrollController();
+
+  /// Target weight while the questions are open; saved only for weight goals.
+  double? _targetKg;
 
   int _step = 0;
+
+  List<_Step> get _steps => [
+    for (final step in _Step.values)
+      if (step != _Step.target || _draft.hasWeightGoal) step,
+  ];
+
+  _Step get _current => _steps[_step.clamp(0, _steps.length - 1)];
   bool _saving = false;
   String? _error;
 
@@ -90,6 +123,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _feetWheel = FixedExtentScrollController(initialItem: imperial.$1 - 3);
     _inchWheel = FixedExtentScrollController(initialItem: imperial.$2);
     _weightRuler = ScrollController(initialScrollOffset: _weightOffset);
+    _targetKg = _draft.targetWeightKg;
   }
 
   @override
@@ -102,6 +136,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _feetWheel.dispose();
     _inchWheel.dispose();
     _weightRuler.dispose();
+    _targetRuler.dispose();
     super.dispose();
   }
 
@@ -128,12 +163,13 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   }
 
   void _go(int step) {
-    if (_saving || step < 0 || step >= _stepCount) return;
+    if (_saving || step < 0 || step >= _steps.length) return;
     FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       _step = step;
       _error = null;
     });
+    if (_current == _Step.target) _prepareTarget();
   }
 
   void _back() {
@@ -147,10 +183,84 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   void _next() {
     if (_saving) return;
-    if (_step == _stepCount - 1) {
+    if (_step == _steps.length - 1) {
       _save();
     } else {
       _go(_step + 1);
+    }
+  }
+
+  /// The answers so far, including the values of wheels and rulers.
+  PersonalizationProfile get _collected => _draft.copyWith(
+    displayName: _name.text.trim(),
+    birthDate: _birthDate,
+    heightCm: _heightCm,
+    weightKg: _weightKg,
+    measurementSystem: _units,
+    targetWeightKg: _draft.hasWeightGoal ? _targetKg : null,
+    pace: _draft.goal == PersonalGoal.loseWeight
+        ? (_draft.pace ?? WeightPace.gentle)
+        : null,
+  );
+
+  // --- Target weight -------------------------------------------------------
+
+  /// Lowest target LIVO offers: never below a BMI of 18.5.
+  double get _targetMinKg => _draft.goal == PersonalGoal.loseWeight
+      ? math.max(_metricMin, _collected.lowestHealthyWeightKg ?? _metricMin)
+      : _weightKg;
+
+  double get _targetMaxKg => _draft.goal == PersonalGoal.loseWeight
+      ? _weightKg
+      : math.min(_metricMax, _weightKg + 40);
+
+  /// Losing weight is only offered above the healthy minimum.
+  bool get _targetPossible => _targetMaxKg - _targetMinKg >= 1;
+
+  double _shown(double kg) => _imperial ? kg * 2.2046226218 : kg;
+  double get _targetShownMin =>
+      (_shown(_targetMinKg) / _weightStep).ceil() * _weightStep;
+  int get _targetItemCount => math.max(
+    1,
+    ((_shown(_targetMaxKg) - _targetShownMin) / _weightStep).floor() + 1,
+  );
+  int get _targetIndex =>
+      ((_shown(_targetKg ?? _targetMinKg) - _targetShownMin) / _weightStep)
+          .round()
+          .clamp(0, _targetItemCount - 1)
+          .toInt();
+
+  void _prepareTarget() {
+    if (!_targetPossible) {
+      _targetKg = null;
+      return;
+    }
+    final suggestion = _draft.goal == PersonalGoal.loseWeight
+        ? math.max(_targetMinKg, _weightKg - 5)
+        : _weightKg + 3;
+    final current = _targetKg;
+    _targetKg =
+        current != null && current >= _targetMinKg && current <= _targetMaxKg
+        ? current
+        : suggestion;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_targetRuler.hasClients) {
+        _targetRuler.jumpTo(_targetIndex * _rulerTickWidth);
+      }
+    });
+  }
+
+  void _onTargetScroll() {
+    if (!_targetRuler.hasClients) return;
+    final index = (_targetRuler.offset / _rulerTickWidth)
+        .round()
+        .clamp(0, _targetItemCount - 1)
+        .toInt();
+    final shown = _targetShownMin + index * _weightStep;
+    final kg = _imperial ? shown / 2.2046226218 : shown;
+    final current = _targetKg;
+    if (current == null || (current - kg).abs() >= .01) {
+      setState(() => _targetKg = kg);
     }
   }
 
@@ -165,15 +275,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       if (later) {
         await widget.onLater();
       } else {
-        await widget.onComplete(
-          _draft.copyWith(
-            displayName: _name.text.trim(),
-            birthDate: _birthDate,
-            heightCm: _heightCm,
-            weightKg: _weightKg,
-            measurementSystem: _units,
-          ),
-        );
+        await widget.onComplete(_collected);
       }
     } catch (_) {
       if (mounted) {
@@ -257,7 +359,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               children: [
                 _Header(
                   step: _step,
-                  count: _stepCount,
+                  count: _steps.length,
                   saving: _saving,
                   editing: widget.editing,
                   onSkip: () => _save(later: true),
@@ -273,7 +375,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: KeyedSubtree(
-                            key: ValueKey('personal-step-$_step'),
+                            key: ValueKey('personal-step-${_current.name}'),
                             child: _QuestionFrame(
                               title: _title,
                               subtitle: _subtitle,
@@ -286,14 +388,26 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                       // On normal phones the controls keep their full size so
                       // wheels and the ruler receive direct drag gestures.
                       // A compact landscape window is the only fallback.
-                      return Center(
-                        child: constraints.maxHeight < 510
-                            ? FittedBox(
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.center,
-                                child: content,
-                              )
-                            : content,
+                      if (constraints.maxHeight < 510) {
+                        return Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.center,
+                            child: content,
+                          ),
+                        );
+                      }
+                      // Choice lists and the summary may be taller than the
+                      // screen; they scroll. Wheels stay fixed.
+                      if (_hasPicker) return Center(child: content);
+                      return SingleChildScrollView(
+                        key: const ValueKey('personal-scroll'),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Center(child: content),
+                        ),
                       );
                     },
                   ),
@@ -301,7 +415,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                 _Footer(
                   saving: _saving,
                   first: _step == 0,
-                  last: _step == _stepCount - 1,
+                  last: _step == _steps.length - 1,
                   onBack: _back,
                   onNext: _next,
                 ),
@@ -313,29 +427,65 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     ),
   );
 
-  String get _title => switch (_step) {
-    0 => 'Damit LIVO dich richtig anspricht.',
-    1 => 'Was ist dein Ziel?',
-    2 => 'Wann hast du Geburtstag?',
-    3 => 'Wie groß bist du?',
-    4 => 'Wo stehst du gerade?',
-    _ => 'Was passt zu deinem Alltag?',
+  /// Steps with vertical wheels; they must not sit in a vertical scroll
+  /// view. The horizontal weight rulers can.
+  bool get _hasPicker =>
+      const {_Step.birthday, _Step.height}.contains(_current);
+
+  String get _title => switch (_current) {
+    _Step.name => 'Damit LIVO dich richtig anspricht.',
+    _Step.goal => 'Was ist dein Ziel?',
+    _Step.motivation => 'Warum ist dir das wichtig?',
+    _Step.sex => 'Welches Geschlecht hat dein Körper?',
+    _Step.birthday => 'Wann hast du Geburtstag?',
+    _Step.height => 'Wie groß bist du?',
+    _Step.weight => 'Wo stehst du gerade?',
+    _Step.target => switch (_draft.goal) {
+      PersonalGoal.buildStrength => 'Wohin möchtest du?',
+      _ => 'Was ist dein Wunschgewicht?',
+    },
+    _Step.activity => 'Wie aktiv bist du meistens?',
+    _Step.food => 'Wie isst du?',
+    _Step.kitchen => 'Wie sieht es in deiner Küche aus?',
+    _Step.obstacles => 'Was hat dich bisher gebremst?',
+    _Step.health => 'Gibt es etwas, worauf LIVO achten soll?',
+    _Step.summary => 'Dein LIVO-Plan ist bereit.',
   };
 
-  String get _subtitle => switch (_step) {
-    0 =>
+  String get _subtitle => switch (_current) {
+    _Step.name =>
       'Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.',
-    1 => 'Das hilft LIVO, Vorschläge sinnvoll zu priorisieren – ohne Druck.',
-    2 => 'Wische direkt in den Rädern nach oben oder unten.',
-    3 =>
+    _Step.goal =>
+      'Das hilft LIVO, Vorschläge sinnvoll zu priorisieren – ohne Druck.',
+    _Step.motivation =>
+      'Wähle alles, was passt. Dein Coach greift das auf, wenn es mal '
+          'schwerfällt.',
+    _Step.sex =>
+      'Nur für die Schätzung deines Energiebedarfs – Körper verbrauchen je '
+          'nach Geschlecht unterschiedlich viel. Du kannst das auch offenlassen.',
+    _Step.birthday => 'Wische direkt in den Rädern nach oben oder unten.',
+    _Step.height =>
       'Wähle die Einheit, die für dich natürlich ist, und wische zum passenden Wert.',
-    4 =>
+    _Step.weight =>
       'Ziehe das Lineal nach links oder rechts. Es ist dein aktuelles Gewicht, kein Ziel.',
-    _ => 'Damit Rezepte, Vorschläge und der Coach zu dir passen.',
+    _Step.target =>
+      'Ein Ziel, das zu dir passt – kein Muss. Du kannst es jederzeit ändern.',
+    _Step.activity => 'Dein ganz normaler Alltag, ohne gezieltes Training.',
+    _Step.food => 'Damit Rezepte, Vorschläge und der Coach zu dir passen.',
+    _Step.kitchen => 'So schlägt LIVO Rezepte vor, die in deinen Tag passen.',
+    _Step.obstacles =>
+      'Wähle alles, was passt – das ist völlig normal. LIVO gibt dir dazu '
+          'passende Tipps.',
+    _Step.health =>
+      'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf '
+          'diesem Gerät.',
+    _Step.summary =>
+      'Alles basiert auf deinen Antworten und lässt sich jederzeit im Profil '
+          'anpassen.',
   };
 
-  Widget _answers() => switch (_step) {
-    0 => Column(
+  Widget _answers() => switch (_current) {
+    _Step.name => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
@@ -359,9 +509,19 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           text:
               'Du kannst oben überspringen. LIVO funktioniert auch ohne diese Antworten.',
         ),
+        if (widget.onSignIn != null) ...[
+          const SizedBox(height: 10),
+          Center(
+            child: TextButton(
+              key: const ValueKey('personal-sign-in'),
+              onPressed: _saving ? null : widget.onSignIn,
+              child: const Text('Schon ein Konto? Anmelden'),
+            ),
+          ),
+        ],
       ],
     ),
-    1 => _ChoiceGrid<PersonalGoal>(
+    _Step.goal => _ChoiceGrid<PersonalGoal>(
       values: PersonalGoal.values,
       selected: _draft.goal,
       keyPrefix: 'goal',
@@ -374,7 +534,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       },
       onChanged: (item) => _update(_draft.copyWith(goal: item)),
     ),
-    2 => Column(
+    _Step.birthday => Column(
       children: [
         _PickerCard(
           label: 'Geburtsdatum',
@@ -414,7 +574,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
       ],
     ),
-    3 => Column(
+    _Step.height => Column(
       children: [
         _UnitToggle(value: _units, onChanged: _setUnits),
         const SizedBox(height: 18),
@@ -454,7 +614,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
       ],
     ),
-    4 => Column(
+    _Step.weight => Column(
       children: [
         _UnitToggle(value: _units, onChanged: _setUnits),
         // Keep the controls large enough to use with a thumb. The spacing is
@@ -491,11 +651,38 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
       ],
     ),
-    _ => Column(
+    _Step.motivation => _MultiChoice<Motivation>(
+      values: Motivation.values,
+      selected: _draft.motivations,
+      keyPrefix: 'motivation',
+      label: (item) => item.label,
+      icon: (item) => switch (item) {
+        Motivation.health => Icons.favorite_outline_rounded,
+        Motivation.energy => Icons.bolt_rounded,
+        Motivation.wellbeing => Icons.self_improvement_rounded,
+        Motivation.fitness => Icons.fitness_center_rounded,
+        Motivation.habits => Icons.event_repeat_rounded,
+        Motivation.rolemodel => Icons.family_restroom_rounded,
+      },
+      onChanged: (values) => _update(_draft.copyWith(motivations: values)),
+    ),
+    _Step.sex => _ChoiceGrid<BodySex>(
+      values: BodySex.values,
+      selected: _draft.sex,
+      keyPrefix: 'sex',
+      label: (item) => item.label,
+      icon: (item) => switch (item) {
+        BodySex.female => Icons.female_rounded,
+        BodySex.male => Icons.male_rounded,
+        BodySex.unspecified => Icons.remove_circle_outline_rounded,
+      },
+      compact: true,
+      onChanged: (item) => _update(_draft.copyWith(sex: item)),
+    ),
+    _Step.target => _targetStep(),
+    _Step.activity => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Wie aktiv bist du meistens?', style: _groupLabelStyle),
-        const SizedBox(height: 9),
         _ChoiceGrid<ActivityPattern>(
           values: ActivityPattern.values,
           selected: _draft.activity,
@@ -507,33 +694,40 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
             ActivityPattern.oftenMoving => Icons.directions_run_rounded,
             ActivityPattern.veryActive => Icons.bolt_rounded,
           },
-          compact: true,
           onChanged: (item) => _update(_draft.copyWith(activity: item)),
         ),
         const SizedBox(height: 14),
-        DropdownButtonFormField<NutritionPreference>(
-          key: const ValueKey('personal-nutrition'),
-          initialValue: _draft.nutrition,
-          dropdownColor: AppColors.surfaceHigh,
-          decoration: const InputDecoration(labelText: 'Ernährung'),
-          items: NutritionPreference.values
-              .map(
-                (item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(switch (item) {
-                    NutritionPreference.mixed => 'Gemischt',
-                    NutritionPreference.vegetarian => 'Vegetarisch',
-                    NutritionPreference.vegan => 'Vegan',
-                    NutritionPreference.pescatarian => 'Pescetarisch',
-                  }, textScaler: TextScaler.noScaling),
-                ),
-              )
-              .toList(),
-          onChanged: _saving
-              ? null
-              : (item) => _update(_draft.copyWith(nutrition: item)),
+        const _SoftNote(
+          icon: Icons.info_outline_rounded,
+          text:
+              'Meist sitzend: Büro, Studium, Auto. Viel in Bewegung: Pflege, '
+              'Handwerk, Verkauf oder viele Wege zu Fuß.',
         ),
-        const SizedBox(height: 12),
+      ],
+    ),
+    _Step.food => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Ernährungsweise', style: _groupLabelStyle),
+        const SizedBox(height: 9),
+        _ChoiceGrid<NutritionPreference>(
+          values: NutritionPreference.values,
+          selected: _draft.nutrition,
+          keyPrefix: 'nutrition',
+          label: (item) => switch (item) {
+            NutritionPreference.pescatarian => 'Pescetarisch',
+            _ => item.label,
+          },
+          icon: (item) => switch (item) {
+            NutritionPreference.mixed => Icons.restaurant_rounded,
+            NutritionPreference.vegetarian => Icons.egg_alt_outlined,
+            NutritionPreference.vegan => Icons.eco_outlined,
+            NutritionPreference.pescatarian => Icons.set_meal_outlined,
+          },
+          compact: true,
+          onChanged: (item) => _update(_draft.copyWith(nutrition: item)),
+        ),
+        const SizedBox(height: 16),
         AllergyProfileField(
           key: const ValueKey('allergy-options'),
           value: _draft.allergies,
@@ -542,7 +736,189 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
       ],
     ),
+    _Step.kitchen => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Zeit zum Kochen an einem normalen Tag',
+          style: _groupLabelStyle,
+        ),
+        const SizedBox(height: 9),
+        _ChoiceGrid<_CookingTime>(
+          values: _CookingTime.values,
+          selected: _CookingTime.fromMinutes(_draft.cookingMinutes),
+          keyPrefix: 'cooking',
+          label: (item) => item.label,
+          icon: (item) => item.icon,
+          compact: true,
+          onChanged: (item) =>
+              _update(_draft.copyWith(cookingMinutes: item.minutes)),
+        ),
+        const SizedBox(height: 18),
+        const Text(
+          'Hast du schon einmal Kalorien gezählt?',
+          style: _groupLabelStyle,
+        ),
+        const SizedBox(height: 9),
+        _ChoiceGrid<TrackingExperience>(
+          values: TrackingExperience.values,
+          selected: _draft.experience,
+          keyPrefix: 'experience',
+          label: (item) => item.label,
+          icon: (item) => switch (item) {
+            TrackingExperience.none => Icons.auto_awesome_outlined,
+            TrackingExperience.some => Icons.history_rounded,
+            TrackingExperience.regular => Icons.verified_outlined,
+          },
+          compact: true,
+          onChanged: (item) => _update(_draft.copyWith(experience: item)),
+        ),
+      ],
+    ),
+    _Step.obstacles => _MultiChoice<Obstacle>(
+      values: Obstacle.values,
+      selected: _draft.obstacles,
+      keyPrefix: 'obstacle',
+      label: (item) => item.label,
+      icon: (item) => switch (item) {
+        Obstacle.cravings => Icons.cookie_outlined,
+        Obstacle.time => Icons.schedule_rounded,
+        Obstacle.irregular => Icons.shuffle_rounded,
+        Obstacle.eatingOut => Icons.storefront_outlined,
+        Obstacle.motivation => Icons.battery_2_bar_rounded,
+        Obstacle.knowledge => Icons.help_outline_rounded,
+        Obstacle.stress => Icons.psychology_outlined,
+      },
+      onChanged: (values) => _update(_draft.copyWith(obstacles: values)),
+    ),
+    _Step.health => _healthStep(),
+    _Step.summary => _PlanSummary(profile: _collected),
   };
+
+  Widget _targetStep() {
+    if (!_targetPossible) {
+      return const _SoftNote(
+        icon: Icons.favorite_outline_rounded,
+        text:
+            'Dein Gewicht liegt bereits im unteren gesunden Bereich. LIVO '
+            'schlägt dir deshalb kein Abnehmziel vor – wir helfen dir, gut '
+            'und ausgewogen zu essen.',
+      );
+    }
+    final target = _targetKg ?? _targetMinKg;
+    final shown = _shown(target);
+    final lose = _draft.goal == PersonalGoal.loseWeight;
+    return Column(
+      children: [
+        Text(
+          _imperial
+              ? '${shown.round()} lb'
+              : '${shown.toStringAsFixed(1).replaceAll('.', ',')} kg',
+          key: const ValueKey('personal-target-value'),
+          style: const TextStyle(
+            color: AppColors.text,
+            fontSize: 46,
+            height: 1,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1.6,
+          ),
+        ),
+        const SizedBox(height: 14),
+        _WeightRuler(
+          controller: _targetRuler,
+          count: _targetItemCount,
+          itemWidth: _rulerTickWidth,
+          selectedIndex: _targetIndex,
+          valueFor: (index) => _targetShownMin + index * _weightStep,
+          unit: _imperial ? 'lb' : 'kg',
+          onChanged: _onTargetScroll,
+        ),
+        if (lose) ...[
+          const SizedBox(height: 14),
+          SegmentedButton<WeightPace>(
+            key: const ValueKey('personal-pace'),
+            segments: [
+              for (final pace in WeightPace.values)
+                ButtonSegment(
+                  value: pace,
+                  label: Text(
+                    '${pace.label}\n'
+                    '${pace.kgPerWeek.toString().replaceAll('.', ',')} kg/Woche',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+            ],
+            selected: {_draft.pace ?? WeightPace.gentle},
+            showSelectedIcon: false,
+            onSelectionChanged: (values) =>
+                _update(_draft.copyWith(pace: values.first)),
+          ),
+        ],
+        const SizedBox(height: 12),
+        _SoftNote(
+          icon: Icons.shield_outlined,
+          text: lose
+              ? 'LIVO bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und '
+                    'höchstens etwa ein halbes Kilo pro Woche an.'
+              : 'Muskeln wachsen langsam. Genug Eiweiß und Training sind '
+                    'wichtiger als schnelle Zahlen.',
+        ),
+      ],
+    );
+  }
+
+  Widget _healthStep() {
+    final notes = _draft.healthNotes;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _MultiChoice<HealthNote>(
+          values: HealthNote.values,
+          selected: notes,
+          keyPrefix: 'health',
+          label: (item) => item.label,
+          icon: (item) => switch (item) {
+            HealthNote.pregnantOrNursing => Icons.pregnant_woman_rounded,
+            HealthNote.eatingDisorder => Icons.favorite_border_rounded,
+            HealthNote.medicalDiet => Icons.medical_services_outlined,
+          },
+          onChanged: (values) => _update(_draft.copyWith(healthNotes: values)),
+        ),
+        const SizedBox(height: 10),
+        _SoftNote(
+          icon: notes.isEmpty
+              ? Icons.check_circle_outline_rounded
+              : Icons.volunteer_activism_outlined,
+          text: notes.isEmpty
+              ? 'Trifft nichts davon zu? Dann tippe einfach auf „Weiter“.'
+              : 'Danke, dass du das teilst. LIVO berechnet für dich keine '
+                    'Kalorienziele und schlägt keine Diät vor. Tagebuch, '
+                    'Rezepte und Coach kannst du trotzdem nutzen – deine Ziele '
+                    'besprichst du am besten mit deiner Ärztin, deinem Arzt '
+                    'oder einer Ernährungsfachkraft.',
+        ),
+      ],
+    );
+  }
+}
+
+/// Cooking time choices, stored as minutes like before.
+enum _CookingTime {
+  quick(15, 'Bis 15 Minuten', Icons.bolt_rounded),
+  normal(30, 'Etwa 30 Minuten', Icons.timer_outlined),
+  relaxed(45, '45 Minuten und mehr', Icons.soup_kitchen_outlined);
+
+  const _CookingTime(this.minutes, this.label, this.icon);
+  final int minutes;
+  final String label;
+  final IconData icon;
+
+  static _CookingTime? fromMinutes(int? minutes) {
+    for (final value in values) {
+      if (value.minutes == minutes) return value;
+    }
+    return null;
+  }
 }
 
 const _groupLabelStyle = TextStyle(
@@ -841,6 +1217,262 @@ class _ChoiceGrid<T> extends StatelessWidget {
       );
     },
   );
+}
+
+/// Full-width rows with a check mark; any number can be chosen.
+class _MultiChoice<T extends Enum> extends StatelessWidget {
+  const _MultiChoice({
+    required this.values,
+    required this.selected,
+    required this.keyPrefix,
+    required this.label,
+    required this.icon,
+    required this.onChanged,
+  });
+
+  final List<T> values;
+  final Set<T> selected;
+  final String keyPrefix;
+  final String Function(T value) label;
+  final IconData Function(T value) icon;
+  final ValueChanged<Set<T>> onChanged;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      for (final value in values) ...[
+        Builder(
+          builder: (context) {
+            final active = selected.contains(value);
+            return Semantics(
+              checked: active,
+              child: Material(
+                color: active
+                    ? AppColors.primary.withValues(alpha: .13)
+                    : AppColors.surfaceHigh,
+                borderRadius: BorderRadius.circular(16),
+                child: InkWell(
+                  key: ValueKey('personal-$keyPrefix-${value.name}'),
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () => onChanged(
+                    active
+                        ? ({...selected}..remove(value))
+                        : {...selected, value},
+                  ),
+                  child: Container(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 13,
+                      vertical: 9,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: active ? AppColors.primary : AppColors.border,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          icon(value),
+                          size: 19,
+                          color: active
+                              ? AppColors.primary
+                              : AppColors.textMuted,
+                        ),
+                        const SizedBox(width: 11),
+                        Expanded(
+                          child: Text(
+                            label(value),
+                            style: const TextStyle(
+                              fontSize: 13.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          active
+                              ? Icons.check_circle_rounded
+                              : Icons.circle_outlined,
+                          size: 20,
+                          color: active
+                              ? AppColors.primary
+                              : AppColors.borderBright,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        if (value != values.last) const SizedBox(height: 7),
+      ],
+    ],
+  );
+}
+
+/// Last step: what LIVO will do with the answers. Targets and dates are
+/// estimates and are labelled as such.
+class _PlanSummary extends StatelessWidget {
+  const _PlanSummary({required this.profile});
+
+  final PersonalizationProfile profile;
+
+  static const _monthNames = [
+    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', //
+    'August', 'September', 'Oktober', 'November', 'Dezember',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final targets = DailyTargets.fromProfile(profile);
+    final weeks = targets.isReady ? profile.weeksToTarget() : null;
+    final target = profile.targetWeightKg;
+    final lines = <(IconData, String)>[
+      if (profile.allergies.trim().isNotEmpty)
+        (
+          Icons.no_food_outlined,
+          'Rezepte mit deinen Allergenen blendet LIVO aus.',
+        ),
+      if (profile.nutrition case final nutrition?
+          when nutrition != NutritionPreference.mixed)
+        (Icons.eco_outlined, '${nutrition.label} Rezepte erscheinen zuerst.'),
+      if (profile.cookingMinutes case final minutes?)
+        (
+          Icons.timer_outlined,
+          'Rezepte bis $minutes Minuten bekommen Vorrang.',
+        ),
+      if (profile.obstacles.isNotEmpty)
+        (
+          Icons.psychology_outlined,
+          'Dein Coach kennt deine Hürden und gibt dir passende Tipps.',
+        ),
+      (
+        Icons.photo_camera_outlined,
+        'Mahlzeiten per Foto, Barcode oder Suche in Sekunden eintragen.',
+      ),
+    ];
+    return Column(
+      key: const ValueKey('personal-summary'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.primary.withValues(alpha: .16),
+                AppColors.mint.withValues(alpha: .06),
+              ],
+            ),
+            border: Border.all(color: AppColors.primary.withValues(alpha: .4)),
+          ),
+          child: targets.isReady
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Dein Tagesrichtwert',
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${targets.calories} kcal',
+                      key: const ValueKey('personal-summary-calories'),
+                      style: const TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'davon ${targets.protein} g Eiweiß',
+                      style: const TextStyle(color: AppColors.textMuted),
+                    ),
+                    if (weeks != null && weeks > 0 && target != null) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        '${_weight(target)} etwa im '
+                        '${_month(DateTime.now().add(Duration(days: weeks * 7)))}',
+                        key: const ValueKey('personal-summary-date'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Grobe Schätzung – dein Körper hält sich nicht an Kalender.',
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ],
+                )
+              : Text(
+                  switch (targets.status) {
+                    DailyTargetsStatus.professionalGuidance =>
+                      'Für dich berechnet LIVO keine Kalorienziele. Du kannst '
+                          'alles andere nutzen – deine Ziele besprichst du am '
+                          'besten mit einer Fachperson.',
+                    DailyTargetsStatus.underage =>
+                      'Für Personen unter 18 Jahren berechnet LIVO keine '
+                          'Kalorienziele. Rezepte, Tagebuch und Tipps kannst '
+                          'du trotzdem nutzen.',
+                    _ =>
+                      'Ohne Alter, Größe und Gewicht berechnet LIVO keine '
+                          'Tagesziele. Du kannst sie später im Profil ergänzen.',
+                  },
+                  key: const ValueKey('personal-summary-paused'),
+                  style: const TextStyle(height: 1.45),
+                ),
+        ),
+        const SizedBox(height: 16),
+        const Text('Das macht LIVO für dich', style: _groupLabelStyle),
+        const SizedBox(height: 8),
+        for (final (icon, text) in lines)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, size: 18, color: AppColors.primary),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: const TextStyle(fontSize: 13.5, height: 1.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: 4),
+        const Text(
+          'Richtwerte zur Orientierung, keine medizinische Beratung.',
+          style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+        ),
+      ],
+    );
+  }
+
+  String _weight(double kg) =>
+      profile.measurementSystem == MeasurementSystem.imperial
+      ? '${(kg * 2.2046226218).round()} lb'
+      : '${kg.toStringAsFixed(1).replaceAll('.', ',').replaceAll(',0', '')} kg';
+
+  String _month(DateTime date) => '${_monthNames[date.month - 1]} ${date.year}';
 }
 
 class _UnitToggle extends StatelessWidget {

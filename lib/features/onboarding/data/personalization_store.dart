@@ -58,3 +58,67 @@ class DevicePersonalizationStore implements PersonalizationStore {
   Future<void> clear(String userId) =>
       SharedPreferencesAsync().remove(_key(userId));
 }
+
+/// Answers given before an account exists ("questions first"). They stay on
+/// this device only and move into the account right after sign-up or
+/// sign-in, then this record is removed.
+abstract interface class PendingPersonalizationStore {
+  Future<PersonalizationRecord> load();
+  Future<void> save(PersonalizationProfile profile);
+  Future<void> defer();
+  Future<void> clear();
+
+  /// Whether an account has been used on this device before. Then a signed
+  /// out start shows the sign-in instead of the questions again.
+  Future<bool> hasSeenAccount();
+  Future<void> markAccountSeen();
+}
+
+class DevicePendingPersonalizationStore implements PendingPersonalizationStore {
+  const DevicePendingPersonalizationStore();
+
+  static const _answersKey = 'livo.personalization.pending.v1';
+  static const _accountSeenKey = 'livo.account_seen.v1';
+
+  @override
+  Future<PersonalizationRecord> load() async {
+    final raw = await SharedPreferencesAsync().getString(_answersKey);
+    if (raw == null) return const PersonalizationRecord();
+    try {
+      final data = jsonDecode(raw);
+      if (data is! Map<String, dynamic> || data['version'] != 1) {
+        return const PersonalizationRecord();
+      }
+      if (data['deferred'] == true) {
+        return const PersonalizationRecord(deferred: true);
+      }
+      return PersonalizationRecord(
+        profile: PersonalizationProfile.fromJson(data),
+      );
+    } on FormatException {
+      // Unreadable leftovers are not worth blocking sign-up for.
+      return const PersonalizationRecord();
+    }
+  }
+
+  @override
+  Future<void> save(PersonalizationProfile profile) => SharedPreferencesAsync()
+      .setString(_answersKey, jsonEncode(profile.toJson()));
+
+  @override
+  Future<void> defer() => SharedPreferencesAsync().setString(
+    _answersKey,
+    jsonEncode({'version': 1, 'deferred': true}),
+  );
+
+  @override
+  Future<void> clear() => SharedPreferencesAsync().remove(_answersKey);
+
+  @override
+  Future<bool> hasSeenAccount() async =>
+      await SharedPreferencesAsync().getBool(_accountSeenKey) ?? false;
+
+  @override
+  Future<void> markAccountSeen() =>
+      SharedPreferencesAsync().setBool(_accountSeenKey, true);
+}

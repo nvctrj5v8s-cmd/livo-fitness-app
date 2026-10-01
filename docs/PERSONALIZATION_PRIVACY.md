@@ -3,6 +3,39 @@
 Stand: 16. September 2026. Technische Dokumentation, keine abschließende
 Datenschutzerklärung oder juristische Freigabe.
 
+## Neu seit 1. Oktober 2026: Fragen vor der Registrierung
+
+- **Reihenfolge:** Einführung → Fragen → Konto erstellen. Wer auf dem Gerät
+  schon ein Konto genutzt hat oder „Schon ein Konto? Anmelden“ wählt, kommt
+  direkt zur Anmeldung.
+- **Vor dem Konto:** Die Antworten liegen nur auf diesem Gerät unter
+  `livo.personalization.pending.v1` (geräteweit, da noch kein Konto
+  existiert). Nichts wird vorher an Supabase, OpenAI oder Analyse-Dienste
+  übertragen. Nach der Registrierung bzw. Anmeldung werden sie ins Konto
+  übernommen und der Zwischenstand gelöscht. „Überspringen“ ersetzt nie
+  Antworten, die ein bestehendes Konto schon hat. `livo.account_seen.v1`
+  merkt sich nur, dass auf dem Gerät schon ein Konto genutzt wurde.
+- **Neue Fragen:** Motivation, Geschlecht (nur für die Energie-Schätzung,
+  „Möchte ich nicht angeben“ möglich), Zielgewicht und Tempo (nur bei
+  Abnehm- oder Muskelziel), Kochzeit, Erfahrung mit dem Kalorienzählen,
+  Hürden und ein freiwilliger Gesundheitshinweis (schwanger/stillend,
+  Essstörung, ärztlich begleitete Ernährung). Am Ende fasst „Dein LIVO-Plan“
+  Tagesrichtwert und eine als grobe Schätzung gekennzeichnete Zielzeit
+  zusammen.
+- **Schutzregeln:** Zielgewichte unter BMI 18,5 werden nicht angeboten,
+  höchstens ca. 0,5 kg pro Woche, Defizit höchstens 20 % und nie unter dem
+  Grundumsatz. Mit Gesundheitshinweis oder unter 18 berechnet LIVO keine
+  Kalorienziele und verweist auf Fachleute. Keine Countdown-Timer,
+  Rabatt-Tricks oder Schuld-Formulierungen.
+- **Wohin nach der Registrierung:** In die Cloud (`public.profiles`) gehen
+  wie bisher nur Ziel, Ernährungsstil, Allergien, Aktivität und Name.
+  Geschlecht, Geburtstag, Größe, Gewicht, Zielgewicht, Tempo, Motivation,
+  Hürden, Erfahrung und Gesundheitshinweis bleiben in der kontobezogenen
+  Einrichtung auf diesem Gerät.
+- **Offen vor echtem Betrieb:** Allergien in der Cloud und die lokalen
+  Gesundheitsangaben sind Gesundheitsdaten (Art. 9 DSGVO). Bei der
+  Registrierung braucht es eine ausdrückliche, widerrufbare Einwilligung.
+
 ## Was gespeichert wird
 
 Alle Fragen sind freiwillig: optionaler Rufname/Spitzname (maximal 40 Zeichen),

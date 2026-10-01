@@ -8,7 +8,6 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../allergies/domain/allergy_safety.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
-import '../../profile/domain/daily_targets.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../domain/recipe_serving.dart';
 import 'cook_mode_page.dart';
@@ -210,7 +209,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     _headerHeight = (size.width * 0.72).clamp(260.0, 420.0);
 
     final goalAllowed =
-        controller.dailyTargets.status != DailyTargetsStatus.underage &&
+        !controller.dailyTargets.isPaused &&
         controller.calorieGoal > 0 &&
         recipe.nutrition.calories > 0;
     final Widget? goalAction = !goalAllowed

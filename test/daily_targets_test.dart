@@ -75,4 +75,71 @@ void main() {
     expect(lose, lessThan(maintain));
     expect(lose, greaterThanOrEqualTo(1690));
   });
+
+  test('Geschlecht verfeinert den Grundumsatz', () {
+    PersonalizationProfile person(BodySex? sex) => PersonalizationProfile(
+      birthDate: DateTime(1996, 9, 26),
+      heightCm: 180,
+      weightKg: 80,
+      activity: ActivityPattern.mixed,
+      goal: PersonalGoal.maintain,
+      sex: sex,
+    );
+    int calories(BodySex? sex) =>
+        DailyTargets.fromProfile(person(sex), today: today).calories!;
+    // BMR male = 1697 + 83 = 1780 -> * 1.375 = 2447.5; female = 1614 -> 2219
+    expect(calories(BodySex.male), 2450);
+    expect(calories(BodySex.female), 2220);
+    expect(calories(BodySex.unspecified), calories(null));
+  });
+
+  test('Tempo bestimmt das Defizit, höchstens 20 Prozent', () {
+    PersonalizationProfile person(WeightPace pace) => PersonalizationProfile(
+      birthDate: DateTime(1996, 9, 26),
+      heightCm: 180,
+      weightKg: 80,
+      activity: ActivityPattern.mixed,
+      goal: PersonalGoal.loseWeight,
+      pace: pace,
+    );
+    final gentle = DailyTargets.fromProfile(
+      person(WeightPace.gentle),
+      today: today,
+    ).calories!;
+    final steady = DailyTargets.fromProfile(
+      person(WeightPace.steady),
+      today: today,
+    ).calories!;
+    // Maintenance 2333: 0,25 kg -> -275 kcal; 0,5 kg -> -550, capped at -467.
+    expect(gentle, 2060);
+    expect(steady, 1870);
+  });
+
+  test('Gesundheitshinweis: keine automatischen Ziele', () {
+    final targets = DailyTargets.fromProfile(
+      PersonalizationProfile(
+        birthDate: DateTime(1996, 9, 26),
+        heightCm: 180,
+        weightKg: 80,
+        goal: PersonalGoal.loseWeight,
+        healthNotes: const {HealthNote.pregnantOrNursing},
+      ),
+      today: today,
+    );
+    expect(targets.status, DailyTargetsStatus.professionalGuidance);
+    expect(targets.isPaused, isTrue);
+    expect(targets.calories, isNull);
+  });
+
+  test('Zielgewicht: Untergrenze BMI 18,5 und grobe Wochenzahl', () {
+    const profile = PersonalizationProfile(
+      heightCm: 175,
+      weightKg: 80,
+      goal: PersonalGoal.loseWeight,
+      targetWeightKg: 75,
+      pace: WeightPace.gentle,
+    );
+    expect(profile.lowestHealthyWeightKg, 57);
+    expect(profile.weeksToTarget(), 20);
+  });
 }

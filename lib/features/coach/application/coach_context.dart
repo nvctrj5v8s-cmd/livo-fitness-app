@@ -16,13 +16,21 @@ Map<String, Object?> coachContextFor(AppController app, {DateTime? now}) {
       app.diaryDate.day == today.day;
   final todayUnknown =
       diaryShowsToday && (app.diaryLoading || app.diaryError != null);
+  // Under 18 or a stated health situation: LIVO calculates no targets, so
+  // the coach gets none either. The reason itself is not sent.
+  final targetsPaused = app.dailyTargets.isPaused;
+  final profile = app.personalization;
   return {
     'goal': app.goal,
-    'calorie_goal': app.calorieGoal,
-    'protein_goal': app.proteinGoal,
+    if (targetsPaused)
+      'calorie_targets_paused': true
+    else ...{
+      'calorie_goal': app.calorieGoal,
+      'protein_goal': app.proteinGoal,
+    },
     if (!todayUnknown) ...{
       'calories_today': app.consumedCalories,
-      'remaining_calories': app.remainingCalories,
+      if (!targetsPaused) 'remaining_calories': app.remainingCalories,
       'protein_today': app.consumedProtein,
       'carbs_today': app.consumedCarbs,
       'fat_today': app.consumedFat,
@@ -30,5 +38,11 @@ Map<String, Object?> coachContextFor(AppController app, {DateTime? now}) {
     'nutrition_style': app.nutritionStyle,
     'allergies': app.allergies,
     'activity_level': app.activityLevel,
+    if (profile != null && profile.motivations.isNotEmpty)
+      'motivations': [for (final value in profile.motivations) value.label],
+    if (profile != null && profile.obstacles.isNotEmpty)
+      'obstacles': [for (final value in profile.obstacles) value.label],
+    if (profile?.experience case final experience?)
+      'tracking_experience': experience.label,
   };
 }

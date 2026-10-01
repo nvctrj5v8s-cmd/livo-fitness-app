@@ -7,7 +7,22 @@ import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/ui_components.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+  const AuthPage({
+    this.answersReady = false,
+    this.startWithSignUp = false,
+    this.onEditAnswers,
+    super.key,
+  });
+
+  /// The questions were answered before sign-up: start with "Registrieren"
+  /// and say that the account keeps the answers.
+  final bool answersReady;
+
+  /// Opens on "Registrieren", for example after skipping the questions.
+  final bool startWithSignUp;
+
+  /// Back to the questions, shown together with [answersReady].
+  final VoidCallback? onEditAnswers;
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -20,7 +35,7 @@ class _AuthPageState extends State<AuthPage>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   late final AnimationController _entranceController;
-  bool _isSignUp = false;
+  late bool _isSignUp = widget.answersReady || widget.startWithSignUp;
   bool _loading = false;
   bool _obscurePassword = true;
   String? _message;
@@ -194,7 +209,11 @@ class _AuthPageState extends State<AuthPage>
                             animation: _entranceController,
                             begin: 0,
                             end: 0.55,
-                            child: const _MobileIntro(),
+                            child: widget.answersReady
+                                ? _AnswersReadyIntro(
+                                    onEdit: widget.onEditAnswers,
+                                  )
+                                : const _MobileIntro(),
                           ),
                           const SizedBox(height: 22),
                           _Entrance(
@@ -227,7 +246,11 @@ class _AuthPageState extends State<AuthPage>
                               animation: _entranceController,
                               begin: 0,
                               end: 0.72,
-                              child: const _AuthStory(),
+                              child: widget.answersReady
+                                  ? _AnswersReadyIntro(
+                                      onEdit: widget.onEditAnswers,
+                                    )
+                                  : const _AuthStory(),
                             ),
                           ),
                           const SizedBox(width: 54),
@@ -483,9 +506,15 @@ class _AuthPanel extends StatelessWidget {
                     size: 14,
                   ),
                   SizedBox(width: 6),
-                  Text(
-                    'Sicher gespeichert · jederzeit löschbar',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 11),
+                  Flexible(
+                    child: Text(
+                      'Sicher gespeichert · jederzeit löschbar',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -624,6 +653,50 @@ class _AuthStory extends StatelessWidget {
           const Spacer(),
         ],
       ),
+    );
+  }
+}
+
+/// Shown after the questions: the account is what keeps the answers.
+class _AnswersReadyIntro extends StatelessWidget {
+  const _AnswersReadyIntro({this.onEdit});
+
+  final VoidCallback? onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: const Key('auth-answers-ready'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _BrandMark(),
+        const SizedBox(height: 24),
+        Text(
+          'Fast geschafft!',
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Erstelle dein kostenloses Konto. Dann speichert LIVO deine '
+          'Antworten und dein Tagebuch – auch auf deinen anderen Geräten.',
+          style: TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 15,
+            height: 1.45,
+          ),
+        ),
+        if (onEdit != null) ...[
+          const SizedBox(height: 6),
+          TextButton.icon(
+            key: const Key('auth-edit-answers'),
+            onPressed: onEdit,
+            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            icon: const Icon(Icons.arrow_back_rounded, size: 18),
+            label: const Text('Antworten ändern'),
+          ),
+        ],
+      ],
     );
   }
 }

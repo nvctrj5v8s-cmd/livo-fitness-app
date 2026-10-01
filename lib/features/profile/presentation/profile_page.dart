@@ -363,6 +363,12 @@ class _DailyGoals extends StatelessWidget {
         'Für Personen unter 18 Jahren berechnet LIVO keine Kalorienziele. '
             'Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen '
             'Arzt oder eine Ernährungsfachkraft.',
+      DailyTargetsStatus.professionalGuidance =>
+        'Weil du angegeben hast, dass deine Ernährung gerade besondere '
+            'Aufmerksamkeit braucht, berechnet LIVO keine Kalorienziele. '
+            'Besprich deine Ziele bitte mit deiner Ärztin, deinem Arzt oder '
+            'einer Ernährungsfachkraft. Tagebuch und Rezepte kannst du '
+            'trotzdem nutzen.',
     };
     return SurfaceCard(
       child: Column(

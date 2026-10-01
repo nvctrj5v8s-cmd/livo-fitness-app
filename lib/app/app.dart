@@ -10,6 +10,7 @@ import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/presentation/introduction_gate.dart';
 import '../features/onboarding/presentation/personalization_gate.dart';
+import '../features/onboarding/presentation/questions_first_gate.dart';
 import '../features/subscription/presentation/paywall_gate.dart';
 
 class FitnessAiApp extends StatefulWidget {
@@ -99,9 +100,11 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
             ? _passwordRecovery && _userId != null
                   ? const PasswordRecoveryPage()
                   : const IntroductionGate(
-                      child: AuthGate(
-                        child: PersonalizationGate(
-                          child: PaywallGate(child: AppShell()),
+                      child: QuestionsFirstGate(
+                        child: AuthGate(
+                          child: PersonalizationGate(
+                            child: PaywallGate(child: AppShell()),
+                          ),
                         ),
                       ),
                     )

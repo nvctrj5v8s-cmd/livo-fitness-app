@@ -9,14 +9,19 @@ Der Coach läuft ausschließlich über die Supabase Edge Function `ai-coach`.
 Die App kennt keinen KI-Schlüssel. Mit jeder Frage überträgt die App:
 
 - die Frage selbst (höchstens 600 Zeichen),
-- Ziel, Kalorien- und Proteinziel,
+- Ziel, Kalorien- und Proteinziel. Berechnet LIVO bewusst keine Ziele (unter
+  18 Jahren oder nach einem Gesundheitshinweis in den Einstiegsfragen),
+  fehlen beide; stattdessen geht nur `calorie_targets_paused: true` mit –
+  ohne den Grund,
 - die heutigen Tagebuchwerte (Kalorien, verbleibende Kalorien, Protein,
   Kohlenhydrate, Fett). Sie fehlen, solange das heutige Tagebuch lädt oder
   nicht geladen werden konnte; es werden keine Nullwerte erfunden,
-- Ernährungsstil, Allergien/Unverträglichkeiten und Aktivitätsniveau.
+- Ernährungsstil, Allergien/Unverträglichkeiten und Aktivitätsniveau,
+- falls beantwortet: Motivation, Hürden und Erfahrung mit dem
+  Kalorienzählen (seit 01.10.2026).
 
-Name, E-Mail, Konto-ID, Geburtstag, Größe und Gewicht werden nicht an den
-KI-Dienst geschickt. Die Edge Function ergänzt dieselben Profilfelder aus
+Name, E-Mail, Konto-ID, Geburtstag, Größe, Gewicht, Geschlecht, Zielgewicht
+und Gesundheitshinweise werden nicht an den KI-Dienst geschickt. Die Edge Function ergänzt dieselben Profilfelder aus
 `public.profiles` und schickt zusätzlich die letzten 12 gespeicherten
 Nachrichten (je höchstens 1500 Zeichen) als Gesprächskontext an OpenAI
 (`store: false`). Allergien können Gesundheitsdaten sein; vor echtem Betrieb

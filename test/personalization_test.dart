@@ -6,6 +6,7 @@ import 'package:fitness_ai_app/features/onboarding/data/personalization_store.da
 import 'package:fitness_ai_app/features/onboarding/domain/personalization_profile.dart';
 import 'package:fitness_ai_app/features/onboarding/presentation/personalization_gate.dart';
 import 'package:fitness_ai_app/features/onboarding/presentation/personalization_page.dart';
+import 'package:fitness_ai_app/features/onboarding/presentation/questions_first_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,24 +28,66 @@ void main() {
     expect(controller.greetingName, 'Neu');
   });
 
-  testWidgets('six short screens save the useful profile data', (tester) async {
+  test('neue Antworten überstehen Speichern und Laden', () {
+    const profile = PersonalizationProfile(
+      goal: PersonalGoal.loseWeight,
+      sex: BodySex.female,
+      targetWeightKg: 64.5,
+      pace: WeightPace.gentle,
+      motivations: {Motivation.energy, Motivation.health},
+      obstacles: {Obstacle.cravings},
+      experience: TrackingExperience.none,
+      healthNotes: {HealthNote.pregnantOrNursing},
+    );
+    final restored = PersonalizationProfile.fromJson(profile.toJson());
+    expect(restored.sex, BodySex.female);
+    expect(restored.targetWeightKg, 64.5);
+    expect(restored.pace, WeightPace.gentle);
+    expect(restored.motivations, {Motivation.energy, Motivation.health});
+    expect(restored.obstacles, {Obstacle.cravings});
+    expect(restored.experience, TrackingExperience.none);
+    expect(restored.healthNotes, {HealthNote.pregnantOrNursing});
+    // Older records without the new fields still load.
+    final old = PersonalizationProfile.fromJson({
+      'version': 1,
+      'goal': 'maintain',
+    });
+    expect(old.motivations, isEmpty);
+    expect(old.healthNotes, isEmpty);
+  });
+
+  testWidgets('alle Fragen bis zum Plan und gespeicherte Antworten', (
+    tester,
+  ) async {
     PersonalizationProfile? result;
     await _page(tester, onComplete: (profile) async => result = profile);
 
     await tester.enterText(find.byKey(const ValueKey('personal-name')), 'Mira');
     await _next(tester);
-    await _tap(tester, 'personal-goal-balanced');
+    await _tap(tester, 'personal-goal-loseWeight');
+    await _next(tester);
+    _expectStep('motivation');
+    await _tap(tester, 'personal-motivation-energy');
+    await _tap(tester, 'personal-motivation-health');
+    await _next(tester);
+    _expectStep('sex');
+    await _tap(tester, 'personal-sex-female');
     await _next(tester);
     expect(find.text('Geburtsdatum'), findsOneWidget);
     await _next(tester);
     expect(find.text('Deine Größe'), findsOneWidget);
-    await tester.tap(find.text('US · ft / lb'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('ft'), findsWidgets);
     await _next(tester);
-    expect(find.textContaining('lb'), findsWidgets);
+    _expectStep('weight');
     await _next(tester);
+    _expectStep('target');
+    expect(find.byKey(const ValueKey('personal-target-value')), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-pace')), findsOneWidget);
+    await _next(tester);
+    _expectStep('activity');
     await _tap(tester, 'personal-activity-mixed');
+    await _next(tester);
+    _expectStep('food');
+    await _tap(tester, 'personal-nutrition-vegetarian');
     await tester.ensureVisible(find.byKey(const Key('edit-allergies')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('edit-allergies')));
@@ -54,17 +97,104 @@ void main() {
     await tester.tap(find.byKey(const Key('save-allergies')));
     await tester.pumpAndSettle();
     await _next(tester);
+    _expectStep('kitchen');
+    await _tap(tester, 'personal-cooking-normal');
+    await _tap(tester, 'personal-experience-none');
+    await _next(tester);
+    _expectStep('obstacles');
+    await _tap(tester, 'personal-obstacle-cravings');
+    await _next(tester);
+    _expectStep('health');
+    await _next(tester);
+    _expectStep('summary');
+    expect(
+      find.byKey(const ValueKey('personal-summary-calories')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('personal-summary-date')), findsOneWidget);
+    expect(find.textContaining('Grobe Schätzung'), findsOneWidget);
+    expect(find.textContaining('Allergenen blendet LIVO aus'), findsOneWidget);
+    await _next(tester);
 
     expect(result, isNotNull);
     expect(result!.displayName, 'Mira');
-    expect(result!.goal, PersonalGoal.balanced);
+    expect(result!.goal, PersonalGoal.loseWeight);
+    expect(result!.motivations, {Motivation.energy, Motivation.health});
+    expect(result!.sex, BodySex.female);
+    expect(result!.targetWeightKg, 65);
+    expect(result!.pace, WeightPace.gentle);
     expect(result!.activity, ActivityPattern.mixed);
-    expect(result!.birthDate, isNotNull);
-    expect(result!.heightCm, isNotNull);
-    expect(result!.weightKg, isNotNull);
-    expect(result!.measurementSystem, MeasurementSystem.imperial);
+    expect(result!.nutrition, NutritionPreference.vegetarian);
     expect(result!.allergies, 'Erdnüsse');
+    expect(result!.cookingMinutes, 30);
+    expect(result!.experience, TrackingExperience.none);
+    expect(result!.obstacles, {Obstacle.cravings});
+    expect(result!.healthNotes, isEmpty);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('ohne Gewichtsziel keine Zielgewicht-Frage', (tester) async {
+    await _page(tester);
+    await _next(tester);
+    await _tap(tester, 'personal-goal-balanced');
+    for (var i = 0; i < 6; i++) {
+      await _next(tester);
+    }
+    _expectStep('activity');
+  });
+
+  testWidgets('kein Abnehmziel unter einem BMI von 18,5', (tester) async {
+    await _page(
+      tester,
+      initial: const PersonalizationProfile(
+        goal: PersonalGoal.loseWeight,
+        heightCm: 175,
+        weightKg: 56,
+      ),
+    );
+    while (find
+        .byKey(const ValueKey('personal-step-target'))
+        .evaluate()
+        .isEmpty) {
+      await _next(tester);
+    }
+    expect(find.textContaining('unteren gesunden Bereich'), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-target-value')), findsNothing);
+  });
+
+  testWidgets('Gesundheitshinweis: keine Kalorienziele im Plan', (
+    tester,
+  ) async {
+    PersonalizationProfile? result;
+    await _page(
+      tester,
+      initial: PersonalizationProfile(
+        goal: PersonalGoal.loseWeight,
+        heightCm: 170,
+        weightKg: 80,
+        birthDate: DateTime(1990, 5, 1),
+      ),
+      onComplete: (profile) async => result = profile,
+    );
+    while (find
+        .byKey(const ValueKey('personal-step-health'))
+        .evaluate()
+        .isEmpty) {
+      await _next(tester);
+    }
+    await _tap(tester, 'personal-health-eatingDisorder');
+    expect(find.textContaining('keine Kalorienziele'), findsOneWidget);
+    await _next(tester);
+    expect(
+      find.byKey(const ValueKey('personal-summary-paused')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('personal-summary-calories')),
+      findsNothing,
+    );
+    await _next(tester);
+    expect(result!.needsProfessionalGuidance, isTrue);
   });
 
   testWidgets('skip stores no body data and future launches open the app', (
@@ -84,29 +214,90 @@ void main() {
     expect(find.byType(PersonalizationPage), findsNothing);
   });
 
-  testWidgets('a saving error keeps the same screen and allows retry', (
+  testWidgets('Antworten von vor der Registrierung gehen ins Konto', (
     tester,
   ) async {
-    var attempts = 0;
-    await _page(
+    final store = _MemoryStore();
+    final pending = _MemoryPending()
+      ..record = const PersonalizationRecord(
+        profile: PersonalizationProfile(
+          displayName: 'Sami',
+          goal: PersonalGoal.maintain,
+        ),
+      );
+    final controller = _controller(store);
+    await _gate(tester, controller, pending: pending);
+
+    expect(find.text('App bereit'), findsOneWidget);
+    expect(find.byType(PersonalizationPage), findsNothing);
+    expect(store.record.profile?.displayName, 'Sami');
+    expect(controller.greetingName, 'Sami');
+    expect(pending.record.hasDecision, isFalse);
+    expect(pending.accountSeen, isTrue);
+  });
+
+  testWidgets('„Überspringen“ vorher ersetzt keine Antworten eines Kontos', (
+    tester,
+  ) async {
+    final store = _MemoryStore()
+      ..record = const PersonalizationRecord(
+        profile: PersonalizationProfile(displayName: 'Bestand'),
+      );
+    final pending = _MemoryPending()
+      ..record = const PersonalizationRecord(deferred: true);
+    await _gate(tester, _controller(store), pending: pending);
+    expect(find.text('App bereit'), findsOneWidget);
+    expect(store.record.profile?.displayName, 'Bestand');
+  });
+
+  group('Fragen vor der Anmeldung', () {
+    testWidgets('neu: erst Fragen, dann Registrierung mit Hinweis', (
       tester,
-      onComplete: (_) async {
-        attempts++;
-        if (attempts == 1) throw StateError('unavailable');
-      },
-    );
-    for (var step = 0; step < 5; step++) {
+    ) async {
+      final pending = _MemoryPending();
+      await _questionsFirst(tester, pending);
+      expect(find.byKey(const ValueKey('questions-first')), findsOneWidget);
+      expect(find.text('App'), findsNothing);
+
+      while (find
+          .byKey(const ValueKey('personal-step-summary'))
+          .evaluate()
+          .isEmpty) {
+        await _next(tester);
+      }
       await _next(tester);
-    }
-    await _next(tester);
-    expect(
-      find.textContaining('Deine Angaben konnten nicht gespeichert'),
-      findsOneWidget,
-    );
-    expect(find.byKey(const ValueKey('personal-step-5')), findsOneWidget);
-    await _next(tester);
-    expect(attempts, 2);
-    expect(tester.takeException(), isNull);
+      expect(pending.record.profile, isNotNull);
+      expect(find.byKey(const Key('auth-answers-ready')), findsOneWidget);
+      expect(find.text('Fast geschafft!'), findsOneWidget);
+
+      await _tap(tester, 'auth-edit-answers');
+      expect(find.byKey(const ValueKey('questions-first')), findsOneWidget);
+    });
+
+    testWidgets('„Schon ein Konto?“ führt direkt zur Anmeldung', (
+      tester,
+    ) async {
+      final pending = _MemoryPending();
+      await _questionsFirst(tester, pending);
+      await _tap(tester, 'personal-sign-in');
+      expect(find.byKey(const ValueKey('questions-first')), findsNothing);
+      expect(find.byKey(const Key('auth-answers-ready')), findsNothing);
+      expect(find.text('Anmelden'), findsWidgets);
+      expect(pending.record.hasDecision, isFalse);
+    });
+
+    testWidgets('nach einem Konto auf dem Gerät gleich die Anmeldung', (
+      tester,
+    ) async {
+      final pending = _MemoryPending()..accountSeen = true;
+      await _questionsFirst(tester, pending);
+      expect(find.byKey(const ValueKey('questions-first')), findsNothing);
+    });
+
+    testWidgets('angemeldet: direkt in die App', (tester) async {
+      await _questionsFirst(tester, _MemoryPending(), signedIn: true);
+      expect(find.text('App'), findsOneWidget);
+    });
   });
 
   for (final (size, scale) in [
@@ -122,19 +313,40 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
-      await _page(tester, scale: scale);
-      for (var step = 0; step < 6; step++) {
-        expect(find.byKey(ValueKey('personal-step-$step')), findsOneWidget);
+      await _page(
+        tester,
+        scale: scale,
+        initial: PersonalizationProfile(
+          goal: PersonalGoal.loseWeight,
+          heightCm: 170,
+          weightKg: 82,
+          birthDate: DateTime(1990, 5, 1),
+          allergies: 'Erdnüsse, Milch',
+          obstacles: const {Obstacle.cravings, Obstacle.time},
+        ),
+      );
+      for (var step = 0; step < 20; step++) {
         expect(
           find.byKey(const ValueKey('personal-next')).hitTestable(),
           findsOneWidget,
+          reason: 'step $step',
         );
         expect(tester.takeException(), isNull, reason: 'step $step');
-        if (step < 5) await _next(tester);
+        if (find
+            .byKey(const ValueKey('personal-step-summary'))
+            .evaluate()
+            .isNotEmpty) {
+          return;
+        }
+        await _next(tester);
       }
+      fail('Die Zusammenfassung wurde nicht erreicht.');
     });
   }
 }
+
+void _expectStep(String name) =>
+    expect(find.byKey(ValueKey('personal-step-$name')), findsOneWidget);
 
 Future<void> _tap(WidgetTester tester, String key) async {
   final target = find.byKey(ValueKey(key));
@@ -149,6 +361,7 @@ Future<void> _next(WidgetTester tester) => _tap(tester, 'personal-next');
 Future<void> _page(
   WidgetTester tester, {
   Future<void> Function(PersonalizationProfile)? onComplete,
+  PersonalizationProfile initial = const PersonalizationProfile(),
   double scale = 1,
 }) async {
   await tester.pumpWidget(
@@ -161,6 +374,7 @@ Future<void> _page(
         child: child!,
       ),
       home: PersonalizationPage(
+        initial: initial,
         onComplete: onComplete ?? (_) async {},
         onLater: () async {},
       ),
@@ -178,15 +392,43 @@ AppController _controller(_MemoryStore store) {
   return controller;
 }
 
-Future<void> _gate(WidgetTester tester, AppController controller) async {
+Future<void> _gate(
+  WidgetTester tester,
+  AppController controller, {
+  _MemoryPending? pending,
+}) async {
   await tester.pumpWidget(
     AppScope(
       controller: controller,
       child: MaterialApp(
         theme: AppTheme.dark,
-        home: const PersonalizationGate(
-          child: Scaffold(body: Text('App bereit')),
+        home: PersonalizationGate(
+          pending: pending ?? _MemoryPending(),
+          child: const Scaffold(body: Text('App bereit')),
         ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _questionsFirst(
+  WidgetTester tester,
+  _MemoryPending pending, {
+  bool signedIn = false,
+}) async {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: AppTheme.dark,
+      home: QuestionsFirstGate(
+        pending: pending,
+        isSignedIn: () => signedIn,
+        authChanges: const Stream.empty(),
+        child: const Scaffold(body: Text('App')),
       ),
     ),
   );
@@ -217,4 +459,29 @@ class _MemoryStore implements PersonalizationStore {
   Future<void> clear(String userId) async {
     record = const PersonalizationRecord();
   }
+}
+
+class _MemoryPending implements PendingPersonalizationStore {
+  PersonalizationRecord record = const PersonalizationRecord();
+  bool accountSeen = false;
+
+  @override
+  Future<PersonalizationRecord> load() async => record;
+
+  @override
+  Future<void> save(PersonalizationProfile profile) async =>
+      record = PersonalizationRecord(profile: profile);
+
+  @override
+  Future<void> defer() async =>
+      record = const PersonalizationRecord(deferred: true);
+
+  @override
+  Future<void> clear() async => record = const PersonalizationRecord();
+
+  @override
+  Future<bool> hasSeenAccount() async => accountSeen;
+
+  @override
+  Future<void> markAccountSeen() async => accountSeen = true;
 }

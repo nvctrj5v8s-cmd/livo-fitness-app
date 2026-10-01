@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fitness_ai_app/features/onboarding/domain/personalization_profile.dart';
 import 'package:fitness_ai_app/core/data/ai_coach_service.dart';
 import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/features/coach/application/coach_chat_controller.dart';
@@ -210,6 +211,28 @@ void main() {
       final loading = coachContextFor(app, now: now);
       expect(loading.containsKey('calories_today'), isFalse);
       expect(loading['calorie_goal'], app.calorieGoal);
+      app.dispose();
+    });
+
+    test('Kontext: pausierte Ziele, Motivation und Hürden', () {
+      final app = AppController(
+        subscriptionRepository: const PreviewSubscriptionRepository(),
+      );
+      app.personalization = const PersonalizationProfile(
+        motivations: {Motivation.energy},
+        obstacles: {Obstacle.cravings},
+        experience: TrackingExperience.none,
+        healthNotes: {HealthNote.eatingDisorder},
+      );
+      final context = coachContextFor(app);
+      expect(context['calorie_targets_paused'], isTrue);
+      expect(context.containsKey('calorie_goal'), isFalse);
+      expect(context.containsKey('remaining_calories'), isFalse);
+      expect(context['motivations'], ['Mehr Energie im Alltag']);
+      expect(context['obstacles'], ['Heißhunger & Naschen']);
+      expect(context['tracking_experience'], 'Noch nie');
+      // The health reason itself never leaves the device.
+      expect(context.toString(), isNot(contains('Essstörung')));
       app.dispose();
     });
   });

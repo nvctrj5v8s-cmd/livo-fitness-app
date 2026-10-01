@@ -1,5 +1,33 @@
 # Funktionsstatus
 
+## Aktualisierung: Fragen vor der Registrierung, 1. Oktober 2026
+
+- **Neue Reihenfolge:** Einführung → Fragen → Konto erstellen (wie Yazio,
+  Lifesum oder Fastic). Die Anmeldeseite startet danach im Modus
+  „Registrieren“ mit „Fast geschafft!“ und „Antworten ändern“. „Schon ein
+  Konto? Anmelden“ auf der ersten Frage; auf Geräten, die schon ein Konto
+  hatten, kommt direkt die Anmeldung.
+- **Antworten vor dem Konto** bleiben nur auf dem Gerät und werden nach
+  Registrierung/Anmeldung automatisch ins Konto übernommen.
+- **Fragen (bis zu 14 Schritte):** Name, Ziel, Motivation, Geschlecht,
+  Geburtstag, Größe, Gewicht, Zielgewicht + Tempo (nur bei Gewichtsziel),
+  Aktivität, Ernährungsweise + Allergien, Kochzeit + Erfahrung, Hürden,
+  Gesundheitshinweis, Zusammenfassung „Dein LIVO-Plan“. Auswahl auf Basis
+  einer Recherche der Fragebögen von Noom, Lifesum, MacroFactor, Yazio,
+  MyFitnessPal, Lose It!, Fastic u. a.
+- **Wirkung:** Geschlecht verfeinert den Energiebedarf (Mifflin-St Jeor),
+  das Tempo bestimmt das Defizit (höchstens 20 %, nie unter Grundumsatz).
+  Motivation, Hürden und Erfahrung gehen als Kontext an den Coach;
+  Kochzeit priorisiert Rezepte. Mit Gesundheitshinweis keine Kalorienziele
+  – auch nicht im Coach (`calorie_targets_paused`, ohne Grund). Das gilt
+  jetzt auch für unter 18-Jährige, die vorher noch den Standardwert an den
+  Coach übermittelten.
+- **Schutz:** kein Zielgewicht unter BMI 18,5, Zielzeit als grobe Schätzung
+  gekennzeichnet, keine Countdown- oder Rabatt-Tricks. Details:
+  `PERSONALIZATION_PRIVACY.md`.
+- **Offen:** ausdrückliche Einwilligung (Art. 9 DSGVO) bei der
+  Registrierung.
+
 ## Aktualisierung: E-Mail-Links und LIVO-Mails, 1. Oktober 2026
 
 - **Befund:** Die Site URL in Supabase Auth steht auf `http://localhost:3000`;
