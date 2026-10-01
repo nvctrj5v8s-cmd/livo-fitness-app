@@ -1,5 +1,25 @@
 # Funktionsstatus
 
+## Korrektur: nur echte Angaben zählen, 1. Oktober 2026
+
+- **Fehler behoben:** Räder und Lineal (Geburtstag, Größe, Gewicht,
+  Zielgewicht) zeigen Startwerte (25 Jahre, 175 cm, 70 kg). Beim
+  Durchklicken wurden diese gespeichert und daraus Kalorien berechnet,
+  obwohl nichts eingegeben war. Jetzt zählt ein Wert nur, wenn er bewegt
+  oder mit „Passt genau so – Wert übernehmen“ bestätigt wurde. Solange auf
+  einer Frage nichts gewählt ist, heißt der Knopf „Überspringen“.
+- **Alles übersprungen:** keine „Plan wird erstellt“-Animation, keine Zahlen,
+  sondern „Du startest ganz neutral“ mit dem ehrlichen Hinweis, dass noch
+  nichts angepasst ist. Tempo wird nur mit einem selbst gewählten Zielgewicht
+  gespeichert; ein Zielgewicht nur mit bekannter Größe und Gewicht.
+- **Rezepte passen sich stärker an:** Neben Ernährungsweise und Kochzeit
+  sortieren jetzt auch das Ziel (Abnehmen: eiweißreich und bis 500 kcal
+  zuerst; Muskelaufbau: eiweißreich zuerst) und Hürden („Wenig Zeit“ →
+  schnelle Rezepte, „Unregelmäßige Mahlzeiten“/„Viel unterwegs“ →
+  Meal-Prep). `recipeSortingReasons` liefert dieselben Gründe für Plan,
+  Checkliste und den Hinweis im Rezepte-Tab – Text und Logik können nicht
+  auseinanderlaufen. Ohne wirksame Angaben steht dort nichts.
+
 ## Aktualisierung: Fragen vor der Registrierung, 1. Oktober 2026
 
 - **Neue Reihenfolge:** Einführung → Fragen → Konto erstellen (wie Yazio,

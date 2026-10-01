@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../profile/domain/daily_targets.dart';
 import '../domain/personalization_profile.dart';
+import '../domain/recipe_preferences.dart';
 
 /// Last step of the questions: first "Dein Plan wird erstellt …", then the
 /// plan. The short wait is presentation only, so every line names something
@@ -54,7 +55,8 @@ class _PlanRevealState extends State<PlanReveal> with TickerProviderStateMixin {
     _started = true;
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (widget.skipBuilding || reduceMotion) {
+    // Without answers there is nothing to build – no show, no numbers.
+    if (widget.skipBuilding || reduceMotion || !widget.profile.hasAnswers) {
       _build.value = 1;
       if (reduceMotion) {
         _reveal.value = 1;
@@ -118,18 +120,31 @@ class _BuildStep {
   final String text;
 }
 
-/// What LIVO really does with these answers, in that order.
+/// What LIVO really does with these answers, in that order. Every line
+/// mirrors the actual calculation or setting; nothing is added for show.
 List<_BuildStep> _buildStepsFor(PersonalizationProfile profile) {
   final targets = DailyTargets.fromProfile(profile);
+  final energyInputs = [
+    'Alter',
+    'Größe',
+    'Gewicht',
+    if (profile.sex == BodySex.female || profile.sex == BodySex.male)
+      'Geschlecht',
+    if (profile.activity != null) 'Alltag',
+  ];
+  final sorting = recipeSortingReasons(profile);
   return [
     if (targets.isReady) ...[
-      const _BuildStep(
+      _BuildStep(
         Icons.calculate_outlined,
-        'Energiebedarf aus Alter, Größe, Gewicht und Alltag berechnen',
+        'Energiebedarf aus ${joinGerman(energyInputs)} berechnen',
       ),
-      const _BuildStep(
+      _BuildStep(
         Icons.pie_chart_outline_rounded,
-        'Eiweiß und Fett passend zu deinem Ziel festlegen',
+        profile.goal == PersonalGoal.loseWeight ||
+                profile.goal == PersonalGoal.buildStrength
+            ? 'Eiweiß und Fett passend zu deinem Ziel festlegen'
+            : 'Eiweiß und Fett aus deinem Gewicht ableiten',
       ),
       if (profile.weeksToTarget() case final weeks? when weeks > 0)
         const _BuildStep(
@@ -151,18 +166,17 @@ List<_BuildStep> _buildStepsFor(PersonalizationProfile profile) {
         Icons.no_food_outlined,
         'Rezepte mit deinen Allergenen aussortieren',
       ),
-    _BuildStep(
-      Icons.restaurant_menu_rounded,
-      profile.cookingMinutes != null ||
-              (profile.nutrition != null &&
-                  profile.nutrition != NutritionPreference.mixed)
-          ? 'Rezepte nach Ernährungsweise und Kochzeit sortieren'
-          : 'Rezepte für dich sortieren',
-    ),
-    if (profile.obstacles.isNotEmpty || profile.motivations.isNotEmpty)
+    if (sorting.isNotEmpty)
+      _BuildStep(
+        Icons.restaurant_menu_rounded,
+        'Rezepte nach ${joinGerman(sorting)} sortieren',
+      ),
+    if (profile.obstacles.isNotEmpty ||
+        profile.motivations.isNotEmpty ||
+        profile.experience != null)
       const _BuildStep(
         Icons.auto_awesome_outlined,
-        'Deinen Coach auf deine Ziele und Hürden einstellen',
+        'Deinem Coach deine Antworten als Hintergrund mitgeben',
       ),
   ];
 }
@@ -416,7 +430,9 @@ class _PlanView extends StatelessWidget {
       children: [
         _Appear(
           animation: _part(0, .32),
-          child: targets.isReady
+          child: !profile.hasAnswers
+              ? const _NeutralCard()
+              : targets.isReady
               ? _TargetsCard(targets: targets, animation: _part(.05, .6))
               : _PausedCard(status: targets.status),
         ),
@@ -470,28 +486,34 @@ class _PlanView extends StatelessWidget {
     );
   }
 
-  /// Only things the app does with these answers.
-  List<(IconData, String)> _benefits() => [
-    if (profile.allergies.trim().isNotEmpty)
+  /// Only things the app does with these answers – same rules as the
+  /// recipe order and the coach context.
+  List<(IconData, String)> _benefits() {
+    final sorting = recipeSortingReasons(profile);
+    return [
+      if (profile.allergies.trim().isNotEmpty)
+        (
+          Icons.no_food_outlined,
+          'Rezepte mit deinen Allergenen blendet LIVO aus.',
+        ),
+      if (sorting.isNotEmpty)
+        (
+          Icons.restaurant_menu_rounded,
+          'Rezepte erscheinen sortiert nach ${joinGerman(sorting)}.',
+        ),
+      if (profile.obstacles.isNotEmpty || profile.motivations.isNotEmpty)
+        (
+          Icons.psychology_outlined,
+          'Dein Coach kennt deine Ziele und Hürden und richtet Tipps daran '
+              'aus.',
+        ),
       (
-        Icons.no_food_outlined,
-        'Rezepte mit deinen Allergenen blendet LIVO aus.',
+        Icons.edit_note_rounded,
+        'Mahlzeiten per Suche oder Barcode eintragen – mit Premium auch per '
+            'Foto.',
       ),
-    if (profile.nutrition case final nutrition?
-        when nutrition != NutritionPreference.mixed)
-      (Icons.eco_outlined, '${nutrition.label} Rezepte erscheinen zuerst.'),
-    if (profile.cookingMinutes case final minutes?)
-      (Icons.timer_outlined, 'Rezepte bis $minutes Minuten bekommen Vorrang.'),
-    if (profile.obstacles.isNotEmpty)
-      (
-        Icons.psychology_outlined,
-        'Dein Coach kennt deine Hürden und gibt dir passende Tipps.',
-      ),
-    (
-      Icons.photo_camera_outlined,
-      'Mahlzeiten per Foto, Barcode oder Suche in Sekunden eintragen.',
-    ),
-  ];
+    ];
+  }
 
   String _month(DateTime date) => '${_monthNames[date.month - 1]} ${date.year}';
 }
@@ -677,6 +699,37 @@ class _MacroBar extends StatelessWidget {
         ),
       ),
     ],
+  );
+}
+
+/// Everything was skipped: say plainly that nothing was personalised.
+class _NeutralCard extends StatelessWidget {
+  const _NeutralCard();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    key: const ValueKey('personal-summary-neutral'),
+    padding: const EdgeInsets.all(18),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22),
+      color: AppColors.surfaceHigh,
+      border: Border.all(color: AppColors.border),
+    ),
+    child: const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(Icons.tune_rounded, color: AppColors.primary),
+        SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Du hast keine Angaben gemacht. Darum berechnet LIVO noch keine '
+            'Tagesziele und sortiert Rezepte nicht für dich. Sobald du im '
+            'Profil etwas ergänzt, passt sich LIVO an.',
+            style: TextStyle(height: 1.45),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

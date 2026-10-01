@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -88,12 +89,94 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   /// Target weight while the questions are open; saved only for weight goals.
   double? _targetKg;
 
+  // Wheels and rulers always show a value. Only values the person actually
+  // set (moved, or confirmed with „Wert übernehmen“) are saved – the start
+  // positions are no answers.
+  late bool _birthDateSet = widget.initial.birthDate != null;
+  late bool _heightSet = widget.initial.heightCm != null;
+  late bool _weightSet = widget.initial.weightKg != null;
+  late bool _targetSet = widget.initial.targetWeightKg != null;
+
   int _step = 0;
 
+  /// A target needs a known height and weight, so the healthy minimum is
+  /// known too.
   List<_Step> get _steps => [
     for (final step in _Step.values)
-      if (step != _Step.target || _draft.hasWeightGoal) step,
+      if (step != _Step.target ||
+          (_draft.hasWeightGoal && _heightSet && _weightSet))
+        step,
   ];
+
+  /// Nothing chosen on this step yet: the button says „Überspringen“.
+  bool get _unanswered => switch (_current) {
+    _Step.goal => _draft.goal == null,
+    _Step.motivation => _draft.motivations.isEmpty,
+    _Step.sex => _draft.sex == null,
+    _Step.birthday => !_birthDateSet,
+    _Step.height => !_heightSet,
+    _Step.weight => !_weightSet,
+    _Step.target => _targetPossible && !_targetSet,
+    _Step.activity => _draft.activity == null,
+    _Step.food => _draft.nutrition == null && _draft.allergies.trim().isEmpty,
+    _Step.kitchen => _draft.cookingMinutes == null && _draft.experience == null,
+    _Step.obstacles => _draft.obstacles.isEmpty,
+    _Step.name || _Step.health || _Step.summary => false,
+  };
+
+  void _markSet(_Step step) {
+    final already = switch (step) {
+      _Step.birthday => _birthDateSet,
+      _Step.height => _heightSet,
+      _Step.weight => _weightSet,
+      _Step.target => _targetSet,
+      _ => true,
+    };
+    if (already) return;
+    setState(() {
+      switch (step) {
+        case _Step.birthday:
+          _birthDateSet = true;
+        case _Step.height:
+          _heightSet = true;
+        case _Step.weight:
+          _weightSet = true;
+        case _Step.target:
+          _targetSet = true;
+        default:
+      }
+    });
+  }
+
+  /// Marks [step] as answered as soon as the person scrolls it themselves
+  /// (programmatic jumps, e.g. after switching units, do not count).
+  Widget _byHand(_Step step, Widget child) =>
+      NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (notification.direction != ScrollDirection.idle) _markSet(step);
+          return false;
+        },
+        child: child,
+      );
+
+  /// Shown while a wheel or ruler still sits on its start value.
+  Widget _confirmValue(_Step step) => AnimatedSwitcher(
+    duration: const Duration(milliseconds: 200),
+    child: _unanswered
+        ? Padding(
+            key: const ValueKey('confirm'),
+            padding: const EdgeInsets.only(top: 10),
+            child: Center(
+              child: TextButton.icon(
+                key: const ValueKey('personal-confirm-value'),
+                onPressed: () => _markSet(step),
+                icon: const Icon(Icons.check_rounded, size: 18),
+                label: const Text('Passt genau so – Wert übernehmen'),
+              ),
+            ),
+          )
+        : const SizedBox(key: ValueKey('set'), width: double.infinity),
+  );
 
   _Step get _current => _steps[_step.clamp(0, _steps.length - 1)];
   bool _saving = false;
@@ -198,23 +281,36 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   }
 
   /// The answers so far, including the values of wheels and rulers.
-  PersonalizationProfile get _collected => _draft.copyWith(
-    displayName: _name.text.trim(),
-    birthDate: _birthDate,
-    heightCm: _heightCm,
-    weightKg: _weightKg,
-    measurementSystem: _units,
-    targetWeightKg: _draft.hasWeightGoal ? _targetKg : null,
-    pace: _draft.goal == PersonalGoal.loseWeight
-        ? (_draft.pace ?? WeightPace.gentle)
-        : null,
-  );
+  PersonalizationProfile get _collected {
+    final hasTarget =
+        _draft.hasWeightGoal &&
+        _targetSet &&
+        _heightSet &&
+        _weightSet &&
+        _targetPossible;
+    return _draft.copyWith(
+      displayName: _name.text.trim(),
+      birthDate: _birthDateSet ? _birthDate : null,
+      heightCm: _heightSet ? _heightCm : null,
+      weightKg: _weightSet ? _weightKg : null,
+      measurementSystem: _units,
+      targetWeightKg: hasTarget ? _targetKg : null,
+      // The pace only matters with a target the person chose.
+      pace: hasTarget && _draft.goal == PersonalGoal.loseWeight
+          ? (_draft.pace ?? WeightPace.gentle)
+          : null,
+    );
+  }
 
   // --- Target weight -------------------------------------------------------
 
   /// Lowest target LIVO offers: never below a BMI of 18.5.
   double get _targetMinKg => _draft.goal == PersonalGoal.loseWeight
-      ? math.max(_metricMin, _collected.lowestHealthyWeightKg ?? _metricMin)
+      ? math.max(
+          _metricMin,
+          PersonalizationProfile(heightCm: _heightCm).lowestHealthyWeightKg ??
+              _metricMin,
+        )
       : _weightKg;
 
   double get _targetMaxKg => _draft.goal == PersonalGoal.loseWeight
@@ -422,6 +518,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                 _Footer(
                   saving: _saving,
                   waiting: _current == _Step.summary && !_planReady,
+                  skipping: _unanswered,
                   first: _step == 0,
                   last: _step == _steps.length - 1,
                   onBack: _back,
@@ -458,7 +555,11 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.obstacles => 'Was hat dich bisher gebremst?',
     _Step.health => 'Gibt es etwas, worauf LIVO achten soll?',
     _Step.summary =>
-      _planReady ? 'Dein LIVO-Plan ist bereit.' : 'Dein Plan wird erstellt …',
+      !_collected.hasAnswers
+          ? 'Du startest ganz neutral.'
+          : _planReady
+          ? 'Dein LIVO-Plan ist bereit.'
+          : 'Dein Plan wird erstellt …',
   };
 
   String get _subtitle => switch (_current) {
@@ -489,7 +590,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf '
           'diesem Gerät.',
     _Step.summary =>
-      _planReady
+      !_collected.hasAnswers
+          ? 'Beantworte die Fragen jederzeit im Profil, dann passt sich LIVO '
+                'an dich an.'
+          : _planReady
           ? 'Alles basiert auf deinen Antworten und lässt sich jederzeit im '
                 'Profil anpassen.'
           : 'LIVO verarbeitet gerade deine Antworten.',
@@ -547,82 +651,90 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     ),
     _Step.birthday => Column(
       children: [
-        _PickerCard(
-          label: 'Geburtsdatum',
-          height: 205,
-          child: Row(
-            children: [
-              Expanded(
-                child: _Wheel(
-                  controller: _dayWheel,
-                  count: DateUtils.getDaysInMonth(
-                    _birthDate.year,
-                    _birthDate.month,
+        _byHand(
+          _Step.birthday,
+          _PickerCard(
+            label: 'Geburtsdatum',
+            height: 205,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _Wheel(
+                    controller: _dayWheel,
+                    count: DateUtils.getDaysInMonth(
+                      _birthDate.year,
+                      _birthDate.month,
+                    ),
+                    label: (index) => '${index + 1}'.padLeft(2, '0'),
+                    onSelected: (index) => _setBirthDate(day: index + 1),
                   ),
-                  label: (index) => '${index + 1}'.padLeft(2, '0'),
-                  onSelected: (index) => _setBirthDate(day: index + 1),
                 ),
-              ),
-              Expanded(
-                child: _Wheel(
-                  controller: _monthWheel,
-                  count: 12,
-                  label: (index) => _months[index],
-                  onSelected: (index) => _setBirthDate(month: index + 1),
+                Expanded(
+                  child: _Wheel(
+                    controller: _monthWheel,
+                    count: 12,
+                    label: (index) => _months[index],
+                    onSelected: (index) => _setBirthDate(month: index + 1),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: _Wheel(
-                  controller: _yearWheel,
-                  count: _yearCount,
-                  label: (index) => '${_currentYear - index}',
-                  onSelected: (index) =>
-                      _setBirthDate(year: _currentYear - index),
+                Expanded(
+                  child: _Wheel(
+                    controller: _yearWheel,
+                    count: _yearCount,
+                    label: (index) => '${_currentYear - index}',
+                    onSelected: (index) =>
+                        _setBirthDate(year: _currentYear - index),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+        _confirmValue(_Step.birthday),
       ],
     ),
     _Step.height => Column(
       children: [
         _UnitToggle(value: _units, onChanged: _setUnits),
         const SizedBox(height: 18),
-        _PickerCard(
-          label: 'Deine Größe',
-          height: 205,
-          child: _imperial
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: _Wheel(
-                        controller: _feetWheel,
-                        count: 6,
-                        label: (index) => '${index + 3} ft',
-                        onSelected: (index) =>
-                            _setImperialHeight(feet: index + 3),
+        _byHand(
+          _Step.height,
+          _PickerCard(
+            label: 'Deine Größe',
+            height: 205,
+            child: _imperial
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: _Wheel(
+                          controller: _feetWheel,
+                          count: 6,
+                          label: (index) => '${index + 3} ft',
+                          onSelected: (index) =>
+                              _setImperialHeight(feet: index + 3),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: _Wheel(
-                        controller: _inchWheel,
-                        count: 12,
-                        label: (index) => '$index in',
-                        onSelected: (index) =>
-                            _setImperialHeight(inches: index),
+                      Expanded(
+                        child: _Wheel(
+                          controller: _inchWheel,
+                          count: 12,
+                          label: (index) => '$index in',
+                          onSelected: (index) =>
+                              _setImperialHeight(inches: index),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : _Wheel(
-                  controller: _heightWheel,
-                  count: 111,
-                  label: (index) => '${index + 120} cm',
-                  onSelected: (index) =>
-                      setState(() => _heightCm = index + 120),
-                ),
+                    ],
+                  )
+                : _Wheel(
+                    controller: _heightWheel,
+                    count: 111,
+                    label: (index) => '${index + 120} cm',
+                    onSelected: (index) =>
+                        setState(() => _heightCm = index + 120),
+                  ),
+          ),
         ),
+        _confirmValue(_Step.height),
       ],
     ),
     _Step.weight => Column(
@@ -636,8 +748,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           _imperial
               ? '${_shownWeight.round()} lb'
               : '${_shownWeight.toStringAsFixed(1).replaceAll('.', ',')} kg',
-          style: const TextStyle(
-            color: AppColors.text,
+          style: TextStyle(
+            color: _weightSet ? AppColors.text : AppColors.textMuted,
             fontSize: 54,
             height: 1,
             fontWeight: FontWeight.w800,
@@ -645,15 +757,19 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           ),
         ),
         const SizedBox(height: 18),
-        _WeightRuler(
-          controller: _weightRuler,
-          count: _weightItemCount,
-          itemWidth: _rulerTickWidth,
-          selectedIndex: _weightIndex,
-          valueFor: (index) => _weightMin + index * _weightStep,
-          unit: _imperial ? 'lb' : 'kg',
-          onChanged: _onWeightScroll,
+        _byHand(
+          _Step.weight,
+          _WeightRuler(
+            controller: _weightRuler,
+            count: _weightItemCount,
+            itemWidth: _rulerTickWidth,
+            selectedIndex: _weightIndex,
+            valueFor: (index) => _weightMin + index * _weightStep,
+            unit: _imperial ? 'lb' : 'kg',
+            onChanged: _onWeightScroll,
+          ),
         ),
+        _confirmValue(_Step.weight),
         const SizedBox(height: 14),
         const _SoftNote(
           icon: Icons.info_outline_rounded,
@@ -836,8 +952,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               ? '${shown.round()} lb'
               : '${shown.toStringAsFixed(1).replaceAll('.', ',')} kg',
           key: const ValueKey('personal-target-value'),
-          style: const TextStyle(
-            color: AppColors.text,
+          style: TextStyle(
+            color: _targetSet ? AppColors.text : AppColors.textMuted,
             fontSize: 46,
             height: 1,
             fontWeight: FontWeight.w800,
@@ -845,15 +961,19 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           ),
         ),
         const SizedBox(height: 14),
-        _WeightRuler(
-          controller: _targetRuler,
-          count: _targetItemCount,
-          itemWidth: _rulerTickWidth,
-          selectedIndex: _targetIndex,
-          valueFor: (index) => _targetShownMin + index * _weightStep,
-          unit: _imperial ? 'lb' : 'kg',
-          onChanged: _onTargetScroll,
+        _byHand(
+          _Step.target,
+          _WeightRuler(
+            controller: _targetRuler,
+            count: _targetItemCount,
+            itemWidth: _rulerTickWidth,
+            selectedIndex: _targetIndex,
+            valueFor: (index) => _targetShownMin + index * _weightStep,
+            unit: _imperial ? 'lb' : 'kg',
+            onChanged: _onTargetScroll,
+          ),
         ),
+        _confirmValue(_Step.target),
         if (lose) ...[
           const SizedBox(height: 14),
           SegmentedButton<WeightPace>(
@@ -1088,6 +1208,7 @@ class _Footer extends StatelessWidget {
     required this.onBack,
     required this.onNext,
     this.waiting = false,
+    this.skipping = false,
   });
 
   final bool saving;
@@ -1098,6 +1219,9 @@ class _Footer extends StatelessWidget {
 
   /// The plan is still being shown; "Weiter" waits, "Zurück" still works.
   final bool waiting;
+
+  /// Nothing chosen on this step: the button says what really happens.
+  final bool skipping;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -1126,6 +1250,8 @@ class _Footer extends StatelessWidget {
                   ? 'Einen Moment …'
                   : last
                   ? 'Los geht’s'
+                  : skipping
+                  ? 'Überspringen'
                   : 'Weiter',
             ),
           ),

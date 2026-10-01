@@ -179,6 +179,47 @@ void main() {
       ]);
     });
 
+    test('Ziel und Hürden verändern die Reihenfolge', () {
+      final recipes = [
+        _recipe('slow', minutes: 50),
+        _recipe('protein', minutes: 50, tags: ['High Protein']),
+        _recipe('quick', minutes: 10),
+        _recipe('prep', minutes: 50, tags: ['MealPrep']),
+      ];
+      const muscle = PersonalizationProfile(goal: PersonalGoal.buildStrength);
+      expect(_ids(prioritizeRecipes(recipes, muscle)).first, 'protein');
+      const busy = PersonalizationProfile(obstacles: {Obstacle.time});
+      expect(_ids(prioritizeRecipes(recipes, busy)).first, 'quick');
+      const irregular = PersonalizationProfile(obstacles: {Obstacle.irregular});
+      expect(_ids(prioritizeRecipes(recipes, irregular)).first, 'prep');
+    });
+
+    test('Begründung nennt nur, was die Reihenfolge wirklich beeinflusst', () {
+      expect(recipeSortingReasons(null), isEmpty);
+      expect(recipeSortingReasons(const PersonalizationProfile()), isEmpty);
+      // Maintaining weight and mixed food change nothing about the order.
+      expect(
+        recipeSortingReasons(
+          const PersonalizationProfile(
+            goal: PersonalGoal.maintain,
+            nutrition: NutritionPreference.mixed,
+          ),
+        ),
+        isEmpty,
+      );
+      expect(
+        recipeSortingReasons(
+          const PersonalizationProfile(
+            goal: PersonalGoal.loseWeight,
+            nutrition: NutritionPreference.vegan,
+            obstacles: {Obstacle.time},
+          ),
+        ),
+        ['deinem Ziel', 'deiner Ernährungsweise', 'deiner Zeit zum Kochen'],
+      );
+      expect(joinGerman(['a', 'b', 'c']), 'a, b und c');
+    });
+
     test('equal scores preserve catalog order and return a separate list', () {
       final recipes = [
         _recipe('first', minutes: 12),

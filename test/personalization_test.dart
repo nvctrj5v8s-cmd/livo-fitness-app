@@ -74,12 +74,17 @@ void main() {
     await _tap(tester, 'personal-sex-female');
     await _next(tester);
     expect(find.text('Geburtsdatum'), findsOneWidget);
+    expect(find.text('Überspringen'), findsWidgets);
+    await _tap(tester, 'personal-confirm-value');
     await _next(tester);
     expect(find.text('Deine Größe'), findsOneWidget);
+    await _tap(tester, 'personal-confirm-value');
     await _next(tester);
     _expectStep('weight');
+    await _tap(tester, 'personal-confirm-value');
     await _next(tester);
     _expectStep('target');
+    await _tap(tester, 'personal-confirm-value');
     expect(find.byKey(const ValueKey('personal-target-value')), findsOneWidget);
     expect(find.byKey(const ValueKey('personal-pace')), findsOneWidget);
     await _next(tester);
@@ -223,7 +228,7 @@ void main() {
     expect(find.text('Dein Plan wird erstellt …'), findsOneWidget);
     expect(find.byKey(const ValueKey('plan-building')), findsOneWidget);
     expect(
-      find.text('Energiebedarf aus Alter, Größe, Gewicht und Alltag berechnen'),
+      find.text('Energiebedarf aus Alter, Größe und Gewicht berechnen'),
       findsOneWidget,
     );
     expect(
@@ -234,6 +239,7 @@ void main() {
       find.text('Rezepte mit deinen Allergenen aussortieren'),
       findsOneWidget,
     );
+    expect(find.text('Rezepte nach deinem Ziel sortieren'), findsOneWidget);
     // No obstacles chosen: nothing about the coach is claimed.
     expect(find.textContaining('Coach auf deine'), findsNothing);
     expect(find.text('Einen Moment …'), findsOneWidget);
@@ -261,7 +267,14 @@ void main() {
     tester.platformDispatcher.accessibilityFeaturesTestValue =
         const FakeAccessibilityFeatures(disableAnimations: true);
     addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
-    await _page(tester);
+    await _page(
+      tester,
+      initial: PersonalizationProfile(
+        heightCm: 170,
+        weightKg: 70,
+        birthDate: DateTime(1990, 5, 1),
+      ),
+    );
     while (find
         .byKey(const ValueKey('personal-step-health'))
         .evaluate()
@@ -274,6 +287,51 @@ void main() {
     expect(find.byKey(const ValueKey('plan-building')), findsNothing);
     expect(find.text('Dein LIVO-Plan ist bereit.'), findsOneWidget);
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('alles übersprungen: keine erfundenen Werte, kein Plan-Theater', (
+    tester,
+  ) async {
+    PersonalizationProfile? result;
+    await _page(tester, onComplete: (profile) async => result = profile);
+    var steps = 0;
+    while (find
+        .byKey(const ValueKey('personal-step-summary'))
+        .evaluate()
+        .isEmpty) {
+      // Every question offers „Überspringen“ while nothing is chosen.
+      if (find.byKey(const ValueKey('personal-step-name')).evaluate().isEmpty &&
+          find
+              .byKey(const ValueKey('personal-step-health'))
+              .evaluate()
+              .isEmpty) {
+        expect(find.text('Überspringen'), findsWidgets, reason: 'step $steps');
+      }
+      await _next(tester);
+      steps++;
+    }
+    await tester.pump();
+    expect(find.byKey(const ValueKey('plan-building')), findsNothing);
+    expect(find.text('Du startest ganz neutral.'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('personal-summary-neutral')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('personal-summary-calories')),
+      findsNothing,
+    );
+    expect(find.textContaining('sortiert nach'), findsNothing);
+    await tester.pumpAndSettle();
+    await _next(tester);
+
+    expect(result, isNotNull);
+    expect(result!.hasAnswers, isFalse);
+    expect(result!.birthDate, isNull);
+    expect(result!.heightCm, isNull);
+    expect(result!.weightKg, isNull);
+    expect(result!.targetWeightKg, isNull);
+    expect(result!.pace, isNull);
   });
 
   testWidgets('skip stores no body data and future launches open the app', (

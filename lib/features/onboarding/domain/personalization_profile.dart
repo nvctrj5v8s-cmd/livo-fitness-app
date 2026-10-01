@@ -167,6 +167,23 @@ class PersonalizationProfile {
 
   bool get needsProfessionalGuidance => healthNotes.isNotEmpty;
 
+  /// Whether anything was answered that LIVO adapts to. The name alone is
+  /// only a greeting.
+  bool get hasAnswers =>
+      goal != null ||
+      sex != null ||
+      birthDate != null ||
+      heightCm != null ||
+      weightKg != null ||
+      activity != null ||
+      nutrition != null ||
+      allergies.trim().isNotEmpty ||
+      cookingMinutes != null ||
+      motivations.isNotEmpty ||
+      obstacles.isNotEmpty ||
+      experience != null ||
+      healthNotes.isNotEmpty;
+
   bool get hasWeightGoal =>
       goal == PersonalGoal.loseWeight || goal == PersonalGoal.buildStrength;
 

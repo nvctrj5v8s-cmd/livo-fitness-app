@@ -7,6 +7,7 @@ import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../onboarding/domain/recipe_preferences.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
 import '../domain/recipe_filter.dart';
@@ -123,11 +124,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     ],
                   ),
                 ],
-                if (controller.personalization != null) ...[
+                if (recipeSortingReasons(controller.personalization)
+                    case final reasons when reasons.isNotEmpty) ...[
                   const SizedBox(height: 14),
-                  const Text(
-                    'Für dich sortiert nach deinen Vorlieben und deiner Kochzeit. Die Sortierung blendet keine Rezepte aus.',
-                    style: TextStyle(color: AppColors.textMuted),
+                  Text(
+                    'Für dich sortiert nach ${joinGerman(reasons)}. Die '
+                    'Sortierung blendet keine Rezepte aus.',
+                    key: const Key('recipes-sorted-for-you'),
+                    style: const TextStyle(color: AppColors.textMuted),
                   ),
                 ],
                 const SizedBox(height: 18),
