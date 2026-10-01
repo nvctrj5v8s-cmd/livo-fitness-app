@@ -197,6 +197,85 @@ void main() {
     expect(result!.needsProfessionalGuidance, isTrue);
   });
 
+  testWidgets('Plan wird erstellt: ehrliche Schritte, dann der Plan', (
+    tester,
+  ) async {
+    await _page(
+      tester,
+      initial: PersonalizationProfile(
+        goal: PersonalGoal.loseWeight,
+        heightCm: 170,
+        weightKg: 82,
+        targetWeightKg: 76,
+        birthDate: DateTime(1990, 5, 1),
+        allergies: 'Erdnüsse',
+      ),
+    );
+    while (find
+        .byKey(const ValueKey('personal-step-health'))
+        .evaluate()
+        .isEmpty) {
+      await _next(tester);
+    }
+    await tester.tap(find.byKey(const ValueKey('personal-next')));
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.text('Dein Plan wird erstellt …'), findsOneWidget);
+    expect(find.byKey(const ValueKey('plan-building')), findsOneWidget);
+    expect(
+      find.text('Energiebedarf aus Alter, Größe, Gewicht und Alltag berechnen'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Zeit bis zu deinem Wunschgewicht abschätzen'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Rezepte mit deinen Allergenen aussortieren'),
+      findsOneWidget,
+    );
+    // No obstacles chosen: nothing about the coach is claimed.
+    expect(find.textContaining('Coach auf deine'), findsNothing);
+    expect(find.text('Einen Moment …'), findsOneWidget);
+    final next = tester.widget<FilledButton>(
+      find.byKey(const ValueKey('personal-next')),
+    );
+    expect(next.onPressed, isNull);
+
+    await tester.pumpAndSettle();
+    expect(find.text('Dein LIVO-Plan ist bereit.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('personal-summary')), findsOneWidget);
+    expect(find.text('Los geht’s'), findsOneWidget);
+    expect(find.text('Eiweiß'), findsOneWidget);
+    expect(find.text('Kohlenhydrate'), findsOneWidget);
+
+    // Back and forth: the plan shows right away the second time.
+    await _tap(tester, 'personal-back');
+    await tester.tap(find.byKey(const ValueKey('personal-next')));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.byKey(const ValueKey('plan-building')), findsNothing);
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('Bewegung reduzieren: Plan ohne Wartezeit', (tester) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await _page(tester);
+    while (find
+        .byKey(const ValueKey('personal-step-health'))
+        .evaluate()
+        .isEmpty) {
+      await _next(tester);
+    }
+    await tester.tap(find.byKey(const ValueKey('personal-next')));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byKey(const ValueKey('plan-building')), findsNothing);
+    expect(find.text('Dein LIVO-Plan ist bereit.'), findsOneWidget);
+    await tester.pumpAndSettle();
+  });
+
   testWidgets('skip stores no body data and future launches open the app', (
     tester,
   ) async {

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
 import '../domain/personalization_profile.dart';
-import '../../profile/domain/daily_targets.dart';
+import 'plan_reveal.dart';
 
 /// The questions in order. [target] only appears for weight goals.
 enum _Step {
@@ -97,6 +97,13 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   _Step get _current => _steps[_step.clamp(0, _steps.length - 1)];
   bool _saving = false;
+
+  /// The plan on the last step is visible and "Fertig" may be used.
+  bool _planReady = false;
+
+  /// The "plan is being built" animation ran once; coming back shows the
+  /// plan right away.
+  bool _planShown = false;
   String? _error;
 
   @override
@@ -414,6 +421,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                 ),
                 _Footer(
                   saving: _saving,
+                  waiting: _current == _Step.summary && !_planReady,
                   first: _step == 0,
                   last: _step == _steps.length - 1,
                   onBack: _back,
@@ -449,7 +457,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.kitchen => 'Wie sieht es in deiner Küche aus?',
     _Step.obstacles => 'Was hat dich bisher gebremst?',
     _Step.health => 'Gibt es etwas, worauf LIVO achten soll?',
-    _Step.summary => 'Dein LIVO-Plan ist bereit.',
+    _Step.summary =>
+      _planReady ? 'Dein LIVO-Plan ist bereit.' : 'Dein Plan wird erstellt …',
   };
 
   String get _subtitle => switch (_current) {
@@ -480,8 +489,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf '
           'diesem Gerät.',
     _Step.summary =>
-      'Alles basiert auf deinen Antworten und lässt sich jederzeit im Profil '
-          'anpassen.',
+      _planReady
+          ? 'Alles basiert auf deinen Antworten und lässt sich jederzeit im '
+                'Profil anpassen.'
+          : 'LIVO verarbeitet gerade deine Antworten.',
   };
 
   Widget _answers() => switch (_current) {
@@ -792,7 +803,17 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       onChanged: (values) => _update(_draft.copyWith(obstacles: values)),
     ),
     _Step.health => _healthStep(),
-    _Step.summary => _PlanSummary(profile: _collected),
+    _Step.summary => PlanReveal(
+      profile: _collected,
+      skipBuilding: _planShown,
+      onReady: () {
+        if (!mounted) return;
+        setState(() {
+          _planReady = true;
+          _planShown = true;
+        });
+      },
+    ),
   };
 
   Widget _targetStep() {
@@ -1066,6 +1087,7 @@ class _Footer extends StatelessWidget {
     required this.last,
     required this.onBack,
     required this.onNext,
+    this.waiting = false,
   });
 
   final bool saving;
@@ -1073,6 +1095,9 @@ class _Footer extends StatelessWidget {
   final bool last;
   final VoidCallback onBack;
   final VoidCallback onNext;
+
+  /// The plan is still being shown; "Weiter" waits, "Zurück" still works.
+  final bool waiting;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -1092,13 +1117,15 @@ class _Footer extends StatelessWidget {
         Expanded(
           child: FilledButton(
             key: const ValueKey('personal-next'),
-            onPressed: saving ? null : onNext,
+            onPressed: saving || waiting ? null : onNext,
             style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
             child: Text(
               saving
                   ? 'Wird gespeichert …'
+                  : waiting
+                  ? 'Einen Moment …'
                   : last
-                  ? 'Fertig'
+                  ? 'Los geht’s'
                   : 'Weiter',
             ),
           ),
@@ -1311,168 +1338,6 @@ class _MultiChoice<T extends Enum> extends StatelessWidget {
       ],
     ],
   );
-}
-
-/// Last step: what LIVO will do with the answers. Targets and dates are
-/// estimates and are labelled as such.
-class _PlanSummary extends StatelessWidget {
-  const _PlanSummary({required this.profile});
-
-  final PersonalizationProfile profile;
-
-  static const _monthNames = [
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', //
-    'August', 'September', 'Oktober', 'November', 'Dezember',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final targets = DailyTargets.fromProfile(profile);
-    final weeks = targets.isReady ? profile.weeksToTarget() : null;
-    final target = profile.targetWeightKg;
-    final lines = <(IconData, String)>[
-      if (profile.allergies.trim().isNotEmpty)
-        (
-          Icons.no_food_outlined,
-          'Rezepte mit deinen Allergenen blendet LIVO aus.',
-        ),
-      if (profile.nutrition case final nutrition?
-          when nutrition != NutritionPreference.mixed)
-        (Icons.eco_outlined, '${nutrition.label} Rezepte erscheinen zuerst.'),
-      if (profile.cookingMinutes case final minutes?)
-        (
-          Icons.timer_outlined,
-          'Rezepte bis $minutes Minuten bekommen Vorrang.',
-        ),
-      if (profile.obstacles.isNotEmpty)
-        (
-          Icons.psychology_outlined,
-          'Dein Coach kennt deine Hürden und gibt dir passende Tipps.',
-        ),
-      (
-        Icons.photo_camera_outlined,
-        'Mahlzeiten per Foto, Barcode oder Suche in Sekunden eintragen.',
-      ),
-    ];
-    return Column(
-      key: const ValueKey('personal-summary'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.primary.withValues(alpha: .16),
-                AppColors.mint.withValues(alpha: .06),
-              ],
-            ),
-            border: Border.all(color: AppColors.primary.withValues(alpha: .4)),
-          ),
-          child: targets.isReady
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Dein Tagesrichtwert',
-                      style: TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${targets.calories} kcal',
-                      key: const ValueKey('personal-summary-calories'),
-                      style: const TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'davon ${targets.protein} g Eiweiß',
-                      style: const TextStyle(color: AppColors.textMuted),
-                    ),
-                    if (weeks != null && weeks > 0 && target != null) ...[
-                      const SizedBox(height: 12),
-                      Text(
-                        '${_weight(target)} etwa im '
-                        '${_month(DateTime.now().add(Duration(days: weeks * 7)))}',
-                        key: const ValueKey('personal-summary-date'),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        'Grobe Schätzung – dein Körper hält sich nicht an Kalender.',
-                        style: TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ],
-                )
-              : Text(
-                  switch (targets.status) {
-                    DailyTargetsStatus.professionalGuidance =>
-                      'Für dich berechnet LIVO keine Kalorienziele. Du kannst '
-                          'alles andere nutzen – deine Ziele besprichst du am '
-                          'besten mit einer Fachperson.',
-                    DailyTargetsStatus.underage =>
-                      'Für Personen unter 18 Jahren berechnet LIVO keine '
-                          'Kalorienziele. Rezepte, Tagebuch und Tipps kannst '
-                          'du trotzdem nutzen.',
-                    _ =>
-                      'Ohne Alter, Größe und Gewicht berechnet LIVO keine '
-                          'Tagesziele. Du kannst sie später im Profil ergänzen.',
-                  },
-                  key: const ValueKey('personal-summary-paused'),
-                  style: const TextStyle(height: 1.45),
-                ),
-        ),
-        const SizedBox(height: 16),
-        const Text('Das macht LIVO für dich', style: _groupLabelStyle),
-        const SizedBox(height: 8),
-        for (final (icon, text) in lines)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, size: 18, color: AppColors.primary),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    text,
-                    style: const TextStyle(fontSize: 13.5, height: 1.35),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        const SizedBox(height: 4),
-        const Text(
-          'Richtwerte zur Orientierung, keine medizinische Beratung.',
-          style: TextStyle(color: AppColors.textMuted, fontSize: 12),
-        ),
-      ],
-    );
-  }
-
-  String _weight(double kg) =>
-      profile.measurementSystem == MeasurementSystem.imperial
-      ? '${(kg * 2.2046226218).round()} lb'
-      : '${kg.toStringAsFixed(1).replaceAll('.', ',').replaceAll(',0', '')} kg';
-
-  String _month(DateTime date) => '${_monthNames[date.month - 1]} ${date.year}';
 }
 
 class _UnitToggle extends StatelessWidget {

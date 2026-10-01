@@ -25,6 +25,15 @@
 - **Schutz:** kein Zielgewicht unter BMI 18,5, Zielzeit als grobe Schätzung
   gekennzeichnet, keine Countdown- oder Rabatt-Tricks. Details:
   `PERSONALIZATION_PRIVACY.md`.
+- **Plan-Animation (letzter Schritt):** Rund 4 Sekunden „Dein Plan wird
+  erstellt …“ mit Fortschrittsring und Checkliste. Die Wartezeit ist reine
+  Darstellung – die Berechnung selbst dauert Millisekunden –, deshalb nennt
+  jede Zeile nur, was die App mit den Antworten wirklich tut, und nur, wenn
+  es zutrifft (z. B. „Rezepte mit deinen Allergenen aussortieren“ nur mit
+  Allergien). Danach zählen Kalorien hoch, Eiweiß/Kohlenhydrate/Fett füllen
+  sich (Kohlenhydrate = Rest der Energie), eine Kurve zeigt den Weg zum
+  Wunschgewicht als „grobe Schätzung“. Beim zweiten Besuch und mit
+  „Bewegung reduzieren“ erscheint der Plan sofort.
 - **Offen:** ausdrückliche Einwilligung (Art. 9 DSGVO) bei der
   Registrierung.
 
