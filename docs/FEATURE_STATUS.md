@@ -1,5 +1,18 @@
 # Funktionsstatus
 
+## Aktualisierung: E-Mail-Links und LIVO-Mails, 1. Oktober 2026
+
+- **Befund:** Die Site URL in Supabase Auth steht auf `http://localhost:3000`;
+  Reset-Links führen auf dem Handy deshalb ins Leere. Behebung im Dashboard,
+  Schritt für Schritt in `EMAIL_SETUP.md` (noch offen, nicht im Code lösbar).
+- **App:** Links mit `token_hash` (aus den neuen Vorlagen) werden beim Start
+  selbst eingelöst und funktionieren geräteübergreifend. Abgelaufene oder
+  bereits benutzte Links zeigen einen Hinweis statt einer leeren Seite.
+- **Vorlagen:** Deutsche E-Mails im LIVO-Stil für Passwort-Reset,
+  Registrierung und E-Mail-Wechsel unter `supabase/templates/`. Wirksam erst
+  nach dem Einfügen im Dashboard; ein eigener Absender „LIVO“ braucht eine
+  eigene Domain und einen Mailversand-Dienst (SMTP).
+
 ## Aktualisierung: Kontodaten, Login und Sicherheitsprüfung, 1. Oktober 2026
 
 - **Lokal umgesetzt, noch nicht live geschaltet:** Unter Profil -> Datenschutz

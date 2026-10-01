@@ -16,11 +16,15 @@ class FitnessAiApp extends StatefulWidget {
   const FitnessAiApp({
     this.useAuth = true,
     this.initialPasswordRecovery = false,
+    this.initialNotice,
     super.key,
   });
 
   final bool useAuth;
   final bool initialPasswordRecovery;
+
+  /// Shown once after start, for example when an e-mail link has expired.
+  final String? initialNotice;
 
   @override
   State<FitnessAiApp> createState() => _FitnessAiAppState();
@@ -31,6 +35,7 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
   StreamSubscription<AuthState>? _authSubscription;
   String? _userId;
   bool _passwordRecovery = false;
+  final _messenger = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -41,6 +46,14 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     _passwordRecovery =
         widget.useAuth && widget.initialPasswordRecovery && _userId != null;
     _controller = AppController(personalizationUserId: _userId);
+    final notice = widget.initialNotice;
+    if (notice != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _messenger.currentState?.showSnackBar(
+          SnackBar(content: Text(notice), duration: const Duration(seconds: 8)),
+        ),
+      );
+    }
     if (widget.useAuth) {
       _authSubscription = Supabase.instance.client.auth.onAuthStateChange
           .listen((event) {
@@ -75,6 +88,7 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
       controller: _controller,
       child: MaterialApp(
         key: ValueKey(_userId ?? 'signed-out-preview'),
+        scaffoldMessengerKey: _messenger,
         title: 'LIVO – Ernährung',
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
