@@ -1,4 +1,4 @@
-# Supabase-Einrichtung für LIVO
+# Supabase-Einrichtung für Lookin
 
 1. Im Supabase-Dashboard den **SQL Editor** öffnen.
 2. `migrations/0001_livo_schema.sql` vollständig ausführen.

@@ -100,7 +100,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
           BarcodeErrorKind.notFound =>
             'Dieses Produkt ist noch nicht in der Datenquelle. Du kannst es selbst eintragen.',
           BarcodeErrorKind.notAllowed =>
-            'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+            'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
           BarcodeErrorKind.rateLimited =>
             'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
           _ => error.message,

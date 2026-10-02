@@ -99,7 +99,7 @@ class _MealTab extends StatelessWidget {
   }
 }
 
-/// Filter chip in the LIVO style; selected chips show a check mark, so the
+/// Filter chip in the Lookin style; selected chips show a check mark, so the
 /// state is not conveyed by colour alone.
 class RecipeChoiceChip extends StatelessWidget {
   const RecipeChoiceChip({

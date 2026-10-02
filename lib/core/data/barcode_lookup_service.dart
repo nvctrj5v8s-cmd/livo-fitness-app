@@ -67,7 +67,7 @@ class BarcodeLookupService {
       final item = FoodItem.fromMap(Map<String, dynamic>.from(food));
       if (!HalalContentPolicy.isAllowedFood(item)) {
         throw const BarcodeLookupException(
-          'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+          'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
           kind: BarcodeErrorKind.notAllowed,
         );
       }

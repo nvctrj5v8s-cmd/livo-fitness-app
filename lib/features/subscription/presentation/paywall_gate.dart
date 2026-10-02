@@ -7,7 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../data/paywall_store.dart';
 import 'paywall_page.dart';
 
-/// Shows the LIVO Premium paywall once per account and device after the
+/// Shows the Lookin Premium paywall once per account and device after the
 /// personalization. Premium accounts skip it; it can always be closed.
 class PaywallGate extends StatefulWidget {
   const PaywallGate({
@@ -97,7 +97,7 @@ class _PaywallGateState extends State<PaywallGate> {
         null => const Scaffold(
           key: ValueKey('paywall-gate-loading'),
           backgroundColor: AppColors.background,
-          body: Center(child: Text('Dein LIVO wird vorbereitet …')),
+          body: Center(child: Text('Dein Lookin wird vorbereitet …')),
         ),
         true => KeyedSubtree(
           key: const ValueKey('paywall-gate-offer'),

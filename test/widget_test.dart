@@ -23,7 +23,7 @@ void main() {
   ) async {
     await _pumpApp(tester);
     await _openTab(tester, 'KI');
-    expect(find.text('LIVO Coach'), findsOneWidget);
+    expect(find.text('Lookin Coach'), findsOneWidget);
     await _openTab(tester, 'Rezepte');
     expect(find.text('Planen & vorbereiten'), findsNothing);
     expect(
@@ -199,7 +199,7 @@ void main() {
     });
     await tester.pumpWidget(const FitnessAiApp(useAuth: false));
     await tester.pumpAndSettle();
-    expect(find.text('LIVO'), findsOneWidget);
+    expect(find.text('Lookin'), findsOneWidget);
     expect(find.text('Fortschritt'), findsNothing);
     await tester.tap(find.byKey(const Key('desktop-quick-add')));
     await tester.pumpAndSettle();

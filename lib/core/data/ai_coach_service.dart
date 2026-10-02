@@ -115,7 +115,7 @@ class AiCoachException implements Exception {
     this.dailyLimit,
   });
 
-  /// The server answered that LIVO Premium is required (HTTP 402).
+  /// The server answered that Lookin Premium is required (HTTP 402).
   static const premiumRequiredCode = 'premium_required';
 
   /// Today's AI requests are used up (HTTP 429 with `daily_limit`).
@@ -167,7 +167,7 @@ AiCoachException? _premiumRequired(FunctionException error) {
     return null;
   }
   return const AiCoachException(
-    'Diese KI-Funktion ist Teil von LIVO Premium.',
+    'Diese KI-Funktion ist Teil von Lookin Premium.',
     code: AiCoachException.premiumRequiredCode,
   );
 }

@@ -118,7 +118,7 @@ void main() {
     );
     expect(find.byKey(const ValueKey('personal-summary-date')), findsOneWidget);
     expect(find.textContaining('Grobe Schätzung'), findsOneWidget);
-    expect(find.textContaining('Allergenen blendet LIVO aus'), findsOneWidget);
+    expect(find.textContaining('Allergenen blendet Lookin aus'), findsOneWidget);
     await _next(tester);
 
     expect(result, isNotNull);
@@ -249,7 +249,7 @@ void main() {
     expect(next.onPressed, isNull);
 
     await tester.pumpAndSettle();
-    expect(find.text('Dein LIVO-Plan ist bereit.'), findsOneWidget);
+    expect(find.text('Dein Lookin-Plan ist bereit.'), findsOneWidget);
     expect(find.byKey(const ValueKey('personal-summary')), findsOneWidget);
     expect(find.text('Los geht’s'), findsOneWidget);
     expect(find.text('Eiweiß'), findsOneWidget);
@@ -285,7 +285,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.byKey(const ValueKey('plan-building')), findsNothing);
-    expect(find.text('Dein LIVO-Plan ist bereit.'), findsOneWidget);
+    expect(find.text('Dein Lookin-Plan ist bereit.'), findsOneWidget);
     await tester.pumpAndSettle();
   });
 

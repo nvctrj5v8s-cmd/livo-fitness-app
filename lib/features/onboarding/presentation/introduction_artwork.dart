@@ -7,7 +7,7 @@ import '../../../core/theme/app_colors.dart';
 /// Number of animated scenes; one per introduction slide.
 const introductionSceneCount = 6;
 
-/// Decorative previews of real LIVO screens with illustrative values. The page
+/// Decorative previews of real Lookin screens with illustrative values. The page
 /// owns animation timing, replay and reduced motion; these scenes only draw
 /// the supplied progress.
 class IntroductionArtwork extends StatelessWidget {
@@ -1179,7 +1179,7 @@ class _CoachPreview extends StatelessWidget {
             const Expanded(
               child: Column(
                 children: [
-                  _FitText('LIVO Coach', size: 12, weight: FontWeight.w900),
+                  _FitText('Lookin Coach', size: 12, weight: FontWeight.w900),
                   _FitText(
                     'KI · Ernährung & Fitness',
                     size: 8,

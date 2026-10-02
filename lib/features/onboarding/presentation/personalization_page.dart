@@ -304,7 +304,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   // --- Target weight -------------------------------------------------------
 
-  /// Lowest target LIVO offers: never below a BMI of 18.5.
+  /// Lowest target Lookin offers: never below a BMI of 18.5.
   double get _targetMinKg => _draft.goal == PersonalGoal.loseWeight
       ? math.max(
           _metricMin,
@@ -538,7 +538,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       const {_Step.birthday, _Step.height}.contains(_current);
 
   String get _title => switch (_current) {
-    _Step.name => 'Damit LIVO dich richtig anspricht.',
+    _Step.name => 'Damit Lookin dich richtig anspricht.',
     _Step.goal => 'Was ist dein Ziel?',
     _Step.motivation => 'Warum ist dir das wichtig?',
     _Step.sex => 'Welches Geschlecht hat dein Körper?',
@@ -553,12 +553,12 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.food => 'Wie isst du?',
     _Step.kitchen => 'Wie sieht es in deiner Küche aus?',
     _Step.obstacles => 'Was hat dich bisher gebremst?',
-    _Step.health => 'Gibt es etwas, worauf LIVO achten soll?',
+    _Step.health => 'Gibt es etwas, worauf Lookin achten soll?',
     _Step.summary =>
       !_collected.hasAnswers
           ? 'Du startest ganz neutral.'
           : _planReady
-          ? 'Dein LIVO-Plan ist bereit.'
+          ? 'Dein Lookin-Plan ist bereit.'
           : 'Dein Plan wird erstellt …',
   };
 
@@ -566,7 +566,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.name =>
       'Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.',
     _Step.goal =>
-      'Das hilft LIVO, Vorschläge sinnvoll zu priorisieren – ohne Druck.',
+      'Das hilft Lookin, Vorschläge sinnvoll zu priorisieren – ohne Druck.',
     _Step.motivation =>
       'Wähle alles, was passt. Dein Coach greift das auf, wenn es mal '
           'schwerfällt.',
@@ -582,21 +582,21 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       'Ein Ziel, das zu dir passt – kein Muss. Du kannst es jederzeit ändern.',
     _Step.activity => 'Dein ganz normaler Alltag, ohne gezieltes Training.',
     _Step.food => 'Damit Rezepte, Vorschläge und der Coach zu dir passen.',
-    _Step.kitchen => 'So schlägt LIVO Rezepte vor, die in deinen Tag passen.',
+    _Step.kitchen => 'So schlägt Lookin Rezepte vor, die in deinen Tag passen.',
     _Step.obstacles =>
-      'Wähle alles, was passt – das ist völlig normal. LIVO gibt dir dazu '
+      'Wähle alles, was passt – das ist völlig normal. Lookin gibt dir dazu '
           'passende Tipps.',
     _Step.health =>
       'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf '
           'diesem Gerät.',
     _Step.summary =>
       !_collected.hasAnswers
-          ? 'Beantworte die Fragen jederzeit im Profil, dann passt sich LIVO '
+          ? 'Beantworte die Fragen jederzeit im Profil, dann passt sich Lookin '
                 'an dich an.'
           : _planReady
           ? 'Alles basiert auf deinen Antworten und lässt sich jederzeit im '
                 'Profil anpassen.'
-          : 'LIVO verarbeitet gerade deine Antworten.',
+          : 'Lookin verarbeitet gerade deine Antworten.',
   };
 
   Widget _answers() => switch (_current) {
@@ -622,7 +622,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         const _SoftNote(
           icon: Icons.tune_rounded,
           text:
-              'Du kannst oben überspringen. LIVO funktioniert auch ohne diese Antworten.',
+              'Du kannst oben überspringen. Lookin funktioniert auch ohne diese Antworten.',
         ),
         if (widget.onSignIn != null) ...[
           const SizedBox(height: 10),
@@ -937,7 +937,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       return const _SoftNote(
         icon: Icons.favorite_outline_rounded,
         text:
-            'Dein Gewicht liegt bereits im unteren gesunden Bereich. LIVO '
+            'Dein Gewicht liegt bereits im unteren gesunden Bereich. Lookin '
             'schlägt dir deshalb kein Abnehmziel vor – wir helfen dir, gut '
             'und ausgewogen zu essen.',
       );
@@ -999,7 +999,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         _SoftNote(
           icon: Icons.shield_outlined,
           text: lose
-              ? 'LIVO bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und '
+              ? 'Lookin bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und '
                     'höchstens etwa ein halbes Kilo pro Woche an.'
               : 'Muskeln wachsen langsam. Genug Eiweiß und Training sind '
                     'wichtiger als schnelle Zahlen.',
@@ -1032,7 +1032,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               : Icons.volunteer_activism_outlined,
           text: notes.isEmpty
               ? 'Trifft nichts davon zu? Dann tippe einfach auf „Weiter“.'
-              : 'Danke, dass du das teilst. LIVO berechnet für dich keine '
+              : 'Danke, dass du das teilst. Lookin berechnet für dich keine '
                     'Kalorienziele und schlägt keine Diät vor. Tagebuch, '
                     'Rezepte und Coach kannst du trotzdem nutzen – deine Ziele '
                     'besprichst du am besten mit deiner Ärztin, deinem Arzt '

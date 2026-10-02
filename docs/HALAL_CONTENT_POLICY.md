@@ -1,8 +1,8 @@
-# Halal-Inhaltsregel für LIVO
+# Halal-Inhaltsregel für Lookin
 
 ## Verbindliche Produktregel
 
-LIVO darf keine bekannten Inhalte mit Schweinefleisch, Alkohol oder Gelatine
+Lookin darf keine bekannten Inhalte mit Schweinefleisch, Alkohol oder Gelatine
 anzeigen, empfehlen, als Rezept aufnehmen oder per Barcode in das Tagebuch
 übernehmen. Fleisch von Landtieren wird nur akzeptiert, wenn die vorliegenden
 Produktdaten es eindeutig als halal kennzeichnen. Fisch sowie vegetarische und

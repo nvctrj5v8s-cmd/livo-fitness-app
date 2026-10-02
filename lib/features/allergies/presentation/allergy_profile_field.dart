@@ -249,7 +249,7 @@ class _AllergyEditorState extends State<_AllergyEditor> {
               const SizedBox(height: 8),
               const Text(
                 'Freiwillige Gesundheitsangabe: Sie wird in deinem Konto '
-                'gespeichert und dem LIVO Coach als Kontext mitgegeben, damit er '
+                'gespeichert und dem Lookin Coach als Kontext mitgegeben, damit er '
                 'nichts Unpassendes vorschl\u00E4gt. Du kannst sie hier jederzeit '
                 '\u00E4ndern oder leeren.',
                 key: Key('allergy-privacy-note'),

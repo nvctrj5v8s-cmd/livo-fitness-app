@@ -1,6 +1,6 @@
 # Barcode-Produktabfrage
 
-LIVO liest einen gescannten Lebensmittel-Barcode über die Supabase Edge
+Lookin liest einen gescannten Lebensmittel-Barcode über die Supabase Edge
 Function `barcode-lookup`. Die Funktion fragt Open Food Facts ab, speichert
 die zurückgegebenen Produktdaten als gemeinsamen Katalogeintrag und zeigt dem
 Nutzer erst eine kontrollierbare Detailansicht. Erst nach Auswahl von Menge
@@ -35,14 +35,14 @@ und Mahlzeit wird etwas in das persönliche Tagebuch geschrieben.
    `supabase/functions/barcode-lookup/index.ts` vollständig einfügen und
    **Deploy function** drücken. JWT-Prüfung eingeschaltet lassen.
 3. Unter **Edge Function Secrets** einen neuen Wert anlegen:
-   `OFF_USER_AGENT` = `LIVO/0.1 (deine-echte-email@example.com)`.
+   `OFF_USER_AGENT` = `Lookin/0.1 (deine-echte-email@example.com)`.
    Die E-Mail muss später erreichbar sein; Open Food Facts verlangt einen
    eindeutig zuordenbaren User-Agent. Keine Supabase-Secret- oder
    service_role-Keys selbst eintragen – diese stellt Supabase der Function
    bereits intern bereit.
 4. Bei Open Food Facts das API-Usage-Formular für deine App ausfüllen. Es gibt
    keinen API-Schlüssel und keinen Preis für diese Leseabfragen.
-5. In der LIVO-App mit einem echten Konto anmelden, Barcode scannen und einen
+5. In der Lookin-App mit einem echten Konto anmelden, Barcode scannen und einen
    gängigen Verpackungscode testen. Ein nicht gefundener Code führt bewusst
    zurück zur manuellen Eingabe.
 

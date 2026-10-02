@@ -22,7 +22,7 @@ Datenschutzerklärung, keine juristische oder medizinische Freigabe.
   protokollieren“). Das Tagebuch dokumentiert, was gegessen wurde – es wird
   nichts blockiert, was bereits gegessen wurde.
 - **KI-Coach und Fotoanalyse:** Die Angaben gehen wie bisher im
-  „LIVO-Kontext“ mit (siehe `AI_COACH_PRIVACY.md`). Der Systemprompt
+  „Lookin-Kontext“ mit (siehe `AI_COACH_PRIVACY.md`). Der Systemprompt
   behandelt sie als feste Ausschlusskriterien und verbietet, Sicherheit zu
   bestätigen, wenn Zutaten oder Spuren nicht verlässlich bekannt sind.
 

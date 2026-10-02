@@ -1681,7 +1681,7 @@ class _PremiumRequiredCard extends StatelessWidget {
           const PremiumBadge(label: 'Premium-Funktion'),
           const SizedBox(height: 10),
           const Text(
-            'Die KI-Foto-Erkennung ist Teil von LIVO Premium. Du kannst die '
+            'Die KI-Foto-Erkennung ist Teil von Lookin Premium. Du kannst die '
             'Mahlzeit trotzdem über „Suchen“ oder „Selbst hinzufügen“ '
             'eintragen.',
             style: TextStyle(color: AppColors.text, height: 1.45),

@@ -197,7 +197,7 @@ class _PaywallPageState extends State<PaywallPage>
   );
 
   void _restore() => _showMessage(
-    'Käufe wiederherstellen ist bald verfügbar. Bisher gibt es in LIVO noch '
+    'Käufe wiederherstellen ist bald verfügbar. Bisher gibt es in Lookin noch '
     'keine Käufe, die wiederhergestellt werden müssten.',
   );
 
@@ -469,12 +469,12 @@ class _PaywallPageState extends State<PaywallPage>
     onPrivacy: () => _legal(
       'Datenschutz',
       'Die vollständige Datenschutzerklärung wird vor dem Start der '
-          'Bezahlung hier verlinkt. Für die Testphase speichert LIVO nur, '
+          'Bezahlung hier verlinkt. Für die Testphase speichert Lookin nur, '
           'dass und bis wann dein Konto sie nutzt – keine Zahlungsdaten.',
     ),
     onTerms: () => _legal(
       'AGB',
-      'Die vollständigen Allgemeinen Geschäftsbedingungen für LIVO Premium '
+      'Die vollständigen Allgemeinen Geschäftsbedingungen für Lookin Premium '
           'werden vor dem Start der Bezahlung hier verlinkt.',
     ),
   );
@@ -591,7 +591,7 @@ class _TopBar extends StatelessWidget {
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
             child: Semantics(
-              label: 'LIVO Premium',
+              label: 'Lookin Premium',
               excludeSemantics: true,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -615,7 +615,7 @@ class _TopBar extends StatelessWidget {
                   ),
                   const SizedBox(width: 9),
                   const Text(
-                    'LIVO',
+                    'Lookin',
                     style: TextStyle(
                       color: AppColors.text,
                       fontSize: 15,
@@ -683,7 +683,7 @@ class _Headline extends StatelessWidget {
       ),
       PaywallSource.coach => (
         Icons.auto_awesome_rounded,
-        'Der LIVO Coach ist Teil von Premium',
+        'Der Lookin Coach ist Teil von Premium',
       ),
       PaywallSource.mealPhoto => (
         Icons.photo_camera_rounded,
@@ -736,7 +736,7 @@ class _Headline extends StatelessWidget {
               children: [
                 const TextSpan(text: 'Hol dir '),
                 TextSpan(
-                  text: 'LIVO Premium',
+                  text: 'Lookin Premium',
                   style: TextStyle(
                     foreground: Paint()
                       ..shader = const LinearGradient(
@@ -788,13 +788,13 @@ class _Benefits extends StatelessWidget {
         Icons.photo_camera_rounded,
         AppColors.primary,
         'KI-Foto-Erkennung',
-        'Foto machen – LIVO schätzt Lebensmittel und Mengen. Du prüfst alles '
+        'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles '
             'vor dem Speichern.',
       ),
       (
         Icons.auto_awesome_rounded,
         AppColors.mint,
-        'LIVO Coach',
+        'Lookin Coach',
         'Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und '
             'deine Tageswerte.',
       ),
@@ -1645,7 +1645,7 @@ class _ComparisonCard extends StatelessWidget {
       ('Profil & Tagesziele', true, true),
       ('Rezepte', '${SubscriptionPlans.freeRecipeSharePercent} %', 'Alle'),
       ('KI-Foto-Erkennung', false, true),
-      ('LIVO Coach (KI-Chat)', false, true),
+      ('Lookin Coach (KI-Chat)', false, true),
     ];
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 10),
@@ -1962,7 +1962,7 @@ class _TrialSuccessView extends StatelessWidget {
                   children: [
                     for (final (i, label) in const [
                       'KI-Foto-Erkennung',
-                      'LIVO Coach',
+                      'Lookin Coach',
                       'Alle Rezepte',
                     ].indexed) ...[
                       if (i > 0) const SizedBox(height: 12),

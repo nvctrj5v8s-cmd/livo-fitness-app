@@ -1,4 +1,4 @@
-# Datenquellen für den LIVO-Katalog
+# Datenquellen für den Lookin-Katalog
 
 Das Supabase-Schema speichert bei jedem Lebensmittel Herkunft, Lizenz und
 Prüfstatus: `source`, `source_url`, `source_license`, `source_attribution`,
@@ -18,7 +18,7 @@ vermischt.
 
 Rezepte werden zunächst selbst erstellt und aus den Lebensmittelwerten
 berechnet. `supabase/content/livo_recipes.json` enthält alle 40 originalen
-LIVO-Rezepte ohne fremde Texte (Fotos: Pexels, siehe
+Lookin-Rezepte ohne fremde Texte (Fotos: Pexels, siehe
 `assets/ASSET_SOURCES.md`) und erzeugt die Migration
 `supabase/migrations/0010_recipe_content.sql`. Fremde Rezepttexte und Bilder
 werden erst nach Lizenzprüfung übernommen. Die kleine Seed-Datei bleibt der

@@ -76,7 +76,7 @@ class _IntroductionGateState extends State<IntroductionGate> {
           backgroundColor: AppColors.background,
           body: Center(
             child: Semantics(
-              label: 'LIVO wird geöffnet',
+              label: 'Lookin wird geöffnet',
               child: const Text(
                 'livo.',
                 style: TextStyle(

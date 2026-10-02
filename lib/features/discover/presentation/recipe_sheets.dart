@@ -403,7 +403,7 @@ Future<bool?> showGoalLockedSheet(
         ),
         const SizedBox(height: 16),
         const Text(
-          'Mit $recipePlusLabel schlägt dir LIVO eine Portionsgröße vor, die zu '
+          'Mit $recipePlusLabel schlägt dir Lookin eine Portionsgröße vor, die zu '
           'deinem heutigen Tagesziel passt – geschätzt aus deinem Tagebuch. '
           'Die Zutatenmengen werden dafür automatisch umgerechnet.',
           style: TextStyle(color: AppColors.text, fontSize: 15, height: 1.5),

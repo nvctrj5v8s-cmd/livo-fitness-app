@@ -87,7 +87,7 @@ class FoodSearchService {
 
   static String sourceLabel(FoodItem food) => switch (food.source) {
     'usda_fndds' || 'usda_foundation' => 'USDA-Lebensmitteldaten',
-    'curated' => 'LIVO-Katalog',
+    'curated' => 'Lookin-Katalog',
     _ => 'Katalogquelle: ${food.source}',
   };
 

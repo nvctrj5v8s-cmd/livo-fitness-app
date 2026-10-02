@@ -1,4 +1,4 @@
-package com.moham.fitness_ai_app
+package com.lookin.foodtracker
 
 import io.flutter.embedding.android.FlutterActivity
 

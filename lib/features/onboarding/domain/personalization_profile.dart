@@ -43,7 +43,7 @@ enum RoutineFocus {
 }
 
 /// Only used for the energy estimate (Mifflin-St Jeor). Without an answer
-/// LIVO keeps the sex-neutral midpoint.
+/// Lookin keeps the sex-neutral midpoint.
 enum BodySex {
   female('Weiblich'),
   male('Männlich'),
@@ -98,7 +98,7 @@ enum TrackingExperience {
   final String label;
 }
 
-/// Situations in which LIVO must not calculate calorie targets on its own
+/// Situations in which Lookin must not calculate calorie targets on its own
 /// (project rule: pregnancy, eating disorders, relevant illnesses). Stored
 /// only on this device and never sent to the coach in detail.
 enum HealthNote {
@@ -167,7 +167,7 @@ class PersonalizationProfile {
 
   bool get needsProfessionalGuidance => healthNotes.isNotEmpty;
 
-  /// Whether anything was answered that LIVO adapts to. The name alone is
+  /// Whether anything was answered that Lookin adapts to. The name alone is
   /// only a greeting.
   bool get hasAnswers =>
       goal != null ||

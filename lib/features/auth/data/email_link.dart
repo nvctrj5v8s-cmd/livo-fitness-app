@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// A sign-in link from a LIVO e-mail: `…?token_hash=…&type=recovery`.
+/// A sign-in link from a Lookin e-mail: `…?token_hash=…&type=recovery`.
 ///
 /// The e-mail templates in `supabase/templates/` link with a one-time token
 /// hash instead of the default PKCE code. Unlike the code, the hash does not

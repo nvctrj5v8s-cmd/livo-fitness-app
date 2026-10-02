@@ -1,7 +1,7 @@
-/// Identifies one of the LIVO Premium subscription plans.
+/// Identifies one of the Lookin Premium subscription plans.
 enum PremiumPlanId { yearly, monthly }
 
-/// A LIVO Premium plan with one flat price. All amounts are gross prices in
+/// A Lookin Premium plan with one flat price. All amounts are gross prices in
 /// euro cents incl. VAT; formatting happens only in the UI.
 class PremiumPlan {
   const PremiumPlan({
@@ -19,8 +19,8 @@ class PremiumPlan {
   /// 1 = billed monthly, 12 = billed once per year.
   final int billingPeriodMonths;
 
-  /// Amount charged once per billing period (monthly: 4,99 € every month,
-  /// yearly: 45,99 € once per year). This is the only amount that is ever
+  /// Amount charged once per billing period (monthly: 6,99 € every month,
+  /// yearly: 59,99 € once per year). This is the only amount that is ever
   /// charged; every other amount is derived for display.
   final int chargeCents;
 
@@ -29,17 +29,17 @@ class PremiumPlan {
   /// Monthly equivalent of [chargeCents], for display only.
   ///
   /// A yearly price does not always split into whole cents
-  /// (4599 / 12 = 383,25 cents), so the value is rounded **up** to the next
-  /// whole cent (3,84 €). Rounding up means the shown monthly amount never
+  /// (5999 / 12 = 499,92 cents), so the value is rounded **up** to the next
+  /// whole cent (5,00 €). Rounding up means the shown monthly amount never
   /// understates what is actually charged.
   int get monthlyEquivalentCents =>
       (chargeCents + billingPeriodMonths - 1) ~/ billingPeriodMonths;
 }
 
-/// The single place for LIVO Premium prices and plan facts. Change prices
+/// The single place for Lookin Premium prices and plan facts. Change prices
 /// here; the paywall, profile and tests read them from this class.
 abstract final class SubscriptionPlans {
-  static const productName = 'LIVO Premium';
+  static const productName = 'Lookin Premium';
 
   /// Free, app-controlled trial. No payment data, ends automatically and can
   /// be used once per account. The server grants the same length in
@@ -52,16 +52,16 @@ abstract final class SubscriptionPlans {
 
   static const yearly = PremiumPlan(
     id: PremiumPlanId.yearly,
-    storeProductId: 'livo_premium_yearly',
+    storeProductId: 'lookin_premium_yearly',
     billingPeriodMonths: 12,
-    chargeCents: 4599,
+    chargeCents: 5999,
   );
 
   static const monthly = PremiumPlan(
     id: PremiumPlanId.monthly,
-    storeProductId: 'livo_premium_monthly',
+    storeProductId: 'lookin_premium_monthly',
     billingPeriodMonths: 1,
-    chargeCents: 499,
+    chargeCents: 699,
   );
 
   /// Display order; the recommended plan comes first.
@@ -72,17 +72,17 @@ abstract final class SubscriptionPlans {
   static PremiumPlan byId(PremiumPlanId id) =>
       all.firstWhere((plan) => plan.id == id);
 
-  /// What one year costs on the monthly plan (12 × 4,99 € = 59,88 €).
+  /// What one year costs on the monthly plan (12 × 6,99 € = 83,88 €).
   static int get monthlyPlanYearCents =>
       monthly.chargeCents * yearly.billingPeriodMonths;
 
   /// What the yearly plan saves compared with a year of monthly payments
-  /// (59,88 € − 45,99 € = 13,89 €).
+  /// (83,88 € − 59,99 € = 23,89 €).
   static int get yearlySavingsCents =>
       monthlyPlanYearCents - yearly.chargeCents;
 
   /// [yearlySavingsCents] as a share of [monthlyPlanYearCents], rounded to
-  /// the nearest whole percent (13,89 / 59,88 = 23,2 % → 23 %). The exact
+  /// the nearest whole percent (23,89 / 83,88 = 28,5 % → 28 %). The exact
   /// euro saving is always shown next to it on the paywall.
   static int get yearlySavingsPercent =>
       (yearlySavingsCents * 100 / monthlyPlanYearCents).round();

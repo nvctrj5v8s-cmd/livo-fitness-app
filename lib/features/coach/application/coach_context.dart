@@ -16,7 +16,7 @@ Map<String, Object?> coachContextFor(AppController app, {DateTime? now}) {
       app.diaryDate.day == today.day;
   final todayUnknown =
       diaryShowsToday && (app.diaryLoading || app.diaryError != null);
-  // Under 18 or a stated health situation: LIVO calculates no targets, so
+  // Under 18 or a stated health situation: Lookin calculates no targets, so
   // the coach gets none either. The reason itself is not sent.
   final targetsPaused = app.dailyTargets.isPaused;
   final profile = app.personalization;

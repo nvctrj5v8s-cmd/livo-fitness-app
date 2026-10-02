@@ -357,15 +357,15 @@ class _DailyGoals extends StatelessWidget {
       DailyTargetsStatus.missingData =>
         'Deine Tagesziele berechnen wir aus deinem Alter, deiner Größe, '
             'deinem Gewicht und deinem Alltag. Wenn du möchtest, beantworte '
-            'dazu ein paar kurze Fragen. Du kannst LIVO aber auch ganz ohne '
+            'dazu ein paar kurze Fragen. Du kannst Lookin aber auch ganz ohne '
             'Ziele nutzen.',
       DailyTargetsStatus.underage =>
-        'Für Personen unter 18 Jahren berechnet LIVO keine Kalorienziele. '
+        'Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. '
             'Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen '
             'Arzt oder eine Ernährungsfachkraft.',
       DailyTargetsStatus.professionalGuidance =>
         'Weil du angegeben hast, dass deine Ernährung gerade besondere '
-            'Aufmerksamkeit braucht, berechnet LIVO keine Kalorienziele. '
+            'Aufmerksamkeit braucht, berechnet Lookin keine Kalorienziele. '
             'Besprich deine Ziele bitte mit deiner Ärztin, deinem Arzt oder '
             'einer Ernährungsfachkraft. Tagebuch und Rezepte kannst du '
             'trotzdem nutzen.',
@@ -642,7 +642,7 @@ class _SettingsList extends StatelessWidget {
           _SettingsTile(
             key: const Key('profile-premium'),
             icon: Icons.workspace_premium_outlined,
-            title: 'LIVO Premium',
+            title: 'Lookin Premium',
             subtitle: _premiumSubtitle(controller.subscription),
             color: AppColors.primary,
             onTap: () => unawaited(showPaywall(context)),

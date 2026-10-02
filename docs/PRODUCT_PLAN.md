@@ -2,7 +2,7 @@
 
 ## Vision
 
-LIVO soll für gesunde Erwachsene der zentrale, leicht verständliche Begleiter
+Lookin soll für gesunde Erwachsene der zentrale, leicht verständliche Begleiter
 für Essen, Diätziele und alltägliche Planung werden. Nutzer sollen Mahlzeiten,
 Nährwerte, Wasser, Rezepte, Einkauf, Ziele und Fortschritt in einer ruhigen App
 finden, ohne mehrere Tracker und Notizen parallel zu benötigen.
@@ -114,10 +114,10 @@ Demo-Daten; nur externe Datenquellen, Konto, KI und Bezahlung fehlen.
 ### Phase 4 – Premium und Veröffentlichung
 
 - Monats- und Jahresabo mit sauberem Restore-/Kündigungsablauf
-- Preise und Testphase (entschieden am 27. September 2026): 7 Tage kostenlos
-  testen, einmal pro Konto und ohne Zahlungsdaten; danach 4,99 € pro Monat
-  oder 45,99 € einmal pro Jahr als Festpreise ohne Einführungsangebot.
-  Premium umfasst KI-Foto, LIVO Coach und alle Rezepte; Tagebuch, Suche,
+- Preise und Testphase (Testphase 27. September 2026, Preise geändert am 2. Oktober 2026): 7 Tage kostenlos
+  testen, einmal pro Konto und ohne Zahlungsdaten; danach 6,99 € pro Monat
+  oder 59,99 € einmal pro Jahr als Festpreise ohne Einführungsangebot.
+  Premium umfasst KI-Foto, Lookin Coach und alle Rezepte; Tagebuch, Suche,
   Barcode, Profil und 30 % der Rezepte bleiben kostenlos. Maßgeblich ist
   `lib/features/subscription/domain/subscription_plans.dart`.
 - Premium-Grenzen, Paywall und serverseitige Berechtigungsprüfung

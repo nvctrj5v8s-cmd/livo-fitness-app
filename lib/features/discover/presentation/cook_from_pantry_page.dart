@@ -183,7 +183,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Text(
-                    'Wähle, was du zu Hause hast. LIVO zeigt Rezepte mit diesen '
+                    'Wähle, was du zu Hause hast. Lookin zeigt Rezepte mit diesen '
                     'Zutaten – die mit den wenigsten fehlenden zuerst.',
                     style: TextStyle(color: AppColors.textMuted, height: 1.4),
                   ),

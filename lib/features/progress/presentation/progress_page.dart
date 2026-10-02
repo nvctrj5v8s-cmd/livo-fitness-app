@@ -369,7 +369,7 @@ class _ProgressHero extends StatelessWidget {
                 const SizedBox(height: 9),
                 Text(
                   tracked == 0
-                      ? 'Trage Mahlzeiten ein und ergänze dein Gewicht. LIVO berechnet danach nur aus deinen echten Daten.'
+                      ? 'Trage Mahlzeiten ein und ergänze dein Gewicht. Lookin berechnet danach nur aus deinen echten Daten.'
                       : '$tracked von $total Tagen mit Einträgen · ${snapshot.mealCount} Mahlzeiten ausgewertet',
                   style: const TextStyle(
                     color: AppColors.textMuted,

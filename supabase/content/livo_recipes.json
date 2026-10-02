@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Geprüfte LIVO-Rezeptinhalte. Nach jeder Änderung: dart run tool/generate_recipe_sql.dart --input supabase/content/livo_recipes.json --output supabase/migrations/0010_recipe_content.sql",
+  "_hinweis": "Geprüfte Lookin-Rezeptinhalte. Nach jeder Änderung: dart run tool/generate_recipe_sql.dart --input supabase/content/livo_recipes.json --output supabase/migrations/0010_recipe_content.sql",
   "retired_recipe_slugs": [
     "berry-protein-oats",
     "salmon-power-bowl",

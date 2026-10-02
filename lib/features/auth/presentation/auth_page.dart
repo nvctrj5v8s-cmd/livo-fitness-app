@@ -78,7 +78,7 @@ class _AuthPageState extends State<AuthPage>
         setState(() {
           _message = response.session == null
               ? 'Fast geschafft: Bestätige zuerst deine E-Mail-Adresse.'
-              : 'Dein LIVO-Konto ist bereit.';
+              : 'Dein Lookin-Konto ist bereit.';
           _messageIsError = false;
         });
       } else {
@@ -678,7 +678,7 @@ class _AnswersReadyIntro extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         const Text(
-          'Erstelle dein kostenloses Konto. Dann speichert LIVO deine '
+          'Erstelle dein kostenloses Konto. Dann speichert Lookin deine '
           'Antworten und dein Tagebuch – auch auf deinen anderen Geräten.',
           style: TextStyle(
             color: AppColors.textMuted,
@@ -754,7 +754,7 @@ class _BrandMark extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         const Text(
-          'LIVO',
+          'Lookin',
           style: TextStyle(
             fontSize: 21,
             fontWeight: FontWeight.w900,

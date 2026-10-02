@@ -59,7 +59,7 @@ void main() {
     test('422-Antwort „not_halal“ wird als Halal-Sperre erkannt', () {
       final error = BarcodeLookupService.errorFromPayload({
         'error':
-            'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+            'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
         'code': 'not_halal',
       });
       expect(error?.kind, BarcodeErrorKind.notAllowed);

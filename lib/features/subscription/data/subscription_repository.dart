@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../domain/entitlement.dart';
 
-/// Replaceable boundary for LIVO Premium. Store billing (Apple, Google or
+/// Replaceable boundary for Lookin Premium. Store billing (Apple, Google or
 /// Stripe) will later be added behind this interface; widgets never talk to
 /// Supabase or a store directly.
 abstract interface class SubscriptionRepository {

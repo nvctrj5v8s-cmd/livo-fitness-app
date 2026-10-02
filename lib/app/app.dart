@@ -90,7 +90,7 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
       child: MaterialApp(
         key: ValueKey(_userId ?? 'signed-out-preview'),
         scaffoldMessengerKey: _messenger,
-        title: 'LIVO – Ernährung',
+        title: 'Lookin – Ernährung',
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
         darkTheme: AppTheme.dark,

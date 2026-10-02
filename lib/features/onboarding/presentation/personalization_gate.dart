@@ -128,7 +128,7 @@ class _PersonalizationGateState extends State<PersonalizationGate> {
     }
     if (_showQuestions == null) {
       return const Scaffold(
-        body: Center(child: Text('Dein LIVO wird vorbereitet …')),
+        body: Center(child: Text('Dein Lookin wird vorbereitet …')),
       );
     }
     if (!_showQuestions!) return widget.child;

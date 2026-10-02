@@ -163,7 +163,7 @@ Deno.serve(async (request) => {
           (entitlement.expires_at == null ||
             new Date(entitlement.expires_at).getTime() > Date.now())
         if (!allowed) {
-          return json({ error: 'Dieses Produkt gehört zu LIVO Premium.', code: 'premium_required' }, 403)
+          return json({ error: 'Dieses Produkt gehört zu Lookin Premium.', code: 'premium_required' }, 403)
         }
       }
       return json({ food: cached, cache: 'catalog' })
@@ -380,7 +380,7 @@ function containsTerm(normalizedValue: string, term: string): boolean {
 
 function notHalal(): Response {
   return json({
-    error: 'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von LIVO.',
+    error: 'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
     code: 'not_halal',
   }, 422)
 }

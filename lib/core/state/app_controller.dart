@@ -46,7 +46,7 @@ class AppController extends ChangeNotifier {
     subscription.addListener(_onSubscriptionChanged);
   }
 
-  /// LIVO Premium state of this account; see `SubscriptionController`.
+  /// Lookin Premium state of this account; see `SubscriptionController`.
   final SubscriptionController subscription;
 
   bool? _premiumCatalog;
@@ -782,7 +782,7 @@ class AppController extends ChangeNotifier {
   void addMeal(MealEntry meal) {
     if (!HalalContentPolicy.isAllowedText(meal.name)) {
       diaryError =
-          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von Lookin.';
       notifyListeners();
       return;
     }
@@ -836,7 +836,7 @@ class AppController extends ChangeNotifier {
   }) async {
     if (!HalalContentPolicy.isAllowedFood(food)) {
       diaryError =
-          'Dieses Lebensmittel entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+          'Dieses Lebensmittel entspricht nicht den Halal-Inhaltsregeln von Lookin.';
       notifyListeners();
       return false;
     }
@@ -1096,7 +1096,7 @@ class AppController extends ChangeNotifier {
   Future<bool> duplicateDiaryEntry(MealEntry entry, {DateTime? date}) async {
     if (!HalalContentPolicy.isAllowedText(entry.name)) {
       diaryError =
-          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+          'Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von Lookin.';
       notifyListeners();
       return false;
     }
@@ -1219,7 +1219,7 @@ class AppController extends ChangeNotifier {
   }) async {
     if (!HalalContentPolicy.isAllowedRecipe(recipe)) {
       diaryError =
-          'Dieses Rezept entspricht nicht den Halal-Inhaltsregeln von LIVO.';
+          'Dieses Rezept entspricht nicht den Halal-Inhaltsregeln von Lookin.';
       notifyListeners();
       return false;
     }
@@ -1275,7 +1275,7 @@ class AppController extends ChangeNotifier {
     }
   }
 
-  /// German text for the diary UI. LIVO's own `StateError`/`ArgumentError`
+  /// German text for the diary UI. Lookin's own `StateError`/`ArgumentError`
   /// messages are shown as they are; technical errors such as network or
   /// database messages (English, "Bad state: …") never reach the user.
   static String diaryErrorMessage(Object error) => switch (error) {

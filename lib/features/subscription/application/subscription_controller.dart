@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../data/subscription_repository.dart';
 import '../domain/entitlement.dart';
 
-/// Holds the LIVO Premium state of the signed-in account. Reachable through
+/// Holds the Lookin Premium state of the signed-in account. Reachable through
 /// `AppScope.of(context).subscription`; the owning `AppController` forwards
 /// its notifications so dependent widgets rebuild.
 class SubscriptionController extends ChangeNotifier {

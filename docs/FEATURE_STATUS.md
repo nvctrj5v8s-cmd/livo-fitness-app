@@ -32,7 +32,7 @@
 - **Fragen (bis zu 14 Schritte):** Name, Ziel, Motivation, Geschlecht,
   Geburtstag, Größe, Gewicht, Zielgewicht + Tempo (nur bei Gewichtsziel),
   Aktivität, Ernährungsweise + Allergien, Kochzeit + Erfahrung, Hürden,
-  Gesundheitshinweis, Zusammenfassung „Dein LIVO-Plan“. Auswahl auf Basis
+  Gesundheitshinweis, Zusammenfassung „Dein Lookin-Plan“. Auswahl auf Basis
   einer Recherche der Fragebögen von Noom, Lifesum, MacroFactor, Yazio,
   MyFitnessPal, Lose It!, Fastic u. a.
 - **Wirkung:** Geschlecht verfeinert den Energiebedarf (Mifflin-St Jeor),
@@ -57,7 +57,7 @@
 - **Offen:** ausdrückliche Einwilligung (Art. 9 DSGVO) bei der
   Registrierung.
 
-## Aktualisierung: E-Mail-Links und LIVO-Mails, 1. Oktober 2026
+## Aktualisierung: E-Mail-Links und Lookin-Mails, 1. Oktober 2026
 
 - **Befund:** Die Site URL in Supabase Auth steht auf `http://localhost:3000`;
   Reset-Links führen auf dem Handy deshalb ins Leere. Behebung im Dashboard,
@@ -65,9 +65,9 @@
 - **App:** Links mit `token_hash` (aus den neuen Vorlagen) werden beim Start
   selbst eingelöst und funktionieren geräteübergreifend. Abgelaufene oder
   bereits benutzte Links zeigen einen Hinweis statt einer leeren Seite.
-- **Vorlagen:** Deutsche E-Mails im LIVO-Stil für Passwort-Reset,
+- **Vorlagen:** Deutsche E-Mails im Lookin-Stil für Passwort-Reset,
   Registrierung und E-Mail-Wechsel unter `supabase/templates/`. Wirksam erst
-  nach dem Einfügen im Dashboard; ein eigener Absender „LIVO“ braucht eine
+  nach dem Einfügen im Dashboard; ein eigener Absender „Lookin“ braucht eine
   eigene Domain und einen Mailversand-Dienst (SMTP).
 
 ## Aktualisierung: Kontodaten, Login und Sicherheitsprüfung, 1. Oktober 2026
@@ -219,7 +219,7 @@
 
 ## Aktualisierung: Premium-Preise und 7-Tage-Test, 27. September 2026
 
-- Die kostenlose Testphase von LIVO Premium dauert jetzt 7 statt 3 Tage. Sie
+- Die kostenlose Testphase von Lookin Premium dauert jetzt 7 statt 3 Tage. Sie
   gilt weiterhin einmal pro Konto, fragt keine Zahlungsdaten ab und endet
   automatisch ohne Kosten und ohne Verlängerung.
 - Neue Festpreise inkl. MwSt.: monatlich 4,99 € pro Monat, jährlich 45,99 €
@@ -241,7 +241,7 @@
   3-Tage-Tests, obwohl die App 7 Tage nennt. Die Migration daher vor oder
   zusammen mit dem App-Update ausführen. Bereits laufende Tests behalten ihr
   gespeichertes Enddatum.
-- Datenschutz: unverändert. Für die Testphase speichert LIVO weiterhin nur
+- Datenschutz: unverändert. Für die Testphase speichert Lookin weiterhin nur
   Konto-ID, Start und Ende (`premium_trials`) und keine Zahlungsdaten.
 - Geprüft: Flutter-Analyse ohne Befund; neue Tests in
   `test/subscription_plans_test.dart` decken Preise, Monatswert, Ersparnis,
@@ -264,7 +264,7 @@
 - Antworten mit Listen und **fett** werden sauber dargestellt, ohne rohe
   Sternchen. Leere oder unlesbare KI-Antworten werden abgefangen; fehlgeschlagene
   KI-Anfragen zählen nach Migration 0013 nicht mehr zum Tageslimit.
-- Neue, strengere Systemanweisung (LIVO-Rolle, Halal-Regel, keine Diagnosen,
+- Neue, strengere Systemanweisung (Lookin-Rolle, Halal-Regel, keine Diagnosen,
   Medikamente, Supplement-Dosierungen oder Extremdiäten, Verweis auf Hilfe
   bei Minderjährigen, Schwangerschaft, Essstörungen und Erkrankungen).
 - Premium-Status nicht ladbar (offline): Hinweis mit „Erneut versuchen“ statt
@@ -414,7 +414,7 @@
   Mahlzeit wählbar), `Barcode scannen` und `Manuell eintragen` (Suche oder
   eigenes Lebensmittel). Die Mahlzeit wird nach Tageszeit vorausgewählt.
 - KI-Foto-Kamera: Auf Android/iOS öffnet sich die System-Kamera
-  (`image_picker`). Im Browser und auf Desktop öffnet LIVO eine eigene
+  (`image_picker`). Im Browser und auf Desktop öffnet Lookin eine eigene
   Live-Kamera (`camera`-Paket) mit Auslöser und Kamerawechsel; der Browser
   fragt dafür nach der Kamera-Berechtigung (nur über HTTPS oder localhost).
   „Aus Galerie wählen“ ist überall als getrennte Option vorhanden. Fotos
@@ -469,7 +469,7 @@
 - Nach Vorstellung und Anmeldung erscheinen einmalig acht freiwillige Schritte:
   Name, Wunsch, Alltag, bisheriger/gewünschter Mahlzeitenrhythmus, Ernährungsweise,
   Kochzeit, Fokus und eine bearbeitbare Zusammenfassung.
-- Dunkle bestehende LIVO-Farbwelt, ein Lime-Akzent, animierte Vorschaukarten,
+- Dunkle bestehende Lookin-Farbwelt, ein Lime-Akzent, animierte Vorschaukarten,
   Diagramme und Übergänge. Die Einrichtung respektiert reduzierte Bewegung.
 - Antworten lassen sich im Profil nachholen, ändern und vom Gerät entfernen.
   Entwürfe bleiben ungespeichert, bis die Auswahl übernommen wird.
@@ -564,7 +564,7 @@
 
 - Die Einführung hat jetzt sechs Seiten, die nur echte Funktionen zeigen:
   Tagebuch mit vier Mahlzeiten und Makros, Plus-Menü (KI-Foto, Barcode,
-  manuell), KI-Foto mit bearbeitbarer Menge, LIVO Coach, Rezepte mit
+  manuell), KI-Foto mit bearbeitbarer Menge, Lookin Coach, Rezepte mit
   Wochenplan und Einkaufsliste sowie Profil mit Serie und Tageszielen.
   Wasser- und Fortschrittsseite wurden entfernt, weil diese Funktionen in der
   App derzeit nicht nutzbar sind.
@@ -708,3 +708,27 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   aber sichtbare Schritte nutzen noch Demo-Daten oder Platzhalter.
 - **Später extern:** Für den verlässlichen Produktbetrieb werden Backend,
   Persistenz, eine lizenzierte Datenquelle, Plattformdienste oder KI benötigt.
+
+## Aktualisierung: Name Lookin und neue Preise, 2. Oktober 2026
+
+- Die App heißt jetzt **Lookin – AI Food Tracker** (Store-Titel, 25 Zeichen);
+  im UI, in den KI-Anweisungen, E-Mail-Vorlagen, Web-Manifest, Android-Label
+  und iOS-Namen steht „Lookin“. Die Marke ist weiterhin **nicht** geprüft
+  (DPMA/EUIPO-Recherche steht aus, siehe `AGENTS.md`).
+- Die Paketkennung ist jetzt `com.lookin.foodtracker` (Android und iOS). Sie
+  ist nach der ersten Veröffentlichung nicht mehr änderbar.
+- Absichtlich unverändert, damit nichts verloren geht: lokale
+  Speicherschlüssel `livo.*`, bereits ausgeführte Datenbank-Migrationen,
+  Bilddateinamen `livo-*.webp` und der Trial-Anbieter `livo_trial`. Das sind
+  technische Namen, die Nutzer nicht sehen. Die Einführung hat einen neuen
+  Marker (`v4`) und wird einmal erneut gezeigt.
+- Neue Festpreise inkl. MwSt.: monatlich 6,99 €, jährlich 59,99 €. Die
+  Paywall zeigt „entspricht 5,00 € pro Monat“ (59,99 € ÷ 12 = 4,9992 €,
+  aufgerundet) und „du sparst 23,89 € gegenüber monatlich“ (12 × 6,99 € =
+  83,88 €), Abzeichen „−28 %“ (genau 28,5 %). Alles wird aus
+  `subscription_plans.dart` berechnet.
+- Die geplanten Store-Produkt-IDs heißen jetzt `lookin_premium_monthly` und
+  `lookin_premium_yearly`. Bezahlung ist weiterhin **nicht** angebunden
+  (`storeBillingAvailable = false`).
+- Der Release-Build ist weiterhin mit dem Debug-Schlüssel signiert. Vor dem
+  Play-Store-Upload braucht es einen eigenen Upload-Schlüssel.

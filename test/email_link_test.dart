@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() {
   const base = 'https://nvctrj5v8s-cmd.github.io/livo-fitness-app/';
 
-  test('Reset-Link aus der LIVO-Mail wird erkannt', () {
+  test('Reset-Link aus der Lookin-Mail wird erkannt', () {
     final link = EmailLink.fromUri(
       Uri.parse('$base?token_hash=pkce_abc123&type=recovery'),
     );

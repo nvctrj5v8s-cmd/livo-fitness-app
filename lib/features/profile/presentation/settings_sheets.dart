@@ -355,7 +355,7 @@ class _PrivacySheet extends StatelessWidget {
           const AccountDataActions(),
           const SizedBox(height: 15),
           const Text(
-            'Profil, Ziele und Tagebuch werden in deinem LIVO-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '
+            'Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '
             'Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. '
             'Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. '
             'Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.',
@@ -438,7 +438,7 @@ class _HelpSheet extends StatelessWidget {
               color: AppColors.primary,
               title: 'Keine medizinische Beratung',
               text:
-                  'LIVO unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.',
+                  'Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.',
             ),
             SizedBox(height: 10),
             _HelpCard(

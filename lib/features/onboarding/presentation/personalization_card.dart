@@ -26,8 +26,8 @@ class PersonalizationCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             profile == null
-                ? 'Dein Alltag. Dein LIVO.'
-                : 'So passt LIVO zu dir',
+                ? 'Dein Alltag. Dein Lookin.'
+                : 'So passt Lookin zu dir',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
@@ -104,7 +104,7 @@ class PersonalizationCard extends StatelessWidget {
           ),
           if (profileMode)
             const Text(
-              'Deine freiwilligen Angaben helfen LIVO und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.',
+              'Deine freiwilligen Angaben helfen Lookin und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.',
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
         ],

@@ -19,12 +19,12 @@ Datenschutzerklärung oder juristische Freigabe.
   „Möchte ich nicht angeben“ möglich), Zielgewicht und Tempo (nur bei
   Abnehm- oder Muskelziel), Kochzeit, Erfahrung mit dem Kalorienzählen,
   Hürden und ein freiwilliger Gesundheitshinweis (schwanger/stillend,
-  Essstörung, ärztlich begleitete Ernährung). Am Ende fasst „Dein LIVO-Plan“
+  Essstörung, ärztlich begleitete Ernährung). Am Ende fasst „Dein Lookin-Plan“
   Tagesrichtwert und eine als grobe Schätzung gekennzeichnete Zielzeit
   zusammen.
 - **Schutzregeln:** Zielgewichte unter BMI 18,5 werden nicht angeboten,
   höchstens ca. 0,5 kg pro Woche, Defizit höchstens 20 % und nie unter dem
-  Grundumsatz. Mit Gesundheitshinweis oder unter 18 berechnet LIVO keine
+  Grundumsatz. Mit Gesundheitshinweis oder unter 18 berechnet Lookin keine
   Kalorienziele und verweist auf Fachleute. Keine Countdown-Timer,
   Rabatt-Tricks oder Schuld-Formulierungen.
 - **Wohin nach der Registrierung:** In die Cloud (`public.profiles`) gehen

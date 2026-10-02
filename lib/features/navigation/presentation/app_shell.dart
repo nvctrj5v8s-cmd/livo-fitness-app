@@ -346,7 +346,7 @@ class _Brand extends StatelessWidget {
         ),
         const SizedBox(width: 11),
         const Text(
-          'LIVO',
+          'Lookin',
           style: TextStyle(
             color: AppColors.text,
             fontSize: 19,

@@ -18,7 +18,7 @@ import '../application/coach_chat_controller.dart';
 import '../application/coach_context.dart';
 import 'coach_formatted_text.dart';
 
-/// The coach chat is part of LIVO Premium. Free accounts see what it offers
+/// The coach chat is part of Lookin Premium. Free accounts see what it offers
 /// and a way to the paywall; the server enforces the same rule.
 class CoachPage extends StatelessWidget {
   const CoachPage({super.key, this.service});
@@ -471,7 +471,7 @@ class _CoachTitle extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'LIVO Coach',
+                'Lookin Coach',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),

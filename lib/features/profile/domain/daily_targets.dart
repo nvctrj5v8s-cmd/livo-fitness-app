@@ -32,15 +32,15 @@ class DailyTargets {
 
   bool get isReady => status == DailyTargetsStatus.ready;
 
-  /// Whether LIVO deliberately calculates no targets for this person.
+  /// Whether Lookin deliberately calculates no targets for this person.
   bool get isPaused =>
       status == DailyTargetsStatus.underage ||
       status == DailyTargetsStatus.professionalGuidance;
 
-  /// Largest daily deficit LIVO suggests, whatever pace was chosen.
+  /// Largest daily deficit Lookin suggests, whatever pace was chosen.
   static const maxDeficitShare = 0.2;
 
-  /// Mifflin-St Jeor. Without a stated sex LIVO uses the midpoint of the
+  /// Mifflin-St Jeor. Without a stated sex Lookin uses the midpoint of the
   /// female (-161) and male (+5) constants.
   static DailyTargets fromProfile(
     PersonalizationProfile? profile, {

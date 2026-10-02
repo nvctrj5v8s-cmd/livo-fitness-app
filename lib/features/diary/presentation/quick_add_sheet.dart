@@ -40,7 +40,7 @@ Future<void> showQuickAddSheet(BuildContext context) async {
   final navigator = Navigator.of(context);
   switch (option) {
     case QuickAddOption.photo:
-      // KI-Foto is part of LIVO Premium; free accounts see the paywall first.
+      // KI-Foto is part of Lookin Premium; free accounts see the paywall first.
       if (!AppScope.of(context).subscription.hasPremium) {
         final unlocked = await showPaywall(
           context,

@@ -1292,7 +1292,7 @@ class RecipePlusArea extends StatelessWidget {
       key: const Key('recipe-plus-area'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DetailSectionTitle('LIVO $recipePlusLabel'),
+        const DetailSectionTitle('Lookin $recipePlusLabel'),
         const SizedBox(height: 4),
         const Padding(
           padding: EdgeInsets.only(left: 16),

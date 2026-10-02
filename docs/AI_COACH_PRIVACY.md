@@ -1,4 +1,4 @@
-# LIVO Coach: Daten, Verlauf und Grenzen
+# Lookin Coach: Daten, Verlauf und Grenzen
 
 Stand: 27. September 2026. Technische Dokumentation, keine abschließende
 Datenschutzerklärung oder juristische Freigabe.
@@ -9,7 +9,7 @@ Der Coach läuft ausschließlich über die Supabase Edge Function `ai-coach`.
 Die App kennt keinen KI-Schlüssel. Mit jeder Frage überträgt die App:
 
 - die Frage selbst (höchstens 600 Zeichen),
-- Ziel, Kalorien- und Proteinziel. Berechnet LIVO bewusst keine Ziele (unter
+- Ziel, Kalorien- und Proteinziel. Berechnet Lookin bewusst keine Ziele (unter
   18 Jahren oder nach einem Gesundheitshinweis in den Einstiegsfragen),
   fehlen beide; stattdessen geht nur `calorie_targets_paused: true` mit –
   ohne den Grund,

@@ -12,7 +12,7 @@ import '../domain/recipe_preferences.dart';
 
 /// Last step of the questions: first "Dein Plan wird erstellt …", then the
 /// plan. The short wait is presentation only, so every line names something
-/// LIVO really does with the answers – nothing is promised that the app
+/// Lookin really does with the answers – nothing is promised that the app
 /// does not do. With reduced motion everything shows at once.
 class PlanReveal extends StatefulWidget {
   const PlanReveal({
@@ -120,7 +120,7 @@ class _BuildStep {
   final String text;
 }
 
-/// What LIVO really does with these answers, in that order. Every line
+/// What Lookin really does with these answers, in that order. Every line
 /// mirrors the actual calculation or setting; nothing is added for show.
 List<_BuildStep> _buildStepsFor(PersonalizationProfile profile) {
   final targets = DailyTargets.fromProfile(profile);
@@ -456,7 +456,7 @@ class _PlanView extends StatelessWidget {
         _Appear(
           animation: _part(.4, .55),
           child: const Text(
-            'Das macht LIVO jetzt für dich',
+            'Das macht Lookin jetzt für dich',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
           ),
         ),
@@ -494,7 +494,7 @@ class _PlanView extends StatelessWidget {
       if (profile.allergies.trim().isNotEmpty)
         (
           Icons.no_food_outlined,
-          'Rezepte mit deinen Allergenen blendet LIVO aus.',
+          'Rezepte mit deinen Allergenen blendet Lookin aus.',
         ),
       if (sorting.isNotEmpty)
         (
@@ -722,9 +722,9 @@ class _NeutralCard extends StatelessWidget {
         SizedBox(width: 12),
         Expanded(
           child: Text(
-            'Du hast keine Angaben gemacht. Darum berechnet LIVO noch keine '
+            'Du hast keine Angaben gemacht. Darum berechnet Lookin noch keine '
             'Tagesziele und sortiert Rezepte nicht für dich. Sobald du im '
-            'Profil etwas ergänzt, passt sich LIVO an.',
+            'Profil etwas ergänzt, passt sich Lookin an.',
             style: TextStyle(height: 1.45),
           ),
         ),
@@ -742,14 +742,14 @@ class _PausedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = switch (status) {
       DailyTargetsStatus.professionalGuidance =>
-        'Für dich berechnet LIVO keine Kalorienziele. Tagebuch, Rezepte und '
+        'Für dich berechnet Lookin keine Kalorienziele. Tagebuch, Rezepte und '
             'Coach kannst du trotzdem nutzen – deine Ziele besprichst du am '
             'besten mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.',
       DailyTargetsStatus.underage =>
-        'Für Personen unter 18 Jahren berechnet LIVO keine Kalorienziele. '
+        'Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. '
             'Rezepte, Tagebuch und Tipps kannst du trotzdem nutzen.',
       _ =>
-        'Ohne Alter, Größe und Gewicht berechnet LIVO keine Tagesziele. Du '
+        'Ohne Alter, Größe und Gewicht berechnet Lookin keine Tagesziele. Du '
             'kannst sie jederzeit im Profil ergänzen.',
     };
     return Container(

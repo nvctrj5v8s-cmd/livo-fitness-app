@@ -79,7 +79,7 @@ class CoachChatEntry {
   );
 }
 
-/// Local state of the LIVO Coach chat: history, sending, errors and quota.
+/// Local state of the Lookin Coach chat: history, sending, errors and quota.
 ///
 /// The history itself lives on the server (`ai_chat_messages`, written only by
 /// the `ai-coach` Edge Function). This controller keeps the visible copy for
@@ -424,7 +424,7 @@ class CoachChatController extends ChangeNotifier {
       _ => CoachIssueKind.unavailable,
     };
     final message = kind == CoachIssueKind.premiumRequired
-        ? 'Der LIVO Coach ist Teil von LIVO Premium. Deine Testphase oder '
+        ? 'Der Lookin Coach ist Teil von Lookin Premium. Deine Testphase oder '
               'dein Abo ist nicht mehr aktiv.'
         : error.message;
     return CoachChatIssue(kind: kind, message: message, retry: retry);

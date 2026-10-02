@@ -1,6 +1,6 @@
 import '../models/app_models.dart';
 
-/// Conservative content gate for LIVO's halal-sensitive catalog.
+/// Conservative content gate for Lookin's halal-sensitive catalog.
 ///
 /// It blocks known pork, alcohol and gelatin terms. Land-animal meat is only
 /// accepted when the supplied product text explicitly contains a halal marker.
@@ -276,7 +276,7 @@ class HalalContentPolicy {
     final text = _withoutHarmlessPhrases(normalize(value));
     if (text.isEmpty) return null;
     if (hardForbiddenTerms.any((term) => _containsTerm(text, term))) {
-      return 'Dieser Eintrag enthält einen in LIVO ausgeschlossenen Bestandteil.';
+      return 'Dieser Eintrag enthält einen in Lookin ausgeschlossenen Bestandteil.';
     }
     final hasLandAnimalMeat = landAnimalMeatTerms.any(
       (term) => _containsTerm(text, term),

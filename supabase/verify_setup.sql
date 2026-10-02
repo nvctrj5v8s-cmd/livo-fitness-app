@@ -1,4 +1,4 @@
--- Read-only check for the LIVO Supabase setup.
+-- Read-only check for the Lookin Supabase setup.
 -- Paste this into the Supabase SQL Editor and click Run.
 
 select tablename, rowsecurity

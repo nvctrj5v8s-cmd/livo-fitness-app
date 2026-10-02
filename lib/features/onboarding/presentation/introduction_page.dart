@@ -39,7 +39,7 @@ const _slides = [
     icon: Icons.photo_camera_outlined,
   ),
   _IntroSlide(
-    label: 'LIVO COACH · PREMIUM',
+    label: 'LOOKIN COACH · PREMIUM',
     title: 'Frag einfach.',
     emphasis: 'Dein KI-Coach.',
     description:
@@ -65,10 +65,10 @@ const _slides = [
     title: 'Deine Ziele.',
     emphasis: 'Deine Serie.',
     description:
-        'Wenn du möchtest, berechnet LIVO Richtwerte aus Alter, Größe und '
+        'Wenn du möchtest, berechnet Lookin Richtwerte aus Alter, Größe und '
         'Gewicht. Deine Serie zeigt, wie regelmäßig du dabei bist.',
     accent: AppColors.primary,
-    detail: 'Ohne Angaben funktioniert LIVO genauso.',
+    detail: 'Ohne Angaben funktioniert Lookin genauso.',
     icon: Icons.person_outline_rounded,
   ),
 ];

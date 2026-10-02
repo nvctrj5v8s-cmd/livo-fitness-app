@@ -37,7 +37,7 @@ class _AccountDataActionsState extends State<AccountDataActions> {
       if (!mounted) return;
       final today = DateTime.now().toIso8601String().substring(0, 10);
       final location = await FileSaver.instance.saveAs(
-        name: 'livo-daten-$today',
+        name: 'lookin-daten-$today',
         bytes: bytes,
         fileExtension: 'json',
         mimeType: MimeType.json,

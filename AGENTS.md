@@ -7,7 +7,7 @@
   bearbeitet.
 - Bestehende Nutzeränderungen und nicht zum Auftrag gehörende Dateien werden
   nicht überschrieben.
-- `LIVO` ist ein visueller Arbeitsname, keine abschließend geprüfte Marke.
+- `Lookin` ist ein visueller Arbeitsname, keine abschließend geprüfte Marke.
 
 ## Architektur und Daten
 

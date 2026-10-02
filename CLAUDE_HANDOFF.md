@@ -1,9 +1,9 @@
-# LIVO – Übergabe für Claude
+# Lookin – Übergabe für Claude
 
 ## Projekt
 
-LIVO ist eine eigenständige Flutter-App für Ernährung und Fitness. Das
-Quran-Projekt ist ein anderes Projekt und darf nicht verändert oder mit LIVO
+Lookin ist eine eigenständige Flutter-App für Ernährung und Fitness. Das
+Quran-Projekt ist ein anderes Projekt und darf nicht verändert oder mit Lookin
 zusammengeführt werden.
 
 Arbeite immer im Repository `fitness_ai_app`. Vor Änderungen zuerst den
@@ -14,7 +14,7 @@ Passwörter oder `.env`-Dateien in Antworten, Commits oder Uploads anzeigen.
 
 Schweinefleisch, Alkohol, Gelatine und andere klar nicht erlaubte Inhalte
 dürfen weder als Lebensmittel, Rezept, Barcode-Ergebnis, Demo-Inhalt noch als
-KI-Empfehlung in LIVO erscheinen. Fleisch von Landtieren ist nur erlaubt,
+KI-Empfehlung in Lookin erscheinen. Fleisch von Landtieren ist nur erlaubt,
 wenn die Daten ausdrücklich eine Halal-Kennzeichnung enthalten. Bei unklaren
 Zutaten nicht raten, sondern den Eintrag blockieren oder auf die Verpackung
 verweisen. Diese Regel nie entfernen oder abschwächen; Details:
@@ -23,7 +23,7 @@ verweisen. Diese Regel nie entfernen oder abschwächen; Details:
 ## Technischer Stand
 
 - Flutter/Dart-App für Android, iOS, Web und Desktop
-- dunkles, responsives LIVO-Design
+- dunkles, responsives Lookin-Design
 - sechsseitige Einführung und Authentifizierung über Supabase
 - sechsstufige Personalisierung: Name, Ziel, Geburtstag, Größe, Gewicht und Alltag
 - Geburtstag und Größe sind getrennte Seiten
@@ -61,7 +61,7 @@ flutter test
 ```
 
 Vor jeder größeren Änderung zuerst `flutter test` ausführen und nach der
-Änderung erneut. Bestehende Funktionalität und das dunkle LIVO-Design erhalten;
+Änderung erneut. Bestehende Funktionalität und das dunkle Lookin-Design erhalten;
 Änderungen klein und nachvollziehbar umsetzen.
 
 ## Nächste sinnvolle Aufgaben
