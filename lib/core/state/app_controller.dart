@@ -12,6 +12,7 @@ import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
 import '../../features/profile/domain/daily_targets.dart';
 import '../../features/subscription/application/subscription_controller.dart';
+import '../../features/subscription/data/store_billing.dart';
 import '../../features/subscription/data/subscription_repository.dart';
 import '../data/avatar_repository.dart';
 import '../data/food_preferences_store.dart';
@@ -31,6 +32,7 @@ class AppController extends ChangeNotifier {
     this.diaryRepository,
     this.avatarRepository,
     SubscriptionRepository? subscriptionRepository,
+    StoreBilling? storeBilling,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
        subscription = SubscriptionController(
@@ -40,8 +42,20 @@ class AppController extends ChangeNotifier {
              (personalizationUserId == null
                  ? const PreviewSubscriptionRepository()
                  : SupabaseSubscriptionRepository()),
+         // Only a signed-in account can buy; the shared billing instance is
+         // still told about sign-out so purchases never cross accounts.
+         billing:
+             storeBilling ??
+             (personalizationUserId == null
+                 ? const UnavailableStoreBilling()
+                 : sharedStoreBilling),
          now: now,
        ) {
+    if (storeBilling == null) {
+      unawaited(sharedStoreBilling.bindAccount(personalizationUserId));
+    } else {
+      unawaited(storeBilling.bindAccount(personalizationUserId));
+    }
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
   }

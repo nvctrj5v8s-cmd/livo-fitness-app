@@ -732,3 +732,30 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   (`storeBillingAvailable = false`).
 - Der Release-Build ist weiterhin mit dem Debug-Schlüssel signiert. Vor dem
   Play-Store-Upload braucht es einen eigenen Upload-Schlüssel.
+
+## Aktualisierung: Store-Bezahlung vorbereitet, 2. Oktober 2026
+
+- **Gebaut, aber noch nicht live:** Kauf, „Käufe wiederherstellen“ und „Abo
+  verwalten“ laufen über RevenueCat (`purchases_flutter`) hinter der
+  austauschbaren Schicht `StoreBilling`. Ohne `REVENUECAT_ANDROID_KEY` im Build
+  verhält sich die App wie vorher: Die Paywall sagt, dass die Bezahlung
+  eingerichtet wird, und nichts wird gekauft. Im Browser steht, dass Abos in
+  der Android-App abgeschlossen werden. iOS ist nicht eingerichtet.
+- Premium gilt erst, wenn der **Server** es bestätigt: Die Function
+  `revenuecat-webhook` (deployed, ohne gesetztes Geheimnis lehnt sie alles mit
+  503 ab) schreibt über `apply_revenuecat_event()` in `public.entitlements`.
+  Die Migration `0016_store_billing_entitlements.sql` liegt im Repository und
+  **ist noch nicht auf die Produktionsdatenbank angewendet**; sie muss vor dem
+  ersten Kauf laufen.
+- Nach einem Kauf fragt die App den Server bis zu 8 Mal; kommt der Webhook
+  später, sagt sie ehrlich „Freischaltung dauert noch einen Moment“.
+- Die App-Testphase (7 Tage, ohne Zahlungsdaten) bleibt serverseitig. In der
+  Play Console darf an den Abos kein eigenes Gratis-Angebot hängen.
+- Android: Internet-Berechtigung ergänzt (fehlte im Release-Manifest, eine
+  Release-App hätte Supabase nicht erreicht), Release-Signierung mit eigenem
+  Upload-Schlüssel (`android/key.properties`, Keystore; beides von Git
+  ignoriert). Ein Release-Bundle (`app-release.aab`, 72 MB) wurde erfolgreich
+  gebaut; auf einem echten Gerät ist es noch nicht getestet.
+- Neue Datenempfänger: RevenueCat (Konto-ID, Kaufdaten) und Google Play. Vor
+  dem Start sind Auftragsverarbeitungsvertrag, Datenschutzerklärung, Händlerprofil
+  und Gewerbe nötig. Details und Einrichtung: `docs/BILLING_SETUP.md`.

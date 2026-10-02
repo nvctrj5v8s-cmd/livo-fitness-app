@@ -87,10 +87,6 @@ abstract final class SubscriptionPlans {
   static int get yearlySavingsPercent =>
       (yearlySavingsCents * 100 / monthlyPlanYearCents).round();
 
-  /// Store billing (Apple, Google or Stripe) is not connected yet. Purchase
-  /// buttons must say so instead of pretending a purchase.
-  static const storeBillingAvailable = false;
-
   // TODO(legal): Add the final privacy policy and terms URLs before billing
   // goes live. No placeholder URLs are invented here.
   static const String? privacyPolicyUrl = null;

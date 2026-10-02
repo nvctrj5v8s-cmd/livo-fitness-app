@@ -44,7 +44,6 @@ void main() {
       expect(SubscriptionPlans.yearly.isYearly, isTrue);
       expect(SubscriptionPlans.yearly.chargeCents, 5999);
       expect(SubscriptionPlans.all.first.id, SubscriptionPlans.recommended);
-      expect(SubscriptionPlans.storeBillingAvailable, isFalse);
     });
 
     test('the monthly equivalent is rounded up to whole cents', () {

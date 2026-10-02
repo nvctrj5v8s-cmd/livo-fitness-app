@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -190,16 +191,36 @@ class _PaywallPageState extends State<PaywallPage>
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _purchase() => _showMessage(
-    '${PremiumCopy.billingPending}. Es wurde nichts gekauft und nichts '
-    'berechnet – teste Premium bis dahin ${SubscriptionPlans.trialDays} Tage '
-    'kostenlos.',
-  );
+  Future<void> _purchase() async {
+    if (!_subscription.storeBillingAvailable) {
+      _showMessage(PremiumCopy.unavailableMessage);
+      return;
+    }
+    if (_subscription.isPurchasing) return;
+    _afterStoreFlow(await _subscription.purchase(_selected));
+  }
 
-  void _restore() => _showMessage(
-    'Käufe wiederherstellen ist bald verfügbar. Bisher gibt es in Lookin noch '
-    'keine Käufe, die wiederhergestellt werden müssten.',
-  );
+  Future<void> _restore() async {
+    if (!_subscription.storeBillingAvailable) {
+      _showMessage(PremiumCopy.restoreUnavailableMessage);
+      return;
+    }
+    if (_subscription.isPurchasing) return;
+    _afterStoreFlow(await _subscription.restore());
+  }
+
+  void _afterStoreFlow(PurchaseOutcome outcome) {
+    if (!mounted) return;
+    _showMessage(PremiumCopy.purchaseOutcomeMessage(outcome));
+    if (outcome == PurchaseOutcome.active) widget.onClose();
+  }
+
+  Future<void> _manage() async {
+    final uri = _subscription.managementUri;
+    if (uri == null) return;
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!opened && mounted) _showMessage(PremiumCopy.manageFailedMessage);
+  }
 
   Future<void> _legal(String title, String message) => showDialog<void>(
     context: context,
@@ -254,11 +275,9 @@ class _PaywallPageState extends State<PaywallPage>
                             key: const ValueKey('paywall-offer'),
                             // Reads the padding that already includes the
                             // pinned action bar (extendBody).
-                            builder: (context) =>
-                                wide ? _wideOffer(context) : _narrowOffer(
-                                    context,
-                                    pinActions,
-                                  ),
+                            builder: (context) => wide
+                                ? _wideOffer(context)
+                                : _narrowOffer(context, pinActions),
                           ),
                   ),
                 ),
@@ -276,11 +295,8 @@ class _PaywallPageState extends State<PaywallPage>
   double _bottomInset(BuildContext context) =>
       MediaQuery.paddingOf(context).bottom;
 
-  Widget _reveal(double start, Widget child) => _Reveal(
-    animation: _intro,
-    start: start,
-    child: child,
-  );
+  Widget _reveal(double start, Widget child) =>
+      _Reveal(animation: _intro, start: start, child: child);
 
   Widget _hero(double height) => SizedBox(
     height: height,
@@ -419,9 +435,7 @@ class _PaywallPageState extends State<PaywallPage>
           const SizedBox(height: 10),
         ],
         _TrialButton(
-          label: canTrial
-              ? PremiumCopy.trialCta
-              : 'Testphase bereits genutzt',
+          label: canTrial ? PremiumCopy.trialCta : 'Testphase bereits genutzt',
           busy: subscription.isStartingTrial,
           enabled: canTrial,
           shimmer: _intro,
@@ -462,9 +476,13 @@ class _PaywallPageState extends State<PaywallPage>
     onSelected: (id) => setState(() => _selected = id),
     onPurchase: _purchase,
     plan: _plan,
+    billingAvailable: _subscription.storeBillingAvailable,
+    busy: _subscription.isPurchasing,
   );
 
   Widget _legalFooter() => _LegalFooter(
+    billingAvailable: _subscription.storeBillingAvailable,
+    onManage: _subscription.managementUri == null ? null : _manage,
     onRestore: _restore,
     onPrivacy: () => _legal(
       'Datenschutz',
@@ -1121,7 +1139,8 @@ class _ShimmerPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (t <= 0 || t >= 1) return;
     final band = size.width * 0.32;
-    final left = -band + (size.width + band * 2) * Curves.easeInOut.transform(t);
+    final left =
+        -band + (size.width + band * 2) * Curves.easeInOut.transform(t);
     final rect = Rect.fromLTWH(left - band, 0, band * 2, size.height);
     canvas.drawRect(
       rect,
@@ -1265,9 +1284,9 @@ class _ActiveCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Premium ist aktiv',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
                 ),
               ),
             ],
@@ -1297,12 +1316,16 @@ class _PlanSection extends StatelessWidget {
     required this.onSelected,
     required this.onPurchase,
     required this.plan,
+    required this.billingAvailable,
+    required this.busy,
   });
 
   final PremiumPlanId selected;
   final ValueChanged<PremiumPlanId> onSelected;
   final VoidCallback onPurchase;
   final PremiumPlan plan;
+  final bool billingAvailable;
+  final bool busy;
 
   @override
   Widget build(BuildContext context) {
@@ -1322,7 +1345,7 @@ class _PlanSection extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
             ),
-            const _SoonTag(),
+            if (!billingAvailable) const _SoonTag(),
           ],
         ),
         const SizedBox(height: 14),
@@ -1346,7 +1369,7 @@ class _PlanSection extends StatelessWidget {
         const SizedBox(height: 16),
         OutlinedButton(
           key: const Key('paywall-purchase'),
-          onPressed: onPurchase,
+          onPressed: busy ? null : onPurchase,
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.text,
             minimumSize: const Size.fromHeight(58),
@@ -1387,10 +1410,10 @@ class _PlanSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const Row(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 1),
               child: Icon(
                 Icons.schedule_rounded,
@@ -1398,12 +1421,13 @@ class _PlanSection extends StatelessWidget {
                 color: AppColors.textMuted,
               ),
             ),
-            SizedBox(width: 7),
+            const SizedBox(width: 7),
             Expanded(
               child: Text(
-                '${PremiumCopy.billingPending} – bis dahin wird nichts '
-                'gekauft oder berechnet.',
-                style: TextStyle(
+                billingAvailable
+                    ? PremiumCopy.storeNote
+                    : PremiumCopy.unavailableNote,
+                style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12.5,
                   height: 1.4,
@@ -1793,11 +1817,15 @@ class _Cell extends StatelessWidget {
 
 class _LegalFooter extends StatelessWidget {
   const _LegalFooter({
+    required this.billingAvailable,
+    required this.onManage,
     required this.onRestore,
     required this.onPrivacy,
     required this.onTerms,
   });
 
+  final bool billingAvailable;
+  final VoidCallback? onManage;
   final VoidCallback onRestore;
   final VoidCallback onPrivacy;
   final VoidCallback onTerms;
@@ -1808,7 +1836,7 @@ class _LegalFooter extends StatelessWidget {
         'Kostenlose Testphase: ${SubscriptionPlans.trialDays} Tage, einmal '
         'pro Konto. Sie endet automatisch – ohne Kosten und ohne '
         'automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n'
-        '${PremiumCopy.priceTerms}';
+        '${PremiumCopy.priceTermsFor(billingAvailable: billingAvailable)}';
     final linkStyle = TextButton.styleFrom(
       foregroundColor: AppColors.textMuted,
       minimumSize: const Size(48, 44),
@@ -1836,9 +1864,25 @@ class _LegalFooter extends StatelessWidget {
               key: const Key('paywall-restore'),
               onPressed: onRestore,
               style: linkStyle,
-              icon: const Icon(Icons.schedule_rounded, size: 15),
-              label: const Text('Käufe wiederherstellen – bald verfügbar'),
+              icon: Icon(
+                billingAvailable
+                    ? Icons.restore_rounded
+                    : Icons.schedule_rounded,
+                size: 15,
+              ),
+              label: Text(
+                billingAvailable
+                    ? 'Käufe wiederherstellen'
+                    : 'Käufe wiederherstellen – bald verfügbar',
+              ),
             ),
+            if (onManage != null)
+              TextButton(
+                key: const Key('paywall-manage'),
+                onPressed: onManage,
+                style: linkStyle,
+                child: const Text('Abo verwalten'),
+              ),
             TextButton(
               onPressed: onPrivacy,
               style: linkStyle,
