@@ -1,0 +1,14 @@
+# Generates app icons from assets/branding. Run:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/branding/icon_master.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "#050708"
+  adaptive_icon_foreground: "assets/branding/icon_foreground.png"
+  web:
+    generate: true
+    image_path: "assets/branding/icon_master.png"
+    background_color: "#050708"
+    theme_color: "#050708"

@@ -759,3 +759,16 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 - Neue Datenempfänger: RevenueCat (Konto-ID, Kaufdaten) und Google Play. Vor
   dem Start sind Auftragsverarbeitungsvertrag, Datenschutzerklärung, Händlerprofil
   und Gewerbe nötig. Details und Einrichtung: `docs/BILLING_SETUP.md`.
+
+## Aktualisierung: App-Icon und Startbildschirm, 2. Oktober 2026
+
+- Eigenes Lookin-Symbol (Ring mit Lücke und Punkt in der Akzentfarbe auf
+  fast schwarzem Grund) für Android (inklusive adaptivem Icon), iOS und Web.
+  Es ist ein **Platzhalter-Entwurf** und kann jederzeit ersetzt werden:
+  Dateien in `assets/branding/` austauschen und
+  `dart run flutter_launcher_icons` ausführen.
+- Der Startbildschirm ist auf Android (auch Android 12+) und iOS dunkel statt
+  weiß.
+- Store-Grafiken `play_store_icon_512.png` und `feature_graphic_1024x500.png`
+  liegen in `assets/branding/`. Die Store-Texte stehen als Entwurf in
+  `docs/PLAY_STORE_LISTING.md`. Screenshots fehlen noch.
