@@ -33,7 +33,7 @@ Teile die Dateien mit niemandem und lade sie nirgends öffentlich hoch.
 
 ---
 
-## Schritt 2: Migration 0016 anwenden (5 Minuten)
+## Schritt 2: Migration 0016 anwenden (erledigt am 3. Oktober 2026)
 
 **Was ist eine Migration?** Deine Datenbank bei Supabase hat feste Tabellen. Eine
 Migration ist eine kleine Änderungsdatei, die die Datenbank erweitert. Die Datei

@@ -744,9 +744,10 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 - Premium gilt erst, wenn der **Server** es bestätigt: Die Function
   `revenuecat-webhook` (deployed, ohne gesetztes Geheimnis lehnt sie alles mit
   503 ab) schreibt über `apply_revenuecat_event()` in `public.entitlements`.
-  Die Migration `0016_store_billing_entitlements.sql` liegt im Repository und
-  **ist noch nicht auf die Produktionsdatenbank angewendet**; sie muss vor dem
-  ersten Kauf laufen.
+  Die Migration `0016_store_billing_entitlements.sql` ist seit dem
+  3. Oktober 2026 auf die Produktionsdatenbank angewendet (`supabase db push`,
+  vom Inhaber freigegeben). `apply_revenuecat_event` ist für App-Nutzer gesperrt
+  (Fehler 42501) und nur für `service_role` aufrufbar.
 - Nach einem Kauf fragt die App den Server bis zu 8 Mal; kommt der Webhook
   später, sagt sie ehrlich „Freischaltung dauert noch einen Moment“.
 - Die App-Testphase (7 Tage, ohne Zahlungsdaten) bleibt serverseitig. In der
