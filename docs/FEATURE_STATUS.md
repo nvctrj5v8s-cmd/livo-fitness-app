@@ -795,8 +795,10 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 - **Konto löschen:** Hat das Konto ein laufendes Store-Abo, warnt der Dialog
   deutlich, dass das Löschen das Abo nicht kündigt, und verlinkt auf die
   Abo-Verwaltung im Store.
-- **Offen:** Die Web-Version lädt CanvasKit und Schriftarten von
-  `gstatic.com` (Google). Mit einem lokalen Build (`--no-web-resources-cdn`) und
-  gebündelter Schrift ließe sich das vermeiden.
+- **Web-Version:** Der Deploy baut mit `--no-web-resources-cdn`, damit
+  CanvasKit von der eigenen Seite statt von `gstatic.com` kommt. Offen bleibt,
+  dass bei fehlenden Zeichen eine Ersatzschrift von `fonts.gstatic.com`
+  nachgeladen werden kann (steht in der Datenschutzerklärung). Mit gebündelter
+  Schrift ließe sich auch das vermeiden.
 - Schritt-für-Schritt-Liste für die Konten und Dashboards:
   `docs/ANLEITUNG_VOR_DEM_GEWERBE.md`.
