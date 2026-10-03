@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
 
 class AuthPage extends StatefulWidget {
@@ -496,6 +497,22 @@ class _AuthPanel extends StatelessWidget {
                   label: Text(isSignUp ? 'Kostenlos starten' : 'Einloggen'),
                 ),
               ),
+              if (isSignUp) ...[
+                const SizedBox(height: 10),
+                const Text(
+                  'Mit dem Start bestätigst du, dass du mindestens 18 Jahre alt '
+                  'bist und die Datenschutzerklärung gelesen hast.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11.5,
+                    height: 1.4,
+                  ),
+                ),
+                const LegalLinksRow(
+                  pages: [LegalPage.privacy, LegalPage.terms],
+                ),
+              ],
               const SizedBox(height: 16),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,

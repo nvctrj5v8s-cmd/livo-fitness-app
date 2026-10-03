@@ -16,7 +16,7 @@ Prüfung vor der Veröffentlichung.
 | Kategorie | Gesundheit & Fitness |
 | Paketkennung | `com.lookin.foodtracker` (nach dem ersten Upload nicht mehr änderbar) |
 | Kontakt-E-Mail | **noch offen**: eigene Support-Adresse anlegen |
-| Datenschutzerklärung (URL) | **noch offen**: Pflicht, öffentlich erreichbar |
+| Datenschutzerklärung (URL) | `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html` (erst eintragen, wenn die Platzhalter ausgefüllt sind; Prüfung: `dart run tool/check_legal_pages.dart`) |
 | Website | optional |
 
 Der Name darf keine irreführenden Zusätze enthalten. „AI“ ist erlaubt, weil die
@@ -89,12 +89,12 @@ Sicherheitspraktiken:
 - Nutzer können die Löschung ihrer Daten beantragen: **Ja**, in der App
   (Konto löschen) mit Export vorher.
 
-Gesammelte Daten (jeweils erforderlich für Kernfunktionen, nicht für Werbung):
+Gesammelte Daten (jeweils erforderlich für Kernfunktionen, nicht für Werbung). Angaben, die nur auf dem Gerät bleiben (Geburtstag, Größe, Geschlecht, Einführungsantworten, Profilbild), gelten nicht als „erhoben“:
 
 | Kategorie | Daten | Zweck |
 | --- | --- | --- |
 | Persönliche Daten | E-Mail-Adresse, Name (Anzeigename), Nutzer-ID | Konto, App-Funktionen |
-| Gesundheit und Fitness | Gewicht, Größe, Geburtstag, Ziel, Allergien, Mahlzeiten und Nährwerte, Wasser | App-Funktionen, Personalisierung |
+| Gesundheit und Fitness | Gewichtseinträge, Ziel, Ernährungsstil, Aktivität, Allergien/Unverträglichkeiten, Mahlzeiten und Nährwerte | App-Funktionen, Personalisierung |
 | Fotos und Videos | Mahlzeitenfotos (nur bei KI-Foto-Erkennung, Premium) | App-Funktionen |
 | Nachrichten | Fragen und Antworten im Coach (Premium) | App-Funktionen |
 | Finanzinfos | Kaufverlauf (Abo-Status) | Abwicklung des Abos |

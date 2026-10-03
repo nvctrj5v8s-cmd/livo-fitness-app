@@ -86,9 +86,4 @@ abstract final class SubscriptionPlans {
   /// euro saving is always shown next to it on the paywall.
   static int get yearlySavingsPercent =>
       (yearlySavingsCents * 100 / monthlyPlanYearCents).round();
-
-  // TODO(legal): Add the final privacy policy and terms URLs before billing
-  // goes live. No placeholder URLs are invented here.
-  static const String? privacyPolicyUrl = null;
-  static const String? termsUrl = null;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
 import 'account_data_actions.dart';
@@ -352,7 +353,21 @@ class _PrivacySheet extends StatelessWidget {
             label: const Text('Lokale Demodaten löschen'),
           ),
           const SizedBox(height: 14),
-          const AccountDataActions(),
+          AccountDataActions(subscription: controller.subscription),
+          const SizedBox(height: 14),
+          const SurfaceCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Rechtliches',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                ),
+                SizedBox(height: 4),
+                LegalLinksRow(alignment: WrapAlignment.start),
+              ],
+            ),
+          ),
           const SizedBox(height: 15),
           const Text(
             'Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '

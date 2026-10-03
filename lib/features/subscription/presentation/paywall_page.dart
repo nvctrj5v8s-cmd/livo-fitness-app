@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/legal_links_row.dart';
 import '../application/subscription_controller.dart';
 import '../domain/entitlement.dart';
 import '../domain/subscription_plans.dart';
@@ -221,21 +222,6 @@ class _PaywallPageState extends State<PaywallPage>
     final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!opened && mounted) _showMessage(PremiumCopy.manageFailedMessage);
   }
-
-  Future<void> _legal(String title, String message) => showDialog<void>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
-      backgroundColor: AppColors.surfaceHigh,
-      title: Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(dialogContext),
-          child: const Text('Schließen'),
-        ),
-      ],
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -484,17 +470,6 @@ class _PaywallPageState extends State<PaywallPage>
     billingAvailable: _subscription.storeBillingAvailable,
     onManage: _subscription.managementUri == null ? null : _manage,
     onRestore: _restore,
-    onPrivacy: () => _legal(
-      'Datenschutz',
-      'Die vollständige Datenschutzerklärung wird vor dem Start der '
-          'Bezahlung hier verlinkt. Für die Testphase speichert Lookin nur, '
-          'dass und bis wann dein Konto sie nutzt – keine Zahlungsdaten.',
-    ),
-    onTerms: () => _legal(
-      'AGB',
-      'Die vollständigen Allgemeinen Geschäftsbedingungen für Lookin Premium '
-          'werden vor dem Start der Bezahlung hier verlinkt.',
-    ),
   );
 }
 
@@ -1820,15 +1795,11 @@ class _LegalFooter extends StatelessWidget {
     required this.billingAvailable,
     required this.onManage,
     required this.onRestore,
-    required this.onPrivacy,
-    required this.onTerms,
   });
 
   final bool billingAvailable;
   final VoidCallback? onManage;
   final VoidCallback onRestore;
-  final VoidCallback onPrivacy;
-  final VoidCallback onTerms;
 
   @override
   Widget build(BuildContext context) {
@@ -1883,17 +1854,10 @@ class _LegalFooter extends StatelessWidget {
                 style: linkStyle,
                 child: const Text('Abo verwalten'),
               ),
-            TextButton(
-              onPressed: onPrivacy,
-              style: linkStyle,
-              child: const Text('Datenschutz'),
-            ),
-            TextButton(
-              onPressed: onTerms,
-              style: linkStyle,
-              child: const Text('AGB'),
-            ),
           ],
+        ),
+        const LegalLinksRow(
+          pages: [LegalPage.privacy, LegalPage.terms, LegalPage.withdrawal],
         ),
       ],
     );

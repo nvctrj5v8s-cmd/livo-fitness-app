@@ -772,3 +772,31 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 - Store-Grafiken `play_store_icon_512.png` und `feature_graphic_1024x500.png`
   liegen in `assets/branding/`. Die Store-Texte stehen als Entwurf in
   `docs/PLAY_STORE_LISTING.md`. Screenshots fehlen noch.
+
+## Aktualisierung: Rechtstexte und Links, 3. Oktober 2026
+
+- **Entwürfe, nicht rechtlich geprüft:** Datenschutzerklärung, AGB,
+  Widerrufsbelehrung und Impressum liegen als Seiten in `web/legal/` und sind
+  nach dem Webbuild öffentlich erreichbar (Adresse in `LegalLinks`, mit
+  `--dart-define=LEGAL_BASE_URL=…` überschreibbar). Gelb markierte Stellen
+  („BITTE AUSFÜLLEN“) fehlen noch, vor allem Anbieterdaten, die erst mit dem
+  Gewerbe feststehen. `dart run tool/check_legal_pages.dart` meldet, was offen
+  ist, und schlägt fehl, solange ein Entwurfshinweis oder Platzhalter steht.
+- Die Datenschutzerklärung beschreibt die tatsächlichen Datenflüsse: Supabase
+  (Region Frankfurt), OpenAI (KI, nur ohne Name und E-Mail), RevenueCat und
+  Google Play (Abo), Open Food Facts (nur Barcode-Nummern), Web-Version über
+  GitHub Pages und Google-Server (gstatic.com). Geburtstag, Größe, Gewicht,
+  Geschlecht, Gesundheitshinweis und Profilbild bleiben nur auf dem Gerät.
+  Offene Prüfungen sind in den Platzhaltern markiert (Verträge mit OpenAI und
+  RevenueCat, Garantien für die USA, Backup-Dauer, Aufsichtsbehörde).
+- **In der App verlinkt:** Paywall (Datenschutz, AGB, Widerruf), Einstellungen
+  unter „Datenschutz & Daten“ (alle vier) und Registrierung (Datenschutz, AGB
+  mit Altersbestätigung 18+).
+- **Konto löschen:** Hat das Konto ein laufendes Store-Abo, warnt der Dialog
+  deutlich, dass das Löschen das Abo nicht kündigt, und verlinkt auf die
+  Abo-Verwaltung im Store.
+- **Offen:** Die Web-Version lädt CanvasKit und Schriftarten von
+  `gstatic.com` (Google). Mit einem lokalen Build (`--no-web-resources-cdn`) und
+  gebündelter Schrift ließe sich das vermeiden.
+- Schritt-für-Schritt-Liste für die Konten und Dashboards:
+  `docs/ANLEITUNG_VOR_DEM_GEWERBE.md`.

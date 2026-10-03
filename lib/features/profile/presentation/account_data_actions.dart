@@ -4,9 +4,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/data/account_data_repository.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/legal_links_row.dart';
+import '../../subscription/application/subscription_controller.dart';
+import '../../subscription/domain/entitlement.dart';
 
 class AccountDataActions extends StatefulWidget {
-  const AccountDataActions({super.key});
+  const AccountDataActions({this.subscription, super.key});
+
+  /// Used to warn before deleting an account with a running store
+  /// subscription, which deleting the account does not cancel.
+  final SubscriptionController? subscription;
 
   @override
   State<AccountDataActions> createState() => _AccountDataActionsState();
@@ -57,11 +64,22 @@ class _AccountDataActionsState extends State<AccountDataActions> {
     }
   }
 
+  bool get _hasStoreSubscription {
+    final subscription = widget.subscription;
+    return subscription != null &&
+        subscription.entitlement.kind == EntitlementKind.subscription &&
+        subscription.hasPremium;
+  }
+
   Future<void> _delete() async {
     if (_busy) return;
     final password = await showDialog<String>(
       context: context,
-      builder: (_) => _DeleteAccountDialog(email: _repository.currentEmail),
+      builder: (_) => DeleteAccountDialog(
+        email: _repository.currentEmail,
+        storeSubscription: _hasStoreSubscription,
+        managementUri: widget.subscription?.managementUri,
+      ),
     );
     if (password == null || !mounted) return;
     setState(() {
@@ -135,15 +153,25 @@ class _AccountDataActionsState extends State<AccountDataActions> {
   }
 }
 
-class _DeleteAccountDialog extends StatefulWidget {
-  const _DeleteAccountDialog({required this.email});
+@visibleForTesting
+class DeleteAccountDialog extends StatefulWidget {
+  const DeleteAccountDialog({
+    required this.email,
+    this.storeSubscription = false,
+    this.managementUri,
+    super.key,
+  });
   final String? email;
 
+  /// The account has a running store subscription.
+  final bool storeSubscription;
+  final Uri? managementUri;
+
   @override
-  State<_DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+  State<DeleteAccountDialog> createState() => _DeleteAccountDialogState();
 }
 
-class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
+class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   final _password = TextEditingController();
   bool _obscure = true;
 
@@ -168,6 +196,43 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
               'Das kann nicht r\u00FCckg\u00E4ngig gemacht werden. '
               'Ein sp\u00E4teres Store-Abo m\u00FCsstest du separat im Store k\u00FCndigen.',
             ),
+            if (widget.storeSubscription) ...[
+              const SizedBox(height: 14),
+              Container(
+                key: const Key('delete-subscription-warning'),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.error.withValues(alpha: 0.6),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Dein Premium-Abo läuft weiter!',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Das Löschen des Kontos kündigt dein Abo nicht. '
+                      'Der Store bucht weiter ab, bis du es dort kündigst. '
+                      'Kündige zuerst, dann lösche das Konto.',
+                    ),
+                    if (widget.managementUri != null)
+                      TextButton.icon(
+                        key: const Key('delete-open-subscriptions'),
+                        onPressed: () =>
+                            openExternalLink(context, widget.managementUri!),
+                        icon: const Icon(Icons.open_in_new_rounded, size: 16),
+                        label: const Text('Abos im Store öffnen'),
+                      ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 18),
             TextField(
               controller: _password,
