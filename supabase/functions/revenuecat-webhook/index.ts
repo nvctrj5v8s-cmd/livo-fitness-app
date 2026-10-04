@@ -122,7 +122,7 @@ function decide(event: StoreEvent): Decision {
 Deno.serve(async (request) => {
   if (request.method !== 'POST') return json({ code: 'method_not_allowed' }, 405)
 
-  const secret = Deno.env.get('REVENUECAT_WEBHOOK_SECRET')
+  const secret = Deno.env.get('REVENUECAT_WEBHOOK_SECRET')?.trim()
   const url = Deno.env.get('SUPABASE_URL')
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
   if (!secret || !url || !serviceKey) {
