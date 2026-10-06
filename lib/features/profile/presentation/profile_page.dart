@@ -15,6 +15,7 @@ import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_format.dart';
 import '../domain/daily_targets.dart';
 import 'avatar_editor.dart';
+import 'demo_replay.dart';
 import 'settings_sheets.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -668,6 +669,17 @@ class _SettingsList extends StatelessWidget {
             subtitle: 'Hinweise und Kontakt',
             onTap: () => showHelpSheet(context),
           ),
+          if (isDemoAccountSignedIn()) ...[
+            const Divider(height: 1),
+            _SettingsTile(
+              key: const Key('profile-demo-replay'),
+              icon: Icons.replay_rounded,
+              title: 'Von vorne zeigen',
+              subtitle: 'Einführung, Fragen und Premium wie beim ersten Start',
+              color: AppColors.primary,
+              onTap: () => unawaited(showDemoReplay(context)),
+            ),
+          ],
           const Divider(height: 1),
           _SettingsTile(
             key: const Key('profile-sign-out'),

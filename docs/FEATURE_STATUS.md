@@ -803,3 +803,13 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   Schrift ließe sich auch das vermeiden.
 - Schritt-für-Schritt-Liste für die Konten und Dashboards:
   `docs/ANLEITUNG_VOR_DEM_GEWERBE.md`.
+
+## Aktualisierung: Demo-Replay im Profil, 6. Oktober 2026
+
+- Nur für das Konto `mohammad.shikho999@icloud.com` erscheint im Profil unter
+  „App & Datenschutz“ der Eintrag „Von vorne zeigen“.
+- Er spielt Einführung, Fragen und Premium-Angebot wie beim ersten Start ab.
+  Es ist nur eine Vorschau: Antworten werden nicht gespeichert, Geräte-Marker
+  und Kontodaten bleiben unverändert, die Registrierungsseite gehört nicht dazu.
+- Der Premium-Schritt ist echt: „Kostenlos testen“ würde auf diesem Konto die
+  Testphase starten.
