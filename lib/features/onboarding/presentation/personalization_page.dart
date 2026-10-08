@@ -1090,17 +1090,22 @@ class _Header extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) => Row(
             children: [
-              const Text(
-                'livo.',
-                textScaler: TextScaler.noScaling,
-                style: TextStyle(
-                  color: AppColors.text,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.4,
+              const Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'lookin.',
+                    textScaler: TextScaler.noScaling,
+                    style: TextStyle(
+                      color: AppColors.text,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -1.4,
+                    ),
+                  ),
                 ),
               ),
-              const Spacer(),
               if (constraints.maxWidth >= 290) ...[
                 Text(
                   '${step + 1} / $count',

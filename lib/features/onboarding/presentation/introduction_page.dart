@@ -220,7 +220,7 @@ class _IntroductionPageState extends State<IntroductionPage>
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'livo.',
+                                    'lookin.',
                                     textScaler: TextScaler.noScaling,
                                     style: TextStyle(
                                       color: AppColors.text,
