@@ -15,7 +15,7 @@ Prüfung vor der Veröffentlichung.
 | Preis | Kostenlos, mit In-App-Käufen (Abos) |
 | Kategorie | Gesundheit & Fitness |
 | Paketkennung | `com.lookin.foodtracker` (nach dem ersten Upload nicht mehr änderbar) |
-| Kontakt-E-Mail | **noch offen**: eigene Support-Adresse anlegen |
+| Kontakt-E-Mail | `lookinsupport@gmail.com` |
 | Datenschutzerklärung (URL) | `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html` (erst eintragen, wenn die Platzhalter ausgefüllt sind; Prüfung: `dart run tool/check_legal_pages.dart`) |
 | Website | optional |
 
