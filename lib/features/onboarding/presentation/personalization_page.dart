@@ -541,7 +541,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.name => 'Damit Lookin dich richtig anspricht.',
     _Step.goal => 'Was ist dein Ziel?',
     _Step.motivation => 'Warum ist dir das wichtig?',
-    _Step.sex => 'Welches Geschlecht hat dein Körper?',
+    _Step.sex => 'Dein Geschlecht',
     _Step.birthday => 'Wann hast du Geburtstag?',
     _Step.height => 'Wie groß bist du?',
     _Step.weight => 'Wo stehst du gerade?',
@@ -565,8 +565,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
   String get _subtitle => switch (_current) {
     _Step.name =>
       'Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.',
-    _Step.goal =>
-      'Das hilft Lookin, Vorschläge sinnvoll zu priorisieren – ohne Druck.',
+    _Step.goal => '',
     _Step.motivation =>
       'Wähle alles, was passt. Dein Coach greift das auf, wenn es mal '
           'schwerfällt.',
@@ -1184,11 +1183,13 @@ class _QuestionFrame extends StatelessWidget {
             fontWeight: FontWeight.w800,
           ),
         ),
-        const SizedBox(height: 9),
-        Text(
-          subtitle,
-          style: const TextStyle(color: AppColors.textMuted, height: 1.4),
-        ),
+        if (subtitle.isNotEmpty) ...[
+          const SizedBox(height: 9),
+          Text(
+            subtitle,
+            style: const TextStyle(color: AppColors.textMuted, height: 1.4),
+          ),
+        ],
         if (error != null) ...[
           const SizedBox(height: 10),
           Text(error!, style: const TextStyle(color: AppColors.error)),

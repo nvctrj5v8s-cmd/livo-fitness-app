@@ -442,15 +442,6 @@ class _MealSheetHeader extends StatelessWidget {
     padding: const EdgeInsets.fromLTRB(12, 9, 12, 0),
     child: Column(
       children: [
-        Container(
-          width: 38,
-          height: 4,
-          decoration: BoxDecoration(
-            color: AppColors.borderBright,
-            borderRadius: BorderRadius.circular(99),
-          ),
-        ),
-        const SizedBox(height: 5),
         Row(
           children: [
             IconButton.outlined(

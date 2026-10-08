@@ -1721,15 +1721,6 @@ class _CatalogFoodPickerState extends State<_CatalogFoodPicker> {
       height: MediaQuery.sizeOf(context).height * .82,
       child: Column(
         children: [
-          const SizedBox(height: 10),
-          Container(
-            width: 38,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AppColors.borderBright,
-              borderRadius: BorderRadius.circular(99),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(18),
             child: TextField(

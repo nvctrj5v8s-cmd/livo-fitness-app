@@ -166,17 +166,8 @@ class _AllergyEditorState extends State<_AllergyEditor> {
     heightFactor: .88,
     child: Column(
       children: [
-        const SizedBox(height: 12),
-        Container(
-          width: 38,
-          height: 4,
-          decoration: BoxDecoration(
-            color: AppColors.borderBright,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 12, 10),
+          padding: const EdgeInsets.fromLTRB(20, 8, 12, 10),
           child: Row(
             children: [
               const Expanded(

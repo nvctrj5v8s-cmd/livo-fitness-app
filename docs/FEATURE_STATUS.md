@@ -813,3 +813,30 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   und Kontodaten bleiben unverändert, die Registrierungsseite gehört nicht dazu.
 - Der Premium-Schritt ist echt: „Kostenlos testen“ würde auf diesem Konto die
   Testphase starten.
+
+## Aktualisierung: Feinschliff und neuer Jahrespreis, 8. Oktober 2026
+
+- **Jahresabo 49,99 €** (vorher 59,99 €), Monatsabo bleibt 6,99 €. Die Paywall
+  zeigt „entspricht 4,17 € pro Monat“ und „du sparst 33,89 €“ (Abzeichen
+  „−40 %“, genau 40,4 %). Preise im Play Console müssen mit
+  `subscription_plans.dart` übereinstimmen; AGB und Store-Texte sind angepasst.
+- **Zielzeit beim Zunehmen:** Der Plan halbierte bisher das Tempo (0,125 kg
+  pro Woche) und lag damit etwa doppelt so lang wie der Kalorienplan
+  (+10 %) nahelegt. Jetzt gilt `PersonalizationProfile.gainKgPerWeek = 0,2`
+  (rund 0,8 kg pro Monat); 5 kg ergeben 25 Wochen statt 40. Abnehmen bleibt
+  beim gewählten Tempo (0,25 oder 0,5 kg pro Woche). Die Zeit ist weiterhin
+  eine grobe Schätzung.
+- **Doppelter Strich in Fenstern:** Das Theme zeigt bereits einen Griff; fünf
+  Fenster zeichneten einen zweiten (Allergien, Mahlzeit hinzufügen, Foto-Suche,
+  Schnell hinzufügen, Gewicht eintragen). Die eigenen Griffe sind entfernt.
+- **Umschalter** (Einheiten, Tempo) sind jetzt grün mit dunkler Schrift statt
+  im Material-Standardton.
+- **Texte:** Der Satz „Kein Ersatz für ärztlichen Rat“ steht nicht mehr auf der
+  Coach-Seite der Einführung (er bleibt unter Einstellungen, Hilfe). Die
+  Zielfrage hat keinen Untertitel mehr. Die Geschlechtsfrage heißt „Dein
+  Geschlecht“; der erklärende Satz darunter bleibt.
+- **Ladebildschirm der Web-Version:** Bis Flutter das erste Bild zeichnet,
+  zeigt die Seite ein dunkles Lookin-Zeichen mit dem Namen statt eines leeren
+  Bildschirms. Ein alter Name auf dem Handy kommt von einer früher angelegten
+  Startbildschirm-Verknüpfung oder vom Browser-Zwischenspeicher: Verknüpfung
+  löschen und neu anlegen.

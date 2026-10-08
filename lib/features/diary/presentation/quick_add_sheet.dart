@@ -81,17 +81,7 @@ class _QuickAddSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: Container(
-              width: 38,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.borderBright,
-                borderRadius: BorderRadius.circular(99),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
           Text(
             'Mahlzeit hinzufügen',
             style: Theme.of(

@@ -71,7 +71,7 @@ Monetarisierung > Abos:
 | Produkt-ID | Basis-Tarif | Preis (inkl. MwSt.) |
 | --- | --- | --- |
 | `lookin_premium_monthly` | monatlich, automatisch verlängernd | 6,99 € |
-| `lookin_premium_yearly` | jährlich, automatisch verlängernd | 59,99 € |
+| `lookin_premium_yearly` | jährlich, automatisch verlängernd | 49,99 € |
 
 - **Keine** Testphase oder Einführungsangebot hinzufügen.
 - Die Preise müssen zu `lib/features/subscription/domain/subscription_plans.dart`

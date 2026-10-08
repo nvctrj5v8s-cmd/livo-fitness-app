@@ -195,6 +195,12 @@ class PersonalizationProfile {
     return (18.5 * meters * meters * 2).ceil() / 2;
   }
 
+  /// Pace assumed when gaining weight with training: about 0.8 kg per month.
+  /// The calorie plan adds 10 % on top of maintenance (about 0.25 kg per week
+  /// if everything were stored), but part of a surplus is not stored as body
+  /// mass, so the estimate uses a bit less. Fat loss uses [WeightPace].
+  static const gainKgPerWeek = 0.2;
+
   /// Rough number of weeks to the target weight at the chosen pace, or
   /// `null` without enough data. An estimate, never a promise.
   int? weeksToTarget() {
@@ -204,8 +210,7 @@ class PersonalizationProfile {
     if (current == null || target == null || !hasWeightGoal) return null;
     final difference = (current - target).abs();
     if (difference < 0.5) return 0;
-    // Muscle gain is much slower than fat loss; halve the pace.
-    final weekly = goal == PersonalGoal.buildStrength ? rate / 2 : rate;
+    final weekly = goal == PersonalGoal.buildStrength ? gainKgPerWeek : rate;
     return (difference / weekly).ceil();
   }
 

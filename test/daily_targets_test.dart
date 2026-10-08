@@ -142,4 +142,24 @@ void main() {
     expect(profile.lowestHealthyWeightKg, 57);
     expect(profile.weeksToTarget(), 20);
   });
+
+  test('Zunehmen: Wochenzahl nutzt 0,2 kg pro Woche, nicht die Hälfte', () {
+    const profile = PersonalizationProfile(
+      heightCm: 178,
+      weightKg: 70,
+      goal: PersonalGoal.buildStrength,
+      targetWeightKg: 75,
+    );
+    expect(PersonalizationProfile.gainKgPerWeek, 0.2);
+    // 5 kg / 0,2 kg = 25 Wochen (gut ein halbes Jahr), nicht fast ein Jahr.
+    expect(profile.weeksToTarget(), 25);
+    // Abnehmen bleibt unverändert beim gewählten Tempo.
+    const lose = PersonalizationProfile(
+      weightKg: 80,
+      goal: PersonalGoal.loseWeight,
+      targetWeightKg: 75,
+      pace: WeightPace.steady,
+    );
+    expect(lose.weeksToTarget(), 10);
+  });
 }

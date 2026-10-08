@@ -19,6 +19,23 @@ abstract final class AppTheme {
       brightness: Brightness.dark,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.background,
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.primary
+                : AppColors.surface,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? AppColors.black
+                : AppColors.text,
+          ),
+          side: const WidgetStatePropertyAll(
+            BorderSide(color: AppColors.border),
+          ),
+        ),
+      ),
       canvasColor: AppColors.background,
       dividerColor: AppColors.border,
       splashFactory: InkSparkle.splashFactory,

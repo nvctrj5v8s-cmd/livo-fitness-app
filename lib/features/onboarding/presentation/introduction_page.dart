@@ -44,7 +44,7 @@ const _slides = [
     emphasis: 'Dein KI-Coach.',
     description:
         'Antworten zu Ernährung und Fitness, passend zu deinem Ziel und deinen '
-        'Tageswerten. Kein Ersatz für ärztlichen Rat.',
+        'Tageswerten.',
     accent: AppColors.primary,
     detail: 'Konzentriert auf Ernährung und Fitness.',
     icon: Icons.auto_awesome_outlined,

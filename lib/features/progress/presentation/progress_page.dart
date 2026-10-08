@@ -1233,17 +1233,6 @@ class _WeightSheetState extends State<_WeightSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 42,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.borderBright,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
               const Text(
                 'Neue Messung',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),

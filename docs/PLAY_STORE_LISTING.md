@@ -48,7 +48,7 @@ LOOKIN PREMIUM (OPTIONAL)
 • KI-Foto-Erkennung: Foto machen, Lookin schätzt Lebensmittel und Mengen. Du prüfst und korrigierst alles, bevor es gespeichert wird.
 • Lookin Coach: KI-Chat für Fragen rund um deine Ernährung.
 • Alle Rezepte.
-Premium testest du 7 Tage kostenlos, ohne Zahlungsdaten. Danach 6,99 € pro Monat oder 59,99 € pro Jahr. Du kannst jederzeit in den Abo-Einstellungen von Google Play kündigen.
+Premium testest du 7 Tage kostenlos, ohne Zahlungsdaten. Danach 6,99 € pro Monat oder 49,99 € pro Jahr. Du kannst jederzeit in den Abo-Einstellungen von Google Play kündigen.
 
 WICHTIG ZU WISSEN
 • Werte aus KI und Fotos sind Schätzungen.

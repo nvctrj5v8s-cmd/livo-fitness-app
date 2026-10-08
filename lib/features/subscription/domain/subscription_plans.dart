@@ -20,7 +20,7 @@ class PremiumPlan {
   final int billingPeriodMonths;
 
   /// Amount charged once per billing period (monthly: 6,99 € every month,
-  /// yearly: 59,99 € once per year). This is the only amount that is ever
+  /// yearly: 49,99 € once per year). This is the only amount that is ever
   /// charged; every other amount is derived for display.
   final int chargeCents;
 
@@ -29,8 +29,8 @@ class PremiumPlan {
   /// Monthly equivalent of [chargeCents], for display only.
   ///
   /// A yearly price does not always split into whole cents
-  /// (5999 / 12 = 499,92 cents), so the value is rounded **up** to the next
-  /// whole cent (5,00 €). Rounding up means the shown monthly amount never
+  /// (4999 / 12 = 416,58 cents), so the value is rounded **up** to the next
+  /// whole cent (4,17 €). Rounding up means the shown monthly amount never
   /// understates what is actually charged.
   int get monthlyEquivalentCents =>
       (chargeCents + billingPeriodMonths - 1) ~/ billingPeriodMonths;
@@ -54,7 +54,7 @@ abstract final class SubscriptionPlans {
     id: PremiumPlanId.yearly,
     storeProductId: 'lookin_premium_yearly',
     billingPeriodMonths: 12,
-    chargeCents: 5999,
+    chargeCents: 4999,
   );
 
   static const monthly = PremiumPlan(
@@ -77,12 +77,12 @@ abstract final class SubscriptionPlans {
       monthly.chargeCents * yearly.billingPeriodMonths;
 
   /// What the yearly plan saves compared with a year of monthly payments
-  /// (83,88 € − 59,99 € = 23,89 €).
+  /// (83,88 € − 49,99 € = 33,89 €).
   static int get yearlySavingsCents =>
       monthlyPlanYearCents - yearly.chargeCents;
 
   /// [yearlySavingsCents] as a share of [monthlyPlanYearCents], rounded to
-  /// the nearest whole percent (23,89 / 83,88 = 28,5 % → 28 %). The exact
+  /// the nearest whole percent (33,89 / 83,88 = 40,4 % → 40 %). The exact
   /// euro saving is always shown next to it on the paywall.
   static int get yearlySavingsPercent =>
       (yearlySavingsCents * 100 / monthlyPlanYearCents).round();

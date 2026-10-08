@@ -42,13 +42,13 @@ void main() {
       expect(SubscriptionPlans.monthly.chargeCents, 699);
       expect(SubscriptionPlans.yearly.billingPeriodMonths, 12);
       expect(SubscriptionPlans.yearly.isYearly, isTrue);
-      expect(SubscriptionPlans.yearly.chargeCents, 5999);
+      expect(SubscriptionPlans.yearly.chargeCents, 4999);
       expect(SubscriptionPlans.all.first.id, SubscriptionPlans.recommended);
     });
 
     test('the monthly equivalent is rounded up to whole cents', () {
-      // 5999 / 12 = 499,92 cents -> 5,00 €, never below the real cost.
-      expect(SubscriptionPlans.yearly.monthlyEquivalentCents, 500);
+      // 4999 / 12 = 416,58 cents -> 4,17 €, never below the real cost.
+      expect(SubscriptionPlans.yearly.monthlyEquivalentCents, 417);
       expect(
         SubscriptionPlans.yearly.monthlyEquivalentCents * 12,
         greaterThanOrEqualTo(SubscriptionPlans.yearly.chargeCents),
@@ -61,37 +61,37 @@ void main() {
 
     test('the yearly saving is derived from twelve monthly charges', () {
       expect(SubscriptionPlans.monthlyPlanYearCents, 8388);
-      expect(SubscriptionPlans.yearlySavingsCents, 2389);
-      // 2389 / 8388 = 28,5 % -> 28 %.
-      expect(SubscriptionPlans.yearlySavingsPercent, 28);
+      expect(SubscriptionPlans.yearlySavingsCents, 3389);
+      // 3389 / 8388 = 40,4 % -> 40 %.
+      expect(SubscriptionPlans.yearlySavingsPercent, 40);
     });
   });
 
   group('PremiumCopy', () {
     test('formats euro amounts in German', () {
-      expect(formatEuro(5999), '59,99$_nbsp€');
+      expect(formatEuro(4999), '49,99$_nbsp€');
       expect(formatEuro(699), '6,99$_nbsp€');
-      expect(formatEuro(500), '5,00$_nbsp€');
+      expect(formatEuro(417), '4,17$_nbsp€');
       expect(formatEuro(123456), '1.234,56$_nbsp€');
     });
 
     test('names flat prices without introductory offers', () {
       const yearly = SubscriptionPlans.yearly;
       const monthly = SubscriptionPlans.monthly;
-      expect(PremiumCopy.headlinePrice(yearly), '59,99$_nbsp€');
+      expect(PremiumCopy.headlinePrice(yearly), '49,99$_nbsp€');
       expect(PremiumCopy.headlineUnit(yearly), 'pro Jahr');
       expect(
         PremiumCopy.priceDetail(yearly),
-        'entspricht 5,00$_nbsp€ pro Monat',
+        'entspricht 4,17$_nbsp€ pro Monat',
       );
       expect(
         PremiumCopy.billingNote(yearly),
-        'einmal im Jahr berechnet – du sparst 23,89$_nbsp€ gegenüber '
+        'einmal im Jahr berechnet – du sparst 33,89$_nbsp€ gegenüber '
         'monatlich',
       );
       expect(
         PremiumCopy.purchaseSummary(yearly),
-        '59,99$_nbsp€ pro Jahr (entspricht 5,00$_nbsp€ pro Monat)',
+        '49,99$_nbsp€ pro Jahr (entspricht 4,17$_nbsp€ pro Monat)',
       );
 
       expect(PremiumCopy.headlinePrice(monthly), '6,99$_nbsp€');
@@ -104,11 +104,11 @@ void main() {
       );
 
       final terms = PremiumCopy.priceTerms;
-      expect(terms, contains('Jährlich 59,99$_nbsp€ pro Jahr'));
+      expect(terms, contains('Jährlich 49,99$_nbsp€ pro Jahr'));
       expect(terms, contains('Monatlich 6,99$_nbsp€ pro Monat'));
       expect(terms, contains('zum selben Preis'));
       for (final old in ['7,99', '5,99', '71,88', '65,88', '3,99', '5,49']) {
-        // Whole amounts only: "59,99" must not count as the old "5,99".
+        // Whole amounts only: "49,99" must not count as the old "5,99".
         expect(terms, isNot(matches(RegExp('(?<![0-9])$old'))));
       }
       expect(terms, isNot(contains('danach')));
@@ -137,13 +137,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('7 Tage kostenlos testen'), findsOneWidget);
-    expect(find.text('Beliebt · −28$_nbsp%'), findsOneWidget);
-    expect(find.text('59,99$_nbsp€'), findsOneWidget);
+    expect(find.text('Beliebt · −40$_nbsp%'), findsOneWidget);
+    expect(find.text('49,99$_nbsp€'), findsOneWidget);
     expect(find.text('pro Jahr'), findsOneWidget);
-    expect(find.text('entspricht 5,00$_nbsp€ pro Monat'), findsOneWidget);
+    expect(find.text('entspricht 4,17$_nbsp€ pro Monat'), findsOneWidget);
     expect(
       find.text(
-        'einmal im Jahr berechnet – du sparst 23,89$_nbsp€ gegenüber '
+        'einmal im Jahr berechnet – du sparst 33,89$_nbsp€ gegenüber '
         'monatlich',
       ),
       findsOneWidget,
@@ -152,7 +152,7 @@ void main() {
     expect(find.text('pro Monat'), findsOneWidget);
     expect(find.text('monatlich kündbar'), findsOneWidget);
     expect(
-      find.text('59,99$_nbsp€ pro Jahr (entspricht 5,00$_nbsp€ pro Monat)'),
+      find.text('49,99$_nbsp€ pro Jahr (entspricht 4,17$_nbsp€ pro Monat)'),
       findsOneWidget,
     );
     expect(find.textContaining('Kostenlose Testphase: 7 Tage'), findsOneWidget);
@@ -199,7 +199,7 @@ void main() {
     final yearlyCard = find.byKey(const ValueKey('paywall-plan-yearly'));
     await tester.ensureVisible(yearlyCard);
     await tester.pumpAndSettle();
-    expect(find.text('entspricht 5,00$_nbsp€ pro Monat'), findsOneWidget);
+    expect(find.text('entspricht 4,17$_nbsp€ pro Monat'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
