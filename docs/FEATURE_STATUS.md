@@ -840,3 +840,15 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   Bildschirms. Ein alter Name auf dem Handy kommt von einer früher angelegten
   Startbildschirm-Verknüpfung oder vom Browser-Zwischenspeicher: Verknüpfung
   löschen und neu anlegen.
+
+## Aktualisierung: Supabase im kostenlosen Tarif, 9. Oktober 2026
+
+- Ein täglicher Lesezugriff (`.github/workflows/supabase-keepalive.yml`) hält
+  das Projekt wach, damit der kostenlose Tarif es nicht nach 7 Tagen
+  Inaktivität pausiert. Er nutzt nur den öffentlichen Publishable Key.
+- **Keine Backups im kostenlosen Tarif.** Vor dem Start mit echten Nutzern
+  gelegentlich `supabase db dump` ausführen oder auf Pro wechseln.
+- Anmelde-E-Mails: Der eingebaute Versand sendet nur an Teammitglieder und
+  höchstens 2 Mails pro Stunde. Für Tester und Nutzer ist ein eigener
+  SMTP-Anbieter nötig (Resend oder Brevo, im Free-Tarif möglich). Das ist vor
+  dem geschlossenen Test zu erledigen (`docs/EMAIL_SETUP.md`).

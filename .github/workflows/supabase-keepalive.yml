@@ -1,0 +1,24 @@
+name: Supabase keep-alive
+
+# The free Supabase plan pauses a project after 7 days of low activity. One
+# harmless read per day from the public catalog keeps it awake. It uses only
+# the publishable key that is already part of the public app. Remove this file
+# once the project runs on a paid plan.
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read one catalog row
+        run: |
+          status=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "apikey: sb_publishable_tRpVVjcjTnUcNMnrcJzGXg_1enTAu7K" \
+            "https://kypxutvvpklkvekciuen.supabase.co/rest/v1/foods?select=id&limit=1")
+          echo "Supabase answered HTTP $status"
+          test "$status" = "200"
