@@ -884,3 +884,37 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   Vertragsbestätigung per E-Mail, Verlängerung des Jahresabos (§ 309 Nr. 9
   BGB), Halal-Regel im Chat für Fleisch von Landtieren, KI-Kennzeichnung je
   Antwort, Aufräumjob für alte Coach-Nachrichten, `allowBackup`.
+
+## Aktualisierung: Einwilligungen, Kauf-Zustimmung, Widerrufsbutton, 10. Oktober 2026
+
+- **Einwilligungen (Art. 9 DSGVO):** Nach der Anmeldung fragt die App einmal
+  nach zwei freiwilligen Einwilligungen (beide nicht vorausgewählt):
+  Gesundheitsangaben im Konto speichern und KI-Weitergabe an OpenAI. Ohne
+  Gesundheits-Einwilligung gehen Allergien und Zielgewicht nicht ins Konto
+  (leer bzw. weggelassen), Gewichtseinträge fragen vorher nach. KI-Coach und
+  KI-Foto fragen vor der ersten Nutzung. Widerruf jederzeit unter
+  Datenschutz & Daten; beim Widerruf der Gesundheits-Einwilligung werden
+  Allergien, Zielgewicht und Gewichtseinträge im Konto gelöscht.
+  Entscheidungen liegen auf dem Gerät und als Nachweis in
+  `public.user_consents` (Migration `0017`, Text-Version `2026-10-10`).
+- **Kauf:** Ein nicht vorausgewähltes Häkchen „sofort beginnen“ (vorzeitiger
+  Leistungsbeginn, § 356 Abs. 5 Nr. 2 BGB) ist Pflicht, bevor der Kauf startet;
+  es wird mit Plan gespeichert.
+- **Widerrufsbutton (§ 356a BGB):** Profil › „Vertrag widerrufen“ (bei einem
+  Store-Abo) und unter „Impressum & Rechtliches“. Name und E-Mail, kein Grund,
+  Button „Widerruf bestätigen“, sofortige Eingangsbestätigung mit Datum und
+  Uhrzeit. Speicherung in `public.withdrawal_requests` über die Function
+  `legal-actions`; E-Mails an Kunde und Inhaber über Resend.
+- **Kaufbestätigung per E-Mail (§ 312f BGB):** `revenuecat-webhook` schickt
+  nach einem Erstkauf Vertrag, Preis, Kündigung, die Zustimmung zum
+  Sofortbeginn und die Widerrufsbelehrung.
+- **Noch nicht aktiv:** E-Mails brauchen Domain und Resend (`RESEND_API_KEY`,
+  `MAIL_FROM`). Migration `0017` ist noch nicht auf die Produktionsdatenbank
+  angewendet; bis dahin bleiben Einwilligungen nur auf dem Gerät und
+  Widerrufe zeigen einen Hinweis mit der E-Mail-Adresse.
+- **Weitere Korrekturen:** Mikrofon-Berechtigung entfernt (kam über das
+  Kamera-Paket), Android-Sicherung abgeschaltet (`allowBackup="false"`),
+  Erinnerungen ehrlich als „bald verfügbar“ statt wirkungsloser Schalter,
+  Webseite `web/legal/konto-loeschen.html` für die Google-Pflicht zur
+  Kontolöschung ohne App, Jahresabo-Text an die Erstattung durch Google Play
+  angepasst, Halal-Formulierung im Coach festgehalten (`HALAL_CONTENT_POLICY.md`).

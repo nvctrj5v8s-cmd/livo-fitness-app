@@ -62,3 +62,19 @@ der Website ablegen und per `<img>` mit absoluter URL einbinden.
 „Passwort vergessen“ auf dem Computer anfordern, Mail auf dem iPhone öffnen,
 neues Passwort setzen, mit dem neuen Passwort anmelden. Absender, Betreff und
 Aussehen prüfen; auch den Spam-Ordner.
+
+## 5. Kauf- und Widerrufsbestätigungen (Resend-API, seit 10.10.2026)
+
+Die Functions `legal-actions` (Widerruf) und `revenuecat-webhook`
+(Kaufbestätigung) schicken E-Mails direkt über die Resend-API
+(`supabase/functions/_shared/mail.ts`). Ohne die zwei Secrets wird nichts
+verschickt, und die App zeigt die Eingangsbestätigung nur auf dem Bildschirm.
+
+Supabase → Edge Functions → Secrets:
+
+- `RESEND_API_KEY`: API-Schlüssel aus Resend (nie in Code oder Chat)
+- `MAIL_FROM`: verifizierter Absender, z. B. `Lookin <noreply@deine-domain.de>`
+
+Benachrichtigungen über neue Widerrufe gehen an `lookinsupport@gmail.com`.
+**Vor dem Verkauf an echte Kunden Pflicht:** Die Eingangsbestätigung eines
+Widerrufs muss auf einem dauerhaften Datenträger kommen (§ 356a BGB).

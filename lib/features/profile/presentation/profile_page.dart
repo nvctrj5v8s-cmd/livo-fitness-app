@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/data/account_data_repository.dart';
 import '../../../core/state/app_controller.dart';
+import '../../consent/presentation/consent_dialogs.dart';
+import '../../subscription/domain/entitlement.dart';
+import '../../subscription/presentation/withdrawal_page.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -648,11 +651,25 @@ class _SettingsList extends StatelessWidget {
             color: AppColors.primary,
             onTap: () => unawaited(showPaywall(context)),
           ),
+          // Withdrawal function (§ 356a BGB) for a running store purchase.
+          if (controller.subscription.entitlement.kind ==
+              EntitlementKind.subscription) ...[
+            const Divider(height: 1),
+            _SettingsTile(
+              key: const Key('profile-withdraw'),
+              icon: Icons.undo_rounded,
+              title: 'Vertrag widerrufen',
+              subtitle: 'Innerhalb von 14 Tagen nach dem Kauf, ohne Grund',
+              color: AppColors.error,
+              onTap: () =>
+                  unawaited(openWithdrawal(context, name: controller.name)),
+            ),
+          ],
           const Divider(height: 1),
           _SettingsTile(
             icon: Icons.notifications_none_rounded,
             title: 'Erinnerungen',
-            subtitle: 'Mahlzeiten und Wasser',
+            subtitle: 'Bald verfügbar',
             onTap: () => showReminderSheet(context, controller),
           ),
           const Divider(height: 1),
@@ -917,7 +934,13 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
             SizedBox(
               width: double.infinity,
               child: FilledButton(
-                onPressed: () {
+                onPressed: () async {
+                  final controller = widget.controller;
+                  if (_targetWeight != controller.targetWeight &&
+                      !controller.consent.healthGranted) {
+                    await ensureHealthConsent(context, controller.consent);
+                    if (!context.mounted) return;
+                  }
                   widget.controller.updateProfile(
                     newName: _nameController.text,
                     newGoal: _goal,

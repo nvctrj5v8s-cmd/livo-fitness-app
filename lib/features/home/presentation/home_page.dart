@@ -41,10 +41,9 @@ class _HomePageState extends State<HomePage> {
                   name: controller.greetingName,
                   streak: controller.streakDays,
                   streakLoading: controller.streakLoading,
-                  remindersActive:
-                      controller.mealReminders ||
-                      controller.waterReminders ||
-                      controller.weeklySummary,
+                  // Reminders are not built yet, so the bell never shows them
+                  // as active.
+                  remindersActive: false,
                   onNotifications: () => showReminderSheet(context, controller),
                   onProfile: () => widget.onOpenPage(3),
                 ),

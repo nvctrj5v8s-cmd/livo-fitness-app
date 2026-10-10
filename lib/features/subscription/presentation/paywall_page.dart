@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/state/app_controller.dart';
+import '../../consent/domain/consent.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
 import '../application/subscription_controller.dart';
@@ -97,6 +98,10 @@ class _PaywallPageState extends State<PaywallPage>
     with SingleTickerProviderStateMixin {
   late final AnimationController _intro;
   PremiumPlanId _selected = SubscriptionPlans.recommended;
+
+  /// Express request to start before the withdrawal period ends. Never
+  /// pre-ticked; the purchase stays disabled until the box is ticked.
+  bool _immediateStart = false;
   _Notice? _notice;
   bool _trialStarted = false;
 
@@ -198,6 +203,22 @@ class _PaywallPageState extends State<PaywallPage>
       return;
     }
     if (_subscription.isPurchasing) return;
+    if (!_immediateStart) {
+      _showMessage(PremiumCopy.immediateStartRequired);
+      return;
+    }
+    // Recorded with the plan before the store dialog opens, so the
+    // confirmation e-mail can name it.
+    final consent = context
+        .dependOnInheritedWidgetOfExactType<AppScope>()
+        ?.notifier
+        ?.consent;
+    await consent?.set(
+      ConsentKind.immediateStart,
+      true,
+      context: _selected.name,
+    );
+    if (!mounted) return;
     _afterStoreFlow(await _subscription.purchase(_selected));
   }
 
@@ -464,6 +485,8 @@ class _PaywallPageState extends State<PaywallPage>
     plan: _plan,
     billingAvailable: _subscription.storeBillingAvailable,
     busy: _subscription.isPurchasing,
+    immediateStart: _immediateStart,
+    onImmediateStartChanged: (value) => setState(() => _immediateStart = value),
   );
 
   Widget _legalFooter() => _LegalFooter(
@@ -1293,6 +1316,8 @@ class _PlanSection extends StatelessWidget {
     required this.plan,
     required this.billingAvailable,
     required this.busy,
+    required this.immediateStart,
+    required this.onImmediateStartChanged,
   });
 
   final PremiumPlanId selected;
@@ -1301,6 +1326,8 @@ class _PlanSection extends StatelessWidget {
   final PremiumPlan plan;
   final bool billingAvailable;
   final bool busy;
+  final bool immediateStart;
+  final ValueChanged<bool> onImmediateStartChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -1342,9 +1369,26 @@ class _PlanSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+        if (billingAvailable) ...[
+          CheckboxListTile(
+            key: const Key('paywall-immediate-start'),
+            value: immediateStart,
+            onChanged: (value) => onImmediateStartChanged(value ?? false),
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: const Text(
+              ConsentTexts.immediateStart,
+              style: TextStyle(fontSize: 12.5, height: 1.4),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
         OutlinedButton(
           key: const Key('paywall-purchase'),
-          onPressed: busy ? null : onPurchase,
+          onPressed: busy || (billingAvailable && !immediateStart)
+              ? null
+              : onPurchase,
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.text,
             minimumSize: const Size.fromHeight(58),

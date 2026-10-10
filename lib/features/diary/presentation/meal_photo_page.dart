@@ -12,6 +12,7 @@ import '../../../core/data/halal_content_policy.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
+import '../../consent/presentation/consent_dialogs.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../allergies/domain/allergy_safety.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
@@ -179,6 +180,8 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
   }
 
   Future<void> _analyze(Uint8List prepared) async {
+    final consent = AppScope.of(context).consent;
+    if (!await ensureAiConsent(context, consent) || !mounted) return;
     setState(() {
       _analyzing = true;
       _error = null;

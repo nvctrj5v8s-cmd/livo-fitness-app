@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/state/app_controller.dart';
 import '../core/theme/app_theme.dart';
+import '../features/consent/presentation/consent_gate.dart';
 import '../features/auth/presentation/auth_gate.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
@@ -103,7 +104,9 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
                       child: QuestionsFirstGate(
                         child: AuthGate(
                           child: PersonalizationGate(
-                            child: PaywallGate(child: AppShell()),
+                            child: ConsentGate(
+                              child: PaywallGate(child: AppShell()),
+                            ),
                           ),
                         ),
                       ),

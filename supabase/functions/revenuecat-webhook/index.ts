@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { germanDateTime, ownerEmail, sendMail, withdrawalPolicyText } from '../_shared/mail.ts'
 
 // Receives RevenueCat webhooks and records the resulting premium state in
 // public.entitlements. Only RevenueCat may call it: the request must carry the
@@ -36,6 +37,10 @@ async function secretMatches(provided: string, expected: string): Promise<boolea
 }
 
 type StoreEvent = {
+  product_id?: string
+  price_in_purchased_currency?: number | null
+  currency?: string | null
+  purchased_at_ms?: number | null
   id?: string
   type?: string
   app_user_id?: string
@@ -166,5 +171,50 @@ Deno.serve(async (request) => {
     return json({ code: 'database_error' }, 500)
   }
   console.log(`revenuecat-webhook ${event.type}: ${data}`)
+  if (event.type === 'INITIAL_PURCHASE' && data === 'applied') {
+    await sendPurchaseConfirmation(client, decision.userId, event)
+  }
   return json({ result: data })
 })
+
+// Contract confirmation on a durable medium (§ 312f Abs. 2 BGB): plan, price,
+// renewal and cancellation, the customer's request to start immediately and
+// the withdrawal policy. Failures are logged only; the purchase stays valid.
+// deno-lint-ignore no-explicit-any
+async function sendPurchaseConfirmation(client: any, userId: string, event: StoreEvent) {
+  try {
+    const { data: userData } = await client.auth.admin.getUserById(userId)
+    const to = userData?.user?.email
+    if (!to) return
+    const yearly = (event.product_id ?? '').includes('yearly')
+    const plan = yearly ? 'Lookin Premium – Jahresabo' : 'Lookin Premium – Monatsabo'
+    const price = typeof event.price_in_purchased_currency === 'number' && event.currency
+      ? `${event.price_in_purchased_currency.toFixed(2).replace('.', ',')} ${event.currency}`
+      : (yearly ? '49,99 EUR' : '6,99 EUR')
+    const purchasedAt = germanDateTime(new Date(Number(event.purchased_at_ms) || Date.now()))
+    const { data: consents } = await client
+      .from('user_consents')
+      .select('granted, created_at')
+      .eq('user_id', userId)
+      .eq('kind', 'immediate_start')
+      .order('created_at', { ascending: false })
+      .limit(1)
+    const consent = Array.isArray(consents) && consents[0]?.granted
+      ? `Du hast am ${germanDateTime(new Date(consents[0].created_at))} ausdrücklich verlangt, dass Lookin Premium sofort, also vor Ablauf der Widerrufsfrist, beginnt, und bestätigt, dass dir bekannt ist: Bei einem Widerruf zahlst du einen anteiligen Betrag für die bis dahin erbrachte Leistung, und dein Widerrufsrecht erlischt bei vollständiger Vertragserfüllung.`
+      : 'Zur Zustimmung zum sofortigen Beginn liegt uns keine Erklärung vor.'
+    const renewal = yearly
+      ? 'Das Abo verlängert sich nach den Regeln von Google Play automatisch, bis du es kündigst.'
+      : 'Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
+    const result = await sendMail({
+      to,
+      subject: 'Deine Bestellung: Lookin Premium',
+      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
+        `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
+        `${renewal} Kündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play oder per E-Mail an ${ownerEmail}.\n\n` +
+        `${consent}\n\n${withdrawalPolicyText}`,
+    })
+    console.log(`purchase confirmation: ${result}`)
+  } catch (_) {
+    console.error('purchase confirmation failed')
+  }
+}

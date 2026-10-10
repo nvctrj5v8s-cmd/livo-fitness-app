@@ -15,4 +15,7 @@ abstract final class LegalLinks {
   static Uri get terms => Uri.parse('${baseUrl}agb.html');
   static Uri get withdrawal => Uri.parse('${baseUrl}widerruf.html');
   static Uri get imprint => Uri.parse('${baseUrl}impressum.html');
+
+  /// Account deletion without the app, required by Google Play.
+  static Uri get accountDeletion => Uri.parse('${baseUrl}konto-loeschen.html');
 }

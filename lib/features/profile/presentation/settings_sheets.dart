@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../../core/config/legal_links.dart';
 import '../../../core/state/app_controller.dart';
+import '../../consent/presentation/consent_dialogs.dart';
+import '../../subscription/presentation/withdrawal_page.dart';
+import '../../consent/presentation/consent_settings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -89,6 +92,20 @@ class _LegalSheet extends StatelessWidget {
                     onTap: () => openExternalLink(context, uri),
                   ),
                 ],
+                const Divider(height: 1),
+                ListTile(
+                  key: const Key('legal-sheet-withdraw'),
+                  leading: const Icon(
+                    Icons.undo_rounded,
+                    color: AppColors.error,
+                  ),
+                  title: const Text('Vertrag widerrufen'),
+                  subtitle: const Text(
+                    'Für Lookin Premium, ohne Angabe von Gründen',
+                  ),
+                  onTap: () =>
+                      openWithdrawal(context, name: AppScope.of(context).name),
+                ),
               ],
             ),
           ),
@@ -111,45 +128,9 @@ class _ReminderSheetState extends State<_ReminderSheet> {
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
       title: 'Erinnerungen',
-      subtitle: 'Dein Rhythmus, jederzeit anpassbar',
+      subtitle: 'Bald verfügbar',
       child: ListView(
         children: [
-          _SwitchCard(
-            icon: Icons.restaurant_outlined,
-            color: AppColors.primary,
-            title: 'Mahlzeiten eintragen',
-            subtitle: 'Täglich um 13:00 und 19:00 Uhr',
-            value: widget.controller.mealReminders,
-            onChanged: (value) {
-              widget.controller.setMealReminders(value);
-              setState(() {});
-            },
-          ),
-          const SizedBox(height: 10),
-          _SwitchCard(
-            icon: Icons.water_drop_outlined,
-            color: AppColors.blue,
-            title: 'Wasser trinken',
-            subtitle: 'Alle zwei Stunden zwischen 9 und 19 Uhr',
-            value: widget.controller.waterReminders,
-            onChanged: (value) {
-              widget.controller.setWaterReminders(value);
-              setState(() {});
-            },
-          ),
-          const SizedBox(height: 10),
-          _SwitchCard(
-            icon: Icons.insights_outlined,
-            color: AppColors.mint,
-            title: 'Wochenrückblick',
-            subtitle: 'Sonntagabend mit deinen wichtigsten Trends',
-            value: widget.controller.weeklySummary,
-            onChanged: (value) {
-              widget.controller.setWeeklySummary(value);
-              setState(() {});
-            },
-          ),
-          const SizedBox(height: 18),
           const SurfaceCard(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +139,7 @@ class _ReminderSheetState extends State<_ReminderSheet> {
                 SizedBox(width: 11),
                 Expanded(
                   child: Text(
-                    'Die Schalter funktionieren lokal. Echte Push-Nachrichten benötigen später die Betriebssystem-Berechtigung und einen Benachrichtigungsdienst.',
+                    'Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.',
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
@@ -175,64 +156,6 @@ class _ReminderSheetState extends State<_ReminderSheet> {
   }
 }
 
-class _SwitchCard extends StatelessWidget {
-  const _SwitchCard({
-    required this.icon,
-    required this.color,
-    required this.title,
-    required this.subtitle,
-    required this.value,
-    required this.onChanged,
-  });
-
-  final IconData icon;
-  final Color color;
-  final String title;
-  final String subtitle;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return SurfaceCard(
-      padding: const EdgeInsets.fromLTRB(15, 10, 8, 10),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(icon, color: color),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Switch(value: value, onChanged: onChanged),
-        ],
-      ),
-    );
-  }
-}
 
 class _NutritionProfileSheet extends StatefulWidget {
   const _NutritionProfileSheet({required this.controller});
@@ -319,7 +242,15 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
           ],
           const SizedBox(height: 26),
           FilledButton(
-            onPressed: () {
+            onPressed: () async {
+              final controller = widget.controller;
+              final hasAllergies =
+                  _allergies.trim().isNotEmpty &&
+                  _allergies.trim() != 'Keine angegeben';
+              if (hasAllergies && !controller.consent.healthGranted) {
+                await ensureHealthConsent(context, controller.consent);
+                if (!context.mounted) return;
+              }
               widget.controller.updateNutritionProfile(
                 newNutritionStyle: _style,
                 newAllergies: _allergies,
@@ -402,6 +333,8 @@ class _PrivacySheet extends StatelessWidget {
             icon: const Icon(Icons.delete_outline_rounded),
             label: const Text('Lokale Demodaten löschen'),
           ),
+          const SizedBox(height: 14),
+          ConsentSettingsCard(controller: controller),
           const SizedBox(height: 14),
           AccountDataActions(subscription: controller.subscription),
           const SizedBox(height: 14),

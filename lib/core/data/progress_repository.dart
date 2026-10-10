@@ -137,6 +137,14 @@ class ProgressRepository {
     }, onConflict: 'user_id,measured_on');
   }
 
+  /// Deletes every weight and waist entry of the signed-in account, for
+  /// example after the health-data consent was revoked.
+  Future<void> deleteAllMeasurements() async {
+    final user = _client.auth.currentUser;
+    if (user == null) return;
+    await _client.from('body_measurements').delete().eq('user_id', user.id);
+  }
+
   _Nutrition? _customNutrition(Object? note) {
     if (note is! String || !note.startsWith(_customNotePrefix)) return null;
     try {

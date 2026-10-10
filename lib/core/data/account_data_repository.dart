@@ -29,6 +29,8 @@ class AccountDataRepository {
     'ai_chat_messages',
     'ai_chat_usage',
     'barcode_lookup_limits',
+    'user_consents',
+    'withdrawal_requests',
   ];
 
   String _requireUserId() {

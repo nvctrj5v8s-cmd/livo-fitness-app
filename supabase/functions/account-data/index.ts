@@ -20,7 +20,10 @@ const sections = {
   ai_chat_messages: { table: 'ai_chat_messages', order: 'id' },
   ai_chat_usage: { table: 'ai_chat_usage', order: 'usage_date' },
   barcode_lookup_limits: { table: 'barcode_lookup_limits', order: 'user_id' },
+  user_consents: { table: 'user_consents', order: 'id' },
+  withdrawal_requests: { table: 'withdrawal_requests', order: 'id' },
 } as const
+const optionalSections = new Set(['user_consents', 'withdrawal_requests'])
 type Section = keyof typeof sections | 'auth' | 'meal_items'
 
 function json(body: unknown, status = 200): Response {
@@ -139,11 +142,14 @@ Deno.serve(async (request) => {
       .eq('user_id', user.id)
       .order(definition.order)
       .range(start, start + pageSize - 1)
-    if (error) {
+    // Newer tables may not exist yet on a project without the latest
+    // migration; they then export as empty instead of failing the export.
+    const missingTable = error?.code === '42P01' || error?.code === 'PGRST205'
+    if (error && !(missingTable && optionalSections.has(section))) {
       console.error('account export failed', section, error.code)
       return json({ code: 'export_failed' }, 500)
     }
-    rows = data ?? []
+    rows = error ? [] : data ?? []
   } else {
     return json({ code: 'invalid_section' }, 400)
   }

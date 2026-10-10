@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/data/progress_repository.dart';
 import '../../../core/models/progress_models.dart';
 import '../../../core/state/app_controller.dart';
+import '../../consent/presentation/consent_dialogs.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -59,6 +60,9 @@ class _ProgressPageState extends State<ProgressPage> {
   }
 
   Future<void> _addWeight() async {
+    // Weight entries live only in the account, so they need consent first.
+    final consent = AppScope.of(context).consent;
+    if (!await ensureHealthConsent(context, consent) || !mounted) return;
     final result = await showModalBottomSheet<_WeightInput>(
       context: context,
       isScrollControlled: true,

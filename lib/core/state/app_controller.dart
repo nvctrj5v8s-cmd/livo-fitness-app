@@ -11,11 +11,14 @@ import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
 import '../../features/profile/domain/daily_targets.dart';
+import '../../features/consent/application/consent_controller.dart';
+import '../../features/consent/data/consent_repository.dart';
 import '../../features/subscription/application/subscription_controller.dart';
 import '../../features/subscription/data/store_billing.dart';
 import '../../features/subscription/data/subscription_repository.dart';
 import '../data/avatar_repository.dart';
 import '../data/food_preferences_store.dart';
+import '../data/progress_repository.dart';
 import '../data/halal_content_policy.dart';
 import '../data/supabase_catalog_repository.dart';
 import '../data/supabase_diary_repository.dart';
@@ -33,8 +36,16 @@ class AppController extends ChangeNotifier {
     this.avatarRepository,
     SubscriptionRepository? subscriptionRepository,
     StoreBilling? storeBilling,
+    ConsentRepository? consentRepository,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
+       consent = ConsentController(
+         repository:
+             consentRepository ??
+             (personalizationUserId == null
+                 ? MemoryConsentRepository()
+                 : SupabaseConsentRepository(userId: personalizationUserId)),
+       ),
        subscription = SubscriptionController(
          // Without an account (demo/preview) premium is never available.
          repository:
@@ -58,10 +69,37 @@ class AppController extends ChangeNotifier {
     }
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
+    consent.addListener(notifyListeners);
   }
 
   /// Lookin Premium state of this account; see `SubscriptionController`.
   final SubscriptionController subscription;
+
+  /// Explicit consent decisions (health data, AI, immediate start).
+  final ConsentController consent;
+
+  /// Health data leaves the device only with consent (Art. 9 DSGVO).
+  /// Without it, allergies are stored as empty and the target weight is not
+  /// sent; both stay usable on this device.
+  Map<String, dynamic> _withHealthConsent(Map<String, dynamic> values) {
+    if (consent.healthGranted) return values;
+    return {
+      for (final entry in values.entries)
+        if (entry.key != 'target_weight')
+          entry.key: entry.key == 'allergies' ? '' : entry.value,
+    };
+  }
+
+  /// Removes health data from the account after consent was revoked.
+  Future<void> clearAccountHealthData() async {
+    await _saveProfileSilently({'allergies': '', 'target_weight': null});
+    try {
+      await ProgressRepository().deleteAllMeasurements();
+    } catch (error) {
+      profileError = error.toString();
+      notifyListeners();
+    }
+  }
 
   bool? _premiumCatalog;
   bool _catalogRequested = false;
@@ -323,7 +361,7 @@ class AppController extends ChangeNotifier {
     notifyListeners();
     try {
       await SupabaseProfileRepository().saveCurrentProfile(
-        _personalizationProfileValues(profile),
+        _withHealthConsent(_personalizationProfileValues(profile)),
         expectedUserId: personalizationUserId,
       );
     } catch (error) {
@@ -403,6 +441,9 @@ class AppController extends ChangeNotifier {
     _disposed = true;
     subscription
       ..removeListener(_onSubscriptionChanged)
+      ..dispose();
+    consent
+      ..removeListener(notifyListeners)
       ..dispose();
     super.dispose();
   }
@@ -1404,7 +1445,12 @@ class AppController extends ChangeNotifier {
   Future<void> _saveProfileSilently(Map<String, dynamic> values) async {
     try {
       await SupabaseProfileRepository().saveCurrentProfile(
-        values,
+        values.containsKey('allergies') &&
+                values['allergies'] == '' &&
+                values.containsKey('target_weight') &&
+                values['target_weight'] == null
+            ? values
+            : _withHealthConsent(values),
         expectedUserId: personalizationUserId,
       );
     } catch (error) {

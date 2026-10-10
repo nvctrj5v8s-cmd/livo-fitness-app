@@ -29,6 +29,10 @@
   Lebensmittelkatalog, Rezepten, Barcode-Ergebnissen, Demo-Daten oder
   KI-Empfehlungen.
 - Fleisch von Landtieren nur bei eindeutiger Halal-Kennzeichnung zulassen.
+  Das gilt für Katalog, Rezepte und Barcode-Ergebnisse. Der KI-Coach nennt
+  Rind, Geflügel oder Lamm als normale Lebensmittel und schreibt nicht
+  ungefragt „nur Halal-Fleisch“ dazu (Entscheidung des Inhabers vom
+  10.10.2026); Schweinefleisch, Alkohol und Gelatine nennt er nie.
 - Bei unklaren Zutaten nicht raten, sondern blockieren oder auf die Verpackung
   verweisen. Details: `docs/HALAL_CONTENT_POLICY.md`.
 

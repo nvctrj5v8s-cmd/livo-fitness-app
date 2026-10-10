@@ -95,7 +95,11 @@ abstract final class PremiumCopy {
     return 'Abo-Preise: $prices Bezahlung und Abrechnung laufen über '
         '$_storeName. Ein Abo verlängert sich automatisch zum selben Preis, '
         'bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen '
-        'von $_storeName, wirksam zum Ende des Abrechnungszeitraums.';
+        'von $_storeName, wirksam zum Ende des Abrechnungszeitraums. Das '
+        'Jahresabo kannst du nach dem ersten Jahr jederzeit kündigen; in '
+        'Deutschland erstattet Google Play den nicht genutzten Teil anteilig. '
+        'Innerhalb von 14 Tagen kannst du unter Profil › Vertrag widerrufen '
+        'widerrufen.';
   }
 
   static String get _storeName =>
@@ -125,6 +129,9 @@ abstract final class PremiumCopy {
       'Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die '
       'Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die '
       'wiederhergestellt werden müssten.';
+
+  static const immediateStartRequired =
+      'Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.';
 
   static const manageFailedMessage =
       'Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-'

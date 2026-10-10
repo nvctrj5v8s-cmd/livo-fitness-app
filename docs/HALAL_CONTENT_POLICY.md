@@ -71,3 +71,13 @@ Bei neuen Katalogen, Rezepten, Bildern, KI-Prompts oder Datenquellen muss die
 Regel vor dem Import geprüft werden. Die Regel steht zusätzlich in `README.md`,
 `AGENTS.md` und `CLAUDE_HANDOFF.md`, damit menschliche und KI-Mitwirkende sie
 nicht übersehen.
+
+## KI-Coach: Formulierung (Entscheidung vom 10. Oktober 2026)
+
+- Der Coach empfiehlt, plant oder bewertet nie Schweinefleisch, Alkohol oder
+  Gelatine, auch nicht als Zutat in Soßen oder Desserts.
+- Rind, Geflügel, Lamm und andere übliche Lebensmittel nennt er wie normale
+  Lebensmittel. Er schreibt dabei nicht ungefragt „nur Halal-Fleisch“ oder
+  Ähnliches dazu. So hat es der Inhaber festgelegt.
+- Katalog, Rezepte, Barcode-Ergebnisse und KI-Foto bleiben bei der strengen
+  Regel: Fleisch von Landtieren nur mit eindeutiger Halal-Kennzeichnung.

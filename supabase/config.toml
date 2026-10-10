@@ -13,3 +13,7 @@ verify_jwt = false
 # RevenueCat cannot send a Supabase JWT. The function checks its own shared
 # secret instead and rejects every other caller with 401.
 verify_jwt = false
+
+[functions.legal-actions]
+# The function verifies the bearer token with Auth.getUser itself.
+verify_jwt = false

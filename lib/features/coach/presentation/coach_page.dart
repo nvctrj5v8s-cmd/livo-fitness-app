@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:image/image.dart' as img;
 
+import '../../consent/presentation/consent_dialogs.dart';
 import '../../../core/data/ai_coach_service.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -166,6 +167,7 @@ class _CoachChatState extends State<_CoachChat>
     final text = suggestion ?? _composer.text;
     if (text.trim().isEmpty || !_chat.canSend) return;
     final app = AppScope.of(context);
+    if (!await ensureAiConsent(context, app.consent) || !mounted) return;
     if (suggestion == null) _composer.clear();
     _focusNode.unfocus();
     final pending = _chat.send(text, context: coachContextFor(app));
@@ -201,6 +203,8 @@ class _CoachChatState extends State<_CoachChat>
 
   Future<void> _analyzeImage() async {
     if (!_chat.canSend) return;
+    final consent = AppScope.of(context).consent;
+    if (!await ensureAiConsent(context, consent) || !mounted) return;
     final file = await openFile(
       acceptedTypeGroups: const [
         XTypeGroup(

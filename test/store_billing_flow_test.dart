@@ -222,6 +222,16 @@ void main() {
       final button = find.byKey(const Key('paywall-purchase'));
       await tester.ensureVisible(button);
       await tester.pumpAndSettle();
+      // Disabled until the immediate-start request is ticked.
+      expect(tester.widget<OutlinedButton>(button).onPressed, isNull);
+      final immediateStart = find.byKey(const Key('paywall-immediate-start'));
+      await tester.ensureVisible(immediateStart);
+      await tester.pumpAndSettle();
+      await tester.tap(immediateStart);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(button);
+      await tester.pumpAndSettle();
+      expect(tester.widget<OutlinedButton>(button).onPressed, isNotNull);
       await tester.tap(button);
       await tester.pumpAndSettle();
 

@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/features/consent/data/consent_repository.dart';
+import 'package:fitness_ai_app/features/consent/domain/consent.dart';
 import 'package:fitness_ai_app/core/models/app_models.dart';
 import 'package:fitness_ai_app/core/state/app_controller.dart';
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
@@ -19,12 +21,22 @@ class PlusSubscriptionRepository implements SubscriptionRepository {
       const TrialStartResult(TrialStartStatus.alreadyPremium);
 }
 
-Future<AppController> recipeTestController({required bool plus}) async {
+Future<AppController> recipeTestController({
+  required bool plus,
+  bool consented = true,
+}) async {
   final controller = AppController(
     subscriptionRepository: plus
         ? const PlusSubscriptionRepository()
         : const PreviewSubscriptionRepository(),
+    // Most tests are about other features; consent has its own tests.
+    consentRepository: MemoryConsentRepository(
+      consented
+          ? {ConsentKind.healthData: true, ConsentKind.aiProcessing: true}
+          : null,
+    ),
   );
+  await controller.consent.load();
   await controller.subscription.load();
   return controller;
 }
