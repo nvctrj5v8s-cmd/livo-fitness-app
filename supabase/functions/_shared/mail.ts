@@ -70,7 +70,7 @@ export const withdrawalPolicyText = `Widerrufsbelehrung
 
 Widerrufsrecht
 Du hast das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.
-Um dein Widerrufsrecht auszuüben, musst du uns (Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, Telefon: +49 15510 338501, E-Mail: lookinsupport@gmail.com) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über deinen Entschluss, diesen Vertrag zu widerrufen, informieren. Du kannst dafür das Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Du kannst dein Widerrufsrecht auch in der App unter Profil > Vertrag widerrufen ausüben.
+Um dein Widerrufsrecht auszuüben, musst du uns (Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, Telefon: +49 15510 338501, E-Mail: lookinsupport@gmail.com) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über deinen Entschluss, diesen Vertrag zu widerrufen, informieren. Du kannst dafür das Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Du kannst dein Widerrufsrecht auch online ausüben: in der App unter Profil > Vertrag widerrufen oder ohne Anmeldung unter https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/widerruf-erklaeren.html. Wenn du diese Online-Funktion nutzt, übermitteln wir dir auf einem dauerhaften Datenträger (z. B. durch eine E-Mail) unverzüglich eine Eingangsbestätigung mit Informationen zum Inhalt der Widerrufserklärung sowie dem Datum und der Uhrzeit ihres Eingangs.
 Zur Wahrung der Widerrufsfrist reicht es aus, dass du die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absendest.
 
 Folgen des Widerrufs
@@ -78,6 +78,17 @@ Wenn du diesen Vertrag widerrufst, haben wir dir alle Zahlungen, die wir von dir
 Hast du verlangt, dass die Dienstleistungen während der Widerrufsfrist beginnen sollen, so hast du uns einen angemessenen Betrag zu zahlen, der dem Anteil der bis zu dem Zeitpunkt, zu dem du uns von der Ausübung des Widerrufsrechts hinsichtlich dieses Vertrags unterrichtest, bereits erbrachten Dienstleistungen im Vergleich zum Gesamtumfang der im Vertrag vorgesehenen Dienstleistungen entspricht.
 
 Ende der Widerrufsbelehrung
+
+Muster-Widerrufsformular
+(Wenn du den Vertrag widerrufen willst, fülle dieses Formular aus und sende es zurück.)
+An Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, lookinsupport@gmail.com:
+Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über die Erbringung der folgenden Dienstleistung (*): Lookin Premium (Abo)
+Bestellt am (*): ____________
+Name des/der Verbraucher(s): ____________
+Anschrift des/der Verbraucher(s): ____________
+Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier): ____________
+Datum: ____________
+(*) Unzutreffendes streichen.
 
 Vollständige Fassung: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/widerruf.html
 AGB: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html`

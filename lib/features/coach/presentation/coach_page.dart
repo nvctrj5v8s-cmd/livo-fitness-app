@@ -179,6 +179,7 @@ class _CoachChatState extends State<_CoachChat>
 
   Future<void> _retry() async {
     final app = AppScope.of(context);
+    if (!await ensureAiConsent(context, app.consent) || !mounted) return;
     final pending = _chat.retry(context: coachContextFor(app));
     _jumpToLatest();
     await pending;

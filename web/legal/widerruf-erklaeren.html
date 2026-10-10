@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Vertrag widerrufen – Lookin</title>
+  <link rel="stylesheet" href="legal.css">
+  <style>
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; }
+    button { margin-top: 18px; width: 100%; padding: 14px; border: 0; border-radius: 14px; background: var(--accent); color: #050708; font: inherit; font-weight: 800; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    #result { margin-top: 18px; }
+    .ok { border-color: var(--accent) !important; }
+    .error { color: #ff7e82; }
+  </style>
+</head>
+<body>
+<main>
+  <nav>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="agb.html">AGB</a>
+    <a href="widerruf.html">Widerruf</a>
+    <a href="impressum.html">Impressum</a>
+    <a href="konto-loeschen.html">Konto löschen</a>
+  </nav>
+
+  <h1>Vertrag widerrufen</h1>
+  <p>Hier widerrufst du deinen Vertrag über Lookin Premium, auch ohne Anmeldung. Einen Grund musst du nicht angeben. Du bekommst sofort eine Eingangsbestätigung mit Datum und Uhrzeit.</p>
+
+  <form id="form" novalidate>
+    <label for="name">Dein Name</label>
+    <input id="name" name="name" autocomplete="name" maxlength="120" required>
+    <label for="email">E-Mail für die Bestätigung</label>
+    <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <label for="note">Google-Play-Bestellnummer (beginnt mit GPA.) oder Hinweis, freiwillig</label>
+    <input id="note" name="note" maxlength="300">
+    <button id="confirm" type="submit" disabled>Widerruf bestätigen</button>
+  </form>
+
+  <div id="result" class="box" hidden></div>
+
+  <p class="muted">Du kannst auch per E-Mail an <a href="mailto:lookinsupport@gmail.com">lookinsupport@gmail.com</a> oder per Brief widerrufen. Details in der <a href="widerruf.html">Widerrufsbelehrung</a>.</p>
+</main>
+<script>
+  (function () {
+    var endpoint = 'https://kypxutvvpklkvekciuen.supabase.co/functions/v1/legal-actions';
+    var form = document.getElementById('form');
+    var name = document.getElementById('name');
+    var email = document.getElementById('email');
+    var note = document.getElementById('note');
+    var button = document.getElementById('confirm');
+    var result = document.getElementById('result');
+    function valid() {
+      return name.value.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    }
+    function update() { button.disabled = !valid(); }
+    [name, email].forEach(function (input) { input.addEventListener('input', update); });
+    function pad(value) { return String(value).padStart(2, '0'); }
+    function show(html, ok) {
+      result.hidden = false;
+      result.className = 'box' + (ok ? ' ok' : '');
+      result.innerHTML = html;
+    }
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (!valid()) return;
+      button.disabled = true;
+      button.textContent = 'Wird gesendet …';
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'withdraw', name: name.value.trim(), email: email.value.trim(), note: note.value.trim() })
+      }).then(function (response) {
+        return response.json().then(function (data) { return { ok: response.ok, data: data }; });
+      }).then(function (answer) {
+        if (!answer.ok || !answer.data.received_at) throw new Error(answer.data && answer.data.code);
+        var at = new Date(answer.data.received_at);
+        var when = pad(at.getDate()) + '.' + pad(at.getMonth() + 1) + '.' + at.getFullYear() + ' um ' + pad(at.getHours()) + ':' + pad(at.getMinutes()) + ' Uhr';
+        form.hidden = true;
+        show('<p><strong>Dein Widerruf ist am ' + when + ' eingegangen.</strong></p>' +
+          (answer.data.confirmation_email === 'sent'
+            ? '<p>Wir haben dir eine Eingangsbestätigung per E-Mail geschickt.</p>'
+            : '<p>Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist.</p>') +
+          '<p class="muted">Vorgangsnummer: ' + String(answer.data.id || '').replace(/[^a-z0-9-]/gi, '') + '</p>', true);
+      }).catch(function (error) {
+        button.disabled = false;
+        button.textContent = 'Widerruf bestätigen';
+        var limited = error && error.message === 'too_many_requests';
+        show('<p class="error">' + (limited
+          ? 'Von diesem Anschluss kamen heute schon mehrere Widerrufe. Bitte widerrufe per E-Mail an lookinsupport@gmail.com.'
+          : 'Der Widerruf konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder widerrufe per E-Mail an lookinsupport@gmail.com. Es zählt, dass du die Erklärung innerhalb der Frist absendest.') + '</p>', false);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

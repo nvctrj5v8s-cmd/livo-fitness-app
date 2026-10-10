@@ -96,10 +96,12 @@ abstract final class PremiumCopy {
         '$_storeName. Ein Abo verlängert sich automatisch zum selben Preis, '
         'bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen '
         'von $_storeName, wirksam zum Ende des Abrechnungszeitraums. Das '
-        'Jahresabo kannst du nach dem ersten Jahr jederzeit kündigen; in '
-        'Deutschland erstattet Google Play den nicht genutzten Teil anteilig. '
-        'Innerhalb von 14 Tagen kannst du unter Profil › Vertrag widerrufen '
-        'widerrufen.';
+        'Jahresabo verlängert sich nach dem ersten Jahr automatisch; ab dann '
+        'kannst du jederzeit kündigen. Mit „Sofort kündigen“ in Google Play '
+        'bekommst du den nicht genutzten Teil anteilig zurück. Innerhalb von '
+        '14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. '
+        'KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an '
+        'OpenAI.';
   }
 
   static String get _storeName =>
@@ -129,6 +131,10 @@ abstract final class PremiumCopy {
       'Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die '
       'Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die '
       'wiederhergestellt werden müssten.';
+
+  static const immediateStartNotStored =
+      'Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe '
+      'deine Verbindung und versuche es erneut. Es wurde nichts gekauft.';
 
   static const immediateStartRequired =
       'Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.';

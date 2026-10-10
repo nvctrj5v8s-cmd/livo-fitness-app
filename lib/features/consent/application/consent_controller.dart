@@ -46,10 +46,11 @@ class ConsentController extends ChangeNotifier {
     _notify();
   }
 
-  Future<void> set(ConsentKind kind, bool granted, {String? context}) async {
+  /// Returns whether the decision was also stored as proof on the server.
+  Future<bool> set(ConsentKind kind, bool granted, {String? context}) async {
     _decisions[kind] = granted;
     _notify();
-    await repository.record(kind, granted, context: context);
+    return repository.record(kind, granted, context: context);
   }
 
   void _notify() {

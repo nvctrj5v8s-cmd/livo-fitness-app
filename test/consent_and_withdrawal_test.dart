@@ -103,7 +103,12 @@ void main() {
         expect(tile.value, isFalse, reason: key);
       }
 
-      await tester.ensureVisible(find.byKey(const Key('consent-continue')));
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('consent-continue')),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('consent-continue')));
       await tester.pumpAndSettle();
 

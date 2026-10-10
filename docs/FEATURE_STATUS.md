@@ -918,3 +918,29 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   Webseite `web/legal/konto-loeschen.html` für die Google-Pflicht zur
   Kontolöschung ohne App, Jahresabo-Text an die Erstattung durch Google Play
   angepasst, Halal-Formulierung im Coach festgehalten (`HALAL_CONTENT_POLICY.md`).
+
+## Aktualisierung: abschließende Rechtsprüfung umgesetzt, 10. Oktober 2026
+
+- **Widerruf ohne Anmeldung:** öffentliche Seite
+  `web/legal/widerruf-erklaeren.html` und Link „Vertrag widerrufen“ auf dem
+  Anmeldebildschirm. `legal-actions` nimmt Widerrufe mit und ohne Anmeldung
+  an; höchstens 5 pro Anschluss und Tag (gesalzener IP-Hash), wiederholte
+  Bestätigungen an dieselbe Adresse höchstens 3 pro Tag.
+- KI-Einwilligung nennt jetzt alles, was an OpenAI geht (letzte
+  Chat-Nachrichten, Angaben aus der Einführung, Allergien als
+  Gesundheitsdaten); Textversion `2026-10-10b`. Auch „Erneut versuchen“ im
+  Coach fragt die Einwilligung ab.
+- Kauf startet nur, wenn die Zustimmung zum Sofortbeginn auf dem Server
+  gespeichert ist (Nachweis); vorher Migration `0017` anwenden.
+- Kaufbestätigung ergänzt um Leistungsumfang (inkl. 50 KI-Anfragen pro Tag),
+  Laufzeit, Mängelrechte, AGB-Link und Muster-Widerrufsformular.
+- Jahresabo-Text: Verlängerung nach dem ersten Jahr, jederzeit kündbar,
+  anteilige Erstattung bei „Sofort kündigen“ in Google Play, sonst per E-Mail.
+- Datenschutzerklärung: OpenAI Ireland Ltd. als Vertragspartner im EWR,
+  Art. 49 gestrichen (Standardvertragsklauseln nach Art. 46), Resend ergänzt,
+  Widerrufe über die Webseite.
+- **Weiter offen (Inhaber oder Anwalt):** Domain und Resend für E-Mails,
+  Migration `0017` anwenden, Entwurfshinweise erst nach anwaltlicher Prüfung
+  entfernen, Gmail ohne Auftragsverarbeitungsvertrag (besser Postfach zur
+  eigenen Domain), Fragen zu Vertragspartner, Button-Lösung, § 312k BGB und
+  KI-Kennzeichnung nach Art. 50 Abs. 2 AI Act.

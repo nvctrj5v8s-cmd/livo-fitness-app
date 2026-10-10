@@ -518,6 +518,11 @@ class _AuthPanel extends StatelessWidget {
                   ],
                 ),
               ],
+              // Withdrawal must work without signing in (§ 356a BGB).
+              if (!isSignUp)
+                const LegalLinksRow(
+                  pages: [LegalPage.withdrawalForm, LegalPage.imprint],
+                ),
               const SizedBox(height: 16),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,

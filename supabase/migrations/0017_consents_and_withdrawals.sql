@@ -57,6 +57,8 @@ create table if not exists public.withdrawal_requests (
   name text not null check (char_length(name) between 1 and 120),
   email text not null check (char_length(email) between 3 and 254),
   contract_note text check (contract_note is null or char_length(contract_note) <= 300),
+  -- Salted hash of the sender IP, only to limit abuse of the public form.
+  client_hash text check (client_hash is null or char_length(client_hash) = 64),
   user_confirmation_sent boolean not null default false,
   owner_notification_sent boolean not null default false,
   created_at timestamptz not null default timezone('utc', now())
@@ -64,6 +66,12 @@ create table if not exists public.withdrawal_requests (
 
 create index if not exists withdrawal_requests_user_idx
   on public.withdrawal_requests (user_id, created_at desc);
+
+create index if not exists withdrawal_requests_client_idx
+  on public.withdrawal_requests (client_hash, created_at desc);
+
+create index if not exists withdrawal_requests_email_idx
+  on public.withdrawal_requests (email, created_at desc);
 
 alter table public.withdrawal_requests enable row level security;
 

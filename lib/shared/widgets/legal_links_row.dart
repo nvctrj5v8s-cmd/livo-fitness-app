@@ -33,7 +33,7 @@ Future<void> openExternalLink(
 }
 
 /// The legal pages a user may want to read, as small text links.
-enum LegalPage { privacy, terms, withdrawal, imprint }
+enum LegalPage { privacy, terms, withdrawal, imprint, withdrawalForm }
 
 extension on LegalPage {
   String get label => switch (this) {
@@ -41,6 +41,7 @@ extension on LegalPage {
     LegalPage.terms => 'AGB',
     LegalPage.withdrawal => 'Widerruf',
     LegalPage.imprint => 'Impressum',
+    LegalPage.withdrawalForm => 'Vertrag widerrufen',
   };
 
   Uri get uri => switch (this) {
@@ -48,6 +49,7 @@ extension on LegalPage {
     LegalPage.terms => LegalLinks.terms,
     LegalPage.withdrawal => LegalLinks.withdrawal,
     LegalPage.imprint => LegalLinks.imprint,
+    LegalPage.withdrawalForm => LegalLinks.withdrawalForm,
   };
 }
 

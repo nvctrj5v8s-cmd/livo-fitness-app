@@ -10,7 +10,7 @@ enum ConsentKind {
   aiProcessing('ai_processing'),
 
   /// Express request to start the paid service before the withdrawal period
-  /// ends (§ 356 Abs. 5 Nr. 2, § 357a Abs. 2 BGB).
+  /// ends (service contract: § 356 Abs. 4, § 357a Abs. 2 BGB).
   immediateStart('immediate_start');
 
   const ConsentKind(this.wire);
@@ -20,7 +20,7 @@ enum ConsentKind {
 /// The exact wording users agree to. Changing a text means raising
 /// [version], so stored decisions can be traced to the text that was shown.
 abstract final class ConsentTexts {
-  static const version = '2026-10-10';
+  static const version = '2026-10-10b';
 
   static const healthTitle = 'Gesundheitsangaben speichern';
   static const health =
@@ -31,10 +31,13 @@ abstract final class ConsentTexts {
 
   static const aiTitle = 'KI-Coach und KI-Foto nutzen';
   static const ai =
-      'Ich willige ein, dass meine Fragen, Fotos und die dafür nötigen Angaben '
-      '(Ziel, Tageswerte, Ernährungsstil, Allergien, Aktivität) zur '
-      'Beantwortung an den KI-Dienst OpenAI in den USA übermittelt werden. '
-      'Name und E-Mail werden nicht übermittelt.';
+      'Ich willige ausdrücklich ein, dass meine Fragen, Fotos, die letzten '
+      'Chat-Nachrichten und folgende Angaben zur Beantwortung an den KI-Dienst '
+      'OpenAI übermittelt werden (Verarbeitung auch in den USA): Ziel, '
+      'Tageswerte, Ernährungsstil, Aktivität, Angaben aus der Einführung '
+      '(Motivation, Hürden, Erfahrung) und meine Allergien und '
+      'Unverträglichkeiten, also Gesundheitsdaten. Name und E-Mail werden '
+      'nicht übermittelt.';
 
   static const immediateStart =
       'Ich verlange ausdrücklich, dass Lookin Premium sofort, also vor Ablauf '

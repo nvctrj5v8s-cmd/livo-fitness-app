@@ -203,15 +203,15 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
       ? `Du hast am ${germanDateTime(new Date(consents[0].created_at))} ausdrücklich verlangt, dass Lookin Premium sofort, also vor Ablauf der Widerrufsfrist, beginnt, und bestätigt, dass dir bekannt ist: Bei einem Widerruf zahlst du einen anteiligen Betrag für die bis dahin erbrachte Leistung, und dein Widerrufsrecht erlischt bei vollständiger Vertragserfüllung.`
       : 'Zur Zustimmung zum sofortigen Beginn liegt uns keine Erklärung vor.'
     const renewal = yearly
-      ? 'Das Abo verlängert sich nach den Regeln von Google Play automatisch, bis du es kündigst.'
-      : 'Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
+      ? 'Laufzeit: 12 Monate ab Kaufdatum. Das Jahresabo verlängert sich nach dem ersten Jahr automatisch. Ab dann kannst du jederzeit kündigen. Wählst du in Google Play „Sofort kündigen“, endet Premium sofort und du bekommst den nicht genutzten Teil anteilig zurück. Geht das dort nicht, schreib an lookinsupport@gmail.com; wir beenden das Abo dann spätestens nach einem Monat und erstatten den Rest anteilig.'
+      : 'Laufzeit: 1 Monat ab Kaufdatum. Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
     const result = await sendMail({
       to,
       subject: 'Deine Bestellung: Lookin Premium',
-      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
+      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 50 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
         `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
         `${renewal} Kündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play oder per E-Mail an ${ownerEmail}.\n\n` +
-        `${consent}\n\n${withdrawalPolicyText}`,
+        `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html\n\n${withdrawalPolicyText}`,
     })
     console.log(`purchase confirmation: ${result}`)
   } catch (_) {

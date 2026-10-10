@@ -213,12 +213,20 @@ class _PaywallPageState extends State<PaywallPage>
         .dependOnInheritedWidgetOfExactType<AppScope>()
         ?.notifier
         ?.consent;
-    await consent?.set(
-      ConsentKind.immediateStart,
-      true,
-      context: _selected.name,
-    );
+    final stored =
+        await consent?.set(
+          ConsentKind.immediateStart,
+          true,
+          context: _selected.name,
+        ) ??
+        true;
     if (!mounted) return;
+    // Without the stored request there is no proof for a later partial
+    // payment on withdrawal, so the purchase does not start.
+    if (!stored) {
+      _showMessage(PremiumCopy.immediateStartNotStored);
+      return;
+    }
     _afterStoreFlow(await _subscription.purchase(_selected));
   }
 

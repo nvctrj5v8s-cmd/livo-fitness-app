@@ -156,7 +156,6 @@ class _ReminderSheetState extends State<_ReminderSheet> {
   }
 }
 
-
 class _NutritionProfileSheet extends StatefulWidget {
   const _NutritionProfileSheet({required this.controller});
   final AppController controller;

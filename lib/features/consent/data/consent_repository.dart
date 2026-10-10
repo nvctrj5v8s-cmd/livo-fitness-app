@@ -9,9 +9,10 @@ abstract interface class ConsentRepository {
   /// Latest known decision per kind; missing kinds are undecided.
   Future<Map<ConsentKind, bool>> load();
 
-  /// Stores one decision. Must not throw for a missing server table; the
-  /// local copy is enough for the app to respect the decision.
-  Future<void> record(ConsentKind kind, bool granted, {String? context});
+  /// Stores one decision and returns whether the server copy (the proof)
+  /// was written. Must not throw; the local copy is enough for the app to
+  /// respect the decision.
+  Future<bool> record(ConsentKind kind, bool granted, {String? context});
 }
 
 /// Demo mode and tests: decisions live only in memory.
@@ -26,9 +27,10 @@ final class MemoryConsentRepository implements ConsentRepository {
   Future<Map<ConsentKind, bool>> load() async => {..._decisions};
 
   @override
-  Future<void> record(ConsentKind kind, bool granted, {String? context}) async {
+  Future<bool> record(ConsentKind kind, bool granted, {String? context}) async {
     _decisions[kind] = granted;
     records.add((kind, granted, context));
+    return true;
   }
 }
 
@@ -82,7 +84,7 @@ final class SupabaseConsentRepository implements ConsentRepository {
   }
 
   @override
-  Future<void> record(ConsentKind kind, bool granted, {String? context}) async {
+  Future<bool> record(ConsentKind kind, bool granted, {String? context}) async {
     await SharedPreferencesAsync().setBool(_key(kind), granted);
     try {
       await _client.from('user_consents').insert({
@@ -92,8 +94,10 @@ final class SupabaseConsentRepository implements ConsentRepository {
         'text_version': ConsentTexts.version,
         'context': ?context,
       });
+      return true;
     } catch (error) {
       debugPrint('Consent record on server failed: ${error.runtimeType}');
+      return false;
     }
   }
 }

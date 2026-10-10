@@ -1,10 +1,13 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { germanDateTime, ownerEmail, sendMail } from '../_shared/mail.ts'
 
-// Withdrawal function for the premium contract (§ 356a BGB). Only a signed-in
-// user can withdraw, and only for their own account. The request is stored
-// first; e-mails are a second step, so a missing mail setup never loses a
-// withdrawal. The service-role key stays inside this function.
+// Withdrawal function for the premium contract (§ 356a BGB). It works with
+// and without sign-in: from the app (account linked) and from the public page
+// web/legal/widerruf-erklaeren.html, so people who deleted their account or
+// forgot their password can still withdraw. The request is stored first;
+// e-mails are a second step, so a missing mail setup never loses a
+// withdrawal. Limits per sender and per address keep the public form from
+// being used to send mails to strangers. The service-role key stays here.
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -35,12 +38,17 @@ Deno.serve(async (request) => {
     console.error('legal-actions configuration missing')
     return json({ code: 'unavailable' }, 503)
   }
+  // Sign-in is optional. A token that is present must be valid; the
+  // publishable key the website sends is not a user token and is ignored.
   const authorization = request.headers.get('Authorization')
   const token = authorization?.startsWith('Bearer ') ? authorization.slice(7).trim() : null
-  if (!token) return json({ code: 'unauthorized' }, 401)
-  const authClient = createClient(url, publicKey)
-  const { data: { user }, error: authError } = await authClient.auth.getUser(token)
-  if (authError || !user) return json({ code: 'unauthorized' }, 401)
+  let user: { id: string; email?: string } | null = null
+  if (token && token !== publicKey && token.split('.').length === 3) {
+    const authClient = createClient(url, publicKey)
+    const { data, error: authError } = await authClient.auth.getUser(token)
+    if (authError || !data.user) return json({ code: 'unauthorized' }, 401)
+    user = data.user
+  }
 
   let body: Record<string, unknown>
   try {
@@ -62,9 +70,32 @@ Deno.serve(async (request) => {
   }
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
+  const ip = (request.headers.get('x-forwarded-for') ?? '').split(',')[0].trim()
+  const clientHash = ip ? await sha256Hex(`${serviceKey}:${ip}`) : null
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  if (!user && clientHash) {
+    const { count } = await admin
+      .from('withdrawal_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('client_hash', clientHash)
+      .gte('created_at', since)
+    if ((count ?? 0) >= 5) return json({ code: 'too_many_requests' }, 429)
+  }
+  const { count: sameAddress } = await admin
+    .from('withdrawal_requests')
+    .select('id', { count: 'exact', head: true })
+    .eq('email', email)
+    .gte('created_at', since)
+
   const { data: row, error: insertError } = await admin
     .from('withdrawal_requests')
-    .insert({ user_id: user.id, name, email, contract_note: note })
+    .insert({
+      user_id: user?.id ?? null,
+      name,
+      email,
+      contract_note: note,
+      client_hash: clientHash,
+    })
     .select('id, created_at')
     .single()
   if (insertError || !row) {
@@ -77,13 +108,15 @@ Deno.serve(async (request) => {
   const details = [
     `Name: ${name}`,
     `E-Mail: ${email}`,
-    `Konto: ${user.email ?? user.id}`,
+    `Konto: ${user ? user.email ?? user.id : 'ohne Anmeldung (Webseite)'}`,
     note ? `Hinweis: ${note}` : null,
     `Eingang: ${when}`,
     `Vorgangsnummer: ${row.id}`,
   ].filter(Boolean).join('\n')
 
-  const userMail = await sendMail({
+  // The withdrawal is stored either way; repeated confirmations to the same
+  // address within a day are not sent again.
+  const userMail = (sameAddress ?? 0) >= 3 ? 'failed' : await sendMail({
     to: email,
     subject: 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
     text: `Hallo ${name},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
@@ -111,3 +144,8 @@ Deno.serve(async (request) => {
     confirmation_email: userMail,
   })
 })
+
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
