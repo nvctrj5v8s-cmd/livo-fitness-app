@@ -500,8 +500,9 @@ class _AuthPanel extends StatelessWidget {
               if (isSignUp) ...[
                 const SizedBox(height: 10),
                 const Text(
-                  'Mit dem Start bestätigst du, dass du mindestens 18 Jahre alt '
-                  'bist und die Datenschutzerklärung gelesen hast.',
+                  'Mit „Kostenlos starten“ bestätigst du, dass du mindestens 18 '
+                  'Jahre alt bist, und akzeptierst die AGB. Hinweise zum '
+                  'Datenschutz findest du in der Datenschutzerklärung.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textMuted,
@@ -510,7 +511,11 @@ class _AuthPanel extends StatelessWidget {
                   ),
                 ),
                 const LegalLinksRow(
-                  pages: [LegalPage.privacy, LegalPage.terms],
+                  pages: [
+                    LegalPage.terms,
+                    LegalPage.privacy,
+                    LegalPage.imprint,
+                  ],
                 ),
               ],
               const SizedBox(height: 16),

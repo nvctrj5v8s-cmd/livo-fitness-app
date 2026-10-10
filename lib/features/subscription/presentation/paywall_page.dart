@@ -798,10 +798,10 @@ class _Benefits extends StatelessWidget {
         '${PremiumCopy.premiumRecipes}. ${PremiumCopy.freeRecipes}.',
       ),
       (
-        Icons.rocket_launch_rounded,
+        Icons.bolt_rounded,
         AppColors.purple,
-        'Neue Premium-Funktionen',
-        'Kommende Premium-Funktionen sind automatisch inklusive.',
+        'Großzügiges KI-Kontingent',
+        'Coach und KI-Foto zusammen bis zu 50 Anfragen pro Tag.',
       ),
     ];
     return Container(
@@ -1857,7 +1857,12 @@ class _LegalFooter extends StatelessWidget {
           ],
         ),
         const LegalLinksRow(
-          pages: [LegalPage.privacy, LegalPage.terms, LegalPage.withdrawal],
+          pages: [
+            LegalPage.privacy,
+            LegalPage.terms,
+            LegalPage.withdrawal,
+            LegalPage.imprint,
+          ],
         ),
       ],
     );

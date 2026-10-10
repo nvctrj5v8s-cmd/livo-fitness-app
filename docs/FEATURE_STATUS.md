@@ -852,3 +852,35 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   höchstens 2 Mails pro Stunde. Für Tester und Nutzer ist ein eigener
   SMTP-Anbieter nötig (Resend oder Brevo, im Free-Tarif möglich). Das ist vor
   dem geschlossenen Test zu erledigen (`docs/EMAIL_SETUP.md`).
+
+## Aktualisierung: Prüfung durch fünf Agenten, 10. Oktober 2026
+
+- **KI-Sicherheit (deployed):** Der Hinweis `calorie_targets_paused` (unter 18
+  oder Gesundheitshinweis) wurde vom Server verworfen, und der Server fügte
+  trotzdem das Kalorienziel aus dem Profil hinzu. Behoben: Der Hinweis kommt
+  an, Ziel-, Rest- und Proteinwerte werden dann weggelassen; auch die
+  Foto-Seite schickt in diesem Fall keine Ziele mehr. Neu ist ein gemeinsamer
+  Sicherheitsblock für Chat und Foto-Analyse (keine Dosierungen, keine
+  Heilversprechen, keine Tagesmengen unter 1200 kcal, Krisenhinweis mit 112
+  und Telefonseelsorge, Essstörungs-Signale, Kontext und Fototext als Daten).
+  Krisennachrichten bekommen eine feste Antwort ohne KI-Aufruf. Ein
+  Ausgabefilter ersetzt Antworten mit Dosierungsangaben für Präparate oder
+  Medikamente. Kontextwerte werden ohne Zeilenumbrüche in `<lookin_kontext>`
+  übergeben. Testliste: `docs/AI_SAFETY_TESTS.md`.
+- **Rechtstexte:** Datenschutzerklärung (Cloud-Daten, OpenAI-Aufbewahrung,
+  RevenueCat bei Anmeldung, Server-Protokolle, E-Mail, ML Kit, jsDelivr,
+  Drittland, TDDDG, Widerspruch, Pflichtangaben), AGB (Leistungsänderungen
+  nach § 327r, Tageslimit, Preis, Verfügbarkeit, Haftung, AGB-Änderungen nur
+  mit Zustimmung, Kündigung per E-Mail), Widerrufsbelehrung (amtliches Muster,
+  Hinweise nach „Ende der Widerrufsbelehrung“), Impressum (ohne „Haftung für
+  Links“).
+- **App:** Impressum-Link bei Registrierung und Paywall, Profilpunkt
+  „Impressum & Rechtliches“, Registrierungstext mit AGB-Zustimmung, Paywall
+  nennt das KI-Tageslimit statt „Kommende Funktionen inklusive“.
+- **Offen (Entscheidung oder größere Funktion nötig):** Telefonnummer
+  (Widerrufsmuster, Apple-Händlerangaben), ausdrückliche Einwilligung für
+  Gesundheitsdaten (Art. 9) und für die KI-Weitergabe, Widerrufsbutton nach
+  § 356a BGB, Zustimmung zum vorzeitigen Leistungsbeginn vor dem Kauf,
+  Vertragsbestätigung per E-Mail, Verlängerung des Jahresabos (§ 309 Nr. 9
+  BGB), Halal-Regel im Chat für Fleisch von Landtieren, KI-Kennzeichnung je
+  Antwort, Aufräumjob für alte Coach-Nachrichten, `allowBackup`.

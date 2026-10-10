@@ -669,6 +669,14 @@ class _SettingsList extends StatelessWidget {
             subtitle: 'Hinweise und Kontakt',
             onTap: () => showHelpSheet(context),
           ),
+          const Divider(height: 1),
+          _SettingsTile(
+            key: const Key('profile-legal'),
+            icon: Icons.gavel_rounded,
+            title: 'Impressum & Rechtliches',
+            subtitle: 'Impressum, AGB, Datenschutz, Widerruf',
+            onTap: () => showLegalSheet(context),
+          ),
           if (isDemoAccountSignedIn()) ...[
             const Divider(height: 1),
             _SettingsTile(

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/config/legal_links.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
@@ -46,6 +47,55 @@ Future<void> showHelpSheet(BuildContext context) {
     useSafeArea: true,
     builder: (_) => const _HelpSheet(),
   );
+}
+
+Future<void> showLegalSheet(BuildContext context) {
+  return showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    builder: (_) => const _LegalSheet(),
+  );
+}
+
+/// Impressum and legal texts in one place that users can find by its name.
+class _LegalSheet extends StatelessWidget {
+  const _LegalSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final pages = [
+      (Icons.badge_outlined, 'Impressum', LegalLinks.imprint),
+      (Icons.description_outlined, 'AGB', LegalLinks.terms),
+      (Icons.privacy_tip_outlined, 'Datenschutzerklärung', LegalLinks.privacy),
+      (Icons.undo_rounded, 'Widerrufsbelehrung', LegalLinks.withdrawal),
+    ];
+    return _SettingsSheetFrame(
+      title: 'Impressum & Rechtliches',
+      subtitle: 'Öffnet sich im Browser',
+      child: ListView(
+        children: [
+          SurfaceCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                for (final (i, (icon, label, uri)) in pages.indexed) ...[
+                  if (i > 0) const Divider(height: 1),
+                  ListTile(
+                    key: Key('legal-sheet-$i'),
+                    leading: Icon(icon, color: AppColors.primary),
+                    title: Text(label),
+                    trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                    onTap: () => openExternalLink(context, uri),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ReminderSheet extends StatefulWidget {

@@ -190,10 +190,15 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
         bytes: prepared,
         context: {
           'goal': controller.goal,
-          'calorie_goal': controller.calorieGoal,
+          // Under 18 or a stated health situation: no targets for the AI.
+          if (controller.dailyTargets.isPaused)
+            'calorie_targets_paused': true
+          else ...{
+            'calorie_goal': controller.calorieGoal,
+            'remaining_calories': controller.diaryRemainingCalories,
+            'protein_goal': controller.proteinGoal,
+          },
           'calories_today': controller.diaryConsumedCalories,
-          'remaining_calories': controller.diaryRemainingCalories,
-          'protein_goal': controller.proteinGoal,
           'protein_today': controller.diaryConsumedProtein,
           'nutrition_style': controller.nutritionStyle,
           'allergies': controller.allergies,
