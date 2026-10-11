@@ -2,7 +2,7 @@
 
 ## Animierter Start-Bildschirm, 12. Oktober 2026
 
-- **Ablauf (ca. 1,85 s, einmal pro Kaltstart):** Der grüne Lookin-Ring wird
+- **Ablauf (ca. 3,3 s, einmal pro Kaltstart; Antippen überspringt):** Der grüne Lookin-Ring wird
   gezeichnet (Lücke rechts oben wie im App-Icon), der Punkt erscheint in der
   Mitte, „Lookin.“ wird Buchstabe für Buchstabe eingeblendet, dann zoomt die
   Ansicht in den Punkt, bis er den Bildschirm füllt, und blendet in die App

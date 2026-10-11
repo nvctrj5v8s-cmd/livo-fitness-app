@@ -32,10 +32,10 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('Gesamtdauer liegt zwischen 1,6 und 2,0 Sekunden', (
+  testWidgets('Gesamtdauer liegt zwischen 3,0 und 3,6 Sekunden', (
     tester,
   ) async {
-    expect(StartupSplash.duration.inMilliseconds, inInclusiveRange(1600, 2000));
+    expect(StartupSplash.duration.inMilliseconds, inInclusiveRange(3000, 3600));
     await tester.pumpWidget(const StartupSplash(child: _App(label: 'App')));
     await tester.pump(const Duration(milliseconds: 1500));
     expect(mark, findsOneWidget);
@@ -107,7 +107,7 @@ void main() {
         ..devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(const StartupSplash(child: _App(label: 'App')));
-      for (var ms = 0; ms < 2000; ms += 100) {
+      for (var ms = 0; ms < 3500; ms += 100) {
         await tester.pump(const Duration(milliseconds: 100));
         expect(tester.takeException(), isNull, reason: 'bei $ms ms');
       }

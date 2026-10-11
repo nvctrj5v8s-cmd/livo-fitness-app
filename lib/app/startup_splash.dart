@@ -63,17 +63,17 @@ class _StartupSplashState extends State<StartupSplash> {
 }
 
 // Timeline in milliseconds.
-const _totalMs = 1850;
-const _ringStart = 40;
-const _ringEnd = 560;
-const _dotStart = 440;
-const _dotEnd = 740;
-const _lettersStart = 480;
-const _letterStep = 50;
-const _letterDuration = 220; // last letter done at 1000 ms
-const _zoomStart = 1200;
-const _textFadeEnd = 1360;
-const _zoomEnd = 1620;
+const _totalMs = 3300;
+const _ringStart = 100;
+const _ringEnd = 1050;
+const _dotStart = 900;
+const _dotEnd = 1350;
+const _lettersStart = 1150;
+const _letterStep = 130;
+const _letterDuration = 320; // last letter done at 2250 ms
+const _zoomStart = 2550;
+const _textFadeEnd = 2750;
+const _zoomEnd = 3050;
 
 const _word = 'Lookin.';
 
