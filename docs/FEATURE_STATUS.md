@@ -1,5 +1,61 @@
 # Funktionsstatus
 
+## Zweite lokale Vorstellungswebsite, 11. Oktober 2026
+
+- Version 2 liegt separat in `website-v2/dist/`. Version 1 in `website/dist/`
+  bleibt unverändert zum Vergleich. `website-compare/index.html` schaltet lokal
+  zwischen beiden Entwürfen um und bietet Desktop- und Handyansicht.
+- Neue Gestaltung mit größerem Einstieg, interaktiver Handyillustration,
+  ausführlicher Funktionsvorstellung, Tagebuch und persönlicher Einrichtung.
+- Produktführung zeigt Foto-Vorschlag, Barcode, Zutatenabgleich und
+  Tagebuchkalender. Alle Ansichten sind ausdrücklich Demonstrationen, ohne
+  echte KI-Anfrage, Kamerazugriff, Konto oder dauerhafte Speicherung.
+- Sechs echte Rezeptvorschauen aus dem vorhandenen Katalog mit Filtern,
+  originalen Zutatenmengen, Zubereitung und numerischen Nährwerten pro Portion.
+  Kein Vorrat, keine Einkaufslisten und kein unerreichbarer Gewichtsverlauf
+  werden als aktuelle App-Funktion beworben.
+- Drei vorbereitete Coach-Beispiele, Free/Premium-Vergleich, geplante Tarife
+  aus dem App-Code, Monat/Jahr-Umschaltung, FAQ-Kategorien und Support.
+  Store-Buttons bleiben als Platzhalter gekennzeichnet; keine Käufe.
+- Scroll-Reveals, Bildübergänge, Zahlen- und Scan-Animationen mit Pausenknopf.
+  Reduzierte Bewegung wird respektiert; Führungsanimationen pausieren außerhalb
+  des sichtbaren Bereichs und in ausgeblendeten Tabs.
+- Nur vorhandene, dokumentierte lokale Rezeptbilder, originales Lookin-Logo
+  und App-Farben. Kein Tracking, keine Cookies, keine API- oder Zahlungsaufrufe.
+- Bestehende Rechtstexte als lokale Entwürfe, ergänzt um passive lokale
+  Widerrufsseite. Kein Aufruf des App-Widerrufsservices. Vor Veröffentlichung
+  Rechtstexte, Hosting, Store-Links und tatsächlichen App-Stand abgleichen.
+- Keine Veröffentlichung, kein Push, keine DNS- oder Cloudflare-Änderung.
+- Abschlussprüfung: 80 Browser- und Ressourcenprüfungen bestanden, acht
+  Bildschirmbreiten von 320 bis 1920 px in allen vier Führungsmodi ohne
+  horizontalen Überlauf; keine JavaScript-Fehler oder Drittanbieteranfragen.
+  `flutter analyze --no-pub` ohne Hinweise, 22 passende Flutter-Tests bestanden.
+
+## Lokale Vorstellungswebsite, 10. Oktober 2026
+
+- Eigenständige Marketingwebsite in `website/dist/`, getrennt von der
+  Flutter-Web-App. Vorhandener Lookin-Name, Logo, App-Farben und dokumentierte
+  lokale Rezeptfotos werden übernommen.
+- Responsive Navigation, animierte Abschnitte, interaktive Handy-Illustration
+  (Tagebuch, Rezepte, Wochenübersicht), Funktionsvorstellung, Rezeptauswahl,
+  Einstieg, Datenschutzbereich, FAQ und Downloadbereich.
+- Die Handyansicht enthält ausschließlich gekennzeichnete Beispielwerte und
+  ist nicht mit dem AppController, einem Konto oder Ernährungsdaten verbunden.
+  Die Website dient zur Vorstellung der mobilen App.
+- Google-Play- und App-Store-Buttons sind ausdrücklich Platzhalter. Sie öffnen
+  einen lokalen Hinweis; es gibt kein erfundenes Startdatum und keine Bestellungen.
+- Kein Tracking, keine Cookies, keine lokale oder externe Datenspeicherung,
+  keine API-Anfragen, Kamera-, Benachrichtigungs- oder Zahlungszugriffe.
+  Kontaktlinks öffnen nur das vorhandene E-Mail-Programm.
+- Reduzierte Bewegung wird respektiert. Die Foto-Scan-Animation ist endlich
+  und wird außerhalb des sichtbaren Bereichs gestoppt.
+- Bestehende Impressums-, App-Datenschutz- und Kontolöschungsseiten als lokale
+  Kopien; zusätzlich Website-Datenschutz für die lokale Vorschau. Rechtstexte
+  bleiben Entwürfe und brauchen vor dem Start einen Abgleich mit dem tatsächlichen
+  Hosting und dem dann veröffentlichten App-Stand.
+- Nur lokale Vorschau. Keine Veröffentlichung, kein Push und keine Änderung
+  an DNS, Cloudflare oder dem bestehenden GitHub-Pages-Workflow.
+
 ## Korrektur: nur echte Angaben zählen, 1. Oktober 2026
 
 - **Fehler behoben:** Räder und Lineal (Geburtstag, Größe, Gewicht,
@@ -944,3 +1000,20 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   entfernen, Gmail ohne Auftragsverarbeitungsvertrag (besser Postfach zur
   eigenen Domain), Fragen zu Vertragspartner, Button-Lösung, § 312k BGB und
   KI-Kennzeichnung nach Art. 50 Abs. 2 AI Act.
+
+## Aktualisierung: Testphase einmal pro E-Mail, Limit 100, Entwickler-Schalter, 11. Oktober 2026
+
+- **Testphase nur einmal pro E-Mail-Adresse** (Migration `0018`, noch nicht
+  angewendet): Ein Hash der normalisierten Adresse (klein geschrieben, ohne
+  „+Zusatz“, bei Gmail ohne Punkte) liegt in `public.trial_claims` und bleibt
+  auch nach einer Kontolöschung höchstens drei Jahre erhalten. Die Testphase
+  braucht außerdem eine bestätigte E-Mail-Adresse. Bisherige Testphasen
+  zählen mit. Nicht verhinderbar: komplett neue E-Mail-Adressen und Apples
+  „E-Mail verbergen“-Adressen.
+- **KI-Tageslimit:** zahlende Kunden und Entwickler 100 Anfragen, Testphase
+  50 (`ai-coach`, deployed). AGB, Paywall und Kaufbestätigung angepasst.
+- **Entwickler-Schalter:** Konten aus `public.developer_accounts` (nur als
+  Hash der E-Mail gespeichert) sehen im Profil „Entwickler: Premium“ und
+  schalten Premium für das eigene Konto an und aus (`developer_set_premium`,
+  Anbieter `developer`). Das Inhaber-Konto startet mit Premium. Wirksam nach
+  Migration `0018`.

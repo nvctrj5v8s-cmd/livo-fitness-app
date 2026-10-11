@@ -208,7 +208,7 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
     const result = await sendMail({
       to,
       subject: 'Deine Bestellung: Lookin Premium',
-      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 50 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
+      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 100 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
         `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
         `${renewal} Kündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play oder per E-Mail an ${ownerEmail}.\n\n` +
         `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html\n\n${withdrawalPolicyText}`,

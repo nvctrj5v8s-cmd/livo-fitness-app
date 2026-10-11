@@ -14,6 +14,7 @@ import '../../features/profile/domain/daily_targets.dart';
 import '../../features/consent/application/consent_controller.dart';
 import '../../features/consent/data/consent_repository.dart';
 import '../../features/subscription/application/subscription_controller.dart';
+import '../../features/subscription/data/developer_repository.dart';
 import '../../features/subscription/data/store_billing.dart';
 import '../../features/subscription/data/subscription_repository.dart';
 import '../data/avatar_repository.dart';
@@ -37,8 +38,14 @@ class AppController extends ChangeNotifier {
     SubscriptionRepository? subscriptionRepository,
     StoreBilling? storeBilling,
     ConsentRepository? consentRepository,
+    DeveloperRepository? developerRepository,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
+       developerRepository =
+           developerRepository ??
+           (personalizationUserId == null
+               ? const NoDeveloperRepository()
+               : SupabaseDeveloperRepository()),
        consent = ConsentController(
          repository:
              consentRepository ??
@@ -70,6 +77,7 @@ class AppController extends ChangeNotifier {
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
     consent.addListener(notifyListeners);
+    if (personalizationUserId != null) unawaited(loadDeveloperStatus());
   }
 
   /// Lookin Premium state of this account; see `SubscriptionController`.
@@ -77,6 +85,27 @@ class AppController extends ChangeNotifier {
 
   /// Explicit consent decisions (health data, AI, immediate start).
   final ConsentController consent;
+
+  final DeveloperRepository developerRepository;
+
+  /// The signed-in account may switch premium on and off for testing.
+  bool isDeveloper = false;
+
+  Future<void> loadDeveloperStatus() async {
+    try {
+      final developer = await developerRepository.isDeveloper();
+      if (_disposed || developer == isDeveloper) return;
+      isDeveloper = developer;
+      notifyListeners();
+    } catch (_) {
+      // Not a developer or migration 0018 missing: no switch is shown.
+    }
+  }
+
+  Future<void> setDeveloperPremium(bool enabled) async {
+    await developerRepository.setPremium(enabled);
+    await subscription.load(force: true);
+  }
 
   /// Health data leaves the device only with consent (Art. 9 DSGVO).
   /// Without it, allergies are stored as empty and the target weight is not

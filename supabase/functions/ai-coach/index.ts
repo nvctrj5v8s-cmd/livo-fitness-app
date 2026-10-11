@@ -11,7 +11,14 @@ const corsHeaders = {
 const model = 'gpt-5.6-luna'
 // All AI features (coach chat, photo analysis) are part of Lookin Premium. An
 // active subscription and a running trial ('trialing') both count as premium.
-const premiumDailyLimit = 50
+// Daily AI requests (chat and photos together): paying customers and the
+// developer account get 100, the free trial 50.
+const subscriberDailyLimit = 100
+const trialDailyLimit = 50
+
+function dailyLimitFor(entitlement: Record<string, unknown> | null): number {
+  return entitlement?.status === 'trialing' ? trialDailyLimit : subscriberDailyLimit
+}
 
 // Coach chat limits. Keep in sync with `CoachChatController` in the app and
 // with docs/AI_COACH_PRIVACY.md.
@@ -219,15 +226,17 @@ async function answerChat(
 
   // Checked before the quota so free accounts never consume AI requests.
   if (!hasPremium(entitlement)) return premiumRequired()
+  const limit = dailyLimitFor(entitlement)
   // Crisis messages never go to the model and never cost a request.
   if (isCrisisMessage(message)) {
     const saved = await saveExchange(admin, userId, message, crisisAnswer)
-    return json({ answer: crisisAnswer, daily_limit: premiumDailyLimit, model, saved })
+    return json({ answer: crisisAnswer, daily_limit: limit, model, saved })
   }
   const quota = await consumeQuota(
     admin,
     userId,
-    `Dein KI-Tageslimit von ${premiumDailyLimit} Anfragen (Chat und Fotos) ist erreicht. Morgen kannst du wieder schreiben.`,
+    `Dein KI-Tageslimit von ${limit} Anfragen (Chat und Fotos) ist erreicht. Morgen kannst du wieder schreiben.`,
+    limit,
   )
   if (quota instanceof Response) return quota
 
@@ -277,7 +286,7 @@ async function answerChat(
   return json({
     answer,
     remaining: quota.remaining,
-    daily_limit: premiumDailyLimit,
+    daily_limit: limit,
     model,
     saved,
   })
@@ -330,7 +339,7 @@ async function loadHistory(
   }
   // Reading one's own earlier chat stays possible; new AI requests need premium.
   const premium = hasPremium(entitlement)
-  const dailyLimit = premium ? premiumDailyLimit : 0
+  const dailyLimit = premium ? dailyLimitFor(entitlement) : 0
   const used = Number(usage?.request_count ?? 0)
   return json({
     messages: Array.isArray(messages) ? messages.reverse() : [],
@@ -380,10 +389,12 @@ async function analyzeVision(
     admin.from('profiles').select('goal,calorie_goal,protein_goal,nutrition_style,allergies,activity_level').eq('user_id', userId).maybeSingle(),
   ])
   if (!hasPremium(entitlement)) return premiumRequired()
+  const limit = dailyLimitFor(entitlement)
   const quota = await consumeQuota(
     admin,
     userId,
-    `Dein KI-Tageslimit von ${premiumDailyLimit} Anfragen (Chat und Fotos) ist erreicht. Morgen kannst du wieder analysieren.`,
+    `Dein KI-Tageslimit von ${limit} Anfragen (Chat und Fotos) ist erreicht. Morgen kannst du wieder analysieren.`,
+    limit,
   )
   if (quota instanceof Response) return quota
   const contextText = buildContext(profile, cleanContext(body.context))
@@ -413,7 +424,7 @@ HALAL-FOTO-SCHUTZ:
     return json({ error: 'Auf dem Foto konnte gerade nichts sicher erkannt werden.', code: 'empty_response' }, 503)
   }
   const saved = await saveExchange(admin, userId, photoQuestion, answer)
-  return json({ answer, remaining: quota.remaining, daily_limit: premiumDailyLimit, model, saved })
+  return json({ answer, remaining: quota.remaining, daily_limit: limit, model, saved })
 }
 
 async function analyzeMealPhoto(
@@ -436,7 +447,7 @@ async function analyzeMealPhoto(
     admin.from('profiles').select('goal,calorie_goal,protein_goal,nutrition_style,allergies,activity_level').eq('user_id', userId).maybeSingle(),
   ])
   if (!hasPremium(entitlement)) return premiumRequired()
-  const dailyLimit = premiumDailyLimit
+  const dailyLimit = dailyLimitFor(entitlement)
   const { data: quotaRows, error: quotaError } = await admin.rpc(
     'consume_ai_chat_quota', { p_user_id: userId, p_daily_limit: dailyLimit },
   )
@@ -682,10 +693,11 @@ async function consumeQuota(
   admin: AdminClient,
   userId: string,
   limitMessage: string,
+  limit: number,
 ): Promise<{ remaining: number } | Response> {
   const { data: quotaRows, error: quotaError } = await admin.rpc(
     'consume_ai_chat_quota',
-    { p_user_id: userId, p_daily_limit: premiumDailyLimit },
+    { p_user_id: userId, p_daily_limit: limit },
   )
   if (quotaError) {
     console.error('AI quota failed', quotaError.code, quotaError.message)
@@ -700,7 +712,7 @@ async function consumeQuota(
       error: limitMessage,
       code: 'daily_limit',
       remaining: 0,
-      daily_limit: premiumDailyLimit,
+      daily_limit: limit,
     }, 429)
   }
   return { remaining: Number(quota.remaining ?? 0) }

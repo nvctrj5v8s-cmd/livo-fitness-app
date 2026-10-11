@@ -832,7 +832,8 @@ class _Benefits extends StatelessWidget {
         Icons.bolt_rounded,
         AppColors.purple,
         'Großzügiges KI-Kontingent',
-        'Coach und KI-Foto zusammen bis zu 50 Anfragen pro Tag.',
+        'Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), '
+            'in der Testphase bis zu 50.',
       ),
     ];
     return Container(

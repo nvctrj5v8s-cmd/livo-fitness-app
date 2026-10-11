@@ -651,6 +651,33 @@ class _SettingsList extends StatelessWidget {
             color: AppColors.primary,
             onTap: () => unawaited(showPaywall(context)),
           ),
+          if (controller.isDeveloper) ...[
+            const Divider(height: 1),
+            SwitchListTile(
+              key: const Key('profile-developer-premium'),
+              secondary: const Icon(
+                Icons.developer_mode_rounded,
+                color: AppColors.primary,
+              ),
+              title: const Text('Entwickler: Premium'),
+              subtitle: const Text('Nur für dein Entwickler-Konto sichtbar'),
+              value: controller.subscription.hasPremium,
+              onChanged: (value) async {
+                final messenger = ScaffoldMessenger.of(context);
+                try {
+                  await controller.setDeveloperPremium(value);
+                } catch (_) {
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Premium konnte gerade nicht umgeschaltet werden.',
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
           // Withdrawal function (§ 356a BGB) for a running store purchase.
           if (controller.subscription.entitlement.kind ==
               EntitlementKind.subscription) ...[
