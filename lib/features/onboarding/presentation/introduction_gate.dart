@@ -71,22 +71,14 @@ class _IntroductionGateState extends State<IntroductionGate> {
           : const Duration(milliseconds: 320),
       switchInCurve: Curves.easeOutCubic,
       child: switch (_complete) {
+        // Only the dark background, so nothing flashes after the start
+        // animation while the stored state loads.
         null => Scaffold(
           key: const ValueKey('introduction-loading'),
           backgroundColor: AppColors.background,
-          body: Center(
-            child: Semantics(
-              label: 'Lookin wird geöffnet',
-              child: const Text(
-                'lookin.',
-                style: TextStyle(
-                  color: AppColors.text,
-                  fontSize: 42,
-                  letterSpacing: -2,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
+          body: Semantics(
+            label: 'Lookin wird geöffnet',
+            child: const SizedBox.expand(),
           ),
         ),
         false => IntroductionPage(
