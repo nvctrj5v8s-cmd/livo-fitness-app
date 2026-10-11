@@ -1,5 +1,25 @@
 # Funktionsstatus
 
+## Animierter Start-Bildschirm, 12. Oktober 2026
+
+- **Ablauf (ca. 1,85 s, einmal pro Kaltstart):** Der grüne Lookin-Ring wird
+  gezeichnet (Lücke rechts oben wie im App-Icon), der Punkt erscheint in der
+  Mitte, „Lookin.“ wird Buchstabe für Buchstabe eingeblendet, dann zoomt die
+  Ansicht in den Punkt, bis er den Bildschirm füllt, und blendet in die App
+  bzw. die Anmeldung über. `lib/app/startup_splash.dart`, eingehängt in
+  `lib/main.dart` oberhalb der `MaterialApp`; spielt deshalb bei Anmelden oder
+  Abmelden nicht erneut. Die App lädt währenddessen darunter.
+- **Barrierefreiheit:** Bei „Bewegung reduzieren“ keine Animation, nur ein
+  kurzer Übergang (200 ms) vom dunklen Hintergrund. Tippen überspringt.
+  Bildschirmleser hören „Lookin wird geöffnet“. Keine Endlosschleife.
+- **Übergänge:** Der Web-Ladebildschirm (`web/index.html`) zeigt nur noch den
+  dunklen Hintergrund, bei langsamer Verbindung nach 1,5 s unten „Wird geladen
+  …“. Android 12+ zeigt im System-Start nur den dunklen Hintergrund (leeres
+  Icon, auch im Dunkelmodus); iOS war bereits nur dunkel. Die Ladezustände von
+  Einführung und Anmeldung zeigen nur noch den dunklen Hintergrund statt Text
+  bzw. Blatt-Symbol.
+- Keine neuen Daten, Berechtigungen, Speicherungen oder Anbieteraufrufe.
+
 ## Registrierung: Postfach-Seite und „E-Mail bestätigt“, 12. Oktober 2026
 
 - Nach der Registrierung erscheint statt einer grünen Meldung die Seite

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
+import 'app/startup_splash.dart';
 import 'core/config/supabase_config.dart';
 import 'features/auth/data/browser_url.dart';
 import 'features/auth/data/email_link.dart';
@@ -79,10 +80,12 @@ Future<void> main() async {
   }
 
   runApp(
-    FitnessAiApp(
-      initialPasswordRecovery: initialPasswordRecovery,
-      initialNotice: initialNotice,
-      initialConfirmedEmail: confirmedEmail,
+    StartupSplash(
+      child: FitnessAiApp(
+        initialPasswordRecovery: initialPasswordRecovery,
+        initialNotice: initialNotice,
+        initialConfirmedEmail: confirmedEmail,
+      ),
     ),
   );
 }
