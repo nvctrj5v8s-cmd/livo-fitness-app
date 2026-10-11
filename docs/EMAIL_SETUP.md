@@ -53,9 +53,11 @@ als der Standard-Link funktioniert er auch, wenn die Mail auf einem anderen
 Gerät geöffnet wird als dem, auf dem sie angefordert wurde. Voraussetzung ist
 Schritt 1 (die Site URL muss auf die Website zeigen).
 
-Das Logo (App-Icon als PNG von der Website, `icons/Icon-192.png`) steht oben
-in jeder Vorlage neben dem Schriftzug „Lookin.“. Zieht die Website auf die
-eigene Domain um, die Bild-URL in den drei Vorlagen anpassen.
+Die Bilder der Vorlagen (animiertes Logo, animierte Kopfbilder, Food-Kacheln)
+liegen in `web/email/` und werden mit der Website veröffentlicht. Erzeugt
+werden sie mit `dart run tool/email_assets.dart`. Die Animationen laufen
+einmal ab und bleiben dann stehen. Zieht die Website auf die eigene Domain um,
+die Bild-URLs in den drei Vorlagen anpassen.
 
 ## 4. Testen
 

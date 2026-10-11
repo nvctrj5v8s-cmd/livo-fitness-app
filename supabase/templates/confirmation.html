@@ -3,44 +3,164 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="supported-color-schemes" content="dark" />
     <title>Willkommen bei Lookin</title>
+    <style>
+      @media (prefers-reduced-motion: no-preference) {
+        @keyframes lookin-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .rise { animation: lookin-rise 0.7s ease-out both; }
+        .rise-2 { animation: lookin-rise 0.7s ease-out 0.15s both; }
+        .rise-3 { animation: lookin-rise 0.7s ease-out 0.3s both; }
+      }
+      @media (max-width: 560px) {
+        .pad { padding-left: 22px !important; padding-right: 22px !important; }
+        .tile { display: block !important; width: 100% !important; padding: 0 0 14px 0 !important; }
+        .tile img { width: 100% !important; height: auto !important; }
+        .h1 { font-size: 25px !important; }
+      }
+    </style>
   </head>
   <body style="margin:0;padding:0;background-color:#050708;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#050708;">
+      Ein Klick noch: Bestätige deine E-Mail-Adresse und starte mit Lookin.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;
+    </div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#050708;">
       <tr>
-        <td align="center" style="padding:32px 16px;">
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;">
+        <td align="center" style="padding:28px 12px 40px 12px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;">
+            <!-- Kopf: Logo und Marke -->
             <tr>
-              <td style="padding:0 4px 20px 4px;font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;letter-spacing:-1px;color:#F5F8F7;">
-                <table role="presentation" cellspacing="0" cellpadding="0"><tr>
-                  <td style="padding-right:12px;"><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/icons/Icon-192.png" width="44" height="44" alt="Lookin" style="display:block;border-radius:12px;border:0;" /></td>
-                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:900;letter-spacing:-1px;color:#F5F8F7;">Lookin<span style="color:#C8FF5A;">.</span></td>
-                </tr></table>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color:#0E1414;border:1px solid #283633;border-radius:20px;padding:32px 28px;font-family:Arial,Helvetica,sans-serif;color:#F5F8F7;">
-                <h1 style="margin:0 0 12px 0;font-size:22px;line-height:1.3;color:#F5F8F7;">Schön, dass du da bist!</h1>
-                <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#C9D3D0;">
-                  Bitte bestätige noch kurz deine E-Mail-Adresse ({{ .Email }}). Danach geht es direkt in deinem Lookin-Konto weiter.
-                </p>
-                <table role="presentation" cellspacing="0" cellpadding="0">
+              <td style="padding:0 6px 18px 6px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td style="border-radius:14px;background-color:#C8FF5A;">
-                      <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=email" style="display:inline-block;padding:14px 26px;font-size:15px;font-weight:700;color:#050706;text-decoration:none;border-radius:14px;">E-Mail bestätigen</a>
+                    <td width="48" style="padding-right:12px;">
+                      <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/logo.gif" width="44" height="44" alt="" style="display:block;border:0;border-radius:12px;" />
+                    </td>
+                    <td style="font-family:Arial,Helvetica,sans-serif;font-size:26px;font-weight:900;letter-spacing:-1px;color:#F5F8F7;">
+                      Lookin<span style="color:#C8FF5A;">.</span>
+                    </td>
+                    <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#98A6A1;">
+                      <span style="display:inline-block;padding:6px 12px;border:1px solid #283633;border-radius:999px;">AI Food Tracker</span>
                     </td>
                   </tr>
                 </table>
-                <p style="margin:24px 0 0 0;font-size:13px;line-height:1.6;color:#98A6A1;">
-                  Du hast dich nicht bei Lookin registriert? Dann ignoriere diese E-Mail einfach.
-                </p>
               </td>
             </tr>
+            <!-- Hauptkarte -->
             <tr>
-              <td style="padding:20px 4px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#98A6A1;">
-                Falls der Knopf nicht funktioniert, kopiere diesen Link in deinen Browser:<br />
-                <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=email" style="color:#98A6A1;word-break:break-all;">{{ .SiteURL }}?token_hash={{ .TokenHash }}&amp;type=email</a>
+              <td class="rise" style="background-color:#0E1414;border:1px solid #283633;border-radius:24px;overflow:hidden;">
+                <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/hero-welcome.gif" width="560" alt="Lookin" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:24px 24px 0 0;" />
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="pad" style="padding:8px 36px 34px 36px;font-family:Arial,Helvetica,sans-serif;">
+                      <p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C8FF5A;">Willkommen</p>
+                      <h1 class="h1" style="margin:0 0 14px 0;font-size:29px;line-height:1.2;font-weight:800;color:#F5F8F7;">Schön, dass du da bist!</h1>
+                      <p style="margin:0 0 26px 0;font-size:16px;line-height:1.65;color:#C9D3D0;">
+                        Nur noch ein Klick: Bestätige deine E-Mail-Adresse <strong style="color:#F5F8F7;">{{ .Email }}</strong>, dann geht es direkt in deinem Lookin-Konto weiter.
+                      </p>
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td align="center" style="border-radius:16px;background-color:#C8FF5A;">
+                            <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=email" style="display:block;padding:17px 24px;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:800;color:#050706;text-decoration:none;border-radius:16px;">E-Mail bestätigen &rarr;</a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin:14px 0 0 0;font-size:13px;line-height:1.5;color:#98A6A1;text-align:center;">
+                        Der Link ist aus Sicherheitsgründen nur begrenzt gültig.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Das erwartet dich -->
+            <tr>
+              <td class="rise-2" style="padding:30px 6px 6px 6px;font-family:Arial,Helvetica,sans-serif;">
+                <p style="margin:0 0 16px 0;font-size:18px;font-weight:800;color:#F5F8F7;">Das erwartet dich</p>
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="tile" width="33%" valign="top" style="padding:0 7px 0 0;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
+                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-track.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
+                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
+                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">Tracken</p>
+                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Kalorien und Makros einfach im Blick.</p>
+                        </td></tr>
+                      </table>
+                    </td>
+                    <td class="tile" width="33%" valign="top" style="padding:0 4px;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
+                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-coach.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
+                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
+                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">KI-Coach</p>
+                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Fragen stellen, Fotos schätzen lassen.</p>
+                        </td></tr>
+                      </table>
+                    </td>
+                    <td class="tile" width="33%" valign="top" style="padding:0 0 0 7px;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
+                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-recipes.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
+                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
+                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">Rezepte</p>
+                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Einfache Alltagsrezepte mit Nährwerten.</p>
+                        </td></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- So geht es weiter -->
+            <tr>
+              <td class="rise-3" style="padding:24px 6px 0 6px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:20px;">
+                  <tr>
+                    <td style="padding:22px 24px 8px 24px;font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:800;color:#F5F8F7;">In 3 Schritten startklar</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 24px 20px 24px;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-family:Arial,Helvetica,sans-serif;">
+                        <tr>
+                          <td width="44" valign="top" style="padding:8px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background-color:#C8FF5A;color:#050706;font-size:14px;font-weight:800;text-align:center;">1</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">E-Mail bestätigen</strong><br />Mit dem Knopf oben.</td>
+                        </tr>
+                        <tr>
+                          <td width="44" valign="top" style="padding:8px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background-color:#1B2624;border:1px solid #C8FF5A;color:#C8FF5A;font-size:14px;font-weight:800;text-align:center;">2</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Ziel festlegen</strong><br />Lookin berechnet deinen Tagesbedarf.</td>
+                        </tr>
+                        <tr>
+                          <td width="44" valign="top" style="padding:8px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background-color:#1B2624;border:1px solid #C8FF5A;color:#C8FF5A;font-size:14px;font-weight:800;text-align:center;">3</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Erste Mahlzeit eintragen</strong><br />Per Suche, Barcode oder Foto.</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Hinweis -->
+            <tr>
+              <td style="padding:22px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#98A6A1;">
+                Du hast dich nicht bei Lookin registriert? Dann ignoriere diese E-Mail einfach. Ohne Bestätigung wird kein Konto aktiv.
+              </td>
+            </tr>
+            <!-- Fußzeile -->
+            <tr>
+              <td style="padding:26px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#7C8A86;border-top:1px solid #1B2624;">
+                <p style="margin:18px 0 10px 0;">
+                  Knopf funktioniert nicht? Kopiere diesen Link in deinen Browser:<br />
+                  <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=email" style="color:#98A6A1;word-break:break-all;">{{ .SiteURL }}?token_hash={{ .TokenHash }}&amp;type=email</a>
+                </p>
+                <p style="margin:0 0 10px 0;">
+                  Fragen? Schreib uns an <a href="mailto:lookinsupport@gmail.com" style="color:#C8FF5A;text-decoration:none;">lookinsupport@gmail.com</a>. Auf diese E-Mail kann nicht geantwortet werden.
+                </p>
+                <p style="margin:0;">
+                  <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html" style="color:#98A6A1;">Datenschutz</a> &nbsp;·&nbsp;
+                  <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html" style="color:#98A6A1;">AGB</a> &nbsp;·&nbsp;
+                  <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/impressum.html" style="color:#98A6A1;">Impressum</a><br />
+                  Lookin · Mhd Khair Shikho · Am Grübchen 18 · 56203 Höhr-Grenzhausen
+                </p>
               </td>
             </tr>
           </table>

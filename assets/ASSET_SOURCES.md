@@ -74,3 +74,11 @@ Joghurt, Thunfisch-Reis-Bowl mit Gurke, Linsen-Ragout mit Spaghetti.
 | `livo-knusper-kichererbsen.webp` | Geröstete Kichererbsen in schwarzer Schale | [Pexels 35369047](https://www.pexels.com/photo/delicious-spiced-chickpeas-in-a-black-bowl-35369047/) | Vural Yavas | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-thunfisch-bohnen-salat.webp` | Thunfisch, gekochte Eier, grüne Bohnen, Kichererbsen | [Pexels 6544221](https://www.pexels.com/photo/tuna-and-green-bean-salad-with-egg-in-bowl-6544221/) | Alesia Kozik | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
 | `livo-joghurt-gurken-dip.webp` | Joghurt-Gurken-Dip mit Dill und Olivenöl (Möhren nicht im Bild) | [Pexels 36378878](https://www.pexels.com/photo/creamy-tzatziki-dip-with-fresh-dill-garnish-36378878/) | Fer ID | [Pexels License](https://www.pexels.com/license/) | 2026-09-27 |
+
+## E-Mail-Bilder (`web/email/`)
+
+Am 11. Oktober 2026 mit `tool/email_assets.dart` erzeugt. Logo und
+Kopfbilder sind selbst gezeichnet (Lookin-Ring, Schloss, Briefumschlag). Die
+drei Kacheln `tile-*.jpg` sind verkleinerte Ausschnitte der oben aufgeführten
+Rezeptfotos `livo-avocado-egg-bowl.webp`, `livo-salmon-tomato-bowl.webp` und
+`livo-protein-oats.webp` (gleiche Lizenz).
