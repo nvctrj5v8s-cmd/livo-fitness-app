@@ -53,9 +53,9 @@ als der Standard-Link funktioniert er auch, wenn die Mail auf einem anderen
 Gerät geöffnet wird als dem, auf dem sie angefordert wurde. Voraussetzung ist
 Schritt 1 (die Site URL muss auf die Website zeigen).
 
-Das Logo ist vorerst der Schriftzug „Lookin.“ als Text. Sobald ein Logo
-existiert, als PNG (nicht SVG, das zeigen viele Mailprogramme nicht an) auf
-der Website ablegen und per `<img>` mit absoluter URL einbinden.
+Das Logo (App-Icon als PNG von der Website, `icons/Icon-192.png`) steht oben
+in jeder Vorlage neben dem Schriftzug „Lookin.“. Zieht die Website auf die
+eigene Domain um, die Bild-URL in den drei Vorlagen anpassen.
 
 ## 4. Testen
 
