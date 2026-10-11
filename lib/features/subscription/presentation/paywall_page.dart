@@ -158,10 +158,16 @@ class _PaywallPageState extends State<PaywallPage>
             'Premium ist für dein Konto bereits aktiv.',
             _Tone.success,
           );
+        case TrialStartStatus.emailUnconfirmed:
+          _notice = const _Notice(
+            'Bitte bestätige zuerst deine E-Mail-Adresse über den Link in '
+            'unserer E-Mail. Danach kannst du die Testphase starten.',
+            _Tone.info,
+          );
         case TrialStartStatus.alreadyUsed:
           _notice = const _Notice(
             'Du hast deine kostenlose Testphase bereits genutzt – sie gilt '
-            'einmal pro Konto.',
+            'einmal pro E-Mail-Adresse.',
             _Tone.warning,
           );
         case TrialStartStatus.notConfigured:
@@ -1858,7 +1864,7 @@ class _LegalFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final terms =
         'Kostenlose Testphase: ${SubscriptionPlans.trialDays} Tage, einmal '
-        'pro Konto. Sie endet automatisch – ohne Kosten und ohne '
+        'pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne '
         'automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n'
         '${PremiumCopy.priceTermsFor(billingAvailable: billingAvailable)}';
     final linkStyle = TextButton.styleFrom(

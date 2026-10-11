@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/onboarding/data/personalization_store.dart';
+import '../../features/consent/domain/consent.dart';
 import '../../features/subscription/data/paywall_store.dart';
 import 'avatar_repository.dart';
 import 'food_preferences_store.dart';
@@ -150,5 +151,10 @@ class AccountDataRepository {
     await preferences.remove('livo.reminders.$userId');
     await preferences.remove('livo.kitchen.v1.${Uri.encodeComponent(userId)}');
     await preferences.remove(DevicePaywallStore.keyFor(userId));
+    for (final kind in ConsentKind.values) {
+      await preferences.remove(
+        'lookin.consent.v1.${kind.wire}.${Uri.encodeComponent(userId)}',
+      );
+    }
   }
 }

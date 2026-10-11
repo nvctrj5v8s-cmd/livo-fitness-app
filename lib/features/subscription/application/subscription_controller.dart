@@ -131,6 +131,7 @@ class SubscriptionController extends ChangeNotifier {
         }
       case TrialStartStatus.alreadyUsed:
         _entitlement = _entitlement.copyWith(trialUsed: true);
+      case TrialStartStatus.emailUnconfirmed:
       case TrialStartStatus.notConfigured:
       case TrialStartStatus.signedOut:
       case TrialStartStatus.previewOnly:

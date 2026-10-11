@@ -96,9 +96,10 @@ abstract final class PremiumCopy {
         '$_storeName. Ein Abo verlängert sich automatisch zum selben Preis, '
         'bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen '
         'von $_storeName, wirksam zum Ende des Abrechnungszeitraums. Das '
-        'Jahresabo verlängert sich nach dem ersten Jahr automatisch; ab dann '
-        'kannst du jederzeit kündigen. Mit „Sofort kündigen“ in Google Play '
-        'bekommst du den nicht genutzten Teil anteilig zurück. Innerhalb von '
+        'Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf '
+        'unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist '
+        'kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den '
+        'nicht genutzten Teil anteilig zurück. Innerhalb von '
         '14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. '
         'KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an '
         'OpenAI.';

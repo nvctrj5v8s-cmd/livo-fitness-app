@@ -116,7 +116,7 @@ begin
    where u.id = v_user_id;
   v_hash := public.email_identity_hash(v_email);
   if v_hash is null or v_confirmed is null then
-    return pg_catalog.jsonb_build_object('result', 'trial_used');
+    return pg_catalog.jsonb_build_object('result', 'email_unconfirmed');
   end if;
   insert into public.trial_claims (email_hash, claimed_at)
   values (v_hash, v_now)

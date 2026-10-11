@@ -13,7 +13,7 @@ angemeldeten Konto gehören sollen.
 | Rezeptfavoriten | `favorites` | gehören zum Konto |
 | Lookin-Coach-Verlauf (höchstens 100 Nachrichten, 90 Tage, jederzeit löschbar) und KI-Tageszähler | `ai_chat_messages`, `ai_chat_usage` | Chat bleibt beim Gerätewechsel erhalten; Details `AI_COACH_PRIVACY.md` |
 | Premium-Status | `entitlements` | später nur vom Kauf-Backend veränderbar |
-| Genutzte 7-Tage-Testphase (nur Konto-ID, Start und Ende) | `premium_trials` | die kostenlose Testphase gilt einmal pro Konto; keine Zahlungs- oder Gesundheitsdaten |
+| Genutzte 7-Tage-Testphase (nur Konto-ID, Start und Ende) | `premium_trials` | die kostenlose Testphase gilt einmal pro E-Mail-Adresse (Hash in `trial_claims`, max. 3 Jahre, auch nach Kontolöschung); keine Zahlungs- oder Gesundheitsdaten |
 
 ## Bleibt nur auf dem Gerät
 

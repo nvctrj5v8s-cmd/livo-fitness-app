@@ -94,6 +94,9 @@ TrialStartResult trialResultFromRpc(Object? data) {
       TrialStartStatus.alreadyPremium,
     ),
     'trial_used' => const TrialStartResult(TrialStartStatus.alreadyUsed),
+    'email_unconfirmed' => const TrialStartResult(
+      TrialStartStatus.emailUnconfirmed,
+    ),
     _ => const TrialStartResult(TrialStartStatus.unavailable),
   };
 }

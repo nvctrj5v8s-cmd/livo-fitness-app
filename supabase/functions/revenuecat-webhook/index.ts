@@ -203,7 +203,7 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
       ? `Du hast am ${germanDateTime(new Date(consents[0].created_at))} ausdrücklich verlangt, dass Lookin Premium sofort, also vor Ablauf der Widerrufsfrist, beginnt, und bestätigt, dass dir bekannt ist: Bei einem Widerruf zahlst du einen anteiligen Betrag für die bis dahin erbrachte Leistung, und dein Widerrufsrecht erlischt bei vollständiger Vertragserfüllung.`
       : 'Zur Zustimmung zum sofortigen Beginn liegt uns keine Erklärung vor.'
     const renewal = yearly
-      ? 'Laufzeit: 12 Monate ab Kaufdatum. Das Jahresabo verlängert sich nach dem ersten Jahr automatisch. Ab dann kannst du jederzeit kündigen. Wählst du in Google Play „Sofort kündigen“, endet Premium sofort und du bekommst den nicht genutzten Teil anteilig zurück. Geht das dort nicht, schreib an lookinsupport@gmail.com; wir beenden das Abo dann spätestens nach einem Monat und erstatten den Rest anteilig.'
+      ? 'Laufzeit: zunächst 12 Monate ab Kaufdatum. Das Jahresabo läuft zunächst ein Jahr. Danach verlängert es sich automatisch auf unbestimmte Zeit, wenn du es nicht vorher kündigst; der Preis wird weiterhin jährlich im Voraus berechnet. Ab dann kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Wählst du in Google Play „Sofort kündigen“, endet Premium sofort und du bekommst den nicht genutzten Teil anteilig zurück. Geht das dort nicht, schreib an lookinsupport@gmail.com; wir beenden das Abo dann spätestens nach einem Monat und erstatten den Rest anteilig.'
       : 'Laufzeit: 1 Monat ab Kaufdatum. Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
     const result = await sendMail({
       to,

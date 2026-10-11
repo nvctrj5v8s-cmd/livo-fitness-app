@@ -102,8 +102,11 @@ enum TrialStartStatus {
   /// The account already has an active subscription or running trial.
   alreadyPremium,
 
-  /// The trial was used before; it is available once per account.
+  /// The trial was used before; it is available once per e-mail address.
   alreadyUsed,
+
+  /// The e-mail address is not confirmed yet (needed for the trial).
+  emailUnconfirmed,
 
   /// The server RPC is missing (migration 0008 not applied yet).
   notConfigured,

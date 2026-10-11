@@ -73,6 +73,8 @@ Deno.serve(async (request) => {
   const ip = (request.headers.get('x-forwarded-for') ?? '').split(',')[0].trim()
   const clientHash = ip ? await sha256Hex(`${serviceKey}:${ip}`) : null
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  // The IP hash is only needed for the 24-hour limit; older ones are removed.
+  await admin.from('withdrawal_requests').update({ client_hash: null }).lt('created_at', since).not('client_hash', 'is', null)
   if (!user && clientHash) {
     const { count } = await admin
       .from('withdrawal_requests')
@@ -120,7 +122,8 @@ Deno.serve(async (request) => {
     to: email,
     subject: 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
     text: `Hallo ${name},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
-      'Wir erstatten dir alle Zahlungen nach den Regeln der Widerrufsbelehrung, spätestens binnen vierzehn Tagen. ' +
+      'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
+      'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
       'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +
       `Bei Fragen erreichst du uns unter ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`,
   })
