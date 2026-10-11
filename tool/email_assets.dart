@@ -23,7 +23,6 @@ void main() {
   _writeGif('logo.gif', _logoFrames(size: 112, background: _page));
   _writeGif('hero-welcome.gif', _heroFrames(_Symbol.ring));
   _writeGif('hero-recovery.gif', _heroFrames(_Symbol.lock));
-  _writeGif('hero-email.gif', _heroFrames(_Symbol.mail));
   _tile('livo-salmon-avocado-rice.webp', 'feature-recipes.jpg');
   stdout.writeln('E-Mail-Bilder in $_out erstellt.');
 }
@@ -51,7 +50,7 @@ void _tile(String source, String name) {
   File('$_out/$name').writeAsBytesSync(img.encodeJpg(cropped, quality: 78));
 }
 
-enum _Symbol { ring, lock, mail }
+enum _Symbol { ring, lock }
 
 double _ease(double t) => 1 - math.pow(1 - t.clamp(0.0, 1.0), 3).toDouble();
 
@@ -89,8 +88,6 @@ List<img.Image> _heroFrames(_Symbol symbol) {
         _drawMark(frame, cx, cy, 92, 22, t, 1);
       case _Symbol.lock:
         _drawLock(frame, cx, cy, t);
-      case _Symbol.mail:
-        _drawMail(frame, cx, cy, t);
     }
     final small = img.copyResize(
       frame,
@@ -236,37 +233,6 @@ void _line(
   }
 }
 
-// Draws the part of a polyline up to [progress] (0..1 of its total length).
-void _polyline(
-  img.Image image,
-  List<(double, double)> points,
-  double stroke,
-  double progress,
-) {
-  var total = 0.0;
-  for (var i = 1; i < points.length; i++) {
-    total += _distance(points[i - 1], points[i]);
-  }
-  var left = total * progress.clamp(0.0, 1.0);
-  for (var i = 1; i < points.length && left > 0; i++) {
-    final a = points[i - 1], b = points[i];
-    final seg = _distance(a, b);
-    final f = math.min(1.0, left / seg);
-    _line(
-      image,
-      a.$1,
-      a.$2,
-      a.$1 + (b.$1 - a.$1) * f,
-      a.$2 + (b.$2 - a.$2) * f,
-      stroke,
-    );
-    left -= seg;
-  }
-}
-
-double _distance((double, double) a, (double, double) b) =>
-    math.sqrt(math.pow(b.$1 - a.$1, 2) + math.pow(b.$2 - a.$2, 2));
-
 // Open ring (gap at the top right, like the app icon) plus centre dot.
 void _drawMark(
   img.Image image,
@@ -340,33 +306,6 @@ void _roundRect(
       );
       if (cover > 0) _blend(image, x, y, cover * alpha);
     }
-  }
-}
-
-void _drawMail(img.Image image, double cx, double cy, double t) {
-  const stroke = 16.0;
-  const w = 130.0, h = 90.0;
-  final box = [
-    (cx - w, cy - h),
-    (cx + w, cy - h),
-    (cx + w, cy + h),
-    (cx - w, cy + h),
-    (cx - w, cy - h),
-  ];
-  _polyline(image, box, stroke, _ease(t / 0.6));
-  final flap = [(cx - w, cy - h), (cx, cy + 8), (cx + w, cy - h)];
-  _polyline(image, flap, stroke, _ease((t - 0.3) / 0.4));
-  // Check badge pops in at the lower right.
-  final badge = _ease((t - 0.6) / 0.4);
-  if (badge > 0) {
-    final bx = cx + w, by = cy + h;
-    _disc(image, bx, by, 52 * badge, 1);
-    // Card-coloured check mark on the green badge.
-    final check = [(bx - 22, by + 1), (bx - 6, by + 17), (bx + 24, by - 15)];
-    final saved = _accentOverride;
-    _accentOverride = (_card.r.toInt(), _card.g.toInt(), _card.b.toInt());
-    _polyline(image, check, 12, _ease((t - 0.75) / 0.25));
-    _accentOverride = saved;
   }
 }
 

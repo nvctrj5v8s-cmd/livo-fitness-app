@@ -6,8 +6,7 @@
   `noreply@lookin-foodtracker.de`; Domain bei Resend verifiziert. Kauf- und
   Widerrufsbestätigungen laufen über die Resend-API (Secrets gesetzt). Ein
   echter Ende-zu-Ende-Test steht noch aus.
-- **Vorlagen:** Bestätigung, Passwort zurücksetzen und E-Mail-Änderung neu
-  gestaltet (animiertes Logo, animierte Kopfbilder, Tagebuch- und
+- **Vorlagen:** Bestätigung und Passwort zurücksetzen neu gestaltet (animiertes Logo, animierte Kopfbilder, Tagebuch- und
   Coach-Animation, Rezeptfoto). Bilder in `web/email/`, Animationen laufen
   einmal. Texte nach Faktencheck: KI-Coach und KI-Foto als Premium
   gekennzeichnet, Rezepte „teils kostenlos“, keine Funktionen versprochen, die
@@ -24,8 +23,9 @@
   Meldung.
 - **Entwickler-Schalter:** Migration `0019` verlangt eine bestätigte E-Mail
   (noch nicht angewendet, braucht Freigabe des Inhabers).
-- **Nicht vorhanden:** eine Funktion „E-Mail-Adresse ändern“ und
-  Android-App-Links (Mail-Links öffnen die Web-Version).
+- **Nicht vorhanden:** eine Funktion „E-Mail-Adresse ändern“ (und damit keine
+  Vorlage dafür), Impressum-Anschrift steht nicht in den Konto-Mails (nur der
+  Link zum Impressum), Android-App-Links (Mail-Links öffnen die Web-Version).
 
 ## Zweite lokale Vorstellungswebsite, 11. Oktober 2026
 

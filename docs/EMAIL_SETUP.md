@@ -45,7 +45,6 @@ eintragen und den Inhalt der Datei vollständig in „Message body“ kopieren:
 | --- | --- | --- |
 | Reset Password | Neues Passwort für Lookin festlegen | `supabase/templates/recovery.html` |
 | Confirm signup | Bestätige deine E-Mail für Lookin | `supabase/templates/confirmation.html` |
-| Change Email Address | Änderung deiner E-Mail-Adresse bestätigen | `supabase/templates/email_change.html` |
 
 Die Vorlagen verlinken mit `{{ .SiteURL }}?token_hash=…&type=…`. Die App
 (`lib/features/auth/data/email_link.dart`) löst den Link selbst ein. Anders
@@ -70,9 +69,9 @@ die Bild-URLs in den drei Vorlagen anpassen.
 - **Authentication → Rate Limits:** E-Mails pro Stunde auf etwa 30.
 - Die Vorlagen „Magic Link“, „Invite“ und „Reauthentication“ nutzt die App
   nicht; sie bleiben Supabase-Standard.
-- Eine Funktion „E-Mail-Adresse ändern“ gibt es in der App noch nicht. Die
-  Vorlage ist vorbereitet; bei aktivem „Secure email change“ bekommen alte
-  und neue Adresse dieselbe Mail und müssen beide bestätigen.
+- Eine Funktion „E-Mail-Adresse ändern“ gibt es in der App nicht; deshalb
+  gibt es auch keine Vorlage dafür („Change Email Address“ bleibt
+  Supabase-Standard und wird nie ausgelöst).
 - Android: Die Links öffnen die Web-Version im Browser (keine App Links).
   Danach meldet man sich in der Android-App an.
 
