@@ -2,7 +2,7 @@
 //
 // Secrets (Supabase dashboard > Edge Functions > Secrets), never in the repo:
 //   RESEND_API_KEY  API key from Resend
-//   MAIL_FROM       verified sender, e.g. "Lookin <noreply@lookin-food.com>"
+//   MAIL_FROM       verified sender, e.g. "Lookin <noreply@lookin-foodtracker.de>"
 // Without both secrets nothing is sent and callers get 'not_configured', so
 // the app keeps working until the owner has a domain and a Resend account.
 
