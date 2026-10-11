@@ -1,5 +1,32 @@
 # Funktionsstatus
 
+## E-Mail-Versand, neue Vorlagen und Login-Korrekturen, 11. Oktober 2026
+
+- **Versand:** Supabase Auth verschickt über Resend (Custom SMTP) von
+  `noreply@lookin-foodtracker.de`; Domain bei Resend verifiziert. Kauf- und
+  Widerrufsbestätigungen laufen über die Resend-API (Secrets gesetzt). Ein
+  echter Ende-zu-Ende-Test steht noch aus.
+- **Vorlagen:** Bestätigung, Passwort zurücksetzen und E-Mail-Änderung neu
+  gestaltet (animiertes Logo, animierte Kopfbilder, Tagebuch- und
+  Coach-Animation, Rezeptfoto). Bilder in `web/email/`, Animationen laufen
+  einmal. Texte nach Faktencheck: KI-Coach und KI-Foto als Premium
+  gekennzeichnet, Rezepte „teils kostenlos“, keine Funktionen versprochen, die
+  es nicht gibt. Einfügen ins Dashboard macht der Inhaber.
+- **Login:** Passwort bei Registrierung jetzt mindestens 8 Zeichen (wie beim
+  Zurücksetzen). Fehlermeldungen von Supabase erscheinen auf Deutsch (u. a.
+  unbestätigte E-Mail, zu viele Versuche). Neu: „Bestätigungs-Mail erneut
+  senden“. „Passwort vergessen“ verrät nicht mehr, ob ein Konto existiert.
+- **Passwort-Reset:** Die Seite „Neues Passwort“ bleibt auch nach einem
+  Neuladen aktiv, bis ein neues Passwort gespeichert oder abgebrochen wurde
+  (lokale Markierung `lookin.password_recovery.v1`, nur Konto-ID). Der
+  benutzte Link wird aus der Adresszeile entfernt. Nach dem Speichern erscheint
+  „Dein neues Passwort ist gespeichert“; „gleiches Passwort“ hat eine eigene
+  Meldung.
+- **Entwickler-Schalter:** Migration `0019` verlangt eine bestätigte E-Mail
+  (noch nicht angewendet, braucht Freigabe des Inhabers).
+- **Nicht vorhanden:** eine Funktion „E-Mail-Adresse ändern“ und
+  Android-App-Links (Mail-Links öffnen die Web-Version).
+
 ## Zweite lokale Vorstellungswebsite, 11. Oktober 2026
 
 - Version 2 liegt separat in `website-v2/dist/`. Version 1 in `website/dist/`

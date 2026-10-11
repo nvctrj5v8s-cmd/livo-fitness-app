@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -41,6 +40,7 @@ class _AuthPageState extends State<AuthPage>
   bool _obscurePassword = true;
   String? _message;
   bool _messageIsError = false;
+  bool _canResend = false;
 
   @override
   void initState() {
@@ -66,6 +66,7 @@ class _AuthPageState extends State<AuthPage>
     setState(() {
       _loading = true;
       _message = null;
+      _canResend = false;
     });
     try {
       final auth = Supabase.instance.client.auth;
@@ -78,9 +79,12 @@ class _AuthPageState extends State<AuthPage>
         if (!mounted) return;
         setState(() {
           _message = response.session == null
-              ? 'Fast geschafft: Bestätige zuerst deine E-Mail-Adresse.'
+              ? 'Fast geschafft: Wir haben dir eine E-Mail geschickt. Tippe '
+                    'auf den Link darin, um deine Adresse zu bestätigen. Schau '
+                    'auch im Spam-Ordner nach.'
               : 'Dein Lookin-Konto ist bereit.';
           _messageIsError = false;
+          _canResend = response.session == null;
         });
       } else {
         await auth.signInWithPassword(
@@ -88,6 +92,48 @@ class _AuthPageState extends State<AuthPage>
           password: _passwordController.text,
         );
       }
+    } on AuthException catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _message = _friendlyAuthError(error.message);
+        _messageIsError = true;
+        _canResend = _isUnconfirmed(error.message);
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+        _messageIsError = true;
+      });
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _resendConfirmation() async {
+    if (_loading) return;
+    final email = _emailController.text.trim();
+    if (email.isEmpty || !email.contains('@')) {
+      setState(() {
+        _message = 'Gib zuerst deine E-Mail-Adresse ein.';
+        _messageIsError = true;
+      });
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      await Supabase.instance.client.auth.resend(
+        type: OtpType.signup,
+        email: email,
+      );
+      if (!mounted) return;
+      setState(() {
+        _message =
+            'Falls die Adresse noch nicht bestätigt ist, haben wir dir eine '
+            'neue Bestätigungs-Mail geschickt. Schau auch im Spam-Ordner nach.';
+        _messageIsError = false;
+        _canResend = false;
+      });
     } on AuthException catch (error) {
       if (!mounted) return;
       setState(() {
@@ -118,18 +164,18 @@ class _AuthPageState extends State<AuthPage>
     setState(() {
       _loading = true;
       _message = null;
+      _canResend = false;
     });
     try {
-      await Supabase.instance.client.auth.resetPasswordForEmail(
-        email,
-        // On the web the link must lead back to this page (also under a
-        // sub-path such as GitHub Pages). Not allow-listed URLs fall back to
-        // the Site URL configured in Supabase Auth.
-        redirectTo: kIsWeb ? '${Uri.base.origin}${Uri.base.path}' : null,
-      );
+      // The e-mail template links to the Site URL set in Supabase Auth.
+      await Supabase.instance.client.auth.resetPasswordForEmail(email);
       if (!mounted) return;
       setState(() {
-        _message = 'Wir haben dir einen Link zum Zurücksetzen geschickt.';
+        // Supabase does not reveal whether an account exists.
+        _message =
+            'Falls es ein Lookin-Konto mit dieser Adresse gibt, haben wir dir '
+            'einen Link zum Zurücksetzen geschickt. Schau auch im Spam-Ordner '
+            'nach.';
         _messageIsError = false;
       });
     } on AuthException catch (error) {
@@ -155,21 +201,37 @@ class _AuthPageState extends State<AuthPage>
     setState(() {
       _isSignUp = signUp;
       _message = null;
+      _canResend = false;
     });
   }
+
+  static bool _isUnconfirmed(String message) =>
+      message.toLowerCase().contains('email not confirmed');
 
   String _friendlyAuthError(String message) {
     final lower = message.toLowerCase();
     if (lower.contains('invalid login credentials')) {
       return 'E-Mail oder Passwort ist nicht korrekt.';
     }
+    if (_isUnconfirmed(message)) {
+      return 'Deine E-Mail-Adresse ist noch nicht bestätigt. Tippe auf den '
+          'Link in unserer E-Mail oder fordere unten eine neue an.';
+    }
     if (lower.contains('user already registered')) {
       return 'Für diese E-Mail gibt es bereits ein Konto.';
     }
-    if (lower.contains('password')) {
-      return 'Das Passwort muss mindestens sechs Zeichen haben.';
+    if (lower.contains('security purposes') ||
+        lower.contains('rate limit') ||
+        lower.contains('too many')) {
+      return 'Zu viele Versuche. Bitte warte kurz und versuche es dann erneut.';
     }
-    return message;
+    if (lower.contains('password')) {
+      return 'Das Passwort muss mindestens acht Zeichen haben.';
+    }
+    if (lower.contains('email') && lower.contains('invalid')) {
+      return 'Bitte prüfe deine E-Mail-Adresse.';
+    }
+    return 'Das hat gerade nicht geklappt. Bitte versuche es später erneut.';
   }
 
   @override
@@ -191,6 +253,8 @@ class _AuthPageState extends State<AuthPage>
                 obscurePassword: _obscurePassword,
                 message: _message,
                 messageIsError: _messageIsError,
+                canResend: _canResend,
+                onResendConfirmation: _resendConfirmation,
                 onModeChanged: _setMode,
                 onTogglePassword: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
@@ -290,6 +354,8 @@ class _AuthPanel extends StatelessWidget {
     required this.obscurePassword,
     required this.message,
     required this.messageIsError,
+    required this.canResend,
+    required this.onResendConfirmation,
     required this.onModeChanged,
     required this.onTogglePassword,
     required this.onSubmit,
@@ -305,6 +371,8 @@ class _AuthPanel extends StatelessWidget {
   final bool obscurePassword;
   final String? message;
   final bool messageIsError;
+  final bool canResend;
+  final VoidCallback onResendConfirmation;
   final ValueChanged<bool> onModeChanged;
   final VoidCallback onTogglePassword;
   final VoidCallback onSubmit;
@@ -429,8 +497,8 @@ class _AuthPanel extends StatelessWidget {
                     ),
                   ),
                 ),
-                validator: (value) => value == null || value.length < 6
-                    ? 'Mindestens sechs Zeichen.'
+                validator: (value) => value == null || value.length < 8
+                    ? 'Mindestens acht Zeichen.'
                     : null,
               ),
               if (!isSignUp)
@@ -477,6 +545,16 @@ class _AuthPanel extends StatelessWidget {
                         ),
                       ),
               ),
+              if (canResend)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: TextButton.icon(
+                    key: const Key('auth-resend-confirmation'),
+                    onPressed: loading ? null : onResendConfirmation,
+                    icon: const Icon(Icons.mark_email_unread_outlined),
+                    label: const Text('Bestätigungs-Mail erneut senden'),
+                  ),
+                ),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(

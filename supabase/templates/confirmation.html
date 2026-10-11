@@ -15,15 +15,16 @@
       }
       @media (max-width: 560px) {
         .pad { padding-left: 22px !important; padding-right: 22px !important; }
-        .tile { display: block !important; width: 100% !important; padding: 0 0 14px 0 !important; }
-        .tile img { width: 100% !important; height: auto !important; }
         .h1 { font-size: 25px !important; }
+        .feature-pic { display: block !important; width: 100% !important; padding: 0 !important; }
+        .feature-pic img { width: 100% !important; height: auto !important; border-radius: 18px 18px 0 0 !important; }
+        .feature-text { display: block !important; width: 100% !important; padding: 16px 18px 18px 18px !important; }
       }
     </style>
   </head>
   <body style="margin:0;padding:0;background-color:#050708;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#050708;">
-      Ein Klick noch: Bestätige deine E-Mail-Adresse und starte mit Lookin.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;
+      Nur noch ein Schritt: Bestätige deine E-Mail-Adresse für Lookin.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;
     </div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#050708;">
       <tr>
@@ -50,14 +51,14 @@
             <!-- Hauptkarte -->
             <tr>
               <td class="rise" style="background-color:#0E1414;border:1px solid #283633;border-radius:24px;overflow:hidden;">
-                <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/hero-welcome.gif" width="560" alt="Lookin" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:24px 24px 0 0;" />
+                <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/hero-welcome.gif" width="560" alt="" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:24px 24px 0 0;" />
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td class="pad" style="padding:8px 36px 34px 36px;font-family:Arial,Helvetica,sans-serif;">
                       <p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C8FF5A;">Willkommen</p>
                       <h1 class="h1" style="margin:0 0 14px 0;font-size:29px;line-height:1.2;font-weight:800;color:#F5F8F7;">Schön, dass du da bist!</h1>
                       <p style="margin:0 0 26px 0;font-size:16px;line-height:1.65;color:#C9D3D0;">
-                        Nur noch ein Klick: Bestätige deine E-Mail-Adresse <strong style="color:#F5F8F7;">{{ .Email }}</strong>, dann geht es direkt in deinem Lookin-Konto weiter.
+                        Nur noch ein Schritt: Bestätige deine E-Mail-Adresse <strong style="color:#F5F8F7;">{{ .Email }}</strong>. Danach kannst du dich in Lookin anmelden.
                       </p>
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                         <tr>
@@ -67,7 +68,7 @@
                         </tr>
                       </table>
                       <p style="margin:14px 0 0 0;font-size:13px;line-height:1.5;color:#98A6A1;text-align:center;">
-                        Der Link ist aus Sicherheitsgründen nur begrenzt gültig.
+                        Der Link funktioniert nur einmal und ist nur begrenzt gültig.
                       </p>
                     </td>
                   </tr>
@@ -76,36 +77,44 @@
             </tr>
             <!-- Das erwartet dich -->
             <tr>
-              <td class="rise-2" style="padding:30px 6px 6px 6px;font-family:Arial,Helvetica,sans-serif;">
+              <td class="rise-2" style="padding:30px 6px 0 6px;font-family:Arial,Helvetica,sans-serif;">
                 <p style="margin:0 0 16px 0;font-size:18px;font-weight:800;color:#F5F8F7;">Das erwartet dich</p>
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <!-- Tagebuch -->
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;margin:0 0 14px 0;">
                   <tr>
-                    <td class="tile" width="33%" valign="top" style="padding:0 7px 0 0;">
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
-                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-track.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
-                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
-                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">Tracken</p>
-                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Kalorien und Makros einfach im Blick.</p>
-                        </td></tr>
-                      </table>
+                    <td class="feature-pic" width="220" valign="top" style="padding:0;">
+                      <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/feature-track.gif" width="220" height="165" alt="" style="display:block;border:0;border-radius:18px 0 0 18px;" />
                     </td>
-                    <td class="tile" width="33%" valign="top" style="padding:0 4px;">
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
-                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-coach.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
-                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
-                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">KI-Coach</p>
-                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Fragen stellen, Fotos schätzen lassen.</p>
-                        </td></tr>
-                      </table>
+                    <td class="feature-text" valign="middle" style="padding:16px 20px;font-family:Arial,Helvetica,sans-serif;">
+                      <span style="display:inline-block;margin:0 0 8px 0;padding:3px 9px;border:1px solid #C8FF5A;border-radius:999px;font-size:11px;font-weight:700;color:#C8FF5A;">Kostenlos</span>
+                      <p style="margin:0 0 6px 0;font-size:17px;font-weight:800;color:#F5F8F7;">Tagebuch</p>
+                      <p style="margin:0;font-size:14px;line-height:1.55;color:#98A6A1;">Kalorien und Makros im Blick. Mahlzeiten per Suche oder Barcode eintragen.</p>
                     </td>
-                    <td class="tile" width="33%" valign="top" style="padding:0 0 0 7px;">
-                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
-                        <tr><td><img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/tile-recipes.jpg" width="176" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:18px 18px 0 0;" /></td></tr>
-                        <tr><td style="padding:14px 14px 16px 14px;font-family:Arial,Helvetica,sans-serif;">
-                          <p style="margin:0 0 4px 0;font-size:15px;font-weight:800;color:#F5F8F7;">Rezepte</p>
-                          <p style="margin:0;font-size:13px;line-height:1.5;color:#98A6A1;">Einfache Alltagsrezepte mit Nährwerten.</p>
-                        </td></tr>
-                      </table>
+                  </tr>
+                </table>
+                <!-- KI-Coach -->
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;margin:0 0 14px 0;">
+                  <tr>
+                    <td class="feature-pic" width="220" valign="top" style="padding:0;">
+                      <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/feature-coach.gif" width="220" height="165" alt="" style="display:block;border:0;border-radius:18px 0 0 18px;" />
+                    </td>
+                    <td class="feature-text" valign="middle" style="padding:16px 20px;font-family:Arial,Helvetica,sans-serif;">
+                      <span style="display:inline-block;margin:0 0 8px 0;padding:3px 9px;background-color:#C8FF5A;border-radius:999px;font-size:11px;font-weight:700;color:#050706;">Premium</span>
+                      <p style="margin:0 0 6px 0;font-size:17px;font-weight:800;color:#F5F8F7;">KI-Coach &amp; KI-Foto</p>
+                      <p style="margin:0;font-size:14px;line-height:1.55;color:#98A6A1;">Stell Fragen zu Ernährung und Fitness oder lass eine Mahlzeit per Foto schätzen. Du prüfst alles vor dem Speichern.</p>
+                    </td>
+                  </tr>
+                </table>
+                <!-- Rezepte -->
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;border:1px solid #283633;border-radius:18px;">
+                  <tr>
+                    <td class="feature-pic" width="220" valign="top" style="padding:0;">
+                      <img src="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/email/feature-recipes.jpg" width="220" height="165" alt="" style="display:block;border:0;border-radius:18px 0 0 18px;" />
+                    </td>
+                    <td class="feature-text" valign="middle" style="padding:16px 20px;font-family:Arial,Helvetica,sans-serif;">
+                      <span style="display:inline-block;margin:0 0 8px 0;padding:3px 9px;border:1px solid #98A6A1;border-radius:999px;font-size:11px;font-weight:700;color:#C9D3D0;">Teils kostenlos</span>
+                      <p style="margin:0 0 6px 0;font-size:17px;font-weight:800;color:#F5F8F7;">Rezepte</p>
+                      <p style="margin:0;font-size:14px;line-height:1.55;color:#98A6A1;">Alltagsrezepte mit Nährwerten. Ein Teil ist kostenlos, alle gibt es mit Premium.</p>
                     </td>
                   </tr>
                 </table>
@@ -127,11 +136,11 @@
                         </tr>
                         <tr>
                           <td width="44" valign="top" style="padding:8px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background-color:#1B2624;border:1px solid #C8FF5A;color:#C8FF5A;font-size:14px;font-weight:800;text-align:center;">2</div></td>
-                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Ziel festlegen</strong><br />Lookin berechnet deinen Tagesbedarf.</td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">In Lookin anmelden</strong><br />Mit deiner E-Mail-Adresse und deinem Passwort.</td>
                         </tr>
                         <tr>
                           <td width="44" valign="top" style="padding:8px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background-color:#1B2624;border:1px solid #C8FF5A;color:#C8FF5A;font-size:14px;font-weight:800;text-align:center;">3</div></td>
-                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Erste Mahlzeit eintragen</strong><br />Per Suche, Barcode oder Foto.</td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Erste Mahlzeit eintragen</strong><br />Per Suche oder Barcode, mit Premium auch per KI-Foto.</td>
                         </tr>
                       </table>
                     </td>
@@ -142,24 +151,24 @@
             <!-- Hinweis -->
             <tr>
               <td style="padding:22px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.6;color:#98A6A1;">
-                Du hast dich nicht bei Lookin registriert? Dann ignoriere diese E-Mail einfach. Ohne Bestätigung wird kein Konto aktiv.
+                Du hast dich nicht bei Lookin registriert? Dann ignoriere diese E-Mail einfach. Ohne Bestätigung kann sich niemand mit dieser Adresse anmelden.
               </td>
             </tr>
             <!-- Fußzeile -->
             <tr>
-              <td style="padding:26px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#7C8A86;border-top:1px solid #1B2624;">
+              <td style="padding:26px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#7C8A86;">
                 <p style="margin:18px 0 10px 0;">
                   Knopf funktioniert nicht? Kopiere diesen Link in deinen Browser:<br />
                   <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=email" style="color:#98A6A1;word-break:break-all;">{{ .SiteURL }}?token_hash={{ .TokenHash }}&amp;type=email</a>
                 </p>
                 <p style="margin:0 0 10px 0;">
-                  Fragen? Schreib uns an <a href="mailto:lookinsupport@gmail.com" style="color:#C8FF5A;text-decoration:none;">lookinsupport@gmail.com</a>. Auf diese E-Mail kann nicht geantwortet werden.
+                  Diese E-Mail wurde automatisch verschickt. Antworten darauf werden nicht gelesen. Bei Fragen schreib uns an <a href="mailto:lookinsupport@gmail.com" style="color:#C8FF5A;text-decoration:none;">lookinsupport@gmail.com</a>.
                 </p>
                 <p style="margin:0;">
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html" style="color:#98A6A1;">Datenschutz</a> &nbsp;·&nbsp;
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html" style="color:#98A6A1;">AGB</a> &nbsp;·&nbsp;
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/impressum.html" style="color:#98A6A1;">Impressum</a><br />
-                  Lookin · Mhd Khair Shikho · Am Grübchen 18 · 56203 Höhr-Grenzhausen
+                  Lookin ist ein Angebot von Mhd Khair Shikho · Am Grübchen 18 · 56203 Höhr-Grenzhausen · Deutschland
                 </p>
               </td>
             </tr>

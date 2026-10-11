@@ -24,18 +24,16 @@ void main() {
   _writeGif('hero-welcome.gif', _heroFrames(_Symbol.ring));
   _writeGif('hero-recovery.gif', _heroFrames(_Symbol.lock));
   _writeGif('hero-email.gif', _heroFrames(_Symbol.mail));
-  _tile('livo-avocado-egg-bowl.webp', 'tile-track.jpg');
-  _tile('livo-salmon-tomato-bowl.webp', 'tile-coach.jpg');
-  _tile('livo-protein-oats.webp', 'tile-recipes.jpg');
+  _tile('livo-salmon-avocado-rice.webp', 'feature-recipes.jpg');
   stdout.writeln('E-Mail-Bilder in $_out erstellt.');
 }
 
-// Small square food photo for the feature tiles (shown at 160 x 120).
+// Food photo for the recipe row of the welcome mail (shown at 220 x 165).
 void _tile(String source, String name) {
   final decoded = img.decodeWebP(
     File('assets/images/recipes/$source').readAsBytesSync(),
   )!;
-  const w = 320, h = 240;
+  const w = 440, h = 330;
   final scale = math.max(w / decoded.width, h / decoded.height);
   final resized = img.copyResize(
     decoded,

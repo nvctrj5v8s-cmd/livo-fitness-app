@@ -4,6 +4,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/ui_components.dart';
 
+/// Message for the sign-in page after a new password was saved. The app shows
+/// it once the recovery session has ended.
+final passwordSavedNotice = ValueNotifier<String?>(null);
+
 /// Shown only after a verified Supabase password-recovery callback.
 class PasswordRecoveryPage extends StatefulWidget {
   const PasswordRecoveryPage({super.key});
@@ -36,14 +40,13 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     try {
       final auth = Supabase.instance.client.auth;
       await auth.updateUser(UserAttributes(password: _password.text));
+      passwordSavedNotice.value =
+          'Dein neues Passwort ist gespeichert. Melde dich jetzt damit an.';
       // A recovery link grants a temporary session. Require a fresh login.
       await auth.signOut(scope: SignOutScope.local);
-    } on AuthException catch (_) {
+    } on AuthException catch (error) {
       if (mounted) {
-        setState(
-          () => _error =
-              'Das Passwort konnte nicht gesetzt werden. Bitte fordere einen neuen Link an.',
-        );
+        setState(() => _error = _saveError(error));
       }
     } catch (_) {
       if (mounted) {
@@ -54,6 +57,19 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  static String _saveError(AuthException error) {
+    final text = '${error.code ?? ''} ${error.message}'.toLowerCase();
+    if (text.contains('same_password') ||
+        text.contains('different from the old')) {
+      return 'Das neue Passwort muss sich von deinem bisherigen unterscheiden.';
+    }
+    if (text.contains('weak_password') || text.contains('at least')) {
+      return 'Das Passwort ist zu schwach. Wähle mindestens acht Zeichen.';
+    }
+    return 'Das Passwort konnte nicht gesetzt werden. Fordere unter '
+        '„Passwort vergessen?“ einen neuen Link an.';
   }
 
   Future<void> _cancel() async {

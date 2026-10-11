@@ -43,9 +43,9 @@ eintragen und den Inhalt der Datei vollständig in „Message body“ kopieren:
 
 | Vorlage | Betreff | Datei |
 | --- | --- | --- |
-| Reset Password | Dein neues Lookin-Passwort | `supabase/templates/recovery.html` |
+| Reset Password | Neues Passwort für Lookin festlegen | `supabase/templates/recovery.html` |
 | Confirm signup | Bestätige deine E-Mail für Lookin | `supabase/templates/confirmation.html` |
-| Change Email Address | Bestätige deine neue E-Mail-Adresse | `supabase/templates/email_change.html` |
+| Change Email Address | Änderung deiner E-Mail-Adresse bestätigen | `supabase/templates/email_change.html` |
 
 Die Vorlagen verlinken mit `{{ .SiteURL }}?token_hash=…&type=…`. Die App
 (`lib/features/auth/data/email_link.dart`) löst den Link selbst ein. Anders
@@ -53,11 +53,28 @@ als der Standard-Link funktioniert er auch, wenn die Mail auf einem anderen
 Gerät geöffnet wird als dem, auf dem sie angefordert wurde. Voraussetzung ist
 Schritt 1 (die Site URL muss auf die Website zeigen).
 
-Die Bilder der Vorlagen (animiertes Logo, animierte Kopfbilder, Food-Kacheln)
-liegen in `web/email/` und werden mit der Website veröffentlicht. Erzeugt
-werden sie mit `dart run tool/email_assets.dart`. Die Animationen laufen
+Die Bilder der Vorlagen (animiertes Logo, animierte Kopfbilder, Funktions-
+Animationen, Rezeptfoto) liegen in `web/email/` und werden mit der Website
+veröffentlicht. Erzeugt werden sie mit `dart run tool/email_assets.dart`
+(Logo, Kopfbilder, Foto) und `flutter test tool/email_frames_test.dart`
+(Tagebuch- und Coach-Animation, mit Flutter im App-Look gerendert). Die Animationen laufen
 einmal ab und bleiben dann stehen. Zieht die Website auf die eigene Domain um,
 die Bild-URLs in den drei Vorlagen anpassen.
+
+## 3a. Pflicht-Einstellungen im Dashboard (Prüfung vom 11.10.2026)
+
+- **Authentication → Sign In / Providers → Email:** „Confirm email“ an,
+  „Secure email change“ an, „Minimum password length“ 8 (die App verlangt
+  ebenfalls 8 Zeichen), „Email OTP Expiration“ 3600 Sekunden lassen.
+- **Authentication → URL Configuration:** Site URL wie in Schritt 1.
+- **Authentication → Rate Limits:** E-Mails pro Stunde auf etwa 30.
+- Die Vorlagen „Magic Link“, „Invite“ und „Reauthentication“ nutzt die App
+  nicht; sie bleiben Supabase-Standard.
+- Eine Funktion „E-Mail-Adresse ändern“ gibt es in der App noch nicht. Die
+  Vorlage ist vorbereitet; bei aktivem „Secure email change“ bekommen alte
+  und neue Adresse dieselbe Mail und müssen beide bestätigen.
+- Android: Die Links öffnen die Web-Version im Browser (keine App Links).
+  Danach meldet man sich in der Android-App an.
 
 ## 4. Testen
 

@@ -7,6 +7,7 @@ import '../core/state/app_controller.dart';
 import '../core/theme/app_theme.dart';
 import '../features/consent/presentation/consent_gate.dart';
 import '../features/auth/presentation/auth_gate.dart';
+import '../features/auth/data/recovery_marker.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/presentation/introduction_gate.dart';
@@ -62,9 +63,23 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
             final nextUserId = event.session?.user.id;
             if (!mounted) return;
             if (event.event == AuthChangeEvent.passwordRecovery) {
+              if (nextUserId != null) unawaited(_remember(nextUserId));
               setState(() => _passwordRecovery = nextUserId != null);
             } else if (event.event == AuthChangeEvent.signedOut) {
+              unawaited(_forgetRecovery());
               setState(() => _passwordRecovery = false);
+              final saved = passwordSavedNotice.value;
+              if (saved != null) {
+                passwordSavedNotice.value = null;
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => _messenger.currentState?.showSnackBar(
+                    SnackBar(
+                      content: Text(saved),
+                      duration: const Duration(seconds: 6),
+                    ),
+                  ),
+                );
+              }
             }
             if (nextUserId == _userId) return;
             final previous = _controller;
@@ -75,6 +90,18 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
             previous.dispose();
           });
     }
+  }
+
+  Future<void> _remember(String userId) async {
+    try {
+      await RecoveryMarker.set(userId);
+    } catch (_) {}
+  }
+
+  Future<void> _forgetRecovery() async {
+    try {
+      await RecoveryMarker.clear();
+    } catch (_) {}
   }
 
   @override

@@ -5,13 +5,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
 import 'core/config/supabase_config.dart';
+import 'features/auth/data/browser_url.dart';
 import 'features/auth/data/email_link.dart';
+import 'features/auth/data/recovery_marker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Supabase may consume and clear the web recovery URL during initialize,
   // before the first widget can subscribe to auth events.
-  var initialPasswordRecovery =
+  final recoveryInUrl =
       Uri.base.queryParameters['type'] == 'recovery' ||
       Uri.base.fragment.contains('type=recovery');
   final emailLink = EmailLink.fromUri(Uri.base);
@@ -21,20 +23,47 @@ Future<void> main() async {
     publishableKey: SupabaseConfig.publishableKey,
   );
 
+  final auth = Supabase.instance.client.auth;
   String? initialNotice;
+  var recovering = false;
   if (emailLink != null) {
-    final auth = Supabase.instance.client.auth;
     final verified = await emailLink
         .verify(auth)
         .timeout(const Duration(seconds: 12), onTimeout: () => false);
-    initialPasswordRecovery = verified && emailLink.isPasswordRecovery;
-    // After a reload the used link fails again; a session means it worked.
+    final userId = auth.currentUser?.id;
+    if (verified && emailLink.isPasswordRecovery && userId != null) {
+      recovering = true;
+      await _markRecovery(userId);
+    }
+    if (verified && emailLink.type == OtpType.emailChange) {
+      initialNotice =
+          'Bestätigt. Hast du auch an deine andere Adresse eine E-Mail '
+          'bekommen, bestätige die Änderung dort ebenfalls.';
+    }
     if (!verified && auth.currentSession == null) {
       initialNotice = emailLink.isPasswordRecovery
           ? 'Der Link zum Zurücksetzen ist abgelaufen oder wurde schon '
                 'benutzt. Fordere unter „Passwort vergessen?“ einen neuen an.'
           : 'Der Bestätigungslink ist abgelaufen oder wurde schon benutzt. '
-                'Melde dich an oder fordere einen neuen Link an.';
+                'Melde dich an. Ist deine Adresse noch nicht bestätigt, '
+                'kannst du dort eine neue Bestätigungs-Mail anfordern.';
+    }
+    // A reload must not try the spent link again.
+    replaceBrowserUrlWithoutQuery();
+  } else if (recoveryInUrl && auth.currentUser != null) {
+    recovering = true;
+    await _markRecovery(auth.currentUser!.id);
+  }
+
+  // A session from a reset link stays limited to the new-password page, also
+  // after a reload, until a new password is saved or the user cancels.
+  final userId = auth.currentUser?.id;
+  var initialPasswordRecovery = recovering;
+  if (userId != null && !recovering) {
+    try {
+      initialPasswordRecovery = await RecoveryMarker.isSetFor(userId);
+    } catch (_) {
+      // No local storage: only the link itself opens the page.
     }
   }
 
@@ -44,4 +73,12 @@ Future<void> main() async {
       initialNotice: initialNotice,
     ),
   );
+}
+
+Future<void> _markRecovery(String userId) async {
+  try {
+    await RecoveryMarker.set(userId);
+  } catch (_) {
+    // Without local storage the page still opens for this start.
+  }
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
     <meta name="supported-color-schemes" content="dark" />
-    <title>Dein neues Lookin-Passwort</title>
+    <title>Neues Passwort für Lookin festlegen</title>
     <style>
       @media (prefers-reduced-motion: no-preference) {
         @keyframes lookin-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -54,7 +54,7 @@
                       <p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C8FF5A;">Passwort zurücksetzen</p>
                       <h1 class="h1" style="margin:0 0 14px 0;font-size:29px;line-height:1.2;font-weight:800;color:#F5F8F7;">Neues Passwort festlegen</h1>
                       <p style="margin:0 0 26px 0;font-size:16px;line-height:1.65;color:#C9D3D0;">
-                        Für das Lookin-Konto <strong style="color:#F5F8F7;">{{ .Email }}</strong> wurde ein neues Passwort angefordert. Tippe auf den Knopf und wähle dein neues Passwort.
+                        Für das Lookin-Konto <strong style="color:#F5F8F7;">{{ .Email }}</strong> wurde ein Link zum Zurücksetzen des Passworts angefordert. Tippe auf den Knopf, wähle ein neues Passwort und melde dich danach damit an.
                       </p>
                       <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                         <tr>
@@ -91,7 +91,7 @@
                         </tr>
                         <tr>
                           <td width="40" valign="top" style="padding:8px 0;"><div style="width:26px;height:26px;line-height:26px;border-radius:13px;background-color:#C8FF5A;color:#050706;font-size:14px;font-weight:800;text-align:center;">&#10003;</div></td>
-                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Geheim halten</strong><br />Lookin fragt dich nie per E-Mail nach deinem Passwort.</td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><strong style="color:#F5F8F7;">Geheim halten</strong><br />Lookin fragt dich nie per E-Mail nach deinem Passwort. Leite diese E-Mail nicht weiter: Der Link meldet dich direkt an.</td>
                         </tr>
                       </table>
                     </td>
@@ -106,7 +106,7 @@
                   <tr>
                     <td style="padding:18px 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#C9D3D0;">
                       <strong style="color:#C8FF5A;">Das warst nicht du?</strong><br />
-                      Dann ignoriere diese E-Mail. Dein Passwort bleibt unverändert, solange niemand auf den Link tippt.
+                      Dann ignoriere diese E-Mail. Dein Passwort bleibt unverändert, solange über diesen Link kein neues festgelegt wird.
                     </td>
                   </tr>
                 </table>
@@ -120,13 +120,13 @@
                   <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=recovery" style="color:#98A6A1;word-break:break-all;">{{ .SiteURL }}?token_hash={{ .TokenHash }}&amp;type=recovery</a>
                 </p>
                 <p style="margin:0 0 10px 0;">
-                  Fragen? Schreib uns an <a href="mailto:lookinsupport@gmail.com" style="color:#C8FF5A;text-decoration:none;">lookinsupport@gmail.com</a>. Auf diese E-Mail kann nicht geantwortet werden.
+                  Diese E-Mail wurde automatisch verschickt. Antworten darauf werden nicht gelesen. Bei Fragen schreib uns an <a href="mailto:lookinsupport@gmail.com" style="color:#C8FF5A;text-decoration:none;">lookinsupport@gmail.com</a>.
                 </p>
                 <p style="margin:0;">
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html" style="color:#98A6A1;">Datenschutz</a> &nbsp;·&nbsp;
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html" style="color:#98A6A1;">AGB</a> &nbsp;·&nbsp;
                   <a href="https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/impressum.html" style="color:#98A6A1;">Impressum</a><br />
-                  Lookin · Mhd Khair Shikho · Am Grübchen 18 · 56203 Höhr-Grenzhausen
+                  Lookin ist ein Angebot von Mhd Khair Shikho · Am Grübchen 18 · 56203 Höhr-Grenzhausen · Deutschland
                 </p>
               </td>
             </tr>
