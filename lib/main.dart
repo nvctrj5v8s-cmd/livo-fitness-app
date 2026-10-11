@@ -25,6 +25,7 @@ Future<void> main() async {
 
   final auth = Supabase.instance.client.auth;
   String? initialNotice;
+  String? confirmedEmail;
   var recovering = false;
   if (emailLink != null) {
     final verified = await emailLink
@@ -34,6 +35,16 @@ Future<void> main() async {
     if (verified && emailLink.isPasswordRecovery && userId != null) {
       recovering = true;
       await _markRecovery(userId);
+    }
+    if (verified && emailLink.isSignUpConfirmation) {
+      // Show a clear "E-Mail bestätigt" page and let the person sign in on
+      // purpose, the same in the browser as for app users.
+      confirmedEmail = auth.currentUser?.email ?? '';
+      try {
+        await auth.signOut(scope: SignOutScope.local);
+      } catch (_) {
+        // Still show the page; the sign-in form works with a session too.
+      }
     }
     if (verified && emailLink.type == OtpType.emailChange) {
       initialNotice =
@@ -71,6 +82,7 @@ Future<void> main() async {
     FitnessAiApp(
       initialPasswordRecovery: initialPasswordRecovery,
       initialNotice: initialNotice,
+      initialConfirmedEmail: confirmedEmail,
     ),
   );
 }

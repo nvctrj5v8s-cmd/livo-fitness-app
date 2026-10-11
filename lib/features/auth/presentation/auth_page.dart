@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,14 +7,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
+import 'email_status_pages.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({
     this.answersReady = false,
     this.startWithSignUp = false,
     this.onEditAnswers,
+    this.initialEmail,
     super.key,
   });
+
+  /// Prefills the e-mail field, for example after confirming the address.
+  final String? initialEmail;
 
   /// The questions were answered before sign-up: start with "Registrieren"
   /// and say that the account keeps the answers.
@@ -42,9 +49,36 @@ class _AuthPageState extends State<AuthPage>
   bool _messageIsError = false;
   bool _canResend = false;
 
+  /// Set after sign-up while the confirmation e-mail is pending.
+  String? _inboxEmail;
+
+  /// Supabase allows one confirmation e-mail per minute; the button waits too.
+  static const _resendWait = Duration(seconds: 60);
+  DateTime? _resendReadyAt;
+  Timer? _resendTicker;
+
+  int get _resendCooldown {
+    final ready = _resendReadyAt;
+    if (ready == null) return 0;
+    final left = ready.difference(DateTime.now()).inMilliseconds;
+    return left <= 0 ? 0 : (left / 1000).ceil();
+  }
+
+  void _startResendCooldown() {
+    _resendReadyAt = DateTime.now().add(_resendWait);
+    _resendTicker?.cancel();
+    _resendTicker = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return timer.cancel();
+      if (_resendCooldown == 0) timer.cancel();
+      setState(() {});
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    final email = widget.initialEmail;
+    if (email != null) _emailController.text = email;
     _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
@@ -53,6 +87,7 @@ class _AuthPageState extends State<AuthPage>
 
   @override
   void dispose() {
+    _resendTicker?.cancel();
     _entranceController.dispose();
     _nameController.dispose();
     _emailController.dispose();
@@ -78,13 +113,14 @@ class _AuthPageState extends State<AuthPage>
         );
         if (!mounted) return;
         setState(() {
-          _message = response.session == null
-              ? 'Fast geschafft: Wir haben dir eine E-Mail geschickt. Tippe '
-                    'auf den Link darin, um deine Adresse zu bestätigen. Schau '
-                    'auch im Spam-Ordner nach.'
-              : 'Dein Lookin-Konto ist bereit.';
-          _messageIsError = false;
-          _canResend = response.session == null;
+          if (response.session == null) {
+            _inboxEmail = _emailController.text.trim();
+            _message = null;
+            _startResendCooldown();
+          } else {
+            _message = 'Dein Lookin-Konto ist bereit.';
+            _messageIsError = false;
+          }
         });
       } else {
         await auth.signInWithPassword(
@@ -111,8 +147,8 @@ class _AuthPageState extends State<AuthPage>
   }
 
   Future<void> _resendConfirmation() async {
-    if (_loading) return;
-    final email = _emailController.text.trim();
+    if (_loading || _resendCooldown > 0) return;
+    final email = _inboxEmail ?? _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       setState(() {
         _message = 'Gib zuerst deine E-Mail-Adresse ein.';
@@ -132,13 +168,15 @@ class _AuthPageState extends State<AuthPage>
             'Falls die Adresse noch nicht bestätigt ist, haben wir dir eine '
             'neue Bestätigungs-Mail geschickt. Schau auch im Spam-Ordner nach.';
         _messageIsError = false;
-        _canResend = false;
+        _startResendCooldown();
       });
     } on AuthException catch (error) {
       if (!mounted) return;
       setState(() {
         _message = _friendlyAuthError(error.message);
         _messageIsError = true;
+        // Also wait after a server-side limit before trying again.
+        _startResendCooldown();
       });
     } catch (_) {
       if (!mounted) return;
@@ -234,8 +272,36 @@ class _AuthPageState extends State<AuthPage>
     return 'Das hat gerade nicht geklappt. Bitte versuche es später erneut.';
   }
 
+  void _leaveInbox({required bool toSignIn}) {
+    setState(() {
+      _inboxEmail = null;
+      _message = null;
+      _canResend = false;
+      _isSignUp = !toSignIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final inboxEmail = _inboxEmail;
+    if (inboxEmail != null) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _leaveInbox(toSignIn: false);
+        },
+        child: CheckInboxPage(
+          email: inboxEmail,
+          resendCooldown: _resendCooldown,
+          loading: _loading,
+          message: _message,
+          messageIsError: _messageIsError,
+          onResend: _resendConfirmation,
+          onSignIn: () => _leaveInbox(toSignIn: true),
+          onBack: () => _leaveInbox(toSignIn: false),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: AppBackdrop(
@@ -254,6 +320,7 @@ class _AuthPageState extends State<AuthPage>
                 message: _message,
                 messageIsError: _messageIsError,
                 canResend: _canResend,
+                resendCooldown: _resendCooldown,
                 onResendConfirmation: _resendConfirmation,
                 onModeChanged: _setMode,
                 onTogglePassword: () =>
@@ -355,6 +422,7 @@ class _AuthPanel extends StatelessWidget {
     required this.message,
     required this.messageIsError,
     required this.canResend,
+    required this.resendCooldown,
     required this.onResendConfirmation,
     required this.onModeChanged,
     required this.onTogglePassword,
@@ -372,6 +440,7 @@ class _AuthPanel extends StatelessWidget {
   final String? message;
   final bool messageIsError;
   final bool canResend;
+  final int resendCooldown;
   final VoidCallback onResendConfirmation;
   final ValueChanged<bool> onModeChanged;
   final VoidCallback onTogglePassword;
@@ -550,9 +619,11 @@ class _AuthPanel extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: TextButton.icon(
                     key: const Key('auth-resend-confirmation'),
-                    onPressed: loading ? null : onResendConfirmation,
+                    onPressed: loading || resendCooldown > 0
+                        ? null
+                        : onResendConfirmation,
                     icon: const Icon(Icons.mark_email_unread_outlined),
-                    label: const Text('Bestätigungs-Mail erneut senden'),
+                    label: Text(resendLabel(resendCooldown)),
                   ),
                 ),
               SizedBox(

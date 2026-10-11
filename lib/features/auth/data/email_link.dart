@@ -14,6 +14,10 @@ class EmailLink {
 
   bool get isPasswordRecovery => type == OtpType.recovery;
 
+  /// The link from the welcome e-mail that confirms a new address.
+  bool get isSignUpConfirmation =>
+      type == OtpType.email || type == OtpType.signup;
+
   static const _types = {
     'recovery': OtpType.recovery,
     'signup': OtpType.signup,

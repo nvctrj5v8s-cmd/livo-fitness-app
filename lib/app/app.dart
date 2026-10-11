@@ -7,6 +7,8 @@ import '../core/state/app_controller.dart';
 import '../core/theme/app_theme.dart';
 import '../features/consent/presentation/consent_gate.dart';
 import '../features/auth/presentation/auth_gate.dart';
+import '../features/auth/presentation/auth_page.dart';
+import '../features/auth/presentation/email_status_pages.dart';
 import '../features/auth/data/recovery_marker.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
@@ -20,11 +22,16 @@ class FitnessAiApp extends StatefulWidget {
     this.useAuth = true,
     this.initialPasswordRecovery = false,
     this.initialNotice,
+    this.initialConfirmedEmail,
     super.key,
   });
 
   final bool useAuth;
   final bool initialPasswordRecovery;
+
+  /// Set when the app was opened from a confirmation link: shows
+  /// „E-Mail bestätigt“ and then the sign-in with this address.
+  final String? initialConfirmedEmail;
 
   /// Shown once after start, for example when an e-mail link has expired.
   final String? initialNotice;
@@ -38,6 +45,8 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
   StreamSubscription<AuthState>? _authSubscription;
   String? _userId;
   bool _passwordRecovery = false;
+  String? _confirmedEmail;
+  String? _directSignInEmail;
   final _messenger = GlobalKey<ScaffoldMessengerState>();
 
   @override
@@ -49,6 +58,9 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     _passwordRecovery =
         widget.useAuth && widget.initialPasswordRecovery && _userId != null;
     _controller = AppController(personalizationUserId: _userId);
+    if (widget.useAuth && _userId == null) {
+      _confirmedEmail = widget.initialConfirmedEmail;
+    }
     final notice = widget.initialNotice;
     if (notice != null) {
       WidgetsBinding.instance.addPostFrameCallback(
@@ -85,6 +97,10 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
             final previous = _controller;
             setState(() {
               _userId = nextUserId;
+              if (nextUserId != null) {
+                _confirmedEmail = null;
+                _directSignInEmail = null;
+              }
               _controller = AppController(personalizationUserId: nextUserId);
             });
             previous.dispose();
@@ -124,21 +140,34 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
         darkTheme: AppTheme.dark,
         // The demo/test mode without account skips all gates, including the
         // paywall; premium features stay locked there.
-        home: widget.useAuth
-            ? _passwordRecovery && _userId != null
-                  ? const PasswordRecoveryPage()
-                  : const IntroductionGate(
-                      child: QuestionsFirstGate(
-                        child: AuthGate(
-                          child: PersonalizationGate(
-                            child: ConsentGate(
-                              child: PaywallGate(child: AppShell()),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-            : const AppShell(),
+        home: widget.useAuth ? _authHome() : const AppShell(),
+      ),
+    );
+  }
+
+  Widget _authHome() {
+    if (_passwordRecovery && _userId != null) {
+      return const PasswordRecoveryPage();
+    }
+    if (_userId == null && _confirmedEmail != null) {
+      return EmailConfirmedPage(
+        onSignIn: () => setState(() {
+          _directSignInEmail = _confirmedEmail;
+          _confirmedEmail = null;
+        }),
+      );
+    }
+    final signInEmail = _directSignInEmail;
+    if (_userId == null && signInEmail != null) {
+      return AuthPage(initialEmail: signInEmail);
+    }
+    return const IntroductionGate(
+      child: QuestionsFirstGate(
+        child: AuthGate(
+          child: PersonalizationGate(
+            child: ConsentGate(child: PaywallGate(child: AppShell())),
+          ),
+        ),
       ),
     );
   }

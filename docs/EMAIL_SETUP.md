@@ -60,6 +60,15 @@ veröffentlicht. Erzeugt werden sie mit `dart run tool/email_assets.dart`
 einmal ab und bleiben dann stehen. Zieht die Website auf die eigene Domain um,
 die Bild-URLs in den drei Vorlagen anpassen.
 
+## 3b. Gmail-Dunkelmodus
+
+Gmail auf dem iPhone kehrt im Dunkelmodus Farben um und machte die dunkle
+Mail hell. Gegenmaßnahme in den Vorlagen: dunkle Flächen zusätzlich als
+`background-image: linear-gradient(...)` (wird nicht umgekehrt), helle Texte
+in `<div class="gs"><div class="gd">` (CSS `mix-blend-mode`, wirkt nur in Gmail
+über den Selektor `u + .body`). Dunkle Schrift darf nicht in diese Hüllen,
+sonst wird sie unsichtbar; der grüne Knopf bleibt deshalb ohne Hülle.
+
 ## 3a. Pflicht-Einstellungen im Dashboard (Prüfung vom 11.10.2026)
 
 - **Authentication → Sign In / Providers → Email:** „Confirm email“ an,

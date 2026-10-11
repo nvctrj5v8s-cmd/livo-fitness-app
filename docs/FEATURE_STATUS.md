@@ -1,5 +1,22 @@
 # Funktionsstatus
 
+## Registrierung: Postfach-Seite und „E-Mail bestätigt“, 12. Oktober 2026
+
+- Nach der Registrierung erscheint statt einer grünen Meldung die Seite
+  „Schau in dein Postfach“ (Adresse, drei Schritte, Spam-Hinweis, „Zur
+  Anmeldung“, „Andere E-Mail-Adresse verwenden“ bzw. Zurück-Taste).
+- „Bestätigungs-Mail erneut senden“ ist nach jedem Versand 60 Sekunden
+  gesperrt (Countdown im Knopf); Supabase begrenzt zusätzlich serverseitig.
+- Der Link aus der Willkommens-Mail öffnet die Seite „E-Mail bestätigt“. Die
+  durch den Link entstandene Sitzung wird beendet; danach meldet man sich
+  bewusst an (E-Mail vorausgefüllt). In der Web-Version gibt es den Hinweis,
+  dass App-Nutzer sich in der App anmelden.
+- Mail-Vorlagen: Die E-Mail-Adresse steht nicht mehr im Text (Gmail machte
+  daraus einen Mail-Link). Gegen die Farbumkehr von Gmail im Dunkelmodus
+  (iPhone) sind dunkle Flächen zusätzlich als Hintergrundbild angelegt und
+  helle Texte mit CSS-Mischmodi geschützt; Wirkung muss im Test bestätigt
+  werden.
+
 ## E-Mail-Versand, neue Vorlagen und Login-Korrekturen, 11. Oktober 2026
 
 - **Versand:** Supabase Auth verschickt über Resend (Custom SMTP) von
