@@ -23,31 +23,7 @@ void main() {
   _writeGif('logo.gif', _logoFrames(size: 112, background: _page));
   _writeGif('hero-welcome.gif', _heroFrames(_Symbol.ring));
   _writeGif('hero-recovery.gif', _heroFrames(_Symbol.lock));
-  _tile('livo-salmon-avocado-rice.webp', 'feature-recipes.jpg');
   stdout.writeln('E-Mail-Bilder in $_out erstellt.');
-}
-
-// Food photo for the recipe row of the welcome mail (shown at 220 x 165).
-void _tile(String source, String name) {
-  final decoded = img.decodeWebP(
-    File('assets/images/recipes/$source').readAsBytesSync(),
-  )!;
-  const w = 440, h = 330;
-  final scale = math.max(w / decoded.width, h / decoded.height);
-  final resized = img.copyResize(
-    decoded,
-    width: (decoded.width * scale).ceil(),
-    height: (decoded.height * scale).ceil(),
-    interpolation: img.Interpolation.average,
-  );
-  final cropped = img.copyCrop(
-    resized,
-    x: (resized.width - w) ~/ 2,
-    y: (resized.height - h) ~/ 2,
-    width: w,
-    height: h,
-  );
-  File('$_out/$name').writeAsBytesSync(img.encodeJpg(cropped, quality: 78));
 }
 
 enum _Symbol { ring, lock }

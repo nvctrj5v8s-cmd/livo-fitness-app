@@ -78,7 +78,5 @@ Joghurt, Thunfisch-Reis-Bowl mit Gurke, Linsen-Ragout mit Spaghetti.
 ## E-Mail-Bilder (`web/email/`)
 
 Am 11. Oktober 2026 mit `tool/email_assets.dart` erzeugt. Logo und
-Kopfbilder sind selbst gezeichnet (Lookin-Ring, Schloss, Briefumschlag). Die
-drei Kacheln `tile-*.jpg` sind verkleinerte Ausschnitte der oben aufgeführten
-Rezeptfotos `livo-avocado-egg-bowl.webp`, `livo-salmon-tomato-bowl.webp` und
-`livo-protein-oats.webp` (gleiche Lizenz).
+Kopfbilder (Lookin-Ring, Schloss) sind selbst gezeichnet. Fotos werden in den
+Mails nicht mehr verwendet.

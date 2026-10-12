@@ -22,6 +22,8 @@
 
 ## Registrierung: Postfach-Seite und „E-Mail bestätigt“, 12. Oktober 2026
 
+- **Mail ohne Werbung:** Die Willkommens-Mail enthält keine Funktions-Kacheln
+  und keinen Hinweis auf Premium mehr (mögliche Werbung nach UWG § 7).
 - Nach der Registrierung erscheint statt einer grünen Meldung die Seite
   „Schau in dein Postfach“ (Adresse, drei Schritte, Spam-Hinweis, „Zur
   Anmeldung“, „Andere E-Mail-Adresse verwenden“ bzw. Zurück-Taste).

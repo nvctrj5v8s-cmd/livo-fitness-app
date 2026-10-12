@@ -52,11 +52,11 @@ als der Standard-Link funktioniert er auch, wenn die Mail auf einem anderen
 Gerät geöffnet wird als dem, auf dem sie angefordert wurde. Voraussetzung ist
 Schritt 1 (die Site URL muss auf die Website zeigen).
 
-Die Bilder der Vorlagen (animiertes Logo, animierte Kopfbilder, Funktions-
-Animationen, Rezeptfoto) liegen in `web/email/` und werden mit der Website
-veröffentlicht. Erzeugt werden sie mit `dart run tool/email_assets.dart`
-(Logo, Kopfbilder, Foto) und `flutter test tool/email_frames_test.dart`
-(Tagebuch- und Coach-Animation, mit Flutter im App-Look gerendert). Die Animationen laufen
+Die Bilder der Vorlagen (animiertes Logo und animierte Kopfbilder) liegen in
+`web/email/` und werden mit der Website veröffentlicht. Erzeugt werden sie mit
+`dart run tool/email_assets.dart`. Funktions-Kacheln (Tagebuch, KI-Coach,
+Rezepte) wurden am 12.10.2026 wieder entfernt: Eine Bestätigungs-Mail soll
+keine Werbung für Premium enthalten (UWG § 7). Die Animationen laufen
 einmal ab und bleiben dann stehen. Zieht die Website auf die eigene Domain um,
 die Bild-URLs in den drei Vorlagen anpassen.
 
