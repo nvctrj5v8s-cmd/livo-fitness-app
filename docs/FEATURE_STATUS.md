@@ -22,6 +22,16 @@
 
 ## Registrierung: Postfach-Seite und „E-Mail bestätigt“, 12. Oktober 2026
 
+- **Keine doppelten Fragen nach der Bestätigung:** Die Antworten der Fragen und
+  die Einführung liegen nur im Browser (bzw. in der App), in dem man sich
+  registriert hat. Öffnet man den Mail-Link in einem anderen Fenster (z. B.
+  im Gmail-Browser), fehlen sie dort. Deshalb meldet sich Lookin im
+  Registrierungs-Fenster automatisch an, sobald man dorthin zurückkehrt
+  (App-Lebenszyklus „resumed“) oder auf „Ich habe bestätigt – weiter“ tippt.
+  Das Passwort liegt dafür nur im Arbeitsspeicher der Postfach-Seite und wird
+  beim Verlassen verworfen. Auf der Seite „E-Mail bestätigt“ wird die
+  Einführung übersprungen; die Fragen müssen dort aber neu beantwortet
+  werden, weil Gesundheitsangaben bewusst nicht in die Cloud gehen.
 - **Mail ohne Werbung:** Die Willkommens-Mail enthält keine Funktions-Kacheln
   und keinen Hinweis auf Premium mehr (mögliche Werbung nach UWG § 7).
 - Nach der Registrierung erscheint statt einer grünen Meldung die Seite

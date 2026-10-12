@@ -12,6 +12,8 @@ import '../features/auth/presentation/email_status_pages.dart';
 import '../features/auth/data/recovery_marker.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
+import '../features/onboarding/data/introduction_store.dart';
+import '../features/onboarding/data/personalization_store.dart';
 import '../features/onboarding/presentation/introduction_gate.dart';
 import '../features/onboarding/presentation/personalization_gate.dart';
 import '../features/onboarding/presentation/questions_first_gate.dart';
@@ -151,10 +153,20 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     }
     if (_userId == null && _confirmedEmail != null) {
       return EmailConfirmedPage(
-        onSignIn: () => setState(() {
-          _directSignInEmail = _confirmedEmail;
-          _confirmedEmail = null;
-        }),
+        onSignIn: () async {
+          // This browser window did not see the introduction or the questions
+          // (they were answered in the window of the sign-up). Skip the
+          // introduction and go straight to the sign-in.
+          try {
+            await const DeviceIntroductionStore().complete();
+            await const DevicePendingPersonalizationStore().markAccountSeen();
+          } catch (_) {}
+          if (!mounted) return;
+          setState(() {
+            _directSignInEmail = _confirmedEmail;
+            _confirmedEmail = null;
+          });
+        },
       );
     }
     final signInEmail = _directSignInEmail;

@@ -36,7 +36,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -51,6 +51,12 @@ class _AuthPageState extends State<AuthPage>
 
   /// Set after sign-up while the confirmation e-mail is pending.
   String? _inboxEmail;
+
+  /// Kept in memory only while the check-inbox page is open. Once the link in
+  /// the e-mail was used (often in another browser window), coming back here
+  /// signs in automatically, so the answers saved in this window are kept.
+  String? _pendingPassword;
+  bool _autoSigningIn = false;
 
   /// Supabase allows one confirmation e-mail per minute; the button waits too.
   static const _resendWait = Duration(seconds: 60);
@@ -79,6 +85,7 @@ class _AuthPageState extends State<AuthPage>
     super.initState();
     final email = widget.initialEmail;
     if (email != null) _emailController.text = email;
+    WidgetsBinding.instance.addObserver(this);
     _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
@@ -87,6 +94,8 @@ class _AuthPageState extends State<AuthPage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _pendingPassword = null;
     _resendTicker?.cancel();
     _entranceController.dispose();
     _nameController.dispose();
@@ -115,6 +124,7 @@ class _AuthPageState extends State<AuthPage>
         setState(() {
           if (response.session == null) {
             _inboxEmail = _emailController.text.trim();
+            _pendingPassword = _passwordController.text;
             _message = null;
             _startResendCooldown();
           } else {
@@ -277,7 +287,59 @@ class _AuthPageState extends State<AuthPage>
     return 'Das hat gerade nicht geklappt. Bitte versuche es später erneut.';
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _inboxEmail != null) {
+      unawaited(_signInAfterConfirmation(silent: true));
+    }
+  }
+
+  /// Tries to sign in with the data from sign-up. Fails quietly while the
+  /// address is still unconfirmed.
+  Future<void> _signInAfterConfirmation({required bool silent}) async {
+    final email = _inboxEmail;
+    final password = _pendingPassword;
+    if (_autoSigningIn || _loading) return;
+    if (email == null || password == null) {
+      if (!silent) _leaveInbox(toSignIn: true);
+      return;
+    }
+    _autoSigningIn = true;
+    if (!silent) setState(() => _loading = true);
+    try {
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      // The gates take over once the session exists.
+      _pendingPassword = null;
+    } on AuthException catch (error) {
+      if (!mounted || silent) return;
+      if (_isUnconfirmed(error.message)) {
+        setState(() {
+          _message =
+              'Deine Adresse ist noch nicht bestätigt. Tippe zuerst auf den Link '
+              'in der E-Mail und komm dann hierher zurück.';
+          _messageIsError = true;
+        });
+      } else {
+        _leaveInbox(toSignIn: true);
+      }
+    } catch (_) {
+      if (mounted && !silent) {
+        setState(() {
+          _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+          _messageIsError = true;
+        });
+      }
+    } finally {
+      _autoSigningIn = false;
+      if (mounted && !silent) setState(() => _loading = false);
+    }
+  }
+
   void _leaveInbox({required bool toSignIn}) {
+    _pendingPassword = null;
     setState(() {
       _inboxEmail = null;
       _message = null;
@@ -302,7 +364,7 @@ class _AuthPageState extends State<AuthPage>
           message: _message,
           messageIsError: _messageIsError,
           onResend: _resendConfirmation,
-          onSignIn: () => _leaveInbox(toSignIn: true),
+          onSignIn: () => unawaited(_signInAfterConfirmation(silent: false)),
           onBack: () => _leaveInbox(toSignIn: false),
         ),
       );

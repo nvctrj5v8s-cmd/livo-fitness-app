@@ -143,7 +143,7 @@ class CheckInboxPage extends StatelessWidget {
           key: const Key('inbox-sign-in'),
           onPressed: loading ? null : onSignIn,
           icon: const Icon(Icons.login_rounded),
-          label: const Text('Zur Anmeldung'),
+          label: const Text('Ich habe bestätigt – weiter'),
         ),
         const SizedBox(height: 10),
         OutlinedButton.icon(
@@ -194,6 +194,17 @@ class EmailConfirmedPage extends StatelessWidget {
             color: AppColors.textMuted,
             fontSize: 15,
             height: 1.5,
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Tipp: Kehre einfach zu Lookin zurück, in dem Fenster oder der App, in '
+          'der du dich registriert hast. Dort wirst du automatisch angemeldet.',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 13,
+            height: 1.45,
           ),
         ),
         const SizedBox(height: 24),
