@@ -61,6 +61,12 @@
   Meldung.
 - **Entwickler-Schalter:** Migration `0019` (angewendet am 12.10.2026) verlangt
   eine bestätigte E-Mail.
+- **Interne Funktionen gesperrt:** Migration `0020` (angewendet am 12.10.2026)
+  entzieht `consume_ai_chat_quota`, `consume_barcode_lookup_quota` und
+  `handle_new_user` den Rollen `anon` und `authenticated`; nur noch die
+  Edge Functions (service role) dürfen die Zähler aufrufen. Außerdem war das
+  Barcode-Limit (12 pro Minute) wirkungslos, weil die Funktion eine Variable
+  `current_time` nannte; behoben und getestet (12 erlaubt, 13. abgelehnt).
 - **Nicht vorhanden:** eine Funktion „E-Mail-Adresse ändern“ (und damit keine
   Vorlage dafür), Impressum-Anschrift steht nicht in den Konto-Mails (nur der
   Link zum Impressum), Android-App-Links (Mail-Links öffnen die Web-Version).
