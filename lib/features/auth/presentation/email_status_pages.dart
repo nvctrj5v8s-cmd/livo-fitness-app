@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -186,45 +185,12 @@ class EmailConfirmedPage extends StatelessWidget {
             height: 1.5,
           ),
         ),
-        if (kIsWeb) ...[
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceHigh,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.smartphone_rounded,
-                  size: 20,
-                  color: AppColors.textMuted,
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Du nutzt die Lookin-App auf deinem Handy? Dann öffne sie '
-                    'und melde dich dort an. Diese Seite kannst du schließen.',
-                    style: TextStyle(
-                      color: AppColors.textMuted,
-                      fontSize: 13,
-                      height: 1.45,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
         const SizedBox(height: 24),
         FilledButton.icon(
           key: const Key('confirmed-sign-in'),
           onPressed: onSignIn,
           icon: const Icon(Icons.login_rounded),
-          label: Text(kIsWeb ? 'Hier anmelden' : 'Jetzt anmelden'),
+          label: const Text('Jetzt anmelden'),
         ),
       ],
     );

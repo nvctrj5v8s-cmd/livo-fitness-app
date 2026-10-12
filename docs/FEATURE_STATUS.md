@@ -29,13 +29,12 @@
   gesperrt (Countdown im Knopf); Supabase begrenzt zusätzlich serverseitig.
 - Der Link aus der Willkommens-Mail öffnet die Seite „E-Mail bestätigt“. Die
   durch den Link entstandene Sitzung wird beendet; danach meldet man sich
-  bewusst an (E-Mail vorausgefüllt). In der Web-Version gibt es den Hinweis,
-  dass App-Nutzer sich in der App anmelden.
+  bewusst an (E-Mail vorausgefüllt).
 - Mail-Vorlagen: Die E-Mail-Adresse steht nicht mehr im Text (Gmail machte
   daraus einen Mail-Link). Gegen die Farbumkehr von Gmail im Dunkelmodus
   (iPhone) sind dunkle Flächen zusätzlich als Hintergrundbild angelegt und
-  helle Texte mit CSS-Mischmodi geschützt; Wirkung muss im Test bestätigt
-  werden.
+  helle Texte mit CSS-Mischmodi geschützt. Im Test färbte Gmail grüne Schrift
+  rosa; deshalb ist Schrift in den Vorlagen weiß, grün nur noch als Fläche.
 
 ## E-Mail-Versand, neue Vorlagen und Login-Korrekturen, 11. Oktober 2026
 
