@@ -249,7 +249,9 @@ class _AuthPageState extends State<AuthPage>
   String _friendlyAuthError(String message) {
     final lower = message.toLowerCase();
     if (lower.contains('invalid login credentials')) {
-      return 'E-Mail oder Passwort ist nicht korrekt.';
+      return 'E-Mail oder Passwort ist nicht korrekt. Hast du dich mit dieser '
+          'Adresse schon einmal registriert, gilt das damalige Passwort. '
+          'Setze es sonst über „Passwort vergessen?“ zurück.';
     }
     if (_isUnconfirmed(message)) {
       return 'Deine E-Mail-Adresse ist noch nicht bestätigt. Tippe auf den '
@@ -262,6 +264,9 @@ class _AuthPageState extends State<AuthPage>
         lower.contains('rate limit') ||
         lower.contains('too many')) {
       return 'Zu viele Versuche. Bitte warte kurz und versuche es dann erneut.';
+    }
+    if (lower.contains('weak') || lower.contains('pwned')) {
+      return 'Dieses Passwort ist zu unsicher. Wähle ein anderes.';
     }
     if (lower.contains('password')) {
       return 'Das Passwort muss mindestens acht Zeichen haben.';

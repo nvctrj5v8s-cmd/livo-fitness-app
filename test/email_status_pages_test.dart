@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  layoutTests();
   testWidgets(
     'Postfach-Seite: erneut senden erst nach Wartezeit, zurück geht',
     (tester) async {
@@ -49,4 +50,40 @@ void main() {
     await tester.tap(find.byKey(const Key('confirmed-sign-in')));
     expect(signIn, 1);
   });
+}
+
+void layoutTests() {
+  for (final scale in const [1.0, 2.0]) {
+    testWidgets('Postfach-Seite ohne Überlauf bei 320 px, Schrift x$scale', (
+      tester,
+    ) async {
+      tester.view
+        ..physicalSize = const Size(320, 640)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(scale)),
+            child: child!,
+          ),
+          home: CheckInboxPage(
+            email: 'ein.sehr.langer.name@beispiel-domain.de',
+            resendCooldown: 30,
+            loading: false,
+            message:
+                'Falls die Adresse noch nicht bestätigt ist, '
+                'haben wir dir eine neue Bestätigungs-Mail geschickt.',
+            onResend: () {},
+            onSignIn: () {},
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

@@ -12,11 +12,6 @@ import 'features/auth/data/recovery_marker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Supabase may consume and clear the web recovery URL during initialize,
-  // before the first widget can subscribe to auth events.
-  final recoveryInUrl =
-      Uri.base.queryParameters['type'] == 'recovery' ||
-      Uri.base.fragment.contains('type=recovery');
   final emailLink = EmailLink.fromUri(Uri.base);
 
   await Supabase.initialize(
@@ -29,9 +24,13 @@ Future<void> main() async {
   String? confirmedEmail;
   var recovering = false;
   if (emailLink != null) {
-    final verified = await emailLink
+    final result = await emailLink
         .verify(auth)
-        .timeout(const Duration(seconds: 12), onTimeout: () => false);
+        .timeout(
+          const Duration(seconds: 12),
+          onTimeout: () => EmailLinkResult.offline,
+        );
+    final verified = result == EmailLinkResult.verified;
     final userId = auth.currentUser?.id;
     if (verified && emailLink.isPasswordRecovery && userId != null) {
       recovering = true;
@@ -52,7 +51,11 @@ Future<void> main() async {
           'Bestätigt. Hast du auch an deine andere Adresse eine E-Mail '
           'bekommen, bestätige die Änderung dort ebenfalls.';
     }
-    if (!verified && auth.currentSession == null) {
+    if (result == EmailLinkResult.offline) {
+      initialNotice =
+          'Keine Verbindung zum Server. Dein Link ist vermutlich noch gültig: '
+          'Lade die Seite neu oder tippe den Link in der E-Mail noch einmal an.';
+    } else if (!verified) {
       initialNotice = emailLink.isPasswordRecovery
           ? 'Der Link zum Zurücksetzen ist abgelaufen oder wurde schon '
                 'benutzt. Fordere unter „Passwort vergessen?“ einen neuen an.'
@@ -60,18 +63,21 @@ Future<void> main() async {
                 'Melde dich an. Ist deine Adresse noch nicht bestätigt, '
                 'kannst du dort eine neue Bestätigungs-Mail anfordern.';
     }
-    // A reload must not try the spent link again.
-    replaceBrowserUrlWithoutQuery();
-  } else if (recoveryInUrl && auth.currentUser != null) {
-    recovering = true;
-    await _markRecovery(auth.currentUser!.id);
+    // A reload must not try the spent link again; after a network error the
+    // link may still be valid and stays in the address bar.
+    if (result != EmailLinkResult.offline) replaceBrowserUrlWithoutQuery();
   }
 
   // A session from a reset link stays limited to the new-password page, also
   // after a reload, until a new password is saved or the user cancels.
   final userId = auth.currentUser?.id;
   var initialPasswordRecovery = recovering;
-  if (userId != null && !recovering) {
+  if (userId == null) {
+    // No session: an old mark (for example from an expired session) is stale.
+    try {
+      await RecoveryMarker.clear();
+    } catch (_) {}
+  } else if (!recovering) {
     try {
       initialPasswordRecovery = await RecoveryMarker.isSetFor(userId);
     } catch (_) {

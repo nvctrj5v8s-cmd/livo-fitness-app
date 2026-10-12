@@ -38,11 +38,14 @@ class CheckInboxPage extends StatelessWidget {
       children: [
         const _StatusIcon(icon: Icons.mark_email_unread_rounded),
         const SizedBox(height: 22),
-        Text(
-          'Schau in dein Postfach',
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w900,
+        Semantics(
+          header: true,
+          child: Text(
+            'Schau in dein Postfach',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -59,8 +62,8 @@ class CheckInboxPage extends StatelessWidget {
               ),
               const TextSpan(
                 text:
-                    ' geschickt. Tippe auf den Link darin, um dein Konto '
-                    'zu aktivieren.',
+                    ' geschickt, falls es dort noch kein Lookin-Konto gibt. '
+                    'Tippe auf den Link darin, um dein Konto zu aktivieren.',
               ),
             ],
           ),
@@ -107,7 +110,9 @@ class CheckInboxPage extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Nichts angekommen? Schau auch im Spam-Ordner nach. Es kann '
-                  'ein bis zwei Minuten dauern.',
+                  'ein bis zwei Minuten dauern. Hast du dich mit dieser '
+                  'Adresse schon einmal registriert? Dann melde dich an oder '
+                  'nutze dort „Passwort vergessen?“.',
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 13,
@@ -120,13 +125,16 @@ class CheckInboxPage extends StatelessWidget {
         ),
         if (message != null) ...[
           const SizedBox(height: 14),
-          Text(
-            message!,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: messageIsError ? AppColors.error : AppColors.primary,
-              fontSize: 13,
-              height: 1.45,
+          Semantics(
+            liveRegion: true,
+            child: Text(
+              message!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: messageIsError ? AppColors.error : AppColors.primary,
+                fontSize: 13,
+                height: 1.45,
+              ),
             ),
           ),
         ],
@@ -167,11 +175,14 @@ class EmailConfirmedPage extends StatelessWidget {
       children: [
         const _StatusIcon(icon: Icons.check_rounded, filled: true),
         const SizedBox(height: 22),
-        Text(
-          'E-Mail bestätigt',
-          textAlign: TextAlign.center,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w900,
+        Semantics(
+          header: true,
+          child: Text(
+            'E-Mail bestätigt',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
         const SizedBox(height: 10),

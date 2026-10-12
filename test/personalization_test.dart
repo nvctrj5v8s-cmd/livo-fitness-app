@@ -118,7 +118,10 @@ void main() {
     );
     expect(find.byKey(const ValueKey('personal-summary-date')), findsOneWidget);
     expect(find.textContaining('Grobe Schätzung'), findsOneWidget);
-    expect(find.textContaining('Allergenen blendet Lookin aus'), findsOneWidget);
+    expect(
+      find.textContaining('Allergenen blendet Lookin aus'),
+      findsOneWidget,
+    );
     await _next(tester);
 
     expect(result, isNotNull);

@@ -1,5 +1,17 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Result of using a link from a Lookin e-mail.
+enum EmailLinkResult {
+  /// The link was accepted.
+  verified,
+
+  /// The link is expired or was already used.
+  invalid,
+
+  /// The server could not be reached; the link may still be valid.
+  offline,
+}
+
 /// A sign-in link from a Lookin e-mail: `…?token_hash=…&type=recovery`.
 ///
 /// The e-mail templates in `supabase/templates/` link with a one-time token
@@ -44,13 +56,16 @@ class EmailLink {
 
   /// Exchanges the link for a session. Recovery links emit
   /// [AuthChangeEvent.passwordRecovery], which opens the new-password page.
-  /// Returns `false` when the link is expired or was already used.
-  Future<bool> verify(GoTrueClient auth) async {
+  Future<EmailLinkResult> verify(GoTrueClient auth) async {
     try {
       final response = await auth.verifyOTP(type: type, tokenHash: tokenHash);
-      return response.session != null || type == OtpType.emailChange;
+      return response.session != null || type == OtpType.emailChange
+          ? EmailLinkResult.verified
+          : EmailLinkResult.invalid;
+    } on AuthRetryableFetchException {
+      return EmailLinkResult.offline;
     } on AuthException {
-      return false;
+      return EmailLinkResult.invalid;
     }
   }
 }
