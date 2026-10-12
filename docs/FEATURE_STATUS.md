@@ -59,8 +59,8 @@
   benutzte Link wird aus der Adresszeile entfernt. Nach dem Speichern erscheint
   „Dein neues Passwort ist gespeichert“; „gleiches Passwort“ hat eine eigene
   Meldung.
-- **Entwickler-Schalter:** Migration `0019` verlangt eine bestätigte E-Mail
-  (noch nicht angewendet, braucht Freigabe des Inhabers).
+- **Entwickler-Schalter:** Migration `0019` (angewendet am 12.10.2026) verlangt
+  eine bestätigte E-Mail.
 - **Nicht vorhanden:** eine Funktion „E-Mail-Adresse ändern“ (und damit keine
   Vorlage dafür), Impressum-Anschrift steht nicht in den Konto-Mails (nur der
   Link zum Impressum), Android-App-Links (Mail-Links öffnen die Web-Version).
