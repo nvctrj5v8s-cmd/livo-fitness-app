@@ -1,0 +1,20 @@
+{
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonContinue": "Continue",
+  "commonBack": "Back",
+  "commonClose": "Close",
+  "commonDone": "Done",
+  "commonRetry": "Try again",
+  "commonDelete": "Delete",
+  "commonEdit": "Edit",
+  "commonOk": "OK",
+  "commonYes": "Yes",
+  "commonNo": "No",
+  "commonLater": "Later",
+  "commonLoading": "Loading …",
+  "commonPremium": "Premium",
+  "commonConnectionFailed": "Connection failed. Please try again.",
+  "commonUnknownError": "That didn't work just now. Please try again later.",
+  "commonAppTitle": "Lookin – Nutrition"
+}

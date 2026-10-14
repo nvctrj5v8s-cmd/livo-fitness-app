@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../core/theme/app_colors.dart';
+import '../l10n/l10n.dart';
 
 /// Plays the Lookin start animation once per cold start above the app.
 ///
@@ -27,7 +28,8 @@ class StartupSplash extends StatefulWidget {
   /// Fade after a tap to skip.
   static const skipDuration = Duration(milliseconds: 180);
 
-  static const semanticsLabel = 'Lookin wird geöffnet';
+  /// The splash sits above the localized app, so it uses the global texts.
+  static String get semanticsLabel => L10n.current.appOpeningSemantics;
 
   @override
   State<StartupSplash> createState() => _StartupSplashState();

@@ -8,6 +8,8 @@ import '../../consent/presentation/consent_dialogs.dart';
 import '../../subscription/domain/entitlement.dart';
 import '../../subscription/presentation/withdrawal_page.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/l10n.dart';
+import '../../language/presentation/language_page.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../onboarding/presentation/personalization_card.dart';
@@ -712,6 +714,14 @@ class _SettingsList extends StatelessWidget {
             title: 'Hilfe & Sicherheit',
             subtitle: 'Hinweise und Kontakt',
             onTap: () => showHelpSheet(context),
+          ),
+          const Divider(height: 1),
+          _SettingsTile(
+            key: const Key('profile-language'),
+            icon: Icons.translate_rounded,
+            title: context.l10n.languageSettingsTitle,
+            subtitle: LanguageOption.of(Locale(context.l10n.localeName)).name,
+            onTap: () => unawaited(showLanguageSheet(context)),
           ),
           const Divider(height: 1),
           _SettingsTile(

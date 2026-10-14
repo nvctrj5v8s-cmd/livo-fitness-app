@@ -1,0 +1,23 @@
+{
+  "commonSave": "Speichern",
+  "commonCancel": "Abbrechen",
+  "commonContinue": "Weiter",
+  "commonBack": "Zurück",
+  "commonClose": "Schließen",
+  "commonDone": "Fertig",
+  "commonRetry": "Erneut versuchen",
+  "commonDelete": "Löschen",
+  "commonEdit": "Bearbeiten",
+  "commonOk": "OK",
+  "commonYes": "Ja",
+  "commonNo": "Nein",
+  "commonLater": "Später",
+  "commonLoading": "Wird geladen …",
+  "commonPremium": "Premium",
+  "commonConnectionFailed": "Verbindung fehlgeschlagen. Bitte versuche es erneut.",
+  "commonUnknownError": "Das hat gerade nicht geklappt. Bitte versuche es später erneut.",
+  "commonAppTitle": "Lookin – Ernährung",
+  "@commonAppTitle": {
+    "description": "Window/task title of the app."
+  }
+}

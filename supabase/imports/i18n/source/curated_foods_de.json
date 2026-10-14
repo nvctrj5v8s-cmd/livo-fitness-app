@@ -1,0 +1,344 @@
+[
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Apfel",
+    "slug": "apple"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Apfelmus, ungesüßt",
+    "slug": "applesauce"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Avocado",
+    "slug": "avocado"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Banane",
+    "slug": "banana"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Paprika, rot",
+    "slug": "bell-pepper-red"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Beeren-Mix",
+    "slug": "berries"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Schwarze Bohnen, abgetropft",
+    "slug": "black-beans-canned"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Pfeffer, schwarz",
+    "slug": "black-pepper"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Tellerlinsen, getrocknet",
+    "slug": "brown-lentils"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Butter",
+    "slug": "butter"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Dosentomaten, gehackt",
+    "slug": "canned-tomatoes"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Rapsöl",
+    "slug": "canola-oil"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Möhren",
+    "slug": "carrot"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Hähnchenbrust",
+    "slug": "chicken-breast"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Hähnchenbrustfilet, halal",
+    "slug": "chicken-breast-halal"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Kichererbsen, abgetropft",
+    "slug": "chickpeas-canned"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Schnittlauch",
+    "slug": "chives"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Zimt, gemahlen",
+    "slug": "cinnamon"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Gurke",
+    "slug": "cucumber"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Kreuzkümmel, gemahlen",
+    "slug": "cumin"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Currypulver",
+    "slug": "curry-powder"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Ei",
+    "slug": "egg"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Feta",
+    "slug": "feta"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Knoblauch",
+    "slug": "garlic"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Grüne Bohnen (TK)",
+    "slug": "green-beans-frozen"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Honig",
+    "slug": "honey"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Zitronensaft",
+    "slug": "lemon-juice"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Magerquark",
+    "slug": "low-fat-quark"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Milch",
+    "slug": "milk"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Naturjoghurt",
+    "slug": "natural-yogurt"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Haferflocken",
+    "slug": "oats"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Olivenöl",
+    "slug": "olive-oil"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Zwiebeln",
+    "slug": "onion"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Oregano, getrocknet",
+    "slug": "oregano"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Paprikapulver, edelsüß",
+    "slug": "paprika-powder"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Petersilie, frisch",
+    "slug": "parsley"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Nudeln, ungekocht",
+    "slug": "pasta-raw"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Erbsen (TK)",
+    "slug": "peas-frozen"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Kartoffeln",
+    "slug": "potatoes"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Milchreis, ungekocht",
+    "slug": "pudding-rice-raw"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Rote Linsen, getrocknet",
+    "slug": "red-lentils"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Reis, gekocht",
+    "slug": "rice"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Reis, ungekocht",
+    "slug": "rice-raw"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Lachsfilet",
+    "slug": "salmon"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Salz",
+    "slug": "salt"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Skyr natur",
+    "slug": "skyr"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Spinat (TK)",
+    "slug": "spinach-frozen"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Frühlingszwiebeln",
+    "slug": "spring-onion"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Mais, abgetropft",
+    "slug": "sweetcorn-canned"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Tomate",
+    "slug": "tomato"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Tomatenmark",
+    "slug": "tomato-paste"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Thunfisch im eigenen Saft, abgetropft",
+    "slug": "tuna-canned"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Gemüsebrühe, zubereitet",
+    "slug": "vegetable-broth"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Weizenmehl",
+    "slug": "wheat-flour"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Vollkornbrot",
+    "slug": "wholegrain-bread"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Vollkornpasta, gekocht",
+    "slug": "wholegrain-pasta"
+  },
+  {
+    "brand": null,
+    "ingredients_text": null,
+    "name": "Zucchini",
+    "slug": "zucchini"
+  }
+]

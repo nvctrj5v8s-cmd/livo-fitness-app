@@ -1,0 +1,9 @@
+# German is the template language; every key must exist in English too.
+# The ARB files are assembled from lib/l10n/parts/ by tool/l10n_merge.dart;
+# edit the parts, not app_de.arb / app_en.arb.
+arb-dir: lib/l10n
+template-arb-file: app_de.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: true
+preferred-supported-locales: [de]

@@ -1,0 +1,19 @@
+{
+  "languageTitle": "Wähle deine Sprache",
+  "languageSubtitle": "Du kannst sie später jederzeit im Profil ändern.",
+  "languageContinue": "Weiter auf Deutsch",
+  "@languageContinue": {
+    "description": "Button on the first-start language page, names the selected language."
+  },
+  "languageSettingsTitle": "Sprache",
+  "languageSheetTitle": "Sprache wählen",
+  "languageSheetSubtitle": "Die ganze App wechselt sofort, auch Rezepte und Lebensmittel.",
+  "languageSelectedSemantics": "{language}, ausgewählt",
+  "@languageSelectedSemantics": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  }
+}

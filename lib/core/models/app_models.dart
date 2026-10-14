@@ -1,13 +1,18 @@
+import '../../l10n/l10n.dart';
 import 'custom_food.dart';
 
 enum MealSlot { breakfast, lunch, dinner, snack }
 
 extension MealSlotLabel on MealSlot {
-  String get label => switch (this) {
-    MealSlot.breakfast => 'Frühstück',
-    MealSlot.lunch => 'Mittagessen',
-    MealSlot.dinner => 'Abendessen',
-    MealSlot.snack => 'Snack',
+  /// Name in the active language. In widgets prefer [labelOf] with
+  /// `context.l10n`, so the text follows a language change at once.
+  String get label => labelOf(L10n.current);
+
+  String labelOf(AppLocalizations l10n) => switch (this) {
+    MealSlot.breakfast => l10n.valuesMealBreakfast,
+    MealSlot.lunch => l10n.valuesMealLunch,
+    MealSlot.dinner => l10n.valuesMealDinner,
+    MealSlot.snack => l10n.valuesMealSnack,
   };
 
   String get databaseValue => switch (this) {

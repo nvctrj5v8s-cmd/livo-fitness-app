@@ -9,9 +9,13 @@ import 'core/config/supabase_config.dart';
 import 'features/auth/data/browser_url.dart';
 import 'features/auth/data/email_link.dart';
 import 'features/auth/data/recovery_marker.dart';
+import 'l10n/locale_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // The language is known before the first frame, also for the texts below.
+  final localeController = LocaleController();
+  await localeController.load();
   final emailLink = EmailLink.fromUri(Uri.base);
 
   await Supabase.initialize(
@@ -91,6 +95,7 @@ Future<void> main() async {
         initialPasswordRecovery: initialPasswordRecovery,
         initialNotice: initialNotice,
         initialConfirmedEmail: confirmedEmail,
+        localeController: localeController,
       ),
     ),
   );

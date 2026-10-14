@@ -9,8 +9,10 @@ import '../features/consent/presentation/consent_gate.dart';
 import '../features/auth/presentation/auth_gate.dart';
 import '../features/auth/presentation/auth_page.dart';
 import '../features/auth/presentation/email_status_pages.dart';
+import '../features/auth/data/account_locale.dart';
 import '../features/auth/data/recovery_marker.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
+import '../features/language/presentation/language_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/data/introduction_store.dart';
 import '../features/onboarding/data/personalization_store.dart';
@@ -18,6 +20,8 @@ import '../features/onboarding/presentation/introduction_gate.dart';
 import '../features/onboarding/presentation/personalization_gate.dart';
 import '../features/onboarding/presentation/questions_first_gate.dart';
 import '../features/subscription/presentation/paywall_gate.dart';
+import '../l10n/l10n.dart';
+import '../l10n/locale_controller.dart';
 
 class FitnessAiApp extends StatefulWidget {
   const FitnessAiApp({
@@ -25,10 +29,15 @@ class FitnessAiApp extends StatefulWidget {
     this.initialPasswordRecovery = false,
     this.initialNotice,
     this.initialConfirmedEmail,
+    this.localeController,
     super.key,
   });
 
   final bool useAuth;
+
+  /// The app language. Without it (tests, previews) the app stays German and
+  /// the language page is skipped.
+  final LocaleController? localeController;
   final bool initialPasswordRecovery;
 
   /// Set when the app was opened from a confirmation link: shows
@@ -60,6 +69,16 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     _passwordRecovery =
         widget.useAuth && widget.initialPasswordRecovery && _userId != null;
     _controller = AppController(personalizationUserId: _userId);
+    final locales = widget.localeController;
+    if (locales != null) {
+      locales.onChanged = (locale) {
+        unawaited(syncLocaleToAccount(locale.languageCode));
+        _rebuildForLanguage();
+      };
+      if (_userId != null && locales.hasChoice) {
+        unawaited(syncLocaleToAccount(locales.locale.languageCode));
+      }
+    }
     if (widget.useAuth && _userId == null) {
       _confirmedEmail = widget.initialConfirmedEmail;
     }
@@ -106,6 +125,10 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
               _controller = AppController(personalizationUserId: nextUserId);
             });
             previous.dispose();
+            final language = widget.localeController;
+            if (nextUserId != null && language != null && language.hasChoice) {
+              unawaited(syncLocaleToAccount(language.locale.languageCode));
+            }
           });
     }
   }
@@ -122,8 +145,24 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     } catch (_) {}
   }
 
+  /// Texts that were built outside the localization lookup (for example in
+  /// helper functions) follow the new language too: every widget rebuilds
+  /// once, without losing its state or the open screens.
+  void _rebuildForLanguage() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      void rebuild(Element element) {
+        element.markNeedsBuild();
+        element.visitChildren(rebuild);
+      }
+
+      (context as Element).visitChildren(rebuild);
+    });
+  }
+
   @override
   void dispose() {
+    widget.localeController?.onChanged = null;
     _authSubscription?.cancel();
     _controller.dispose();
     super.dispose();
@@ -131,18 +170,39 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
 
   @override
   Widget build(BuildContext context) {
+    final locales = widget.localeController;
+    if (locales == null) return _app(L10n.german);
+    return LocaleScope(
+      controller: locales,
+      child: ListenableBuilder(
+        listenable: locales,
+        builder: (context, _) => _app(locales.locale),
+      ),
+    );
+  }
+
+  Widget _app(Locale locale) {
+    final locales = widget.localeController;
     return AppScope(
       controller: _controller,
       child: MaterialApp(
         key: ValueKey(_userId ?? 'signed-out-preview'),
         scaffoldMessengerKey: _messenger,
-        title: 'Lookin – Ernährung',
+        onGenerateTitle: (context) => context.l10n.commonAppTitle,
+        locale: locale,
+        supportedLocales: L10n.supported,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
         darkTheme: AppTheme.dark,
-        // The demo/test mode without account skips all gates, including the
-        // paywall; premium features stay locked there.
-        home: widget.useAuth ? _authHome() : const AppShell(),
+        // First start: the language comes before everything else.
+        home: locales != null && !locales.hasChoice
+            ? LanguagePage(initial: locales.suggested, onChosen: locales.choose)
+            // The demo/test mode without account skips all gates, including
+            // the paywall; premium features stay locked there.
+            : widget.useAuth
+            ? _authHome()
+            : const AppShell(),
       ),
     );
   }

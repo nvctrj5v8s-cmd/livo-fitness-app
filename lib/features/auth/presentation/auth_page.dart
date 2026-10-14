@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/l10n.dart';
 import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
 import 'email_status_pages.dart';
@@ -118,7 +119,10 @@ class _AuthPageState extends State<AuthPage>
         final response = await auth.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text,
-          data: {'display_name': _nameController.text.trim()},
+          data: {
+            'display_name': _nameController.text.trim(),
+            'locale': L10n.code,
+          },
         );
         if (!mounted) return;
         setState(() {
