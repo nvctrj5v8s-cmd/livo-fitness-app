@@ -1,5 +1,21 @@
 # Funktionsstatus
 
+## Antworten der Einrichtung im Konto, 14. Oktober 2026
+
+- **Problem:** Die Antworten der Fragen lagen nur auf dem Gerät. Nach einem
+  neuen Handy, einer Neuinstallation, einem anderen Browser oder dem Umzug auf
+  `app.lookin-foodtracker.de` wurde alles noch einmal gefragt.
+- **Lösung:** Mit der Einwilligung in die Gesundheitsangaben (neue Textversion
+  `2026-10-14`) wird eine Kopie der Antworten in `public.personalization_answers`
+  gespeichert (Migration `0022`, **noch nicht angewendet**, braucht Freigabe).
+  Auf einem Gerät ohne lokale Antworten holt die App sie nach der Anmeldung aus
+  dem Konto und fragt nicht erneut. Widerruf, „Antworten zurücksetzen“ und
+  Konto-Löschung entfernen die Kopie; der Export enthält sie.
+- Ohne die Tabelle verhält sich die App wie vorher (die Fragen kommen).
+  Datenschutzerklärung 3.2 und 3.3 angepasst.
+- **Migration `0021`** (Halal-Filter mit Akzenten) ist ebenfalls noch nicht
+  angewendet.
+
 ## Sicherheitsprüfung, 14. Oktober 2026
 
 Unabhängige Prüfung (Datenbank-Rechte, Edge Functions, Web, Android, Kaufpfad,

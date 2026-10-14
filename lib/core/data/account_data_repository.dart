@@ -32,6 +32,7 @@ class AccountDataRepository {
     'barcode_lookup_limits',
     'user_consents',
     'withdrawal_requests',
+    'personalization_answers',
   ];
 
   String _requireUserId() {

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/allergies/domain/allergy_safety.dart';
+import '../../features/onboarding/data/personalization_cloud.dart';
 import '../../features/onboarding/data/personalization_store.dart';
 import '../../features/onboarding/domain/personalization_profile.dart';
 import '../../features/onboarding/domain/recipe_preferences.dart';
@@ -33,6 +34,7 @@ class AppController extends ChangeNotifier {
   AppController({
     this.personalizationUserId,
     this.personalizationStore = const DevicePersonalizationStore(),
+    PersonalizationCloud? personalizationCloud,
     this.diaryRepository,
     this.avatarRepository,
     SubscriptionRepository? subscriptionRepository,
@@ -41,6 +43,11 @@ class AppController extends ChangeNotifier {
     DeveloperRepository? developerRepository,
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now,
+       personalizationCloud =
+           personalizationCloud ??
+           (personalizationUserId == null
+               ? const NoPersonalizationCloud()
+               : SupabasePersonalizationCloud()),
        developerRepository =
            developerRepository ??
            (personalizationUserId == null
@@ -77,6 +84,7 @@ class AppController extends ChangeNotifier {
     if (personalizationUserId != null) meals.clear();
     subscription.addListener(_onSubscriptionChanged);
     consent.addListener(notifyListeners);
+    consent.onHealthGranted = _pushPersonalization;
     if (personalizationUserId != null) unawaited(loadDeveloperStatus());
   }
 
@@ -122,6 +130,7 @@ class AppController extends ChangeNotifier {
   /// Removes health data from the account after consent was revoked.
   Future<void> clearAccountHealthData() async {
     await _saveProfileSilently({'allergies': '', 'target_weight': null});
+    await _deleteCloudPersonalization();
     try {
       await ProgressRepository().deleteAllMeasurements();
     } catch (error) {
@@ -147,6 +156,10 @@ class AppController extends ChangeNotifier {
 
   final String? personalizationUserId;
   final PersonalizationStore personalizationStore;
+
+  /// Copy of the answers in the account (after the health-data consent), so
+  /// a new device does not ask every question again.
+  final PersonalizationCloud personalizationCloud;
   final SupabaseDiaryRepository? diaryRepository;
   final AvatarRepository? avatarRepository;
   final DateTime Function() _now;
@@ -368,9 +381,24 @@ class AppController extends ChangeNotifier {
     final revision = ++_personalizationRevision;
     final userId = personalizationUserId;
     if (userId == null) return const PersonalizationRecord();
-    final record = await personalizationStore
+    var record = await personalizationStore
         .load(userId)
         .timeout(const Duration(seconds: 4));
+    if (!record.hasDecision) {
+      // Nothing on this device (new phone, reinstall, other browser): use the
+      // answers saved in the account, if there are any.
+      try {
+        final remote = await personalizationCloud.load().timeout(
+          const Duration(seconds: 4),
+        );
+        if (remote != null) {
+          await personalizationStore.save(userId, remote);
+          record = PersonalizationRecord(profile: remote);
+        }
+      } catch (_) {
+        // The questions are asked instead.
+      }
+    }
     if (!_disposed && revision == _personalizationRevision) {
       personalization = record.profile;
       _syncGoalsWithTargets();
@@ -388,6 +416,7 @@ class AppController extends ChangeNotifier {
     personalization = profile;
     _applyPersonalizationToProfile(profile);
     notifyListeners();
+    unawaited(_pushPersonalization());
     try {
       await SupabaseProfileRepository().saveCurrentProfile(
         _withHealthConsent(_personalizationProfileValues(profile)),
@@ -396,6 +425,27 @@ class AppController extends ChangeNotifier {
     } catch (error) {
       profileError = error.toString();
       notifyListeners();
+    }
+  }
+
+  /// Stores the current answers in the account, but only with the explicit
+  /// health-data consent (they contain birth date, height, weight and the
+  /// optional health note).
+  Future<void> _pushPersonalization() async {
+    final profile = personalization;
+    if (_disposed || profile == null || !consent.healthGranted) return;
+    try {
+      await personalizationCloud.save(profile);
+    } catch (_) {
+      // The device copy is enough; the next change tries again.
+    }
+  }
+
+  Future<void> _deleteCloudPersonalization() async {
+    try {
+      await personalizationCloud.delete();
+    } catch (_) {
+      // Retried the next time the answers are reset or the consent changes.
     }
   }
 
@@ -455,6 +505,7 @@ class AppController extends ChangeNotifier {
     final revision = ++_personalizationRevision;
     final userId = personalizationUserId;
     if (userId != null) await personalizationStore.clear(userId);
+    await _deleteCloudPersonalization();
     if (_disposed || revision != _personalizationRevision) return;
     personalization = null;
     notifyListeners();

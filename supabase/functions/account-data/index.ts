@@ -22,8 +22,13 @@ const sections = {
   barcode_lookup_limits: { table: 'barcode_lookup_limits', order: 'user_id' },
   user_consents: { table: 'user_consents', order: 'id' },
   withdrawal_requests: { table: 'withdrawal_requests', order: 'id' },
+  personalization_answers: { table: 'personalization_answers', order: 'user_id' },
 } as const
-const optionalSections = new Set(['user_consents', 'withdrawal_requests'])
+const optionalSections = new Set([
+  'user_consents',
+  'withdrawal_requests',
+  'personalization_answers',
+])
 type Section = keyof typeof sections | 'auth' | 'meal_items'
 
 function json(body: unknown, status = 200): Response {

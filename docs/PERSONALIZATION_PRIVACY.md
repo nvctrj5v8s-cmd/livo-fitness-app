@@ -3,6 +3,28 @@
 Stand: 16. September 2026. Technische Dokumentation, keine abschließende
 Datenschutzerklärung oder juristische Freigabe.
 
+## Neu seit 14. Oktober 2026: Kopie der Antworten im Konto
+
+- **Warum:** Die Antworten lagen nur auf dem Gerät. Neues Handy, Neuinstallation,
+  anderer Browser oder ein anderer Adressraum (Umzug auf
+  `app.lookin-foodtracker.de`) fragten alles noch einmal.
+- **Was:** Tabelle `public.personalization_answers` (Migration `0022`, eine
+  Zeile pro Konto, RLS nur eigene Zeile, höchstens 16 KB). Inhalt: dieselben
+  Antworten wie lokal (Geschlecht, Geburtstag, Größe, Gewicht, Zielgewicht,
+  Motivation, Hürden, Erfahrung, Gesundheitshinweis, Allergien, Rufname).
+- **Wann:** Nur mit der ausdrücklichen Einwilligung in die Gesundheitsangaben
+  (Textversion `2026-10-14`). Beim Speichern mit Einwilligung und beim
+  Erteilen der Einwilligung. Ohne Einwilligung bleibt alles auf dem Gerät.
+- **Lesen:** Nur wenn auf dem Gerät keine Antworten liegen, einmal beim Start
+  nach der Anmeldung. Danach liegt eine lokale Kopie vor.
+- **Löschen:** Widerruf der Einwilligung, „Antworten zurücksetzen“ und
+  Konto-Löschung (Cascade). Der Datenexport enthält die Zeile.
+- **Konflikte:** Die zuletzt gespeicherte Fassung gilt. Lesen überschreibt nie
+  vorhandene lokale Antworten.
+- **Alt-Einwilligungen:** Einwilligungen mit der Textversion `2026-10-10b`
+  nannten diese Speicherung nicht. Bisher gibt es nur Testkonten; vor dem Start
+  mit echten Nutzern gilt nur die neue Fassung.
+
 ## Neu seit 1. Oktober 2026: Fragen vor der Registrierung
 
 - **Reihenfolge:** Einführung → Fragen → Konto erstellen. Wer auf dem Gerät

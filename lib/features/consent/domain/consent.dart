@@ -2,7 +2,8 @@
 /// `kind` column of `public.user_consents` (migration 0017).
 enum ConsentKind {
   /// Storing and using voluntary health data (weight, allergies, target
-  /// weight) in the account (Art. 9 Abs. 2 lit. a DSGVO).
+  /// weight and the answers of the set-up) in the account (Art. 9 Abs. 2
+  /// lit. a DSGVO).
   healthData('health_data'),
 
   /// Sending questions, photos and the needed context to the AI provider
@@ -20,14 +21,17 @@ enum ConsentKind {
 /// The exact wording users agree to. Changing a text means raising
 /// [version], so stored decisions can be traced to the text that was shown.
 abstract final class ConsentTexts {
-  static const version = '2026-10-10b';
+  static const version = '2026-10-14';
 
   static const healthTitle = 'Gesundheitsangaben speichern';
   static const health =
       'Ich willige ein, dass Lookin meine freiwilligen Gesundheitsangaben '
       '(Gewicht, Taillenumfang, Zielgewicht, Allergien und '
-      'Unverträglichkeiten) in meinem Konto speichert und für Richtwerte, '
-      'Rezeptfilter und Warnhinweise nutzt.';
+      'Unverträglichkeiten sowie meine Antworten aus der Einführung wie '
+      'Geburtstag, Größe, Geschlecht und einen optionalen Gesundheitshinweis) '
+      'in meinem Konto speichert und für Richtwerte, Rezeptfilter und '
+      'Warnhinweise nutzt. So muss ich sie auf einem neuen Gerät nicht noch '
+      'einmal eingeben.';
 
   static const aiTitle = 'KI-Coach und KI-Foto nutzen';
   static const ai =

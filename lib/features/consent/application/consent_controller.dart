@@ -10,6 +10,10 @@ class ConsentController extends ChangeNotifier {
 
   final ConsentRepository repository;
 
+  /// Called when the person grants the health-data consent (a decision made
+  /// on purpose, not when saved decisions are loaded).
+  VoidCallback? onHealthGranted;
+
   final Map<ConsentKind, bool> _decisions = {};
   bool _loaded = false;
   bool _disposed = false;
@@ -50,6 +54,7 @@ class ConsentController extends ChangeNotifier {
   Future<bool> set(ConsentKind kind, bool granted, {String? context}) async {
     _decisions[kind] = granted;
     _notify();
+    if (granted && kind == ConsentKind.healthData) onHealthGranted?.call();
     return repository.record(kind, granted, context: context);
   }
 
