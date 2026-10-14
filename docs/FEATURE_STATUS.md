@@ -1,5 +1,16 @@
 # Funktionsstatus
 
+## Eigene Adresse für Web-App und Rechtsseiten, 14. Oktober 2026
+
+- Die Web-App und die Rechtsseiten laufen unter `https://app.lookin-foodtracker.de/`
+  (GitHub Pages mit eigener Domain, DNS bei Cloudflare: CNAME `app` auf
+  `nvctrj5v8s-cmd.github.io`, „DNS only“). Die alte Adresse mit „livo“ leitet
+  GitHub dorthin um. `lookin-foodtracker.de` selbst ist für eine spätere
+  Startseite frei.
+- Umgestellt: Basis-Pfad des Web-Builds (`/`), Standard-Adresse der
+  Rechtslinks, E-Mail-Vorlagen, Widerrufs- und Kaufbestätigungs-Mails,
+  Rechtsseiten und Dokumentation.
+
 ## Animierter Start-Bildschirm, 12. Oktober 2026
 
 - **Ablauf (ca. 3,3 s, einmal pro Kaltstart; Antippen überspringt):** Der grüne Lookin-Ring wird

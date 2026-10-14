@@ -16,8 +16,8 @@ Prüfung vor der Veröffentlichung.
 | Kategorie | Gesundheit & Fitness |
 | Paketkennung | `com.lookin.foodtracker` (nach dem ersten Upload nicht mehr änderbar) |
 | Kontakt-E-Mail | `lookinsupport@gmail.com` |
-| Datenschutzerklärung (URL) | `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html` (erst eintragen, wenn die Platzhalter ausgefüllt sind; Prüfung: `dart run tool/check_legal_pages.dart`) |
-| Kontolöschung (URL, Pflicht im Datensicherheits-Formular) | `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/konto-loeschen.html` |
+| Datenschutzerklärung (URL) | `https://app.lookin-foodtracker.de/legal/datenschutz.html` (erst eintragen, wenn die Platzhalter ausgefüllt sind; Prüfung: `dart run tool/check_legal_pages.dart`) |
+| Kontolöschung (URL, Pflicht im Datensicherheits-Formular) | `https://app.lookin-foodtracker.de/legal/konto-loeschen.html` |
 | Website | optional |
 
 Der Name darf keine irreführenden Zusätze enthalten. „AI“ ist erlaubt, weil die

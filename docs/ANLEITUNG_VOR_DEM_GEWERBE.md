@@ -196,7 +196,7 @@ Die Texte liegen als Seiten in `web/legal/` und sind in der App verlinkt:
 - Mit `dart run tool/check_legal_pages.dart` prüfst du, ob noch etwas offen ist.
   Solange das Skript „Nicht bereit“ meldet, ist nichts veröffentlichungsreif.
 - Die öffentliche Adresse der Seiten (für die Play Console) ist
-  `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/datenschutz.html`. Sie
+  `https://app.lookin-foodtracker.de/legal/datenschutz.html`. Sie
   ist erst erreichbar, nachdem die Änderungen gepusht wurden und die Webseite neu
   gebaut ist. Sie enthält noch das Wort „livo“, weil das GitHub-Projekt so heißt.
   Mit einer eigenen Domain wird sie schöner.

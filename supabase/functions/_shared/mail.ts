@@ -70,7 +70,7 @@ export const withdrawalPolicyText = `Widerrufsbelehrung
 
 Widerrufsrecht
 Du hast das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.
-Um dein Widerrufsrecht auszuüben, musst du uns (Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, Telefon: +49 15510 338501, E-Mail: lookinsupport@gmail.com) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über deinen Entschluss, diesen Vertrag zu widerrufen, informieren. Du kannst dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Du kannst dein Widerrufsrecht auch online unter https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/widerruf-erklaeren.html (ohne Anmeldung) oder in der App unter Profil > Vertrag widerrufen ausüben. Wenn du diese Online-Funktion nutzt, übermitteln wir dir auf einem dauerhaften Datenträger (z. B. durch eine E-Mail) unverzüglich eine Eingangsbestätigung mit Informationen zum Inhalt der Widerrufserklärung sowie dem Datum und der Uhrzeit ihres Eingangs.
+Um dein Widerrufsrecht auszuüben, musst du uns (Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, Telefon: +49 15510 338501, E-Mail: lookinsupport@gmail.com) mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief oder eine E-Mail) über deinen Entschluss, diesen Vertrag zu widerrufen, informieren. Du kannst dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Du kannst dein Widerrufsrecht auch online unter https://app.lookin-foodtracker.de/legal/widerruf-erklaeren.html (ohne Anmeldung) oder in der App unter Profil > Vertrag widerrufen ausüben. Wenn du diese Online-Funktion nutzt, übermitteln wir dir auf einem dauerhaften Datenträger (z. B. durch eine E-Mail) unverzüglich eine Eingangsbestätigung mit Informationen zum Inhalt der Widerrufserklärung sowie dem Datum und der Uhrzeit ihres Eingangs.
 Zur Wahrung der Widerrufsfrist reicht es aus, dass du die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absendest.
 
 Folgen des Widerrufs
@@ -92,5 +92,5 @@ Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier): ___________
 Datum: ____________
 (*) Unzutreffendes streichen.
 
-Vollständige Fassung: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/widerruf.html
-AGB: https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/agb.html`
+Vollständige Fassung: https://app.lookin-foodtracker.de/legal/widerruf.html
+AGB: https://app.lookin-foodtracker.de/legal/agb.html`

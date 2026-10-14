@@ -8,7 +8,7 @@
 abstract final class LegalLinks {
   static const baseUrl = String.fromEnvironment(
     'LEGAL_BASE_URL',
-    defaultValue: 'https://nvctrj5v8s-cmd.github.io/livo-fitness-app/legal/',
+    defaultValue: 'https://app.lookin-foodtracker.de/legal/',
   );
 
   static Uri get privacy => Uri.parse('${baseUrl}datenschutz.html');

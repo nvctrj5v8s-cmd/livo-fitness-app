@@ -45,7 +45,7 @@ kann vorherige Datenkopien enthalten.
    `auth.getUser(token)`. Den Service-Role-Schlüssel nie in die App kopieren.
 3. Supabase Auth »Site URL« und erlaubte Redirect-URLs auf die tatsächlich
    genutzte Web-/App-Adresse setzen. Die derzeitige GitHub-Pages-Adresse ist
-   `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/` (vor Verwendung
+   `https://app.lookin-foodtracker.de/` (vor Verwendung
    nochmals prüfen). Passwort-Reset mit einer echten Mail testen; die App
    erwartet nach dem Link ein neues Passwort und danach erneute Anmeldung.
    Supabase Flutter nutzt standardmäßig PKCE: Ein Reset-Link muss in den

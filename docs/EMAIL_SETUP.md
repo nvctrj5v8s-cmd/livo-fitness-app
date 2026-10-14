@@ -11,9 +11,9 @@ vergessen“ auf dem Handy eine nicht erreichbare Seite.
 
 Dashboard → **Authentication → URL Configuration**:
 
-- **Site URL:** `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/`
+- **Site URL:** `https://app.lookin-foodtracker.de/`
   (mit Schrägstrich am Ende)
-- **Redirect URLs → Add URL:** `https://nvctrj5v8s-cmd.github.io/livo-fitness-app/**`
+- **Redirect URLs → Add URL:** `https://app.lookin-foodtracker.de/**`
 - Speichern. Sobald es eine eigene Domain gibt, beide Einträge ergänzen.
 
 ## 2. Eigener Absender „Lookin“ (eigene Domain nötig)

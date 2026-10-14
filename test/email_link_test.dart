@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
-  const base = 'https://nvctrj5v8s-cmd.github.io/livo-fitness-app/';
+  const base = 'https://app.lookin-foodtracker.de/';
 
   test('Reset-Link aus der Lookin-Mail wird erkannt', () {
     final link = EmailLink.fromUri(
