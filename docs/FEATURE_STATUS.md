@@ -1,5 +1,16 @@
 # Funktionsstatus
 
+## Android-Datei geprüft, 14. Oktober 2026
+
+- Release-Bundle gebaut (72,7 MB, mit Upload-Schlüssel signiert, Paket
+  `com.lookin.foodtracker`, Version 1.0.0+1, targetSdk 36, minSdk 24). Enthält
+  die Berechtigung für Abos (`com.android.vending.BILLING`); Mikrofon ist entfernt.
+- `READ_EXTERNAL_STORAGE` (kam von einem Zusatzpaket) gilt jetzt nur bis
+  Android 12 (`maxSdkVersion=32`), damit Google keine Begründung für breiten
+  Dateizugriff verlangt. Fotos laufen über den System-Auswahldialog.
+- Für den Kauftest fehlt noch der öffentliche RevenueCat-Schlüssel
+  (`REVENUECAT_ANDROID_KEY`), der nur beim Bauen eingesetzt wird.
+
 ## Eigene Adresse für Web-App und Rechtsseiten, 14. Oktober 2026
 
 - Die Web-App und die Rechtsseiten laufen unter `https://app.lookin-foodtracker.de/`

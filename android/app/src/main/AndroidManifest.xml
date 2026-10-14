@@ -4,6 +4,13 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- The camera plugin adds the microphone; Lookin records no audio. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+    <!-- A plugin requests broad storage access. Lookin picks photos through the
+         system picker, so the permission is only kept for Android 12 and older
+         (it has no effect from Android 13 on). -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:node="replace" />
     <application
         android:allowBackup="false"
         android:fullBackupContent="false"
