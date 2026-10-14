@@ -21,6 +21,14 @@ function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers })
 }
 
+// Text that goes into e-mails to a third party: no links or addresses, so the
+// public form cannot be used to carry a phishing link under our domain.
+function plain(value: string): string {
+  return value
+    .replace(/(https?:\/\/|www\.)\S+/gi, '[Link entfernt]')
+    .replace(/\S+@\S+/g, '[Adresse entfernt]')
+}
+
 function field(value: unknown, max: number): string | null {
   if (typeof value !== 'string') return null
   const clean = value.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s{2,}/g, ' ').trim()
@@ -70,12 +78,15 @@ Deno.serve(async (request) => {
   }
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } })
-  const ip = (request.headers.get('x-forwarded-for') ?? '').split(',')[0].trim()
+  const ip = (request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for') ?? '')
+    .split(',')[0].trim()
   const clientHash = ip ? await sha256Hex(`${serviceKey}:${ip}`) : null
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
   // The IP hash is only needed for the 24-hour limit; older ones are removed.
   await admin.from('withdrawal_requests').update({ client_hash: null }).lt('created_at', since).not('client_hash', 'is', null)
-  if (!user && clientHash) {
+  // The limit applies with and without sign-in: one account could otherwise
+  // trigger mails to any number of addresses.
+  if (clientHash) {
     const { count } = await admin
       .from('withdrawal_requests')
       .select('id', { count: 'exact', head: true })
@@ -83,6 +94,13 @@ Deno.serve(async (request) => {
       .gte('created_at', since)
     if ((count ?? 0) >= 5) return json({ code: 'too_many_requests' }, 429)
   }
+  // Daily ceiling for mails to third parties and to the owner. Requests are
+  // still stored, so no withdrawal is lost; only the mails stop.
+  const { count: dayTotal } = await admin
+    .from('withdrawal_requests')
+    .select('id', { count: 'exact', head: true })
+    .gte('created_at', since)
+  const mailsAllowed = (dayTotal ?? 0) < 60
   const { count: sameAddress } = await admin
     .from('withdrawal_requests')
     .select('id', { count: 'exact', head: true })
@@ -107,7 +125,18 @@ Deno.serve(async (request) => {
 
   const receivedAt = new Date(row.created_at as string)
   const when = germanDateTime(receivedAt)
+  // Signed-in people get the receipt at their account address; the public
+  // form sends it to the address typed in. Names and notes go into the mail
+  // without links or addresses.
+  const mailTo = user?.email ?? email
   const details = [
+    `Name: ${plain(name)}`,
+    `Konto: ${user ? 'angemeldet' : 'ohne Anmeldung (Webseite)'}`,
+    note ? `Hinweis: ${plain(note)}` : null,
+    `Eingang: ${when}`,
+    `Vorgangsnummer: ${row.id}`,
+  ].filter(Boolean).join('\n')
+  const ownerDetails = [
     `Name: ${name}`,
     `E-Mail: ${email}`,
     `Konto: ${user ? user.email ?? user.id : 'ohne Anmeldung (Webseite)'}`,
@@ -117,20 +146,20 @@ Deno.serve(async (request) => {
   ].filter(Boolean).join('\n')
 
   // The withdrawal is stored either way; repeated confirmations to the same
-  // address within a day are not sent again.
-  const userMail = (sameAddress ?? 0) >= 3 ? 'failed' : await sendMail({
-    to: email,
+  // address within a day, and all mails above the daily ceiling, are not sent.
+  const userMail = !mailsAllowed || (sameAddress ?? 0) >= 3 ? 'failed' : await sendMail({
+    to: mailTo,
     subject: 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
-    text: `Hallo ${name},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
+    text: `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
       'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
       'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
       'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +
       `Bei Fragen erreichst du uns unter ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`,
   })
-  const ownerMail = await sendMail({
+  const ownerMail = (dayTotal ?? 0) >= 200 ? 'failed' : await sendMail({
     to: ownerEmail,
     subject: `Neuer Widerruf: ${name}`,
-    text: `Ein Widerruf ist eingegangen. Bitte die Zahlung in der Play Console erstatten und das Abo beenden.\n\n${details}`,
+    text: `Ein Widerruf ist eingegangen. Bitte die Zahlung in der Play Console erstatten und das Abo beenden.\n\n${ownerDetails}`,
     replyTo: email,
   })
   await admin

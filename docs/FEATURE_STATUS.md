@@ -1,5 +1,39 @@
 # Funktionsstatus
 
+## Sicherheitsprüfung, 14. Oktober 2026
+
+Unabhängige Prüfung (Datenbank-Rechte, Edge Functions, Web, Android, Kaufpfad,
+Datenschutz). Live-Abfragen mit dem öffentlichen Schlüssel liefern nur leere
+Antworten oder „permission denied“; keine Geheimnisse im Repo oder Verlauf.
+
+**Behoben:**
+- Private E-Mail-Adresse stand im öffentlichen Web-Code (Demo-Eintrag „Von
+  vorne zeigen“). Der Eintrag hängt jetzt am Server-Merkmal `isDeveloper`.
+- Widerrufs-Funktion (`legal-actions`): IP-Limit auch mit Anmeldung, Obergrenze
+  für Mails pro Tag (60 an Kunden, 200 an den Inhaber), Quittung nur an die
+  Konto-Adresse bei Anmeldung, Links und Adressen werden aus dem Mailtext
+  entfernt. Der Widerruf wird in jedem Fall gespeichert.
+- Halal-Filter: Akzente („gélatine“, „bière“, „bœuf“) werden zu einfachen
+  Buchstaben gefaltet und Begriffe aus Französisch, Spanisch, Italienisch,
+  Niederländisch und Portugiesisch ergänzt (App, Barcode-Funktion, Migration
+  `0021`). Ein Test prüft, dass alle drei Listen gleich sind.
+- Web: Schutz gegen Einbetten in fremde Seiten (Frame-Schutz).
+- `.gitignore`: `.env`, `.claude/`.
+
+**Offen (nach Wichtigkeit):**
+1. Kaufpfad: Abo-Abgleich mit RevenueCat, `TRANSFER` und `BILLING_ISSUE` im
+   Webhook, Alarm bei Webhook-Fehlern (nach dem Kauftest mit echten Ereignissen).
+2. Einwilligungen: Widerruf bei Netzfehler wird nicht nachgesendet; die
+   KI-Einwilligung wird nur in der App geprüft, nicht im `ai-coach`.
+3. Halal: Produkte ohne Zutatenliste werden nicht blockiert; Foto-Filter im
+   `ai-coach` kürzer als die Hauptliste; kein Ausgabefilter im Chat.
+4. Barcode-Skript von jsDelivr ohne Integritätsprüfung (selbst ausliefern).
+5. Löschjobs (IP-Hash 24 h, Trial-Hash 3 Jahre, Widerrufs-Verjährung) laufen
+   nur bei Gelegenheit; Längenlimits in der Datenbank.
+6. OpenAI-Budget und Alarm, Timeout im Foto-Pfad.
+7. Dashboard: Passwort-Minimum 8 serverseitig, Resend-Tracking aus, Resend-
+   Kontingent.
+
 ## Android-Datei geprüft, 14. Oktober 2026
 
 - Release-Bundle gebaut (72,7 MB, mit Upload-Schlüssel signiert, Paket

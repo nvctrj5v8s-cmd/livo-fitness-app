@@ -721,7 +721,7 @@ class _SettingsList extends StatelessWidget {
             subtitle: 'Impressum, AGB, Datenschutz, Widerruf',
             onTap: () => showLegalSheet(context),
           ),
-          if (isDemoAccountSignedIn()) ...[
+          if (controller.isDeveloper) ...[
             const Divider(height: 1),
             _SettingsTile(
               key: const Key('profile-demo-replay'),

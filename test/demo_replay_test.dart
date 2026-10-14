@@ -7,18 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('nur das Demo-Konto wird erkannt', () {
-    expect(isDemoAccountEmail('mohammad.shikho999@icloud.com'), isTrue);
-    expect(isDemoAccountEmail('  Mohammad.Shikho999@iCloud.com '), isTrue);
-    expect(isDemoAccountEmail('anderer@icloud.com'), isFalse);
-    expect(isDemoAccountEmail(''), isFalse);
-    expect(isDemoAccountEmail(null), isFalse);
-  });
-
-  test('ohne Backend ist der Demo-Knopf aus', () {
-    expect(isDemoAccountSignedIn(), isFalse);
-  });
-
   testWidgets('Replay zeigt Einführung, Fragen und Premium und schließt', (
     tester,
   ) async {

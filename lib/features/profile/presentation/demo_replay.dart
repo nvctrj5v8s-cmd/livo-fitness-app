@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/data/account_data_repository.dart';
 import '../../../core/state/app_controller.dart';
 import '../../onboarding/presentation/introduction_page.dart';
 import '../../onboarding/presentation/personalization_page.dart';
 import '../../subscription/presentation/paywall_page.dart';
 
-/// Only this account sees the "Neu starten" demo entry in the profile.
-const demoAccountEmail = 'mohammad.shikho999@icloud.com';
-
-bool isDemoAccountEmail(String? email) =>
-    email != null && email.trim().toLowerCase() == demoAccountEmail;
-
-/// Reads the signed-in e-mail without throwing when no backend is configured
-/// (demo mode and widget tests run without Supabase).
-bool isDemoAccountSignedIn() {
-  try {
-    return isDemoAccountEmail(AccountDataRepository().currentEmail);
-  } catch (_) {
-    return false;
-  }
-}
+// Only developer accounts see the "Von vorne zeigen" demo entry in the profile.
+// The server decides (`AppController.isDeveloper`); no address is stored in
+// the app, which is public on the web.
 
 /// Plays the first-start experience again: introduction, questions, premium
 /// offer. It is a pure preview. Nothing is saved, no device marker or account

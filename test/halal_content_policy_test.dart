@@ -5,6 +5,7 @@ import 'package:fitness_ai_app/core/models/app_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  halalAccentTests();
   group('HalalContentPolicy', () {
     test('allows plant-based and fish-based foods', () {
       expect(
@@ -260,7 +261,7 @@ void _extendedTermTests() {
 
   group('Listen sind in App, Datenbank und Barcode-Funktion gleich', () {
     final sql = File(
-      'supabase/migrations/0014_halal_terms_extended.sql',
+      'supabase/migrations/0021_halal_accents_and_languages.sql',
     ).readAsStringSync();
     final ts = File(
       'supabase/functions/barcode-lookup/index.ts',
@@ -295,7 +296,7 @@ void _extendedTermTests() {
           .toSet();
     }
 
-    test('SQL-Migration 0014', () {
+    test('SQL-Migration 0021', () {
       expect(
         sqlTerms('hard_forbidden_pattern'),
         HalalContentPolicy.hardForbiddenTerms.toSet(),
@@ -340,6 +341,37 @@ void _extendedTermTests() {
         tsTerms('harmlessPhrases'),
         HalalContentPolicy.harmlessPhrases.toSet(),
       );
+    });
+  });
+}
+
+void halalAccentTests() {
+  group('Akzente und weitere Sprachen', () {
+    test('Gelatine, Schwein und Alkohol mit Akzenten werden erkannt', () {
+      expect(HalalContentPolicy.isAllowedText('gélatine de porc'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('Gélatine'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('bière blonde'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('Crème, jambon cuit'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('jamón serrano'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('vino tinto'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('birra'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('varkensvlees'), isFalse);
+    });
+
+    test('Fleisch in anderen Sprachen braucht Halal-Kennzeichnung', () {
+      expect(HalalContentPolicy.isAllowedText('bœuf haché'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('poulet rôti'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('pollo asado'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('vitello tonnato'), isFalse);
+      expect(HalalContentPolicy.isAllowedText('poulet halal'), isTrue);
+    });
+
+    test('Akzente allein machen nichts Harmloses unzulässig', () {
+      expect(HalalContentPolicy.isAllowedText('Crème fraîche'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Café au lait'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Gemüse und Käse'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Jalapeño-Dip'), isTrue);
+      expect(HalalContentPolicy.isAllowedText('Vinaigrette'), isTrue);
     });
   });
 }

@@ -33,6 +33,13 @@
   <title>Lookin – AI Food Tracker</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#050708">
+  <script>
+    // The app is never meant to be shown inside another page (clickjacking).
+    if (window.top !== window.self) {
+      document.documentElement.style.display = "none";
+      try { window.top.location = window.self.location; } catch (_) {}
+    }
+  </script>
   <style>
     html, body { margin: 0; height: 100%; background: #050708; }
     #boot {

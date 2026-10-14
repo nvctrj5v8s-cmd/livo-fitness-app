@@ -53,6 +53,12 @@ class HalalContentPolicy {
     'punsch', 'bowle', 'bloody mary', 'long island', 'pina colada',
     'irish coffee', 'white russian', 'black russian', 'mai tai', 'hot toddy',
     'rum punch', 'mint julep', 'tom collins', 'cuba libre', 'cocktail',
+    // Pork, gelatin and alcohol in French, Spanish, Italian, Dutch, Portuguese.
+    'porc', 'porcs', 'cochon', 'cochons', 'jambon', 'saucisson', 'saindoux',
+    'couenne', 'cerdo', 'cerdos', 'jamon', 'tocino', 'maiale', 'porco',
+    'toucinho', 'banha', 'varken', 'varkensvlees', 'spek', 'gelatina',
+    'colageno', 'collagene', 'alcool', 'alcol', 'biere', 'birra', 'vino',
+    'vinho', 'wijn', 'rhum', 'cidre',
   ];
 
   /// Land-animal meat: allowed only together with a [halalMarkers] word.
@@ -82,6 +88,12 @@ class HalalContentPolicy {
     'cuban sandwich', 'french dip', 'shepherd s pie', 'shepherds pie',
     'wonton soup', 'soup wonton', 'wonton dumpling', 'pot sticker',
     'pot stickers', 'barbecue sandwich', 'frito pie',
+    // Meat words in French, Spanish, Italian, Dutch, Portuguese.
+    'viande', 'poulet', 'boeuf', 'agneau', 'veau', 'canard', 'dinde',
+    'lapin', 'saucisse', 'pollo', 'ternera', 'cordero', 'manzo', 'vitello',
+    'agnello', 'tacchino', 'anatra', 'coniglio', 'salsiccia', 'salchicha',
+    'vlees', 'rundvlees', 'kalfsvlees', 'lamsvlees', 'kip', 'worst',
+    'frango',
   ];
 
   static const halalMarkers = <String>['halal', 'zabiha', 'dhabiha'];
@@ -290,14 +302,59 @@ class HalalContentPolicy {
     return null;
   }
 
-  static String normalize(String value) => value
-      .toLowerCase()
+  static String normalize(String value) => _foldAccents(value.toLowerCase())
       .replaceAll('ä', 'ae')
       .replaceAll('ö', 'oe')
       .replaceAll('ü', 'ue')
       .replaceAll('ß', 'ss')
+      .replaceAll('œ', 'oe')
+      .replaceAll('æ', 'ae')
       .replaceAll(RegExp(r'[^a-z0-9]+'), ' ')
       .trim();
+
+  // Accented letters of the Western European languages used on packaging
+  // ("gélatine" must become "gelatine", not "g latine").
+  static const _accents = <String, String>{
+    'à': 'a',
+    'á': 'a',
+    'â': 'a',
+    'ã': 'a',
+    'å': 'a',
+    'ā': 'a',
+    'ç': 'c',
+    'ć': 'c',
+    'č': 'c',
+    'è': 'e',
+    'é': 'e',
+    'ê': 'e',
+    'ë': 'e',
+    'ē': 'e',
+    'ì': 'i',
+    'í': 'i',
+    'î': 'i',
+    'ï': 'i',
+    'ñ': 'n',
+    'ò': 'o',
+    'ó': 'o',
+    'ô': 'o',
+    'õ': 'o',
+    'ø': 'o',
+    'ō': 'o',
+    'ù': 'u',
+    'ú': 'u',
+    'û': 'u',
+    'ū': 'u',
+    'ý': 'y',
+    'ÿ': 'y',
+    'š': 's',
+    'ž': 'z',
+  };
+  static final _accentPattern = RegExp('[${_accents.keys.join()}]');
+
+  static String _foldAccents(String value) => value.replaceAllMapped(
+    _accentPattern,
+    (match) => _accents[match.group(0)] ?? match.group(0)!,
+  );
 
   static String _withoutHarmlessPhrases(String normalized) {
     var padded = ' $normalized ';

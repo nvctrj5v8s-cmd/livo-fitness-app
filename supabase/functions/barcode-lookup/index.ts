@@ -37,6 +37,12 @@ const hardForbiddenTerms = [
   'bowle', 'bloody mary', 'long island', 'pina colada', 'irish coffee',
   'white russian', 'black russian', 'mai tai', 'hot toddy', 'rum punch',
   'mint julep', 'tom collins', 'cuba libre', 'cocktail',
+  // Pork, gelatin and alcohol in French, Spanish, Italian, Dutch, Portuguese.
+  'porc', 'porcs', 'cochon', 'cochons', 'jambon', 'saucisson', 'saindoux',
+  'couenne', 'cerdo', 'cerdos', 'jamon', 'tocino', 'maiale', 'porco',
+  'toucinho', 'banha', 'varken', 'varkensvlees', 'spek', 'gelatina',
+  'colageno', 'collagene', 'alcool', 'alcol', 'biere', 'birra', 'vino',
+  'vinho', 'wijn', 'rhum', 'cidre',
 ]
 const landAnimalMeatTerms = [
   'meat', 'fleisch', 'chicken', 'huhn', 'haehnchen', 'hen', 'poultry',
@@ -61,6 +67,11 @@ const landAnimalMeatTerms = [
   'french dip', 'shepherd s pie', 'shepherds pie', 'wonton soup',
   'soup wonton', 'wonton dumpling', 'pot sticker', 'pot stickers',
   'barbecue sandwich', 'frito pie',
+  // Meat words in French, Spanish, Italian, Dutch, Portuguese.
+  'viande', 'poulet', 'boeuf', 'agneau', 'veau', 'canard', 'dinde', 'lapin',
+  'saucisse', 'pollo', 'ternera', 'cordero', 'manzo', 'vitello', 'agnello',
+  'tacchino', 'anatra', 'coniglio', 'salsiccia', 'salchicha', 'vlees',
+  'rundvlees', 'kalfsvlees', 'lamsvlees', 'kip', 'worst', 'frango',
 ]
 const halalMarkers = ['halal', 'zabiha', 'dhabiha']
 // Words starting with these roots match ("schweinefleisch").
@@ -343,13 +354,26 @@ function halalRestriction(value: string): string | null {
 }
 
 function normalizeForHalal(value: string): string {
-  return value.toLowerCase()
+  return foldAccents(value.toLowerCase())
     .replaceAll('ä', 'ae')
     .replaceAll('ö', 'oe')
     .replaceAll('ü', 'ue')
     .replaceAll('ß', 'ss')
+    .replaceAll('œ', 'oe')
+    .replaceAll('æ', 'ae')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
+}
+
+// Accented letters of the Western European languages used on packaging, so
+// "gélatine" becomes "gelatine" and not "g latine".
+const accents: Record<string, string> = {
+  'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'å': 'a', 'ā': 'a', 'ç': 'c', 'ć': 'c', 'č': 'c', 'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e', 'ē': 'e', 'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i', 'ñ': 'n', 'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ø': 'o', 'ō': 'o', 'ù': 'u', 'ú': 'u', 'û': 'u', 'ū': 'u', 'ý': 'y', 'ÿ': 'y', 'š': 's', 'ž': 'z',
+}
+const accentPattern = new RegExp(`[${Object.keys(accents).join('')}]`, 'g')
+
+function foldAccents(value: string): string {
+  return value.replace(accentPattern, (char) => accents[char] ?? char)
 }
 
 function withoutHarmlessPhrases(normalized: string): string {
