@@ -40,14 +40,15 @@
   `app.lookin-foodtracker.de` wurde alles noch einmal gefragt.
 - **Lösung:** Mit der Einwilligung in die Gesundheitsangaben (neue Textversion
   `2026-10-14`) wird eine Kopie der Antworten in `public.personalization_answers`
-  gespeichert (Migration `0022`, **noch nicht angewendet**, braucht Freigabe).
+  gespeichert (Migration `0022`, angewendet am 15.10.2026).
   Auf einem Gerät ohne lokale Antworten holt die App sie nach der Anmeldung aus
   dem Konto und fragt nicht erneut. Widerruf, „Antworten zurücksetzen“ und
   Konto-Löschung entfernen die Kopie; der Export enthält sie.
-- Ohne die Tabelle verhält sich die App wie vorher (die Fragen kommen).
-  Datenschutzerklärung 3.2 und 3.3 angepasst.
-- **Migration `0021`** (Halal-Filter mit Akzenten) ist ebenfalls noch nicht
-  angewendet.
+- Datenschutzerklärung 3.2 und 3.3 angepasst.
+- **Migration `0021`** (Halal-Filter mit Akzenten und weiteren Sprachen) ist am
+  15.10.2026 angewendet. Danach sind alle 40 Rezepte weiter sichtbar; im
+  USDA-Katalog wird ein Eintrag zusätzlich ausgeblendet (3.913 von 5.431
+  sichtbar).
 
 ## Sicherheitsprüfung, 14. Oktober 2026
 
