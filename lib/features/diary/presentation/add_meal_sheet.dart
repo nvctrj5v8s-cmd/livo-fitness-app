@@ -6,6 +6,7 @@ import '../../../core/data/food_search_service.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/catalog_notice.dart';
 import '../../allergies/domain/allergy_safety.dart';
 import 'barcode_scanner_page.dart';
 import 'custom_food_sheet.dart';
@@ -226,6 +227,11 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                   const Padding(
                     padding: EdgeInsets.fromLTRB(18, 10, 18, 0),
                     child: LinearProgressIndicator(minHeight: 2),
+                  ),
+                if (controller.catalogFailed)
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(18, 10, 18, 0),
+                    child: CatalogUnavailableNotice(),
                   ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 18, 18, 10),

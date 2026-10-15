@@ -9143,6 +9143,24 @@ abstract class AppLocalizations {
   /// **'DEIN RHYTHMUS'**
   String get progressYourRhythm;
 
+  /// No description provided for @sharedCatalogReload.
+  ///
+  /// In de, this message translates to:
+  /// **'Erneut laden'**
+  String get sharedCatalogReload;
+
+  /// No description provided for @sharedCatalogReloading.
+  ///
+  /// In de, this message translates to:
+  /// **'Lädt …'**
+  String get sharedCatalogReloading;
+
+  /// No description provided for @sharedCatalogUnavailable.
+  ///
+  /// In de, this message translates to:
+  /// **'Der Katalog konnte nicht geladen werden. Du siehst vorerst nur Beispiele. Prüfe deine Verbindung.'**
+  String get sharedCatalogUnavailable;
+
   /// No description provided for @sharedImprint.
   ///
   /// In de, this message translates to:

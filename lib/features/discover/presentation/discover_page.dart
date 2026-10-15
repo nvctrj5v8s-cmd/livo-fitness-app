@@ -7,6 +7,7 @@ import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
+import '../../../shared/widgets/catalog_notice.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../onboarding/domain/recipe_preferences.dart';
 import '../../subscription/presentation/paywall_page.dart';
@@ -98,6 +99,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     subtitle: context.l10n.discoverIdeasThatFitYourGoalAndYour,
                   ),
                 ),
+                if (controller.catalogFailed) ...[
+                  const SizedBox(height: 12),
+                  const CatalogUnavailableNotice(),
+                ],
                 if (allergyExcluded > 0) ...[
                   const SizedBox(height: 9),
                   Row(

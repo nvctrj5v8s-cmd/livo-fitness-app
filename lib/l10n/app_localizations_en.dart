@@ -5251,6 +5251,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get progressYourRhythm => 'YOUR RHYTHM';
 
   @override
+  String get sharedCatalogReload => 'Reload';
+
+  @override
+  String get sharedCatalogReloading => 'Loading…';
+
+  @override
+  String get sharedCatalogUnavailable =>
+      'The catalog could not be loaded. You only see examples for now. Check your connection.';
+
+  @override
   String get sharedImprint => 'Imprint';
 
   @override

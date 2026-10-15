@@ -4,5 +4,8 @@
   "sharedTerms": "Terms",
   "sharedWithdrawal": "Withdrawal",
   "sharedImprint": "Imprint",
-  "sharedWithdrawFromContract": "Withdraw from contract"
+  "sharedWithdrawFromContract": "Withdraw from contract",
+  "sharedCatalogUnavailable": "The catalog could not be loaded. You only see examples for now. Check your connection.",
+  "sharedCatalogReload": "Reload",
+  "sharedCatalogReloading": "Loading…"
 }

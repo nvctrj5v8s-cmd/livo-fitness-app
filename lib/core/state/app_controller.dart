@@ -546,6 +546,11 @@ class AppController extends ChangeNotifier {
   String? get catalogError =>
       _catalogError == null ? null : DisplayText.of(_catalogError!);
   set catalogError(String? value) => _catalogError = value;
+
+  /// The catalog could not be loaded for a signed-in person; only the
+  /// built-in examples are available until a reload succeeds.
+  bool get catalogFailed =>
+      _catalogError != null && personalizationUserId != null;
   bool profileLoading = false;
   String? _profileError;
   String? get profileError =>
@@ -735,7 +740,9 @@ class AppController extends ChangeNotifier {
     catalogError = null;
     notifyListeners();
     try {
-      final catalog = await SupabaseCatalogRepository().loadCatalog();
+      final catalog = await SupabaseCatalogRepository().loadCatalog().timeout(
+        const Duration(seconds: 25),
+      );
       if (catalog.foods.isNotEmpty) {
         foods
           ..clear()

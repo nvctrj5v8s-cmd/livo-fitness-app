@@ -5273,6 +5273,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get progressYourRhythm => 'DEIN RHYTHMUS';
 
   @override
+  String get sharedCatalogReload => 'Erneut laden';
+
+  @override
+  String get sharedCatalogReloading => 'Lädt …';
+
+  @override
+  String get sharedCatalogUnavailable =>
+      'Der Katalog konnte nicht geladen werden. Du siehst vorerst nur Beispiele. Prüfe deine Verbindung.';
+
+  @override
   String get sharedImprint => 'Impressum';
 
   @override

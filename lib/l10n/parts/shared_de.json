@@ -4,5 +4,8 @@
   "sharedTerms": "AGB",
   "sharedWithdrawal": "Widerruf",
   "sharedImprint": "Impressum",
-  "sharedWithdrawFromContract": "Vertrag widerrufen"
+  "sharedWithdrawFromContract": "Vertrag widerrufen",
+  "sharedCatalogUnavailable": "Der Katalog konnte nicht geladen werden. Du siehst vorerst nur Beispiele. Prüfe deine Verbindung.",
+  "sharedCatalogReload": "Erneut laden",
+  "sharedCatalogReloading": "Lädt …"
 }

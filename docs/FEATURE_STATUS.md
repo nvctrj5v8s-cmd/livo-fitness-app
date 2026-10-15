@@ -29,9 +29,28 @@
 - **Onboarding-Text:** Der Hinweis bei den optionalen Gesundheitsangaben sagt
   jetzt, dass die Angabe auf dem Gerät bleibt, solange man der Speicherung im
   Konto nicht zustimmt.
+- **Katalog-Fehler sichtbar:** Kann der Katalog für eine angemeldete Person nicht
+  geladen werden (offline, Zeitüberschreitung nach 25 Sekunden), zeigen
+  „Rezepte“ und „Mahlzeit hinzufügen“ einen Hinweis mit „Erneut laden“, statt
+  stumm nur Beispieldaten zu zeigen. Ohne Konto (Demo) erscheint er nicht.
+- **Einwilligungen laden:** Die Abfrage auf dem Server hat eine Zeitgrenze von
+  8 Sekunden; danach entscheidet die Kopie auf dem Gerät, sodass der
+  Ladekreis nicht hängen bleibt.
+- **Android:** Die Kamera ist nicht mehr als Pflicht-Funktion markiert (die App
+  lässt sich auch auf Geräten ohne Kamera installieren), „Mail öffnen“ ist im
+  Manifest erlaubt, und Android 13+ kann die App-Sprache (Deutsch/Englisch) in
+  den Systemeinstellungen wählen. Keine neuen Berechtigungen.
+- **Build-Skript:** `tool/build_release.ps1 -BuildNumber <n> -RevenueCatAndroidKey
+  goog_…` bricht ab, wenn der Upload-Schlüssel fehlt oder die Versionsnummer
+  schon vergeben ist, prüft Analyse und Tests und legt die .aab-Datei in
+  `Desktop\Lookin-Upload`.
+- **Store-Unterlagen:** `docs/PLAY_STORE_LISTING.md` enthält jetzt den
+  englischen Eintrag, die aktuelle Datensicherheits-Tabelle (inklusive
+  Antworten der Einrichtung mit Einwilligung), KI-Meldung, Werbe-ID, Länder
+  und Testkonto-Hinweise.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 365 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 368 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)

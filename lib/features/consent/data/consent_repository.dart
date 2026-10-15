@@ -63,7 +63,8 @@ final class SupabaseConsentRepository implements ConsentRepository {
           .select('kind,granted,created_at')
           .eq('user_id', userId)
           .order('created_at', ascending: false)
-          .limit(50);
+          .limit(50)
+          .timeout(const Duration(seconds: 8));
       final seen = <String>{};
       for (final row in rows) {
         final wire = row['kind'];
@@ -77,7 +78,7 @@ final class SupabaseConsentRepository implements ConsentRepository {
         }
       }
     } catch (error) {
-      // Offline or table not created yet: the device copy decides.
+      // Offline, too slow or table not created yet: the device copy decides.
       debugPrint('Consent load from server failed: ${error.runtimeType}');
     }
     return result;
