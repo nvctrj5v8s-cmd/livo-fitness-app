@@ -46,6 +46,16 @@ eintragen und den Inhalt der Datei vollständig in „Message body“ kopieren:
 | Reset Password | Neues Passwort für Lookin festlegen | `supabase/templates/recovery.html` |
 | Confirm signup | Bestätige deine E-Mail für Lookin | `supabase/templates/confirmation.html` |
 
+**Zweisprachig (seit 15.10.2026):** Beide Dateien enthalten Deutsch und Englisch
+und wählen anhand der Sprache des Kontos (`user_metadata.locale`, wird bei der
+Registrierung und beim Sprachwechsel gesetzt; fehlt sie, kommt Deutsch). Auch
+das Betreff-Feld versteht diese Weiche. Dort eintragen:
+
+- Confirm signup:
+  `{{ if eq .Data.locale "en" }}Confirm your email for Lookin{{ else }}Bestätige deine E-Mail für Lookin{{ end }}`
+- Reset Password:
+  `{{ if eq .Data.locale "en" }}Set a new password for Lookin{{ else }}Neues Passwort für Lookin festlegen{{ end }}`
+
 Die Vorlagen verlinken mit `{{ .SiteURL }}?token_hash=…&type=…`. Die App
 (`lib/features/auth/data/email_link.dart`) löst den Link selbst ein. Anders
 als der Standard-Link funktioniert er auch, wenn die Mail auf einem anderen
