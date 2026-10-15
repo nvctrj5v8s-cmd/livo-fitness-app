@@ -33,7 +33,7 @@
   "progressFat": "Fat",
   "progressTrackingConsistency": "Tracking consistency",
   "progressUpToTheLast28Days": "Up to the last 28 days",
-  "progressValueValueNoEntry": "{arg0}.{arg1}. · no entry",
+  "progressValueValueNoEntry": "{arg0} · no entry",
   "progressInTargetRange": "in target range",
   "progressWeight": "Weight",
   "progressNoMeasurementYet": "No measurement yet",

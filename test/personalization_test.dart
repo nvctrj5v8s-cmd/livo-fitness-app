@@ -414,6 +414,18 @@ void main() {
       expect(find.byKey(const ValueKey('questions-first')), findsOneWidget);
     });
 
+    testWidgets('der Name aus den Fragen steht schon in der Registrierung', (
+      tester,
+    ) async {
+      final pending = _MemoryPending()
+        ..record = const PersonalizationRecord(
+          profile: PersonalizationProfile(displayName: 'Max'),
+        );
+      await _questionsFirst(tester, pending);
+      expect(find.byKey(const Key('auth-answers-ready')), findsOneWidget);
+      expect(find.text('Max'), findsOneWidget);
+    });
+
     testWidgets('„Schon ein Konto?“ führt direkt zur Anmeldung', (
       tester,
     ) async {

@@ -66,13 +66,10 @@
   "progressFat": "Fett",
   "progressTrackingConsistency": "Tracking-Konstanz",
   "progressUpToTheLast28Days": "Die letzten maximal 28 Tage",
-  "progressValueValueNoEntry": "{arg0}.{arg1}. · kein Eintrag",
+  "progressValueValueNoEntry": "{arg0} · kein Eintrag",
   "@progressValueValueNoEntry": {
     "placeholders": {
       "arg0": {
-        "type": "String"
-      },
-      "arg1": {
         "type": "String"
       }
     }

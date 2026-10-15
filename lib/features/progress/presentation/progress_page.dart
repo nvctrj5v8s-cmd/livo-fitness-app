@@ -876,12 +876,9 @@ class _ConsistencyCard extends StatelessWidget {
               return Tooltip(
                 message: data == null || !data.tracked
                     ? context.l10n.progressValueValueNoEntry(
-                        (cell.date.day).toString(),
-                        (cell.date.month).toString(),
+                        AppFormat.dayMonth(cell.date),
                       )
-                    : L10n.isEnglish
-                    ? '${AppFormat.dayMonth(cell.date)} · ${AppFormat.integer(data.calories)} kcal'
-                    : '${cell.date.day}.${cell.date.month}. · ${data.calories.round()} kcal',
+                    : '${AppFormat.dayMonth(cell.date)} · ${AppFormat.integer(data.calories)} kcal',
                 child: Container(
                   decoration: BoxDecoration(
                     color: color,

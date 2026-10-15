@@ -17,8 +17,13 @@ class AuthPage extends StatefulWidget {
     this.startWithSignUp = false,
     this.onEditAnswers,
     this.initialEmail,
+    this.initialName,
     super.key,
   });
+
+  /// Prefills the name field with the name given in the questions, so it
+  /// is not typed twice.
+  final String? initialName;
 
   /// Prefills the e-mail field, for example after confirming the address.
   final String? initialEmail;
@@ -87,6 +92,8 @@ class _AuthPageState extends State<AuthPage>
     super.initState();
     final email = widget.initialEmail;
     if (email != null) _emailController.text = email;
+    final name = widget.initialName?.trim();
+    if (name != null && name.isNotEmpty) _nameController.text = name;
     WidgetsBinding.instance.addObserver(this);
     _entranceController = AnimationController(
       vsync: this,

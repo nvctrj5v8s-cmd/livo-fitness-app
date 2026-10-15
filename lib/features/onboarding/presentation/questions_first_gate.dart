@@ -131,6 +131,7 @@ class _QuestionsFirstGateState extends State<QuestionsFirstGate> {
     return AuthPage(
       key: ValueKey('auth-${answered ? 'answers' : 'plain'}'),
       answersReady: answered,
+      initialName: answered ? _record.profile?.displayName : null,
       startWithSignUp: !_wantsSignIn && !_accountSeen,
       onEditAnswers: answered ? () => setState(() => _editing = true) : null,
     );

@@ -5199,8 +5199,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String progressValueValueNoEntry(String arg0, String arg1) {
-    return '$arg0.$arg1. · no entry';
+  String progressValueValueNoEntry(String arg0) {
+    return '$arg0 · no entry';
   }
 
   @override

@@ -1487,7 +1487,7 @@
   "progressValueOfValueDaysWithEntriesValue": "{arg0} of {arg1} days with entries · {arg2} meals analysed",
   "progressValueValueKcalValueGProtein": "{arg0}: {arg1} kcal · {arg2} g protein",
   "progressValueValueKgInThisPeriod": "{arg0}{arg1} kg in this period",
-  "progressValueValueNoEntry": "{arg0}.{arg1}. · no entry",
+  "progressValueValueNoEntry": "{arg0} · no entry",
   "progressWaistCircumferenceMustBeBetween30And": "Waist circumference must be between 30 and 300 cm.",
   "progressWaistOptional": "Waist (optional)",
   "progressWeight": "Weight",

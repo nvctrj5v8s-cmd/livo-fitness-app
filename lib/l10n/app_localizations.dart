@@ -9062,8 +9062,8 @@ abstract class AppLocalizations {
   /// No description provided for @progressValueValueNoEntry.
   ///
   /// In de, this message translates to:
-  /// **'{arg0}.{arg1}. · kein Eintrag'**
-  String progressValueValueNoEntry(String arg0, String arg1);
+  /// **'{arg0} · kein Eintrag'**
+  String progressValueValueNoEntry(String arg0);
 
   /// No description provided for @progressWaistCircumferenceMustBeBetween30And.
   ///
@@ -9626,7 +9626,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionSubscriptionPricesValuePaymentAndBillingAre.
   ///
   /// In de, this message translates to:
-  /// **'Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.'**
+  /// **'Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.'**
   String subscriptionSubscriptionPricesValuePaymentAndBillingAre(
     String arg0,
     String arg1,
