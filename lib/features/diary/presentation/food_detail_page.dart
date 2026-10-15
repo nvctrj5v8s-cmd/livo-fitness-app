@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/data/food_search_service.dart';
@@ -49,10 +51,12 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     final isSaved = controller.foodFavoriteIds.contains(food.id);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lebensmittel'),
+        title: Text(context.l10n.diaryFood),
         actions: [
           IconButton(
-            tooltip: isSaved ? 'Von Merkliste entfernen' : 'Merken',
+            tooltip: isSaved
+                ? context.l10n.diaryRemoveFromSavedFoods
+                : context.l10n.diarySaveFood,
             onPressed: () => controller.toggleFoodFavorite(food.id),
             icon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 180),
@@ -116,7 +120,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                 const SizedBox(height: 3),
                               ],
                               Text(
-                                food.name,
+                                food.displayName,
                                 style: TextStyle(
                                   color: germanHint == null
                                       ? AppColors.text
@@ -156,13 +160,15 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                         color: AppColors.blue,
                       ),
                       StatusPill(
-                        label: 'BASIS: ${food.servingGrams.round()} G',
+                        label: context.l10n.diaryServingBasis(
+                          food.servingGrams.round(),
+                        ),
                         icon: Icons.scale_outlined,
                       ),
                     ],
                   ),
                   const SizedBox(height: 26),
-                  const SectionHeader(title: 'Nährwerte'),
+                  SectionHeader(title: context.l10n.diaryNutrition),
                   const SizedBox(height: 9),
                   _NutrientGrid(food: food, factor: factor),
                   if (controller.hasAllergyProfile) ...[
@@ -179,7 +185,10 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                     _BarcodeProductFacts(food: food),
                   ],
                   const SizedBox(height: 26),
-                  Text('Menge', style: Theme.of(context).textTheme.labelLarge),
+                  Text(
+                    context.l10n.diaryAmount,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                   const SizedBox(height: 9),
                   Wrap(
                     spacing: 8,
@@ -195,7 +204,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Mahlzeit',
+                    context.l10n.diaryMeal,
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(height: 9),
@@ -231,8 +240,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                           : const Icon(Icons.add_rounded),
                       label: Text(
                         _saving
-                            ? 'Wird gespeichert ...'
-                            : 'Zum Tagebuch hinzufügen',
+                            ? context.l10n.diarySaving2
+                            : context.l10n.diaryAddToDiary,
                       ),
                     ),
                   ),
@@ -259,22 +268,24 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       controller.allergies,
     );
     if (assessment.hasConflict) {
-      final conflicts = assessment.conflicts.join(', ');
+      final conflicts = assessment.conflicts.map(DisplayText.of).join(', ');
       final proceed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Allergiehinweis'),
+          title: Text(L10n.current.diaryAllergyNotice),
           content: Text(
-            'Die Produktdaten nennen m\u00F6glicherweise: $conflicts. Nur fortfahren, wenn du das Lebensmittel bereits gegessen hast und es lediglich dokumentieren m\u00F6chtest. Pr\u00FCfe die Verpackung.',
+            L10n.current.diaryTheProductInformationMayMentionValueOnly(
+              (conflicts).toString(),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text('Abbrechen'),
+              child: Text(L10n.current.diaryCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text('Trotzdem protokollieren'),
+              child: Text(L10n.current.diaryLogAnyway),
             ),
           ],
         ),
@@ -295,7 +306,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
         SnackBar(
           content: Text(
             AppScope.of(context).diaryError ??
-                'Das Lebensmittel konnte nicht gespeichert werden.',
+                L10n.current.diaryTheFoodCouldNotBeSaved,
           ),
         ),
       );
@@ -303,7 +314,11 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     }
     Navigator.pop(context, true);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${widget.food.name} wurde hinzugefügt.')),
+      SnackBar(
+        content: Text(
+          L10n.current.diaryValueWasAdded((widget.food.displayName).toString()),
+        ),
+      ),
     );
   }
 }
@@ -318,42 +333,46 @@ class _NutrientGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final values = <(String, String, Color)>[
       (
-        'Kalorien',
+        context.l10n.diaryCalories,
         '${(food.calories * factor).round()} kcal',
         AppColors.orange,
       ),
       ('Protein', '${(food.protein * factor).round()} g', AppColors.mint),
       (
-        'Kohlenhydrate',
+        context.l10n.diaryCarbohydrates,
         '${(food.carbohydrates * factor).round()} g',
         AppColors.blue,
       ),
-      ('Fett', '${(food.fat * factor).round()} g', AppColors.purple),
+      (
+        context.l10n.diaryFat,
+        '${(food.fat * factor).round()} g',
+        AppColors.purple,
+      ),
     ];
     if (food.saturatedFat != null) {
       values.add((
-        'gesättigte Fettsäuren',
+        context.l10n.diarySaturatedFat,
         '${(food.saturatedFat! * factor).toStringAsFixed(1)} g',
         AppColors.orange,
       ));
     }
     if (food.sugar != null) {
       values.add((
-        'Zucker',
+        context.l10n.diarySugar,
         '${(food.sugar! * factor).toStringAsFixed(1)} g',
         AppColors.purple,
       ));
     }
     if (food.fiber != null) {
       values.add((
-        'Ballaststoffe',
+        context.l10n.diaryFibre,
         '${(food.fiber! * factor).toStringAsFixed(1)} g',
         AppColors.mint,
       ));
     }
     if (food.salt != null) {
       values.add((
-        'Salz',
+        context.l10n.diarySalt,
         '${(food.salt! * factor).toStringAsFixed(2)} g',
         AppColors.blue,
       ));
@@ -406,7 +425,8 @@ class _BarcodeProductFacts extends StatelessWidget {
 
   final FoodItem food;
 
-  String _cleanTag(String value) => AllergySafety.displayTag(value);
+  String _cleanTag(String value) =>
+      DisplayText.of(AllergySafety.displayTag(value));
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +434,7 @@ class _BarcodeProductFacts extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Produktinfos'),
+        SectionHeader(title: context.l10n.diaryProductInformation),
         const SizedBox(height: 9),
         SurfaceCard(
           child: Column(
@@ -455,8 +475,8 @@ class _BarcodeProductFacts extends StatelessWidget {
               ],
               if (food.allergens.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text(
-                  'Allergene laut Produktdaten',
+                Text(
+                  context.l10n.diaryAllergensAccordingToProductData,
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
@@ -481,8 +501,8 @@ class _BarcodeProductFacts extends StatelessWidget {
                 const SizedBox(height: 14),
                 ExpansionTile(
                   tilePadding: EdgeInsets.zero,
-                  title: const Text(
-                    'Zutatenliste',
+                  title: Text(
+                    context.l10n.diaryIngredientsList,
                     style: TextStyle(fontWeight: FontWeight.w800),
                   ),
                   children: [
@@ -494,8 +514,8 @@ class _BarcodeProductFacts extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 12),
-              const Text(
-                'Quelle: Open Food Facts. Angaben können fehlen oder sich ändern – bei Allergien und Unverträglichkeiten immer das Verpackungsetikett prüfen.',
+              Text(
+                context.l10n.diarySourceOpenFoodFactsInformationMayBe,
                 style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 11,

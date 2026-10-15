@@ -1,3 +1,5 @@
+import '../../l10n/display_text.dart';
+
 enum ProgressPeriod {
   sevenDays('7 Tage', 7),
   thirtyDays('30 Tage', 30),
@@ -6,8 +8,9 @@ enum ProgressPeriod {
   oneYear('1 Jahr', 365),
   all('Alles', null);
 
-  const ProgressPeriod(this.label, this.days);
-  final String label;
+  const ProgressPeriod(this._label, this.days);
+  final String _label;
+  String get label => DisplayText.of(_label);
   final int? days;
 
   DateTime start(DateTime end) {

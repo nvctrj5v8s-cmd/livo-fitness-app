@@ -38,6 +38,26 @@ const chatMaxOutputTokens = 1200
 const photoQuestion = '📷 Lebensmittel-Foto zur Analyse'
 const truncationNote = '\n\n(Antwort gekürzt – frag gern nach, wenn du mehr wissen möchtest.)'
 
+function isEnglish(body: Record<string, unknown>): boolean {
+  return body.locale === 'en'
+}
+
+// Locale is a bounded UI preference, never an instruction supplied by a user.
+// All health and food-content rules remain in the prompt for both languages.
+function localizedInstructions(base: string, body: Record<string, unknown>): string {
+  if (!isEnglish(body)) return base
+  return 'REPLY LANGUAGE: English. The person uses the app in English, so write every reply in English, even if the question is in another language, unless they explicitly ask for another language.\n\n' + base
+    .replace('in einer deutschen Ernährungs- und Fitness-App', 'in der Ernährungs- und Fitness-App Lookin')
+    .replace('der deutschsprachigen Ernährungs- und Fitness-App', 'der Ernährungs- und Fitness-App')
+    .replace('- Antworte auf Deutsch,', '- Antworte auf Englisch,')
+    .replace('- Deutsch, per du,', '- Englisch, direkte Ansprache,')
+    .replaceAll('„ca.“', '"approx."')
+    .replaceAll('Notruf 112', 'örtlichen Notruf')
+    .split('\n').map((line) => line.includes('Telefonseelsorge')
+      ? '- Bei Selbstverletzung, Suizidgedanken oder akuter Gefahr: keine Ernährungstipps; freundlich zu örtlichem Notruf, qualifizierter Hilfe und einer vertrauten Person verweisen.'
+      : line).join('\n') + '\n\nOUTPUT LANGUAGE: English. All replies, food names and JSON summary fields must be in English. Label uncertain nutrition values as estimates. Keep JSON keys and confidence codes unchanged.'
+}
+
 // Base rules for the photo analyses (`meal_photo`, `vision`). Kept unchanged
 // on purpose: the structured meal photo flow was tuned against this text.
 const instructions = `Du bist der Lookin Coach in einer deutschen Ernährungs- und Fitness-App.
@@ -229,8 +249,9 @@ async function answerChat(
   const limit = dailyLimitFor(entitlement)
   // Crisis messages never go to the model and never cost a request.
   if (isCrisisMessage(message)) {
-    const saved = await saveExchange(admin, userId, message, crisisAnswer)
-    return json({ answer: crisisAnswer, daily_limit: limit, model, saved })
+    const answer = isEnglish(body) ? crisisAnswerEn : crisisAnswer
+    const saved = await saveExchange(admin, userId, message, answer)
+    return json({ answer, daily_limit: limit, model, saved })
   }
   const quota = await consumeQuota(
     admin,
@@ -261,7 +282,7 @@ async function answerChat(
 
   const result = await requestOpenAi(openAiKey, 'chat', {
     model,
-    instructions: chatInstructions,
+    instructions: localizedInstructions(chatInstructions, body),
     input: [...history, { role: 'user', content: question }],
     reasoning: { effort: 'low' },
     max_output_tokens: chatMaxOutputTokens,
@@ -272,7 +293,7 @@ async function answerChat(
     return result.response
   }
 
-  const answer = guardAnswer(finalizeAnswer(result.payload))
+  const answer = guardAnswer(finalizeAnswer(result.payload, isEnglish(body)), isEnglish(body))
   if (!answer) {
     console.error('OpenAI chat response contained no usable text', result.payload?.status)
     await releaseQuota(admin, userId)
@@ -405,9 +426,9 @@ HALAL-FOTO-SCHUTZ:
 - Liste nur erlaubte sichtbare Bestandteile auf.`
   const result = await requestOpenAi(openAiKey, 'vision', {
     model,
-    instructions: `${visionInstructions}${visionHalalInstruction}\n${safetyRules}`,
+    instructions: localizedInstructions(`${visionInstructions}${visionHalalInstruction}\n${safetyRules}`, body),
     input: [{ role: 'user', content: [
-      { type: 'input_text', text: contextText ? `Analysiere dieses Lebensmittel-Foto auf Deutsch.\n<lookin_kontext>\n${contextText}\n</lookin_kontext>` : 'Analysiere dieses Lebensmittel-Foto auf Deutsch.' },
+      { type: 'input_text', text: `${isEnglish(body) ? 'Analyse this food photo in English.' : 'Analysiere dieses Lebensmittel-Foto auf Deutsch.'}${contextText ? `\n<lookin_kontext>\n${contextText}\n</lookin_kontext>` : ''}` },
       { type: 'input_image', image_url: `data:${mimeType};base64,${imageBase64}`, detail: 'low' },
     ] }],
     reasoning: { effort: 'low' },
@@ -418,12 +439,12 @@ HALAL-FOTO-SCHUTZ:
     await releaseQuota(admin, userId)
     return result.response
   }
-  const answer = guardAnswer(finalizeAnswer(result.payload))
+  const answer = guardAnswer(finalizeAnswer(result.payload, isEnglish(body)), isEnglish(body))
   if (!answer) {
     await releaseQuota(admin, userId)
     return json({ error: 'Auf dem Foto konnte gerade nichts sicher erkannt werden.', code: 'empty_response' }, 503)
   }
-  const saved = await saveExchange(admin, userId, photoQuestion, answer)
+  const saved = await saveExchange(admin, userId, isEnglish(body) ? '📷 Food photo for analysis' : photoQuestion, answer)
   return json({ answer, remaining: quota.remaining, daily_limit: limit, model, saved })
 }
 
@@ -478,9 +499,9 @@ AUFGABE: STRUKTURIERTE MAHLZEITENERKENNUNG
     headers: { Authorization: `Bearer ${openAiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model,
-      instructions: mealPhotoInstructions,
+      instructions: localizedInstructions(mealPhotoInstructions, body),
       input: [{ role: 'user', content: [
-        { type: 'input_text', text: `Erkenne die Bestandteile dieser Mahlzeit. Alle Werte werden vor dem Speichern bearbeitet.\n${contextText}` },
+        { type: 'input_text', text: `${isEnglish(body) ? 'Identify the components of this meal in English. All values will be reviewed before saving.' : 'Erkenne die Bestandteile dieser Mahlzeit. Alle Werte werden vor dem Speichern bearbeitet.'}\n${contextText}` },
         { type: 'input_image', image_url: `data:${mimeType};base64,${imageBase64}`, detail: 'low' },
       ] }],
       text: {
@@ -604,14 +625,18 @@ function mealItemAllowed(value: string): boolean {
     .replaceAll('ö', 'oe')
     .replaceAll('ü', 'ue')
     .replaceAll('ß', 'ss')
+    .replaceAll('œ', 'oe')
+    .replaceAll('æ', 'ae')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
   const words = normalized.split(' ')
-  const forbidden = ['pork', 'pig', 'swine', 'schwein', 'bacon', 'ham', 'prosciutto', 'salami', 'pepperoni', 'lard', 'speck', 'gelatin', 'gelatine', 'alcohol', 'alkohol', 'beer', 'bier', 'wine', 'wein', 'whisky', 'whiskey', 'vodka', 'rum', 'gin', 'brandy', 'cognac', 'champagne', 'schnapps', 'liqueur', 'liquor', 'schinken', 'chorizo', 'mortadella', 'bratwurst', 'leberkaese', 'kassler', 'kasseler', 'eisbein', 'mettwurst', 'rotwein', 'weisswein', 'sekt', 'likoer']
+  const forbidden = ['pork', 'pig', 'swine', 'schwein', 'bacon', 'ham', 'prosciutto', 'salami', 'pepperoni', 'lard', 'speck', 'gelatin', 'gelatine', 'alcohol', 'alkohol', 'beer', 'bier', 'wine', 'wein', 'whisky', 'whiskey', 'vodka', 'rum', 'gin', 'brandy', 'cognac', 'champagne', 'schnapps', 'liqueur', 'liquor', 'schinken', 'chorizo', 'mortadella', 'bratwurst', 'leberkaese', 'kassler', 'kasseler', 'eisbein', 'mettwurst', 'rotwein', 'weisswein', 'sekt', 'likoer', 'porc', 'porcs', 'cochon', 'cochons', 'jambon', 'saucisson', 'saindoux', 'cerdo', 'cerdos', 'jamon', 'tocino', 'maiale', 'porco', 'toucinho', 'varken', 'varkensvlees', 'spek', 'gelatina', 'collagen', 'kollagen', 'alcool', 'alcol', 'biere', 'birra', 'vino', 'vinho', 'wijn', 'rhum', 'cidre', 'cider', 'mead', 'sake', 'sherry', 'aperol', 'campari', 'tequila', 'mezcal', 'cocktail']
   if (words.some((word) => forbidden.some((term) => word === term || (term.length > 4 && word.startsWith(term))))) {
     return false
   }
-  const landMeat = ['meat', 'fleisch', 'chicken', 'huhn', 'haehnchen', 'poultry', 'turkey', 'pute', 'beef', 'rind', 'veal', 'kalb', 'lamb', 'lamm', 'mutton', 'goat', 'ziege', 'duck', 'ente', 'venison', 'wurst', 'sausage']
+  const landMeat = ['meat', 'fleisch', 'chicken', 'huhn', 'haehnchen', 'poultry', 'turkey', 'pute', 'beef', 'rind', 'veal', 'kalb', 'lamb', 'lamm', 'mutton', 'goat', 'ziege', 'duck', 'ente', 'venison', 'wurst', 'sausage', 'drumstick', 'kebab', 'doner', 'doener', 'schnitzel', 'frikadelle', 'hackfleisch', 'viande', 'poulet', 'boeuf', 'agneau', 'veau', 'canard', 'dinde', 'lapin', 'saucisse', 'pollo', 'ternera', 'cordero', 'manzo', 'vitello', 'agnello', 'tacchino', 'anatra', 'vlees', 'worst', 'frango']
   const hasLandMeat = words.some((word) => landMeat.some((term) => word === term || word.startsWith(term)))
   const hasHalalMarker = words.some((word) => ['halal', 'zabiha', 'dhabiha'].includes(word))
   return !hasLandMeat || hasHalalMarker
@@ -728,18 +753,25 @@ async function releaseQuota(admin: AdminClient, userId: string): Promise<void> {
 
 // Text of a Responses API payload, cleaned for display and storage. Returns
 // null for empty or unreadable output.
-function finalizeAnswer(payload: Record<string, unknown>): string | null {
+function finalizeAnswer(payload: Record<string, unknown>, english = false): string | null {
   const raw = extractOutputText(payload)
   if (!raw) return null
   // `incomplete` means the output token limit cut the answer off.
   const incomplete = payload.status === 'incomplete'
+  const note = english ? '\n\n(Answer shortened — feel free to ask if you would like more detail.)' : truncationNote
   const text = sanitizeAnswer(
     incomplete ? dropPartialSentence(raw) : raw,
-    incomplete ? maxStoredLength - truncationNote.length : maxStoredLength,
+    incomplete ? maxStoredLength - note.length : maxStoredLength,
   )
   if (!text) return null
-  return incomplete ? `${text}${truncationNote}` : text
+  return incomplete ? `${text}${note}` : text
 }
+
+const crisisAnswerEn = 'I am sorry you are going through this. You do not have to face it alone. ' +
+  'If you are in immediate danger, call your local emergency number now (112 in Germany and across the EU). ' +
+  'In Germany, the TelefonSeelsorge is free, anonymous and open around the clock on 0800 111 0 111 or 0800 111 0 222 (German-speaking). ' +
+  'Elsewhere, findahelpline.com lists crisis lines by country. ' +
+  'Please also reach out to someone you trust or a qualified medical or mental health professional.'
 
 const crisisAnswer = 'Es tut mir leid, dass es dir gerade so geht. Du musst damit nicht allein bleiben. ' +
   'Wenn du in akuter Gefahr bist, wähle bitte sofort den Notruf 112. ' +
@@ -748,7 +780,7 @@ const crisisAnswer = 'Es tut mir leid, dass es dir gerade so geht. Du musst dami
 
 // Narrow on purpose: words like "hungern" or "abnehmen" alone are normal
 // coaching topics and stay with the model and its safety rules.
-const crisisPattern = /(suizid|selbstmord|mich\s+(umbringen|töten|toeten)|nicht\s+mehr\s+leben|will\s+sterben|möchte\s+sterben|moechte\s+sterben|mir\s+(etwas|was)\s+antun|selbstverletz|mich\s+ritzen|\britzen\b)/i
+const crisisPattern = /(suizid|selbstmord|mich\s+(umbringen|töten|toeten)|nicht\s+mehr\s+leben|will\s+sterben|möchte\s+sterben|moechte\s+sterben|mir\s+(etwas|was)\s+antun|selbstverletz|mich\s+ritzen|\britzen\b|suicid|kill\s+myself|want\s+to\s+die|self[ -]?harm|hurt\s+myself|end\s+my\s+life|take\s+my\s+own\s+life|(do\s*n[o']?t|don't|dont)\s+want\s+to\s+(live|be\s+alive)|no\s+reason\s+to\s+live|better\s+off\s+dead|cut\s+myself)/i
 
 function isCrisisMessage(message: string): boolean {
   return crisisPattern.test(message)
@@ -759,12 +791,12 @@ const doseFallback = 'Zu Mengen oder Dosierungen von Nahrungsergänzungsmitteln 
   'Bei Fragen zu Lebensmitteln, Mahlzeiten und Bewegung helfe ich dir gern.'
 
 const doseUnit = /\d+([.,]\d+)?\s?(mg|µg|mcg|ie|i\.\s?e\.|iu|einheiten)\b/i
-const doseContext = /(dosis|dosierung|einnehmen|einnahme|tablette|kapsel|präparat|praeparat|supplement|nahrungsergänzung|nahrungsergaenzung|medikament|insulin|metformin|semaglutid|ozempic|wegovy|mounjaro)/i
-const creatineDose = /(\d+([.,]\d+)?\s?g\b[^.!?\n]{0,40}kreatin|kreatin[^.!?\n]{0,40}\d+([.,]\d+)?\s?g\b)/i
+const doseContext = /(dose|dosage|tablet|capsule|medicine|medication|dosis|dosierung|einnehmen|einnahme|tablette|kapsel|präparat|praeparat|supplement|nahrungsergänzung|nahrungsergaenzung|medikament|insulin|metformin|semaglutid|ozempic|wegovy|mounjaro)/i
+const creatineDose = /(\d+([.,]\d+)?\s?g\b[^.!?\n]{0,40}(kreatin|creatine)|(kreatin|creatine)[^.!?\n]{0,40}\d+([.,]\d+)?\s?g\b)/i
 
 // Last line of defence after the prompt: an answer that names a dose for a
 // supplement or medicine is replaced. Only a code is logged, no content.
-function guardAnswer(answer: string | null): string | null {
+function guardAnswer(answer: string | null, english = false): string | null {
   if (!answer) return answer
   const sentences = answer.split(/(?<=[.!?\n])/)
   const namesDose = sentences.some((sentence) =>
@@ -772,7 +804,9 @@ function guardAnswer(answer: string | null): string | null {
   )
   if (namesDose) {
     console.warn('ai-coach answer replaced: dose_guard')
-    return doseFallback
+    return english
+      ? 'I cannot provide quantities or doses for supplements or medicines. Please follow the package leaflet and ask your doctor or pharmacist. I can help with questions about foods, meals and movement.'
+      : doseFallback
   }
   return answer
 }

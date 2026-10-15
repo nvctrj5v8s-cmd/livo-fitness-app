@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -65,7 +66,7 @@ class AiMealPhotoItem {
     double number(String key) {
       final value = map[key];
       if (value is! num || !value.isFinite || value < 0) {
-        throw const FormatException('Ungültiger KI-Nährwert.');
+        throw FormatException(L10n.current.coreInvalidAiNutritionValue);
       }
       return value.toDouble();
     }
@@ -73,7 +74,7 @@ class AiMealPhotoItem {
     final name = (map['name'] as String? ?? '').trim();
     final amount = number('amount_grams');
     if (name.isEmpty || name.length > 100 || amount <= 0 || amount > 5000) {
-      throw const FormatException('Ungültiges erkanntes Lebensmittel.');
+      throw FormatException(L10n.current.coreInvalidRecognisedFood);
     }
     return AiMealPhotoItem(
       name: name,
@@ -166,8 +167,8 @@ AiCoachException? _premiumRequired(FunctionException error) {
   if (error.status != 402 && code != AiCoachException.premiumRequiredCode) {
     return null;
   }
-  return const AiCoachException(
-    'Diese KI-Funktion ist Teil von Lookin Premium.',
+  return AiCoachException(
+    L10n.current.coreThisAiFeatureIsPartOfLookin,
     code: AiCoachException.premiumRequiredCode,
   );
 }
@@ -197,8 +198,9 @@ class AiCoachService {
     Duration? timeout,
   }) {
     final invoker = _providedInvoker;
-    if (invoker != null) return invoker(body, timeout: timeout);
-    return _invokeFunction(body, timeout: timeout);
+    final localizedBody = {...body, 'locale': L10n.code};
+    if (invoker != null) return invoker(localizedBody, timeout: timeout);
+    return _invokeFunction(localizedBody, timeout: timeout);
   }
 
   Future<FunctionResponse> _invokeFunction(
@@ -232,15 +234,16 @@ class AiCoachService {
   }) async {
     final cleanMessage = message.trim();
     if (cleanMessage.isEmpty) {
-      throw const AiCoachException(
-        'Schreib zuerst eine kurze Frage.',
+      throw AiCoachException(
+        L10n.current.coreWriteAShortQuestionFirst,
         code: AiCoachException.invalidMessageCode,
       );
     }
     if (cleanMessage.length > maxMessageLength) {
-      throw const AiCoachException(
-        'Deine Nachricht ist zu lang. Bitte kürze sie auf höchstens '
-        '$maxMessageLength Zeichen.',
+      throw AiCoachException(
+        L10n.current.coreYourMessageIsTooLongPleaseShorten(
+          (maxMessageLength).toString(),
+        ),
         code: AiCoachException.invalidMessageCode,
       );
     }
@@ -252,16 +255,12 @@ class AiCoachService {
       }, timeout: chatTimeout);
       return _replyFrom(
         response.data,
-        emptyMessage:
-            'Der Coach konnte gerade keine Antwort formulieren. Bitte '
-            'versuche es noch einmal.',
+        emptyMessage: L10n.current.coreTheCoachCouldNotPutTogetherAn,
       );
     } catch (error) {
       throw _chatError(
         error,
-        fallback:
-            'Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich '
-            'noch einmal.',
+        fallback: L10n.current.coreTheCoachIsCurrentlyUnavailablePleaseTry,
       );
     }
   }
@@ -273,15 +272,15 @@ class AiCoachService {
       }, timeout: historyTimeout);
       final data = response.data;
       if (data is! Map) {
-        throw const AiCoachException(
-          'Dein Chatverlauf konnte nicht geladen werden.',
+        throw AiCoachException(
+          L10n.current.coreYourChatHistoryCouldNotBeLoaded,
           code: AiCoachException.invalidResponseCode,
         );
       }
       final error = data['error'];
       if (error is String && error.trim().isNotEmpty) {
         throw AiCoachException(
-          'Dein Chatverlauf konnte gerade nicht geladen werden.',
+          L10n.current.coreYourChatHistoryCouldNotBeLoaded2,
           code: data['code'] as String? ?? AiCoachException.unavailableCode,
         );
       }
@@ -301,7 +300,7 @@ class AiCoachService {
     } catch (error) {
       throw _chatError(
         error,
-        fallback: 'Dein Chatverlauf konnte gerade nicht geladen werden.',
+        fallback: L10n.current.coreYourChatHistoryCouldNotBeLoaded2,
       );
     }
   }
@@ -311,16 +310,14 @@ class AiCoachService {
   /// confirms the deletion, so the app never claims a deletion that did not
   /// happen (for example with an outdated Edge Function).
   Future<int> clearHistory() async {
-    const notDeleted =
-        'Dein Chatverlauf konnte gerade nicht gelöscht werden. Bitte '
-        'versuche es gleich noch einmal.';
+    final notDeleted = L10n.current.coreYourChatHistoryCouldNotBeDeleted;
     try {
       final response = await _invoke(const {
         'action': 'clear_history',
       }, timeout: historyTimeout);
       final data = response.data;
       if (data is! Map || data['cleared'] != true) {
-        throw const AiCoachException(
+        throw AiCoachException(
           notDeleted,
           code: AiCoachException.invalidResponseCode,
         );
@@ -337,8 +334,8 @@ class AiCoachService {
     String mimeType = 'image/jpeg',
   }) async {
     if (bytes.isEmpty || bytes.length > 4 * 1024 * 1024) {
-      throw const AiCoachException(
-        'Das Foto ist zu groß. Bitte wähle ein kleineres Bild.',
+      throw AiCoachException(
+        L10n.current.coreThePhotoIsTooLargePleaseChoose,
         code: 'image_too_large',
       );
     }
@@ -352,14 +349,12 @@ class AiCoachService {
       return _replyFrom(
         response.data,
         emptyMessage:
-            'Auf dem Foto konnte gerade nichts sicher erkannt werden.',
+            L10n.current.coreNothingCouldBeConfidentlyRecognisedInThis,
       );
     } catch (error) {
       throw _chatError(
         error,
-        fallback:
-            'Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es '
-            'erneut.',
+        fallback: L10n.current.coreImageAnalysisIsCurrentlyUnavailablePleaseTry,
       );
     }
   }
@@ -370,8 +365,8 @@ class AiCoachService {
     String mimeType = 'image/jpeg',
   }) async {
     if (bytes.isEmpty || bytes.length > 4 * 1024 * 1024) {
-      throw const AiCoachException(
-        'Das Foto ist zu groß. Bitte nimm ein kleineres Bild auf.',
+      throw AiCoachException(
+        L10n.current.coreThePhotoIsTooLargePleaseTake,
         code: 'image_too_large',
       );
     }
@@ -384,8 +379,8 @@ class AiCoachService {
       });
       final data = response.data;
       if (data is! Map) {
-        throw const AiCoachException(
-          'Die Fotoanalyse hat keine gültige Antwort erhalten.',
+        throw AiCoachException(
+          L10n.current.corePhotoAnalysisDidNotReturnAValid,
           code: 'invalid_response',
         );
       }
@@ -395,8 +390,8 @@ class AiCoachService {
       }
       final rawAnalysis = data['analysis'];
       if (rawAnalysis is! Map) {
-        throw const AiCoachException(
-          'Auf dem Foto konnten keine Lebensmittel sicher erkannt werden.',
+        throw AiCoachException(
+          L10n.current.coreNoFoodsCouldBeConfidentlyRecognisedIn,
           code: 'invalid_response',
         );
       }
@@ -413,8 +408,8 @@ class AiCoachService {
                 .toList(growable: false)
           : const <AiMealPhotoItem>[];
       if (items.isEmpty) {
-        throw const AiCoachException(
-          'Auf dem Foto konnten keine erlaubten Lebensmittel sicher erkannt werden.',
+        throw AiCoachException(
+          L10n.current.coreNoPermittedFoodsCouldBeConfidentlyRecognised,
           code: 'empty_response',
         );
       }
@@ -428,31 +423,31 @@ class AiCoachService {
     } on AiCoachException {
       rethrow;
     } on FormatException {
-      throw const AiCoachException(
-        'Die erkannten Werte waren unvollständig. Bitte versuche es erneut.',
+      throw AiCoachException(
+        L10n.current.coreTheRecognisedValuesWereIncompletePleaseTry,
         code: 'invalid_response',
       );
     } on FunctionException catch (error) {
       if (_premiumRequired(error) case final premium?) throw premium;
       if (error.status == 401 || error.status == 403) {
-        throw const AiCoachException(
-          'Bitte melde dich erneut an, um die Fotoanalyse zu verwenden.',
+        throw AiCoachException(
+          L10n.current.corePleaseSignInAgainToUsePhoto,
           code: 'unauthorized',
         );
       }
       if (error.status == 429) {
-        throw const AiCoachException(
-          'Dein KI-Limit für heute ist erreicht. Morgen kannst du wieder analysieren.',
+        throw AiCoachException(
+          L10n.current.coreYouHaveReachedTodaySAiLimit,
           code: 'daily_limit',
         );
       }
-      throw const AiCoachException(
-        'Die Fotoanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.',
+      throw AiCoachException(
+        L10n.current.corePhotoAnalysisIsCurrentlyUnavailablePleaseTry,
         code: 'unavailable',
       );
     } catch (_) {
-      throw const AiCoachException(
-        'Die Fotoanalyse ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.',
+      throw AiCoachException(
+        L10n.current.corePhotoAnalysisIsCurrentlyUnavailablePleaseCheck,
         code: 'unavailable',
       );
     }
@@ -460,16 +455,15 @@ class AiCoachService {
 
   AiCoachReply _replyFrom(Object? data, {required String emptyMessage}) {
     if (data is! Map) {
-      throw const AiCoachException(
-        'Der Coach hat keine gültige Antwort geschickt. Bitte versuche es '
-        'noch einmal.',
+      throw AiCoachException(
+        L10n.current.coreTheCoachDidNotSendAValid,
         code: AiCoachException.invalidResponseCode,
       );
     }
     final error = data['error'];
     if (error is String && error.trim().isNotEmpty) {
       throw AiCoachException(
-        error.trim(),
+        L10n.isEnglish ? emptyMessage : error.trim(),
         code: data['code'] as String?,
         remaining: _nullableInteger(data['remaining']),
         dailyLimit: _nullableInteger(data['daily_limit']),
@@ -494,15 +488,14 @@ class AiCoachService {
   AiCoachException _chatError(Object error, {required String fallback}) {
     if (error is AiCoachException) return error;
     if (error is TimeoutException) {
-      return const AiCoachException(
-        'Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.',
+      return AiCoachException(
+        L10n.current.coreTheCoachIsTakingTooLongPlease,
         code: AiCoachException.timeoutCode,
       );
     }
     if (error is FunctionsFetchException) {
-      return const AiCoachException(
-        'Keine Verbindung zum Coach. Bitte prüfe deine Internetverbindung '
-        'und versuche es erneut.',
+      return AiCoachException(
+        L10n.current.coreNoConnectionToTheCoachPleaseCheck,
         code: AiCoachException.networkCode,
       );
     }
@@ -511,20 +504,21 @@ class AiCoachService {
       final details = error.details;
       final code = details is Map ? details['code'] : null;
       final serverMessage = details is Map ? details['error'] : null;
-      final message = serverMessage is String && serverMessage.trim().isNotEmpty
+      final message =
+          !L10n.isEnglish &&
+              serverMessage is String &&
+              serverMessage.trim().isNotEmpty
           ? serverMessage.trim()
           : null;
       if (error.status == 401 || error.status == 403) {
-        return const AiCoachException(
-          'Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.',
+        return AiCoachException(
+          L10n.current.coreYourSessionHasExpiredPleaseSignIn,
           code: AiCoachException.unauthorizedCode,
         );
       }
       if (error.status == 429 && code != 'openai_unavailable') {
         return AiCoachException(
-          message ??
-              'Dein KI-Tageslimit ist erreicht. Morgen kannst du wieder '
-                  'schreiben.',
+          message ?? L10n.current.coreYouHaveReachedYourDailyAiLimit,
           code: AiCoachException.dailyLimitCode,
           remaining: 0,
           dailyLimit: details is Map
@@ -535,13 +529,13 @@ class AiCoachService {
       if (error.status == 400 &&
           (code == 'invalid_message' || code == 'message_too_long')) {
         return AiCoachException(
-          message ?? 'Bitte formuliere deine Frage etwas anders.',
+          message ?? L10n.current.corePleaseRephraseYourQuestion,
           code: AiCoachException.invalidMessageCode,
         );
       }
       if (code == 'openai_timeout' || error.status == 504) {
-        return const AiCoachException(
-          'Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.',
+        return AiCoachException(
+          L10n.current.coreTheCoachIsTakingTooLongPlease,
           code: AiCoachException.timeoutCode,
         );
       }

@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'halal_content_policy.dart';
@@ -37,8 +38,8 @@ class BarcodeLookupService {
   Future<FoodItem> lookup(String barcode) async {
     final normalized = barcode.trim().replaceAll(RegExp(r'\D'), '');
     if (normalized.length < 8 || normalized.length > 14) {
-      throw const BarcodeLookupException(
-        'Dieser Barcode ist ungültig.',
+      throw BarcodeLookupException(
+        L10n.current.coreThisBarcodeIsInvalid,
         kind: BarcodeErrorKind.invalid,
       );
     }
@@ -50,8 +51,8 @@ class BarcodeLookupService {
       );
       final data = response.data;
       if (data is! Map) {
-        throw const BarcodeLookupException(
-          'Die Produktantwort war unvollständig.',
+        throw BarcodeLookupException(
+          L10n.current.coreTheProductResponseWasIncomplete,
           kind: BarcodeErrorKind.unavailable,
         );
       }
@@ -59,15 +60,15 @@ class BarcodeLookupService {
       if (error != null) throw error;
       final food = data['food'];
       if (food is! Map) {
-        throw const BarcodeLookupException(
-          'Dieses Produkt wurde nicht gefunden.',
+        throw BarcodeLookupException(
+          L10n.current.coreThisProductWasNotFound,
           kind: BarcodeErrorKind.notFound,
         );
       }
       final item = FoodItem.fromMap(Map<String, dynamic>.from(food));
       if (!HalalContentPolicy.isAllowedFood(item)) {
-        throw const BarcodeLookupException(
-          'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
+        throw BarcodeLookupException(
+          L10n.current.coreThisProductDoesNotMeetLookinS,
           kind: BarcodeErrorKind.notAllowed,
         );
       }
@@ -81,24 +82,24 @@ class BarcodeLookupService {
       final fromBody = errorFromPayload(error.details);
       if (fromBody != null) throw fromBody;
       if (error.status == 401 || error.status == 403) {
-        throw const BarcodeLookupException(
-          'Bitte melde dich erneut an und versuche den Scan danach noch einmal.',
+        throw BarcodeLookupException(
+          L10n.current.corePleaseSignInAgainThenTryScanning,
           kind: BarcodeErrorKind.unavailable,
         );
       }
       if (error.status == 429) {
-        throw const BarcodeLookupException(
-          'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
+        throw BarcodeLookupException(
+          L10n.current.corePleaseWaitAMomentBeforeSearchingFor,
           kind: BarcodeErrorKind.rateLimited,
         );
       }
-      throw const BarcodeLookupException(
-        'Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.',
+      throw BarcodeLookupException(
+        L10n.current.coreBarcodeSearchDidNotReceiveAValid,
         kind: BarcodeErrorKind.unavailable,
       );
     } catch (_) {
-      throw const BarcodeLookupException(
-        'Die Barcode-Suche ist gerade nicht erreichbar. Bitte versuche es später erneut.',
+      throw BarcodeLookupException(
+        L10n.current.coreBarcodeSearchIsCurrentlyUnavailablePleaseTry,
         kind: BarcodeErrorKind.unavailable,
       );
     }
@@ -118,6 +119,18 @@ class BarcodeLookupService {
       'upstream_unavailable' => BarcodeErrorKind.unavailable,
       _ => BarcodeErrorKind.unknown,
     };
-    return BarcodeLookupException(message, kind: kind);
+    final localized = L10n.isEnglish
+        ? switch (kind) {
+            BarcodeErrorKind.invalid => L10n.current.coreThisBarcodeIsInvalid,
+            BarcodeErrorKind.notFound =>
+              L10n.current.coreThisProductWasNotFound,
+            BarcodeErrorKind.notAllowed =>
+              L10n.current.coreThisProductDoesNotMeetLookinS,
+            BarcodeErrorKind.rateLimited =>
+              L10n.current.corePleaseWaitAMomentBeforeSearchingFor,
+            _ => L10n.current.coreBarcodeSearchIsCurrentlyUnavailablePleaseTry,
+          }
+        : message;
+    return BarcodeLookupException(localized, kind: kind);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -86,7 +87,7 @@ class PremiumRecipesCard extends StatelessWidget {
               const PremiumBadge(),
               const SizedBox(height: 12),
               Text(
-                'Mehr Rezepte mit Premium',
+                context.l10n.subscriptionMoreRecipesWithPremium,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -98,7 +99,7 @@ class PremiumRecipesCard extends StatelessWidget {
                 text: PremiumCopy.freeRecipes,
               ),
               const SizedBox(height: 6),
-              const _Line(
+              _Line(
                 icon: Icons.check_circle_rounded,
                 color: AppColors.primary,
                 text: PremiumCopy.premiumRecipes,
@@ -108,12 +109,13 @@ class PremiumRecipesCard extends StatelessWidget {
                 key: const Key('premium-recipes-unlock'),
                 onPressed: onUnlock,
                 icon: const Icon(Icons.workspace_premium_rounded, size: 19),
-                label: const Text('Alle Rezepte freischalten'),
+                label: Text(context.l10n.subscriptionUnlockAllRecipes),
               ),
               const SizedBox(height: 8),
               Text(
-                '${SubscriptionPlans.trialDays} Tage kostenlos testen · endet '
-                'automatisch',
+                context.l10n.subscriptionValueDayFreeTrialEndsAutomatically(
+                  (SubscriptionPlans.trialDays).toString(),
+                ),
                 style: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,

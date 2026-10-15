@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Reads and writes the signed-in user's nutrition profile.
@@ -27,7 +28,7 @@ class SupabaseProfileRepository {
   }) async {
     final user = _client.auth.currentUser;
     if (expectedUserId != null && user?.id != expectedUserId) {
-      throw StateError('Bitte erneut anmelden.');
+      throw StateError(L10n.current.corePleaseSignInAgain);
     }
     if (user == null) return;
     await _client.from('profiles').upsert({

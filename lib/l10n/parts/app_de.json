@@ -1,3 +1,7 @@
 {
-  "appOpeningSemantics": "Lookin wird geöffnet"
+  "appOpeningSemantics": "Lookin wird geöffnet",
+  "appConfirmedIfYouAlsoReceivedAnEmail": "Bestätigt. Hast du auch an deine andere Adresse eine E-Mail bekommen, bestätige die Änderung dort ebenfalls.",
+  "appNoConnectionToTheServerYourLink": "Keine Verbindung zum Server. Dein Link ist vermutlich noch gültig: Lade die Seite neu oder tippe den Link in der E-Mail noch einmal an.",
+  "appYourResetLinkHasExpiredOrHas": "Der Link zum Zurücksetzen ist abgelaufen oder wurde schon benutzt. Fordere unter „Passwort vergessen?“ einen neuen an.",
+  "appYourConfirmationLinkHasExpiredOrHas": "Der Bestätigungslink ist abgelaufen oder wurde schon benutzt. Melde dich an. Ist deine Adresse noch nicht bestätigt, kannst du dort eine neue Bestätigungs-Mail anfordern."
 }

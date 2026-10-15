@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// What the server confirmed for a withdrawal.
@@ -48,15 +49,20 @@ final class SupabaseWithdrawalRepository implements WithdrawalRepository {
       'legal-actions',
       body: {
         'action': 'withdraw',
+        'locale': L10n.code,
         'name': name,
         'email': email,
         if (note != null && note.trim().isNotEmpty) 'note': note.trim(),
       },
     );
     final data = response.data;
-    if (data is! Map) throw StateError('Unerwartete Antwort.');
+    if (data is! Map) {
+      throw StateError(L10n.current.subscriptionUnexpectedResponse);
+    }
     final received = DateTime.tryParse('${data['received_at'] ?? ''}');
-    if (received == null) throw StateError('Unerwartete Antwort.');
+    if (received == null) {
+      throw StateError(L10n.current.subscriptionUnexpectedResponse);
+    }
     return WithdrawalReceipt(
       receivedAt: received.toLocal(),
       emailSent: data['confirmation_email'] == 'sent',

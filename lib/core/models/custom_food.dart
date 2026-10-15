@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+
 enum NutritionBasis { per100g, per100ml, portion }
 
 /// Label values remain unrounded. [amount] is consumed g, ml or portions.
@@ -39,11 +41,11 @@ class CustomFoodNutrition {
 
   String? validate({bool requireLabelValues = false}) {
     if (!amount.isFinite || amount <= 0) {
-      return 'Bitte eine Menge größer als 0 eingeben.';
+      return L10n.current.corePleaseEnterAnAmountGreaterThan0;
     }
     if (requireLabelValues &&
         (sugar == null || saturatedFat == null || salt == null)) {
-      return 'Bitte Zucker, gesättigte Fettsäuren und Salz vom Etikett ergänzen.';
+      return L10n.current.corePleaseAddSugarSaturatedFatAndSalt;
     }
     final values = [
       calories,
@@ -58,16 +60,16 @@ class CustomFoodNutrition {
     if (values.any(
       (value) => value != null && (!value.isFinite || value < 0),
     )) {
-      return 'Nährwerte müssen gültige Zahlen ab 0 sein.';
+      return L10n.current.coreNutritionValuesMustBeValidNumbersOf;
     }
     if (values.any((value) => value != null && !(value * factor).isFinite)) {
-      return 'Die Menge oder ein Nährwert ist zu groß.';
+      return L10n.current.coreTheAmountOrANutritionValueIs;
     }
     if (sugar != null && sugar! > carbohydrates) {
-      return 'Zucker darf nicht höher als die Kohlenhydrate sein.';
+      return L10n.current.coreSugarCannotExceedCarbohydrates;
     }
     if (saturatedFat != null && saturatedFat! > fat) {
-      return 'Gesättigte Fettsäuren dürfen nicht höher als Fett sein.';
+      return L10n.current.coreSaturatedFatCannotExceedTotalFat;
     }
     return null;
   }
@@ -88,17 +90,21 @@ class CustomFoodNutrition {
 
   factory CustomFoodNutrition.fromJson(Map<String, dynamic> json) {
     if (json['version'] != 1) {
-      throw const FormatException('Unbekannte Nährwert-Version.');
+      throw FormatException(L10n.current.coreUnknownNutritionDataVersion);
     }
     final basis = NutritionBasis.values
         .where((value) => value.name == json['basis'])
         .firstOrNull;
     if (basis == null) {
-      throw const FormatException('Unbekannte Nährwert-Basis.');
+      throw FormatException(L10n.current.coreUnknownNutritionBasis);
     }
     double requiredValue(String key) {
       final value = json[key];
-      if (value is! num) throw FormatException('Nährwert fehlt: $key');
+      if (value is! num) {
+        throw FormatException(
+          L10n.current.coreMissingNutritionValueValue((key).toString()),
+        );
+      }
       return value.toDouble();
     }
 

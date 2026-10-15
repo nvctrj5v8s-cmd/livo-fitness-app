@@ -1,0 +1,23 @@
+{
+  "consentSaveHealthInformation": "Save health information",
+  "consentIConsentToLookinStoringMyOptional": "I consent to Lookin storing my optional health information (weight, waist circumference, target weight, allergies and intolerances, and my introduction answers such as date of birth, height, sex and an optional health note) in my account and using it for guideline values, recipe filters and warnings. This means I do not have to enter it again on a new device.",
+  "consentUseAiCoachAndAiPhoto": "Use AI Coach and AI Photo",
+  "consentIExpresslyConsentToMyQuestionsPhotos": "I expressly consent to my questions, photos, recent chat messages and the following information being sent to the AI service OpenAI to answer my requests (processing also takes place in the USA): goal, daily totals, nutrition style, activity, introduction answers (motivation, obstacles, experience) and my allergies and intolerances, which are health data. My name and email address are not sent.",
+  "consentIExpresslyRequestThatLookinPremiumBegins": "I expressly request that Lookin Premium begin immediately, before the withdrawal period ends. I understand that if I withdraw, I pay a proportionate amount for the service already provided, and that my right of withdrawal expires when the contract has been fully performed.",
+  "consentOptionalYouCanWithdrawEachConsentAt": "Optional. You can withdraw each consent at any time under Profile › Privacy & data.",
+  "consentNotNow": "Not now",
+  "consentGiveConsent": "Give consent",
+  "consentYourConsents": "Your consents",
+  "consentLookinAlsoWorksWithoutTheseConsentsWithout": "Lookin also works without these consents. Without them, health information stays on this device only, and AI Coach and AI Photo will ask again before their first use.",
+  "consentSaveAndContinue": "Save and continue",
+  "consentContinueWithoutConsent": "Continue without consent",
+  "consentWithdrawConsent": "Withdraw consent?",
+  "consentWeWillThenDeleteYourHealthInformation": "We will then delete your health information from your account (allergies, target weight, weight and waist measurements). Your information stays on this device.",
+  "consentWithdrawAndDelete": "Withdraw and delete",
+  "consentAiCoachAndAiPhotoWillThen": "AI Coach and AI Photo will then stop sending data to OpenAI and will ask again before their next use.",
+  "consentWithdraw": "Withdraw",
+  "consentCancel": "Cancel",
+  "consentConsents": "Consents",
+  "consentSaveWeightTargetWeightAndAllergiesIn": "Save weight, target weight and allergies in your account",
+  "consentSendQuestionsAndPhotosToOpenaiUsa": "Send questions and photos to OpenAI (USA)"
+}

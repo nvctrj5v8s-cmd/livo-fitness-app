@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -23,15 +24,17 @@ class LocalAvatarRepository implements AvatarRepository {
 
   void _validate(String userId, Uint8List jpeg) {
     if (userId.trim().isEmpty) {
-      throw ArgumentError.value(userId, 'userId', 'Konto fehlt.');
+      throw ArgumentError.value(
+        userId,
+        'userId',
+        L10n.current.coreNoAccountAvailable,
+      );
     }
     if (jpeg.length < 4 ||
         jpeg.length > 1024 * 1024 ||
         jpeg[0] != 0xff ||
         jpeg[1] != 0xd8) {
-      throw ArgumentError(
-        'Das Profilbild muss ein JPEG mit höchstens 1 MB sein.',
-      );
+      throw ArgumentError(L10n.current.coreYourProfilePictureMustBeAJpeg);
     }
   }
 

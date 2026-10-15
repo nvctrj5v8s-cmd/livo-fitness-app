@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -26,14 +27,14 @@ class PersonalizationCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             profile == null
-                ? 'Dein Alltag. Dein Lookin.'
-                : 'So passt Lookin zu dir',
+                ? context.l10n.onboardingYourDayYourLookin
+                : context.l10n.onboardingMakeLookinFitYou,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
           Text(
             profile == null
-                ? 'Wie isst du gern? Richte deinen Rhythmus und deine Rezeptideen in wenigen Schritten ein.'
+                ? context.l10n.onboardingHowDoYouLikeToEatSet
                 : profile.routineLabel,
             style: const TextStyle(color: AppColors.text, height: 1.4),
           ),
@@ -47,7 +48,11 @@ class PersonalizationCard extends StatelessWidget {
                 if (profile.nutrition != null)
                   _PreferenceTag(profile.nutrition!.label),
                 if (profile.cookingMinutes != null)
-                  _PreferenceTag('Bis ${profile.cookingMinutes} Min.'),
+                  _PreferenceTag(
+                    context.l10n.onboardingUpToValueMin(
+                      (profile.cookingMinutes).toString(),
+                    ),
+                  ),
                 if (profile.activity != null)
                   _PreferenceTag(profile.activity!.label),
                 if (profile.allergies.trim().isNotEmpty)
@@ -82,7 +87,7 @@ class PersonalizationCard extends StatelessWidget {
                 FilledButton.tonalIcon(
                   onPressed: onRecipes,
                   icon: const Icon(Icons.restaurant_menu_rounded),
-                  label: const Text('Rezeptideen ansehen'),
+                  label: Text(context.l10n.onboardingViewRecipeIdeas),
                 ),
               TextButton.icon(
                 key: const ValueKey('personalization-edit'),
@@ -90,21 +95,21 @@ class PersonalizationCard extends StatelessWidget {
                 icon: const Icon(Icons.edit_outlined),
                 label: Text(
                   profile == null
-                      ? 'Persönlich einrichten'
-                      : 'Antworten ändern',
+                      ? context.l10n.onboardingPersonalise
+                      : context.l10n.onboardingChangeAnswers,
                 ),
               ),
               if (profileMode && profile != null)
                 TextButton(
                   key: const ValueKey('personalization-remove'),
                   onPressed: () => _remove(context, controller),
-                  child: const Text('Antworten entfernen'),
+                  child: Text(context.l10n.onboardingRemoveAnswers),
                 ),
             ],
           ),
           if (profileMode)
-            const Text(
-              'Deine freiwilligen Angaben helfen Lookin und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.',
+            Text(
+              context.l10n.onboardingYourOptionalInformationHelpsLookinAndThe,
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
         ],
@@ -114,15 +119,14 @@ class PersonalizationCard extends StatelessWidget {
 
   String _dailyHint(PersonalizationProfile profile) => switch (profile.focus) {
     RoutineFocus.time =>
-      'Wenig Zeit heute? In deinen Rezeptideen stehen schnelle Gerichte weiter oben.',
+      L10n.current.onboardingShortOnTimeTodayQuickMealsAppear,
     RoutineFocus.budget =>
-      'Für deinen Einkauf stehen als Budget-Rezept markierte Ideen weiter oben.',
-    RoutineFocus.consistency =>
-      'Dein Rhythmus ist eine Orientierung. Du kannst ihn jederzeit ändern.',
+      L10n.current.onboardingIdeasMarkedAsBudgetRecipesAppearHigher,
+    RoutineFocus.consistency => L10n.current.onboardingYourRhythmIsAGuideYouCan,
     _ =>
       profile.cookingMinutes != null
-          ? 'Deine Rezeptideen berücksichtigen deine Kochzeit.'
-          : 'Deine Rezeptideen richten sich nach den Vorlieben, die du angegeben hast.',
+          ? L10n.current.onboardingYourRecipeIdeasTakeYourCookingTime
+          : L10n.current.onboardingYourRecipeIdeasReflectThePreferencesYou,
   };
 
   Future<void> _remove(BuildContext context, AppController controller) async {
@@ -130,9 +134,9 @@ class PersonalizationCard extends StatelessWidget {
       await controller.clearPersonalization();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Deine Einrichtungsantworten wurden von diesem Gerät entfernt.',
+              context.l10n.onboardingYourSetupAnswersHaveBeenRemovedFrom,
             ),
           ),
         );
@@ -140,9 +144,9 @@ class PersonalizationCard extends StatelessWidget {
     } catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Entfernen hat nicht geklappt. Bitte versuche es erneut.',
+              context.l10n.onboardingRemovalDidNotWorkPleaseTryAgain,
             ),
           ),
         );

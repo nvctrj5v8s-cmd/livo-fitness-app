@@ -1,5 +1,38 @@
 # Funktionsstatus
 
+## Deutsch und Englisch vollständig angebunden, 15. Oktober 2026
+
+- Die App folgt beim ersten Start der Gerätesprache: Deutsch bei `de`, sonst
+  Englisch. Profil › Sprache bietet „Handysprache verwenden“, Deutsch und
+  Englisch. Die manuelle Auswahl bleibt auf diesem Gerät gespeichert;
+  Automatik reagiert auch auf spätere Änderungen der Gerätesprache.
+- Einführung, Einrichtung, Anmeldung, Hauptansichten, Dialoge, Einstellungen,
+  Einwilligungen, Premium und Fehlermeldungen verwenden die Sprachressourcen.
+  Rezeptnamen, Zutaten, Zubereitung, Pro-Tipps, Kochmodus und Premium-Inhalte
+  des vorhandenen Katalogs haben lokale englische Übersetzungen. Originaldaten,
+  Nährwerte und die Halal-/Allergieprüfung bleiben erhalten. Eigene Texte und
+  bereits gespeicherte Chatnachrichten werden nicht automatisch übersetzt.
+- Chat und beide Fotoanfragen senden `locale: de/en`. Die Serverfunktion
+  `ai-coach` setzt die Antwortsprache einschließlich fester Sicherheitshinweise
+  passend dazu. KI-Ausgaben sind weiterhin Schätzungen und nicht garantiert
+  fehlerfrei.
+- Englische Rechtsseiten, Bestätigungs-/Passwortmails sowie Kauf- und
+  Widerrufsbestätigungen sind im Quellcode vorbereitet. Konto-Mails verwenden
+  `user_metadata.locale`. Einwilligungsnachweise speichern zusätzlich die
+  angezeigte Sprache (`2026-10-14:de` bzw. `2026-10-14:en`).
+- Web-Ladeanzeige und Dokumentensprache folgen der Auswahl. iOS enthält
+  deutsche und englische Berechtigungsbeschreibungen. Keine neuen
+  Berechtigungen, Analyse-, Tracking- oder Gesundheitsdienste ergänzt.
+- **Veröffentlichungsstand:** Diese Änderungen sind lokal. App/Web-Build,
+  die Edge Functions `ai-coach`, `legal-actions`, `revenuecat-webhook` und
+  die beiden Auth-Mailvorlagen müssen gemeinsam aktualisiert werden. Es
+  wurde für diesen Auftrag nichts live veröffentlicht; bestehende offene
+  Migrationen und rechtliche Freigaben bleiben offen.
+- Prüfung: `test/english_app_test.dart` deckt den Sprachwechsel, Gerätesprache,
+  alle 40 vorhandenen Rezepte, Pro-Tipps und englische Ansichten bis 320 px mit
+  großer Schrift ab. `tool/check_ai_locale.js` prüft die tatsächlichen reinen
+  Sprach-/Sicherheitsfunktionen ohne externe KI-Anfragen.
+
 ## Antworten der Einrichtung im Konto, 14. Oktober 2026
 
 - **Problem:** Die Antworten der Fragen lagen nur auf dem Gerät. Nach einem

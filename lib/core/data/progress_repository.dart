@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:convert';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -127,7 +128,7 @@ class ProgressRepository {
     double? waistCm,
   }) async {
     final user = _client.auth.currentUser;
-    if (user == null) throw StateError('Bitte melde dich zuerst an.');
+    if (user == null) throw StateError(L10n.current.corePleaseSignInFirst);
     await _client.from('body_measurements').upsert({
       'user_id': user.id,
       'measured_on': _dateOnly(date),

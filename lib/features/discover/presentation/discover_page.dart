@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ import '../domain/recipe_filter.dart';
 import 'cook_from_pantry_page.dart';
 import 'recipe_card.dart';
 import 'recipe_filters.dart';
-import 'recipe_format.dart';
 
 export 'recipe_detail_page.dart' show RecipeDetailPage;
 
@@ -76,10 +76,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
     final showQuick =
         _filter.isDefault && quick.length >= 3 && quick.length < recipes.length;
     final listTitle = !_filter.isDefault
-        ? 'Passende Rezepte'
+        ? context.l10n.discoverMatchingRecipes
         : controller.personalization != null
-        ? 'Für dich'
-        : 'Alle Rezepte';
+        ? context.l10n.discoverForYou
+        : context.l10n.discoverAllRecipes;
 
     return SingleChildScrollView(
       key: const PageStorageKey('discover-scroll'),
@@ -92,11 +92,10 @@ class _DiscoverPageState extends State<DiscoverPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AnimatedReveal(
+                AnimatedReveal(
                   child: PageHeader(
-                    title: 'Rezepte',
-                    subtitle:
-                        'Ideen, die zu deinem Ziel und deinem Alltag passen.',
+                    title: context.l10n.discoverRecipes,
+                    subtitle: context.l10n.discoverIdeasThatFitYourGoalAndYour,
                   ),
                 ),
                 if (allergyExcluded > 0) ...[
@@ -113,8 +112,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       const SizedBox(width: 7),
                       Expanded(
                         child: Text(
-                          '${countText(allergyExcluded, 'Rezept', 'Rezepte')} '
-                          'wegen deiner Allergieangaben ausgeblendet.',
+                          context.l10n.discoverHiddenForAllergies(
+                            allergyExcluded,
+                          ),
                           style: const TextStyle(
                             color: AppColors.orange,
                             fontSize: 12,
@@ -128,8 +128,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     case final reasons when reasons.isNotEmpty) ...[
                   const SizedBox(height: 14),
                   Text(
-                    'Für dich sortiert nach ${joinGerman(reasons)}. Die '
-                    'Sortierung blendet keine Rezepte aus.',
+                    context.l10n.discoverSortedForYouByValueSortingDoes(
+                      (joinGerman(reasons)).toString(),
+                    ),
                     key: const Key('recipes-sorted-for-you'),
                     style: const TextStyle(color: AppColors.textMuted),
                   ),
@@ -154,12 +155,13 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           onChanged: (value) =>
                               _setFilter(_filter.copyWith(query: value)),
                           decoration: InputDecoration(
-                            hintText: 'Rezepte oder Zutaten suchen',
+                            hintText:
+                                context.l10n.discoverSearchRecipesOrIngredients,
                             prefixIcon: const Icon(Icons.search_rounded),
                             suffixIcon: _filter.query.isEmpty
                                 ? null
                                 : IconButton(
-                                    tooltip: 'Suche löschen',
+                                    tooltip: context.l10n.discoverClearSearch,
                                     onPressed: () {
                                       _search.clear();
                                       _setFilter(_filter.copyWith(query: ''));
@@ -295,7 +297,9 @@ class _ListHeader extends StatelessWidget {
             const SizedBox(width: 8),
             Flexible(
               child: Text(
-                count == 1 ? '1 Rezept' : '$count Rezepte',
+                count == 1
+                    ? context.l10n.discover1Recipe
+                    : context.l10n.discoverValueRecipes((count).toString()),
                 key: const Key('recipe-result-count'),
                 textAlign: TextAlign.end,
                 style: const TextStyle(
@@ -313,7 +317,7 @@ class _ListHeader extends StatelessWidget {
             child: TextButton.icon(
               onPressed: onReset,
               icon: const Icon(Icons.restart_alt_rounded, size: 18),
-              label: const Text('Alle Filter zurücksetzen'),
+              label: Text(context.l10n.discoverResetAllFilters),
             ),
           ),
       ],
@@ -340,7 +344,7 @@ class _QuickRecipes extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionHeader(title: 'Schnell unter 15 Min.'),
+            SectionHeader(title: context.l10n.discoverQuickUnder15Min),
             const SizedBox(height: 12),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -397,16 +401,16 @@ class _EmptyResults extends StatelessWidget {
               color: AppColors.textMuted,
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Kein Rezept passt zu deiner Auswahl.',
+            Text(
+              context.l10n.discoverNoRecipeMatchesYourSelection,
               textAlign: TextAlign.center,
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
             ),
             const SizedBox(height: 6),
             Text(
               noFavorites
-                  ? 'Du hast noch keine Favoriten. Tippe auf das Herz eines Rezepts, um es dir zu merken.'
-                  : 'Probiere einen anderen Suchbegriff oder entferne einen Filter.',
+                  ? context.l10n.discoverYouHaveNoFavouritesYetTapA
+                  : context.l10n.discoverTryAnotherSearchTermOrRemoveA,
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppColors.textMuted, height: 1.4),
             ),
@@ -414,7 +418,7 @@ class _EmptyResults extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: onReset,
               icon: const Icon(Icons.restart_alt_rounded),
-              label: const Text('Alle Filter zurücksetzen'),
+              label: Text(context.l10n.discoverResetAllFilters),
             ),
           ],
         ),

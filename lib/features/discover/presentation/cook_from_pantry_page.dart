@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -73,13 +75,13 @@ class CookFromPantryBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Was kann ich kochen?',
+                  Text(
+                    context.l10n.discoverWhatCanICook,
                     style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                   ),
                   const SizedBox(height: 3),
-                  const Text(
-                    'Rezepte mit dem, was du zu Hause hast',
+                  Text(
+                    context.l10n.discoverRecipesUsingWhatYouHaveAtHome,
                     style: TextStyle(color: AppColors.textMuted, fontSize: 13),
                   ),
                 ],
@@ -167,11 +169,11 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
         backgroundColor: AppColors.background,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          tooltip: 'Zurück',
+          tooltip: context.l10n.discoverBack,
           onPressed: () => Navigator.maybePop(context),
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: const Text('Was kann ich kochen?'),
+        title: Text(context.l10n.discoverWhatCanICook),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -182,9 +184,8 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Wähle, was du zu Hause hast. Lookin zeigt Rezepte mit diesen '
-                    'Zutaten – die mit den wenigsten fehlenden zuerst.',
+                  Text(
+                    context.l10n.discoverSelectWhatYouHaveAtHomeLookin,
                     style: TextStyle(color: AppColors.textMuted, height: 1.4),
                   ),
                   const SizedBox(height: 18),
@@ -192,8 +193,8 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text(
-                          'Das habe ich da',
+                        Text(
+                          context.l10n.discoverIHaveThese,
                           style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
@@ -215,8 +216,10 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                                   _addExtra(value);
                                   _focus.requestFocus();
                                 },
-                                decoration: const InputDecoration(
-                                  hintText: 'Zutat eingeben, z. B. Kartoffeln',
+                                decoration: InputDecoration(
+                                  hintText: context
+                                      .l10n
+                                      .discoverEnterAnIngredientEGPotatoes,
                                   counterText: '',
                                   prefixIcon: Icon(Icons.search_rounded),
                                 ),
@@ -225,7 +228,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                             const SizedBox(width: 9),
                             IconButton.filled(
                               key: const Key('cook-add'),
-                              tooltip: 'Zutat hinzufügen',
+                              tooltip: context.l10n.discoverAddIngredient,
                               style: IconButton.styleFrom(
                                 minimumSize: const Size(52, 52),
                               ),
@@ -247,7 +250,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                                     Icons.add_rounded,
                                     size: 17,
                                   ),
-                                  label: Text(suggestion),
+                                  label: Text(DisplayText.of(suggestion)),
                                   onPressed: () => _addExtra(suggestion),
                                 ),
                             ],
@@ -262,8 +265,11 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                               for (final name in _extra)
                                 InputChip(
                                   key: ValueKey('cook-chip-$name'),
-                                  label: Text(name),
-                                  deleteButtonTooltipMessage: '$name entfernen',
+                                  label: Text(DisplayText.of(name)),
+                                  deleteButtonTooltipMessage: context.l10n
+                                      .discoverRemoveValue(
+                                        DisplayText.of(name),
+                                      ),
                                   onDeleted: () =>
                                       setState(() => _extra.remove(name)),
                                 ),
@@ -271,8 +277,8 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                           ),
                         ],
                         const SizedBox(height: 12),
-                        const Text(
-                          'Häufige Zutaten',
+                        Text(
+                          context.l10n.discoverCommonIngredients,
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 13,
@@ -287,7 +293,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                             for (final staple in kitchenStaples)
                               FilterChip(
                                 key: ValueKey('cook-staple-$staple'),
-                                label: Text(staple),
+                                label: Text(DisplayText.of(staple)),
                                 selected: inventory.has(staple),
                                 showCheckmark: true,
                                 checkmarkColor: AppColors.black,
@@ -309,25 +315,25 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                           value: _assumeBasics,
                           onChanged: (value) =>
                               setState(() => _assumeBasics = value),
-                          title: const Text('Grundzutaten sind vorhanden'),
-                          subtitle: const Text(kitchenBasicsLabel),
+                          title: Text(
+                            context.l10n.discoverBasicIngredientsAreAvailable,
+                          ),
+                          subtitle: Text(DisplayText.of(kitchenBasicsLabel)),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
                   if (have.isEmpty)
-                    const _Hint(
+                    _Hint(
                       icon: Icons.touch_app_outlined,
-                      title: 'Was hast du zu Hause?',
-                      text:
-                          'Tippe auf eine häufige Zutat oder gib selbst etwas '
-                          'ein, zum Beispiel „Kartoffeln“.',
+                      title: context.l10n.discoverWhatDoYouHaveAtHome,
+                      text: context.l10n.discoverTapACommonIngredientOrEnterOne,
                     )
                   else ...[
                     Text(
                       matches.isEmpty
-                          ? 'Keine passenden Rezepte'
+                          ? context.l10n.discoverNoMatchingRecipes
                           : '${countText(matches.length, 'passendes Rezept', 'passende Rezepte')}'
                                 '${cookNow > 0 ? ' · $cookNow sofort kochbar' : ''}',
                       key: const Key('cook-result-count'),
@@ -335,12 +341,14 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                     ),
                     const SizedBox(height: 12),
                     if (matches.isEmpty)
-                      const _Hint(
+                      _Hint(
                         icon: Icons.search_off_rounded,
-                        title: 'Kein Rezept mit diesen Zutaten gefunden.',
-                        text:
-                            'Probiere eine weitere Zutat oder einen anderen '
-                            'Namen, zum Beispiel „Nudeln“ statt „Spaghetti“.',
+                        title: context
+                            .l10n
+                            .discoverNoRecipeFoundWithTheseIngredients,
+                        text: context
+                            .l10n
+                            .discoverTryAnotherIngredientOrADifferentName,
                       )
                     else
                       _MatchList(matches: matches),
@@ -431,7 +439,7 @@ class _MatchCard extends StatelessWidget {
 
   String _names(List<RecipeIngredient> ingredients) => [
     for (final ingredient in ingredients)
-      ingredientDisplayName(ingredient.name),
+      ingredientDisplayName(ingredient.displayName),
   ].join(', ');
 
   @override
@@ -439,10 +447,10 @@ class _MatchCard extends StatelessWidget {
     final recipe = match.recipe;
     final missing = match.missing.length;
     final status = missing == 0
-        ? 'Alles da'
+        ? context.l10n.discoverEverythingAvailable
         : missing == 1
-        ? '1 Zutat fehlt'
-        : '$missing Zutaten fehlen';
+        ? context.l10n.discover1IngredientMissing
+        : context.l10n.discoverValueIngredientsMissing((missing).toString());
     final tag = recipeHeroTag(recipe, 'cook');
     return PressableScale(
       key: ValueKey('cook-result-${recipe.id}'),
@@ -478,7 +486,7 @@ class _MatchCard extends StatelessWidget {
                         const SizedBox(height: 5),
                       ],
                       Text(
-                        recipe.title,
+                        recipe.displayTitle,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -527,7 +535,10 @@ class _MatchCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Semantics(
-              label: '${match.covered} von ${match.total} Zutaten vorhanden',
+              label: context.l10n.discoverValueOfValueIngredientsAvailable(
+                (match.covered).toString(),
+                (match.total).toString(),
+              ),
               child: ExcludeSemantics(
                 child: Row(
                   children: [
@@ -544,7 +555,10 @@ class _MatchCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      '${match.covered} von ${match.total} da',
+                      context.l10n.discoverValueOfValueAvailable(
+                        (match.covered).toString(),
+                        (match.total).toString(),
+                      ),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -556,19 +570,19 @@ class _MatchCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _IngredientLine(
-              label: 'Hast du',
+              label: context.l10n.discoverYouHave,
               text: _names(match.available),
               color: AppColors.mint,
             ),
             if (match.missing.isNotEmpty)
               _IngredientLine(
-                label: 'Fehlt',
+                label: context.l10n.discoverMissing,
                 text: _names(match.missing),
                 color: AppColors.orange,
               ),
             if (match.assumedBasics.isNotEmpty)
               _IngredientLine(
-                label: 'Grundzutaten',
+                label: context.l10n.discoverBasicIngredients,
                 text: _names(match.assumedBasics),
                 color: AppColors.textMuted,
               ),

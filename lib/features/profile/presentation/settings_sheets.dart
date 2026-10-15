@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -68,14 +70,22 @@ class _LegalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      (Icons.badge_outlined, 'Impressum', LegalLinks.imprint),
-      (Icons.description_outlined, 'AGB', LegalLinks.terms),
-      (Icons.privacy_tip_outlined, 'Datenschutzerklärung', LegalLinks.privacy),
-      (Icons.undo_rounded, 'Widerrufsbelehrung', LegalLinks.withdrawal),
+      (Icons.badge_outlined, context.l10n.profileImprint, LegalLinks.imprint),
+      (Icons.description_outlined, context.l10n.profileTerms, LegalLinks.terms),
+      (
+        Icons.privacy_tip_outlined,
+        context.l10n.profilePrivacyPolicy,
+        LegalLinks.privacy,
+      ),
+      (
+        Icons.undo_rounded,
+        context.l10n.profileWithdrawalInformation,
+        LegalLinks.withdrawal,
+      ),
     ];
     return _SettingsSheetFrame(
-      title: 'Impressum & Rechtliches',
-      subtitle: 'Öffnet sich im Browser',
+      title: context.l10n.profileImprintLegal,
+      subtitle: context.l10n.profileOpensInBrowser,
       child: ListView(
         children: [
           SurfaceCard(
@@ -99,9 +109,9 @@ class _LegalSheet extends StatelessWidget {
                     Icons.undo_rounded,
                     color: AppColors.error,
                   ),
-                  title: const Text('Vertrag widerrufen'),
-                  subtitle: const Text(
-                    'Für Lookin Premium, ohne Angabe von Gründen',
+                  title: Text(context.l10n.profileWithdrawFromContract),
+                  subtitle: Text(
+                    context.l10n.profileForLookinPremiumWithoutGivingAReason,
                   ),
                   onTap: () =>
                       openWithdrawal(context, name: AppScope.of(context).name),
@@ -127,11 +137,11 @@ class _ReminderSheetState extends State<_ReminderSheet> {
   @override
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
-      title: 'Erinnerungen',
-      subtitle: 'Bald verfügbar',
+      title: context.l10n.profileReminders,
+      subtitle: context.l10n.profileComingSoon,
       child: ListView(
         children: [
-          const SurfaceCard(
+          SurfaceCard(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -139,7 +149,7 @@ class _ReminderSheetState extends State<_ReminderSheet> {
                 SizedBox(width: 11),
                 Expanded(
                   child: Text(
-                    'Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.',
+                    context.l10n.profileMealWaterAndWeeklyReviewRemindersWill,
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
@@ -184,25 +194,25 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
   @override
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
-      title: 'Ernährungsprofil',
+      title: context.l10n.profileNutritionProfile,
       subtitle: widget.controller.personalization == null
-          ? 'Deine gespeicherten Profilangaben'
-          : 'Ernährungsweise und Aktivität änderst du unter „Antworten ändern“.',
+          ? context.l10n.profileYourSavedProfileInformation
+          : context.l10n.profileChangeNutritionStyleAndActivityUnderChange,
       child: ListView(
         children: [
           if (widget.controller.personalization == null) ...[
-            const Text(
-              'Ernährungsstil',
+            Text(
+              context.l10n.profileNutritionStyle,
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 9),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: ['Ausgewogen', 'Vegetarisch', 'Vegan', 'Low Carb']
+              children: ["Ausgewogen", "Vegetarisch", "Vegan", "Low Carb"]
                   .map(
                     (value) => ChoiceChip(
-                      label: Text(value),
+                      label: Text(DisplayText.of(value)),
                       selected: _style == value,
                       showCheckmark: false,
                       onSelected: (_) => setState(() => _style = value),
@@ -219,18 +229,18 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
           ),
           const SizedBox(height: 20),
           if (widget.controller.personalization == null) ...[
-            const Text(
-              'Aktivitätsniveau',
+            Text(
+              context.l10n.profileActivityLevel,
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 9),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: ['Wenig aktiv', 'Moderat aktiv', 'Sehr aktiv']
+              children: ["Wenig aktiv", "Moderat aktiv", "Sehr aktiv"]
                   .map(
                     (value) => ChoiceChip(
-                      label: Text(value),
+                      label: Text(DisplayText.of(value)),
                       selected: _activity == value,
                       showCheckmark: false,
                       onSelected: (_) => setState(() => _activity = value),
@@ -245,7 +255,8 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
               final controller = widget.controller;
               final hasAllergies =
                   _allergies.trim().isNotEmpty &&
-                  _allergies.trim() != 'Keine angegeben';
+                  _allergies.trim() !=
+                      'Keine angegeben'; // l10n-ignore: canonical empty value
               if (hasAllergies && !controller.consent.healthGranted) {
                 await ensureHealthConsent(context, controller.consent);
                 if (!context.mounted) return;
@@ -257,7 +268,7 @@ class _NutritionProfileSheetState extends State<_NutritionProfileSheet> {
               );
               Navigator.pop(context);
             },
-            child: const Text('Ernährungsprofil speichern'),
+            child: Text(context.l10n.profileSaveNutritionProfile),
           ),
         ],
       ),
@@ -272,35 +283,35 @@ class _PrivacySheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
-      title: 'Datenschutz & Daten',
-      subtitle: 'Transparent und unter deiner Kontrolle',
+      title: context.l10n.profilePrivacyData,
+      subtitle: context.l10n.profileTransparentAndUnderYourControl,
       child: ListView(
         children: [
-          const SurfaceCard(
+          SurfaceCard(
             child: Column(
               children: [
                 _DataRow(
                   icon: Icons.person_outline,
-                  label: 'Profil & Ziele',
-                  place: 'IM KONTO',
+                  label: context.l10n.profileProfileTargets,
+                  place: context.l10n.profileInAccount,
                 ),
                 Divider(height: 25),
                 _DataRow(
                   icon: Icons.restaurant_outlined,
-                  label: 'Mahlzeiten & Nährwerte',
-                  place: 'IM KONTO',
+                  label: context.l10n.profileMealsNutrition,
+                  place: context.l10n.profileInAccount,
                 ),
                 Divider(height: 25),
                 _DataRow(
                   icon: Icons.photo_camera_outlined,
-                  label: 'KI-Foto & KI-Chat',
-                  place: 'KI-DIENST',
+                  label: context.l10n.profileAiPhotoAiChat,
+                  place: context.l10n.profileAiService,
                 ),
                 Divider(height: 25),
                 _DataRow(
                   icon: Icons.account_circle_outlined,
-                  label: 'Profilbild & Erinnerungen',
-                  place: 'NUR GERÄT',
+                  label: context.l10n.profileProfilePictureReminders,
+                  place: context.l10n.profileDeviceOnly,
                 ),
               ],
             ),
@@ -310,39 +321,45 @@ class _PrivacySheet extends StatelessWidget {
             onPressed: () => showDialog<void>(
               context: context,
               builder: (dialogContext) => AlertDialog(
-                title: const Text('Lokale Datenübersicht'),
+                title: Text(context.l10n.profileLocalDataOverview),
                 content: Text(
-                  'Name: ${controller.name}\nZiel: ${controller.goal}\nMahlzeiten: ${controller.meals.length}\nGewicht: ${controller.currentWeight} kg\nFavoriten: ${controller.favoriteRecipeIds.length}',
+                  context.l10n.profileNameValueGoalValueMealsValueWeight(
+                    (controller.name).toString(),
+                    (DisplayText.of(controller.goal)).toString(),
+                    (controller.meals.length).toString(),
+                    (controller.currentWeight).toString(),
+                    (controller.favoriteRecipeIds.length).toString(),
+                  ),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext),
-                    child: const Text('Schließen'),
+                    child: Text(context.l10n.profileClose),
                   ),
                 ],
               ),
             ),
             icon: const Icon(Icons.visibility_outlined),
-            label: const Text('Lokale Daten ansehen'),
+            label: Text(context.l10n.profileViewLocalData),
           ),
           const SizedBox(height: 10),
           OutlinedButton.icon(
             onPressed: () => _confirmDeletion(context),
             style: OutlinedButton.styleFrom(foregroundColor: AppColors.error),
             icon: const Icon(Icons.delete_outline_rounded),
-            label: const Text('Lokale Demodaten löschen'),
+            label: Text(context.l10n.profileDeleteLocalDemoData),
           ),
           const SizedBox(height: 14),
           ConsentSettingsCard(controller: controller),
           const SizedBox(height: 14),
           AccountDataActions(subscription: controller.subscription),
           const SizedBox(height: 14),
-          const SurfaceCard(
+          SurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Rechtliches',
+                  context.l10n.profileLegal,
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
                 ),
                 SizedBox(height: 4),
@@ -351,11 +368,8 @@ class _PrivacySheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-          const Text(
-            'Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. '
-            'Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. '
-            'Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. '
-            'Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.',
+          Text(
+            context.l10n.profileYourProfileTargetsAndDiaryAreSaved,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,
@@ -371,21 +385,21 @@ class _PrivacySheet extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Demodaten löschen?'),
+        title: Text(context.l10n.profileDeleteDemoData),
         content: Text(
           controller.personalizationUserId == null
-              ? 'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.'
-              : 'Gespeicherte Listen und dein Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.',
+              ? context.l10n.profileMealsFavouritesListsAndWaterTotalsAre
+              : context.l10n.profileSavedListsAndYourWaterTotalAre,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Abbrechen'),
+            child: Text(context.l10n.profileCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
             style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-            child: const Text('Löschen'),
+            child: Text(context.l10n.profileDelete),
           ),
         ],
       ),
@@ -424,34 +438,32 @@ class _HelpSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _SettingsSheetFrame(
-      title: 'Hilfe & Sicherheit',
-      subtitle: 'Gesundheit geht immer vor Tracking',
+    return _SettingsSheetFrame(
+      title: context.l10n.profileHelpSafety,
+      subtitle: context.l10n.profileHealthAlwaysComesBeforeTracking,
       child: SingleChildScrollView(
         child: Column(
           children: [
             _HelpCard(
               icon: Icons.health_and_safety_outlined,
               color: AppColors.primary,
-              title: 'Keine medizinische Beratung',
-              text:
-                  'Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.',
+              title: context.l10n.profileNotMedicalAdvice,
+              text: context.l10n.profileLookinSupportsHabitsButDoesNotDiagnose,
             ),
             SizedBox(height: 10),
             _HelpCard(
               icon: Icons.favorite_border_rounded,
               color: AppColors.error,
-              title: 'Essstörung oder akute Beschwerden',
-              text:
-                  'Nutze keine Diät- oder Kalorienziele auf eigene Faust. Hole dir persönliche Hilfe bei medizinischem oder psychotherapeutischem Fachpersonal. Bei einem akuten Notfall wende dich an den örtlichen Notruf.',
+              title: context.l10n.profileEatingDisorderOrAcuteSymptoms,
+              text: context.l10n.profileDoNotFollowDietOrCalorieTargets,
             ),
             SizedBox(height: 10),
             _HelpCard(
               icon: Icons.balance_outlined,
               color: AppColors.blue,
-              title: 'Zahlen sind Orientierung',
+              title: context.l10n.profileNumbersAreAGuide,
               text:
-                  'Nährwerte und Ziele sind Schätzungen. Achte zusätzlich auf Energie, Wohlbefinden, Schlaf und ein entspanntes Verhältnis zum Essen.',
+                  context.l10n.profileNutritionValuesAndTargetsAreEstimatesAlso,
             ),
           ],
         ),
@@ -558,7 +570,7 @@ class _SettingsSheetFrame extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      tooltip: 'Schließen',
+                      tooltip: context.l10n.profileClose,
                       icon: const Icon(Icons.close_rounded),
                     ),
                   ],

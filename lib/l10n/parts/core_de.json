@@ -1,0 +1,90 @@
+{
+  "corePleaseSignInFirst": "Bitte melde dich zuerst an.",
+  "coreTheSignedInAccountHasChanged": "Das angemeldete Konto hat sich geändert.",
+  "coreTheServerResponseIsInvalid": "Die Antwort des Servers ist ungültig.",
+  "coreTheDataExportIsIncomplete": "Der Datenexport ist unvollständig.",
+  "corePleaseEnterYourPassword": "Bitte Passwort eingeben.",
+  "coreYourAccountCouldNotBeDeleted": "Das Konto konnte nicht gelöscht werden.",
+  "coreYourAccountWasDeletedButSomeLocal": "Das Konto wurde gelöscht, aber lokale Daten konnten nicht vollständig entfernt werden.",
+  "coreInvalidAiNutritionValue": "Ungültiger KI-Nährwert.",
+  "coreInvalidRecognisedFood": "Ungültiges erkanntes Lebensmittel.",
+  "coreThisAiFeatureIsPartOfLookin": "Diese KI-Funktion ist Teil von Lookin Premium.",
+  "coreWriteAShortQuestionFirst": "Schreib zuerst eine kurze Frage.",
+  "coreYourMessageIsTooLongPleaseShorten": "Deine Nachricht ist zu lang. Bitte kürze sie auf höchstens {arg0} Zeichen.",
+  "@coreYourMessageIsTooLongPleaseShorten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coreTheCoachCouldNotPutTogetherAn": "Der Coach konnte gerade keine Antwort formulieren. Bitte versuche es noch einmal.",
+  "coreTheCoachIsCurrentlyUnavailablePleaseTry": "Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich noch einmal.",
+  "coreYourChatHistoryCouldNotBeLoaded": "Dein Chatverlauf konnte nicht geladen werden.",
+  "coreYourChatHistoryCouldNotBeLoaded2": "Dein Chatverlauf konnte gerade nicht geladen werden.",
+  "coreYourChatHistoryCouldNotBeDeleted": "Dein Chatverlauf konnte gerade nicht gelöscht werden. Bitte versuche es gleich noch einmal.",
+  "coreThePhotoIsTooLargePleaseChoose": "Das Foto ist zu groß. Bitte wähle ein kleineres Bild.",
+  "coreNothingCouldBeConfidentlyRecognisedInThis": "Auf dem Foto konnte gerade nichts sicher erkannt werden.",
+  "coreImageAnalysisIsCurrentlyUnavailablePleaseTry": "Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.",
+  "coreThePhotoIsTooLargePleaseTake": "Das Foto ist zu groß. Bitte nimm ein kleineres Bild auf.",
+  "corePhotoAnalysisDidNotReturnAValid": "Die Fotoanalyse hat keine gültige Antwort erhalten.",
+  "coreNoFoodsCouldBeConfidentlyRecognisedIn": "Auf dem Foto konnten keine Lebensmittel sicher erkannt werden.",
+  "coreNoPermittedFoodsCouldBeConfidentlyRecognised": "Auf dem Foto konnten keine erlaubten Lebensmittel sicher erkannt werden.",
+  "coreTheRecognisedValuesWereIncompletePleaseTry": "Die erkannten Werte waren unvollständig. Bitte versuche es erneut.",
+  "corePleaseSignInAgainToUsePhoto": "Bitte melde dich erneut an, um die Fotoanalyse zu verwenden.",
+  "coreYouHaveReachedTodaySAiLimit": "Dein KI-Limit für heute ist erreicht. Morgen kannst du wieder analysieren.",
+  "corePhotoAnalysisIsCurrentlyUnavailablePleaseTry": "Die Fotoanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.",
+  "corePhotoAnalysisIsCurrentlyUnavailablePleaseCheck": "Die Fotoanalyse ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.",
+  "coreTheCoachDidNotSendAValid": "Der Coach hat keine gültige Antwort geschickt. Bitte versuche es noch einmal.",
+  "coreTheCoachIsTakingTooLongPlease": "Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.",
+  "coreNoConnectionToTheCoachPleaseCheck": "Keine Verbindung zum Coach. Bitte prüfe deine Internetverbindung und versuche es erneut.",
+  "coreYourSessionHasExpiredPleaseSignIn": "Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.",
+  "coreYouHaveReachedYourDailyAiLimit": "Dein KI-Tageslimit ist erreicht. Morgen kannst du wieder schreiben.",
+  "corePleaseRephraseYourQuestion": "Bitte formuliere deine Frage etwas anders.",
+  "coreNoAccountAvailable": "Konto fehlt.",
+  "coreYourProfilePictureMustBeAJpeg": "Das Profilbild muss ein JPEG mit höchstens 1 MB sein.",
+  "coreThisBarcodeIsInvalid": "Dieser Barcode ist ungültig.",
+  "coreTheProductResponseWasIncomplete": "Die Produktantwort war unvollständig.",
+  "coreThisProductWasNotFound": "Dieses Produkt wurde nicht gefunden.",
+  "coreThisProductDoesNotMeetLookinS": "Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "corePleaseSignInAgainThenTryScanning": "Bitte melde dich erneut an und versuche den Scan danach noch einmal.",
+  "corePleaseWaitAMomentBeforeSearchingFor": "Bitte kurz warten, bevor du den nächsten Barcode suchst.",
+  "coreBarcodeSearchDidNotReceiveAValid": "Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.",
+  "coreBarcodeSearchIsCurrentlyUnavailablePleaseTry": "Die Barcode-Suche ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+  "coreUsdaFoodData": "USDA-Lebensmitteldaten",
+  "coreLookinCatalogue": "Lookin-Katalog",
+  "coreCatalogueSourceValue": "Katalogquelle: {arg0}",
+  "@coreCatalogueSourceValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coreAccountChanged": "Konto geändert.",
+  "corePleaseSignInBeforeSavingAnything": "Bitte melde dich an, bevor du etwas speicherst.",
+  "coreMustBeGreaterThan0": "Muss größer als 0 sein.",
+  "coreTheFoodEntryIsIncomplete": "Der Lebensmitteleintrag ist unvollständig.",
+  "coreTheMealEntryHasNotBeenSaved": "Der Mahlzeiteneintrag ist nicht gespeichert.",
+  "coreTheCustomEntryHasNotBeenSaved": "Der eigene Eintrag ist nicht gespeichert.",
+  "coreThisRecipeHasNoSavedIngredientsYet": "Dieses Rezept hat noch keine gespeicherten Zutaten.",
+  "corePleaseSignInAgain": "Bitte erneut anmelden.",
+  "corePleaseEnterAnAmountGreaterThan0": "Bitte eine Menge größer als 0 eingeben.",
+  "corePleaseAddSugarSaturatedFatAndSalt": "Bitte Zucker, gesättigte Fettsäuren und Salz vom Etikett ergänzen.",
+  "coreNutritionValuesMustBeValidNumbersOf": "Nährwerte müssen gültige Zahlen ab 0 sein.",
+  "coreTheAmountOrANutritionValueIs": "Die Menge oder ein Nährwert ist zu groß.",
+  "coreSugarCannotExceedCarbohydrates": "Zucker darf nicht höher als die Kohlenhydrate sein.",
+  "coreSaturatedFatCannotExceedTotalFat": "Gesättigte Fettsäuren dürfen nicht höher als Fett sein.",
+  "coreUnknownNutritionDataVersion": "Unbekannte Nährwert-Version.",
+  "coreUnknownNutritionBasis": "Unbekannte Nährwert-Basis.",
+  "coreMissingNutritionValueValue": "Nährwert fehlt: {arg0}",
+  "@coreMissingNutritionValueValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "corePleaseSignInFirst2": "Bitte zuerst anmelden.",
+  "coreThisFoodCouldNoLongerBeFound": "Das Lebensmittel konnte nicht mehr gefunden werden."
+}

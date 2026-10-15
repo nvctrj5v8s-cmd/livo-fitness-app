@@ -1,3 +1,4 @@
+import '../../l10n/l10n.dart';
 import '../models/app_models.dart';
 
 /// Conservative content gate for Lookin's halal-sensitive catalog.
@@ -288,7 +289,7 @@ class HalalContentPolicy {
     final text = _withoutHarmlessPhrases(normalize(value));
     if (text.isEmpty) return null;
     if (hardForbiddenTerms.any((term) => _containsTerm(text, term))) {
-      return 'Dieser Eintrag enthält einen in Lookin ausgeschlossenen Bestandteil.';
+      return L10n.current.displayThisEntryContainsAnIngredientExcludedFrom;
     }
     final hasLandAnimalMeat = landAnimalMeatTerms.any(
       (term) => _containsTerm(text, term),
@@ -297,7 +298,7 @@ class HalalContentPolicy {
       (marker) => _containsTerm(text, marker),
     );
     if (hasLandAnimalMeat && !explicitlyHalal) {
-      return 'Fleisch von Landtieren wird nur mit eindeutiger Halal-Kennzeichnung aufgenommen.';
+      return L10n.current.displayMeatFromLandAnimalsIsOnlyIncluded;
     }
     return null;
   }

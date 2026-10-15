@@ -1,0 +1,116 @@
+{
+  "coachNewChatExplanation": "Dafür wird dein bisheriger Chatverlauf dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "coachDeleteHistoryExplanation": "Dein Chatverlauf wird dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "coachFoodPhotoForAnalysis": "📷 Lebensmittel-Foto zur Analyse",
+  "coachYourQuestionIsTooLongPleaseShorten": "Deine Frage ist zu lang. Bitte kürze sie auf höchstens {arg0} Zeichen.",
+  "@coachYourQuestionIsTooLongPleaseShorten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachYourChatHistoryHasBeenDeleted": "Dein Chatverlauf wurde gelöscht.",
+  "coachTheLookinCoachIsPartOfLookin": "Der Lookin Coach ist Teil von Lookin Premium. Deine Testphase oder dein Abo ist nicht mehr aktiv.",
+  "coachStartANewChat": "Neuen Chat beginnen?",
+  "coachDeleteChatHistory": "Chatverlauf löschen?",
+  "coachValuePermanentlyDeletedFromYourAccountThis": "{arg0} dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "@coachValuePermanentlyDeletedFromYourAccountThis": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachCancel": "Abbrechen",
+  "coachDeleteHistory": "Verlauf löschen",
+  "coachFoodPhoto": "Lebensmittel-Foto",
+  "coachThisImageCouldNotBeRead": "Dieses Bild konnte nicht gelesen werden.",
+  "coachThePhotoIsTooLargePleaseChoose": "Das Foto ist zu groß. Bitte wähle ein kleineres Bild.",
+  "coachNewChatDeleteHistory": "Neuer Chat (Verlauf löschen)",
+  "coachLoadingYourHistory": "Dein Verlauf wird geladen …",
+  "coachValueOfValueAiRequestsLeftToday": "Noch {arg0} von {arg1} KI-Anfragen heute",
+  "@coachValueOfValueAiRequestsLeftToday": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "coachAiNutritionFitness": "KI · Ernährung & Fitness",
+  "coachTheCoachCannotBeOpenedJustNow": "Der Coach kann gerade nicht geöffnet werden.",
+  "coachYourPremiumStatusCouldNotBeLoaded": "Dein Premium-Status konnte nicht geladen werden. Bitte prüfe deine Internetverbindung.",
+  "coachTryAgain": "Erneut versuchen",
+  "coachIdeasThatFitYourRemainingCalories": "Ideen, die zu deinen restlichen Kalorien passen",
+  "coachProteinAndTrainingTipsForYourDay": "Protein- und Trainingstipps für deinen Alltag",
+  "coachGetEstimatesFromPhotosOfYourMeals": "Fotos deiner Mahlzeiten einschätzen lassen",
+  "coachPremiumFeature": "Premium-Funktion",
+  "coachYourPersonalAiCoach": "Dein persönlicher KI-Coach",
+  "coachAskAboutMealsNutritionOrTrainingAnswers": "Frag nach Mahlzeiten, Nährwerten oder Training – die Antworten berücksichtigen dein Ziel und deine Tageswerte.",
+  "coachUnlockPremium": "Premium freischalten",
+  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · endet automatisch · keine Zahlungsdaten",
+  "@coachValueDayFreeTrialEndsAutomaticallyNo": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachYourTrialHasEndedContinueChattingWith": "Deine Testphase ist vorbei. Mit Premium schreibst du weiter mit deinem Coach.",
+  "coachAiCanMakeMistakesNotMedicalAdvice": "KI kann Fehler machen · Keine medizinische Beratung",
+  "coachDeleteSavedCoachHistory": "Gespeicherten Coach-Verlauf löschen",
+  "coachExampleCoachConversationAvailableWithPremium": "Beispiel eines Coach-Gesprächs, mit Premium verfügbar",
+  "coachExample": "Beispiel",
+  "coachWhatCanIStillEatThisEvening": "Was kann ich heute Abend noch essen?",
+  "coachYouHaveAbout650KcalLeftToday": "Du hast heute noch etwa 650 kcal frei. Wie wäre eine Lachs-Bowl mit Reis und Gemüse? Das bringt dir rund 35 g Protein und hält lange satt.",
+  "coachWithPremium": "Mit Premium",
+  "coachDinner": "Abendessen",
+  "coachMoreProtein": "Mehr Protein",
+  "coachGiveMeASimpleHighProteinIdea": "Gib mir eine einfache proteinreiche Idee.",
+  "coachDailyTarget": "Tagesziel",
+  "coachHowCanISensiblyReachMyCalorie": "Wie erreiche ich heute sinnvoll mein Kalorienziel?",
+  "coachWhatDoYouNeedToday": "Was brauchst du heute?",
+  "coachAskAboutMealsRecipesNutritionOrTraining": "Frag nach Mahlzeiten, Rezepten, Nährwerten oder Training. Dein Ziel und deine heutigen Werte werden dabei berücksichtigt.",
+  "coachEachQuestionSendsYourGoalDailyTargets": "Mit jeder Frage gehen dein Ziel, deine Tagesziele, heutigen Tageswerte, Ernährungsstil, Allergien und Aktivität an den KI-Dienst – nicht dein Name. Der Chat wird in deinem Konto gespeichert und lässt sich jederzeit löschen.",
+  "coachFocusedOnNutritionFitnessAndAHealthy": "Fokussiert auf Ernährung, Fitness und gesunden Alltag",
+  "coachYourHistoryIsSavedInYourAccount": "Dein Verlauf ist in deinem Konto gespeichert – höchstens die letzten {arg0} Nachrichten der letzten {arg1} Tage.",
+  "@coachYourHistoryIsSavedInYourAccount": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "coachYourQuestionNotSent": "Deine Frage, nicht gesendet",
+  "coachYourQuestion": "Deine Frage",
+  "coachCoachSAnswer": "Antwort vom Coach",
+  "coachNotSent": "Nicht gesendet",
+  "coachTheCoachIsWritingAnAnswer": "Der Coach schreibt eine Antwort",
+  "coachThisIsTakingALittleLongerThan": "Das dauert etwas länger als sonst …",
+  "coachCoachIsTyping": "Coach schreibt …",
+  "coachDismissNotice": "Hinweis schließen",
+  "coachViewPremium": "Premium ansehen",
+  "coachDailyLimitReachedComeBackTomorrow": "Tageslimit erreicht – morgen geht es weiter",
+  "coachTheCoachIsReplying": "Der Coach antwortet …",
+  "coachAskYourCoach": "Frag deinen Coach …",
+  "coachAnalyseAFoodPhoto": "Lebensmittel-Foto analysieren",
+  "coachSendMessage": "Nachricht senden",
+  "coachAiCanMakeMistakesValuesAreEstimates": "KI kann Fehler machen · Werte sind Schätzungen · Keine medizinische Beratung",
+  "coachValueOfValueCharactersRemaining": "Noch {arg0} von {arg1} Zeichen frei",
+  "@coachValueOfValueCharactersRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  }
+}

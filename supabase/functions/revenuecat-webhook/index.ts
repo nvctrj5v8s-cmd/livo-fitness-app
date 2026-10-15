@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { germanDateTime, ownerEmail, sendMail, withdrawalPolicyText } from '../_shared/mail.ts'
+import { englishDateTime, germanDateTime, ownerEmail, sendMail, withdrawalPolicyText, withdrawalPolicyTextEn } from '../_shared/mail.ts'
 
 // Receives RevenueCat webhooks and records the resulting premium state in
 // public.entitlements. Only RevenueCat may call it: the request must carry the
@@ -186,6 +186,7 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
     const { data: userData } = await client.auth.admin.getUserById(userId)
     const to = userData?.user?.email
     if (!to) return
+    const english = userData?.user?.user_metadata?.locale === 'en'
     const yearly = (event.product_id ?? '').includes('yearly')
     const plan = yearly ? 'Lookin Premium – Jahresabo' : 'Lookin Premium – Monatsabo'
     const price = typeof event.price_in_purchased_currency === 'number' && event.currency
@@ -205,10 +206,25 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
     const renewal = yearly
       ? 'Laufzeit: zunächst 12 Monate ab Kaufdatum. Das Jahresabo läuft zunächst ein Jahr. Danach verlängert es sich automatisch auf unbestimmte Zeit, wenn du es nicht vorher kündigst; der Preis wird weiterhin jährlich im Voraus berechnet. Ab dann kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Wählst du in Google Play „Sofort kündigen“, endet Premium sofort und du bekommst den nicht genutzten Teil anteilig zurück. Geht das dort nicht, schreib an lookinsupport@gmail.com; wir beenden das Abo dann spätestens nach einem Monat und erstatten den Rest anteilig.'
       : 'Laufzeit: 1 Monat ab Kaufdatum. Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
+    const planEn = yearly ? 'Lookin Premium — yearly subscription' : 'Lookin Premium — monthly subscription'
+    const priceEn = typeof event.price_in_purchased_currency === 'number' && event.currency
+      ? `${event.price_in_purchased_currency.toFixed(2)} ${event.currency}`
+      : (yearly ? '49.99 EUR' : '6.99 EUR')
+    const renewalEn = yearly
+      ? 'Term: initially 12 months from purchase. The yearly subscription initially runs for one year. It then renews automatically for an indefinite period unless cancelled beforehand; the price continues to be charged annually in advance. From then on, you may cancel at any time with no more than one month\'s notice. Selecting "Cancel immediately" in Google Play ends Premium immediately and gives you a proportionate refund for the unused period. If this is not possible there, email lookinsupport@gmail.com; we will end the subscription within one month and refund the remaining period proportionately.'
+      : 'Term: 1 month from purchase. The subscription renews for one month at a time until cancelled.'
+    const consentEn = Array.isArray(consents) && consents[0]?.granted
+      ? `On ${englishDateTime(new Date(consents[0].created_at))}, you expressly requested that Lookin Premium begin immediately, before the withdrawal period ends, and acknowledged that withdrawal requires proportionate payment for the service already provided and that your right of withdrawal expires upon full performance of the contract.`
+      : 'We have no declaration of consent to immediate service commencement.'
     const result = await sendMail({
       to,
-      subject: 'Deine Bestellung: Lookin Premium',
-      text: `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 100 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
+      subject: english ? 'Your order: Lookin Premium' : 'Deine Bestellung: Lookin Premium',
+      text: english
+        ? `Thank you for your purchase!\n\nContract: ${planEn}\nService: AI photo recognition and Lookin Coach (up to 100 requests per day combined), plus all recipes, in addition to the free features.\nPrice: ${priceEn} (including any applicable VAT)\nPurchased: ${englishDateTime(new Date(Number(event.purchased_at_ms) || Date.now()))}\n` +
+          `Provider: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
+          `${renewalEn} You may cancel at any time effective at the end of the billing period in Google Play subscription settings or by emailing ${ownerEmail}.\n\n` +
+          `${consentEn}\n\nStatutory rights concerning defects in digital products apply. Terms: https://app.lookin-foodtracker.de/legal/en/agb.html\n\n${withdrawalPolicyTextEn}`
+        : `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 100 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
         `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
         `${renewal} Kündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play oder per E-Mail an ${ownerEmail}.\n\n` +
         `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen: https://app.lookin-foodtracker.de/legal/agb.html\n\n${withdrawalPolicyText}`,

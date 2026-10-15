@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _SheetTitle extends StatelessWidget {
       ),
       IconButton(
         onPressed: () => Navigator.pop(context),
-        tooltip: 'Schließen',
+        tooltip: context.l10n.discoverClose,
         icon: const Icon(Icons.close_rounded),
       ),
     ],
@@ -88,9 +89,11 @@ Future<MealSlot?> showMealSlotSheet(
     builder: (sheetContext) => _SheetBody(
       children: [
         _SheetTitle(
-          'Zu welcher Mahlzeit?',
-          subtitle:
-              '1 Portion · ${recipe.calories} kcal · ${recipe.protein} g Protein',
+          context.l10n.discoverWhichMeal,
+          subtitle: context.l10n.discover1ServingValueKcalValueGProtein(
+            (recipe.calories).toString(),
+            (recipe.protein).toString(),
+          ),
         ),
         const SizedBox(height: 14),
         for (final slot in [
@@ -156,8 +159,8 @@ class _SlotTile extends StatelessWidget {
                 ),
               ),
               if (suggested)
-                const Text(
-                  'Vorschlag',
+                Text(
+                  context.l10n.discoverSuggestion,
                   style: TextStyle(
                     color: AppColors.primary,
                     fontSize: 12.5,
@@ -225,15 +228,12 @@ Future<bool?> showGoalSuggestionSheet(
     useSafeArea: true,
     builder: (sheetContext) => _SheetBody(
       children: [
-        const _SheetTitle('An mein Ziel anpassen'),
+        _SheetTitle(context.l10n.discoverAdaptToMyTarget),
         const SizedBox(height: 10),
         Text(
           suggestion.goalReached
-              ? 'Laut deinem Tagebuch ist dein Tagesziel heute schon erreicht. '
-                    'Wenn du Hunger hast, ist eine kleinere Portion eine '
-                    'Möglichkeit.'
-              : 'Damit dieses Rezept gut zu deinem heutigen Tagesziel passt, '
-                    'wäre diese Portionsgröße ein Vorschlag:',
+              ? context.l10n.discoverYourDiaryShowsYouHaveAlreadyReached
+              : context.l10n.discoverThisServingSizeIsASuggestionTo,
           style: const TextStyle(
             color: AppColors.text,
             fontSize: 15,
@@ -252,8 +252,8 @@ Future<bool?> showGoalSuggestionSheet(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'VORSCHLAG · SCHÄTZUNG',
+              Text(
+                context.l10n.discoverSuggestionEstimate,
                 style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 11,
@@ -272,16 +272,18 @@ Future<bool?> showGoalSuggestionSheet(
               ),
               const SizedBox(height: 2),
               Text(
-                'ca. ${formatKcal(perPortion.calories * factor)} · '
-                '${formatNutrientGrams(perPortion.protein * factor)} Protein',
+                context.l10n.discoverApproxValueValueProtein(
+                  (formatKcal(perPortion.calories * factor)).toString(),
+                  (formatNutrientGrams(perPortion.protein * factor)).toString(),
+                ),
                 style: const TextStyle(color: AppColors.textMuted),
               ),
             ],
           ),
         ),
         const SizedBox(height: 14),
-        const Text(
-          'So ist der Vorschlag entstanden',
+        Text(
+          context.l10n.discoverHowThisSuggestionWasCalculated,
           style: TextStyle(
             color: AppColors.text,
             fontSize: 14,
@@ -290,33 +292,34 @@ Future<bool?> showGoalSuggestionSheet(
         ),
         const SizedBox(height: 4),
         _CalcRow(
-          'Dein Tagesziel',
+          context.l10n.discoverYourDailyTarget,
           '${formatThousandsDe(suggestion.calorieGoal)} kcal',
         ),
         _CalcRow(
-          'Heute eingetragen',
+          context.l10n.discoverLoggedToday,
           '${formatThousandsDe(suggestion.consumedCalories)} kcal',
         ),
         _CalcRow(
-          'Noch offen',
+          context.l10n.discoverRemaining,
           '${formatThousandsDe(math.max(0, suggestion.remainingCalories))} kcal',
         ),
         _CalcRow(
-          'Mahlzeiten, die heute noch kommen',
-          'ca. ${suggestion.mealsLeft}',
+          context.l10n.discoverMealsStillToComeToday,
+          context.l10n.discoverApproxValue((suggestion.mealsLeft).toString()),
         ),
         _CalcRow(
-          'Für diese Mahlzeit',
-          'ca. ${formatThousandsDe(suggestion.mealBudget)} kcal',
+          context.l10n.discoverForThisMeal,
+          context.l10n.discoverApproxValueKcal(
+            (formatThousandsDe(suggestion.mealBudget)).toString(),
+          ),
           strong: true,
         ),
         const SizedBox(height: 10),
         Text(
-          'Grundlage: ${suggestion.mealsPerDay} Mahlzeiten am Tag, davon '
-          '${suggestion.mealsLogged} schon im Tagebuch. Das ist eine Schätzung '
-          'zur Orientierung und keine Ernährungsberatung – hör auch auf deinen '
-          'Hunger. „Übernehmen“ rechnet nur die Zutatenmengen um; ins Tagebuch '
-          'wird weiterhin 1 Portion eingetragen.',
+          context.l10n.discoverBasedOnValueMealsADayWith(
+            (suggestion.mealsPerDay).toString(),
+            (suggestion.mealsLogged).toString(),
+          ),
           style: const TextStyle(
             color: AppColors.textMuted,
             fontSize: 12.5,
@@ -334,7 +337,7 @@ Future<bool?> showGoalSuggestionSheet(
                   foregroundColor: AppColors.text,
                   side: const BorderSide(color: AppColors.borderBright),
                 ),
-                child: const Text('Schließen'),
+                child: Text(context.l10n.discoverClose),
               ),
             ),
             const SizedBox(width: 12),
@@ -342,7 +345,7 @@ Future<bool?> showGoalSuggestionSheet(
               child: FilledButton(
                 key: const Key('goal-suggestion-apply'),
                 onPressed: () => Navigator.pop(sheetContext, true),
-                child: const Text('Übernehmen'),
+                child: Text(context.l10n.discoverApply),
               ),
             ),
           ],
@@ -382,14 +385,14 @@ Future<bool?> showGoalLockedSheet(
               ),
             ),
             const SizedBox(width: 13),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RecipePlusBadge(),
                   SizedBox(height: 6),
                   Text(
-                    'An mein Ziel anpassen',
+                    context.l10n.discoverAdaptToMyTarget,
                     style: TextStyle(
                       color: AppColors.text,
                       fontSize: 20,
@@ -402,16 +405,15 @@ Future<bool?> showGoalLockedSheet(
           ],
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Mit $recipePlusLabel schlägt dir Lookin eine Portionsgröße vor, die zu '
-          'deinem heutigen Tagesziel passt – geschätzt aus deinem Tagebuch. '
-          'Die Zutatenmengen werden dafür automatisch umgerechnet.',
+        Text(
+          context.l10n.discoverWithValueLookinSuggestsAServingSize(
+            (recipePlusLabel).toString(),
+          ),
           style: TextStyle(color: AppColors.text, fontSize: 15, height: 1.5),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Den Portionsrechner und alle Nährwerte kannst du weiterhin kostenlos '
-          'nutzen.',
+        Text(
+          context.l10n.discoverTheServingCalculatorAndAllNutritionValues,
           style: TextStyle(
             color: AppColors.textMuted,
             fontSize: 13.5,
@@ -430,7 +432,7 @@ Future<bool?> showGoalLockedSheet(
                   foregroundColor: AppColors.text,
                   side: const BorderSide(color: AppColors.borderBright),
                 ),
-                child: const Text('Jetzt nicht'),
+                child: Text(context.l10n.discoverNotNow),
               ),
             ),
             const SizedBox(width: 12),
@@ -440,8 +442,12 @@ Future<bool?> showGoalLockedSheet(
                 onPressed: () => Navigator.pop(sheetContext, true),
                 child: Text(
                   trialAvailable
-                      ? '$recipePlusLabel testen'
-                      : '$recipePlusLabel ansehen',
+                      ? context.l10n.discoverTryValue(
+                          (recipePlusLabel).toString(),
+                        )
+                      : context.l10n.discoverViewValue(
+                          (recipePlusLabel).toString(),
+                        ),
                 ),
               ),
             ),

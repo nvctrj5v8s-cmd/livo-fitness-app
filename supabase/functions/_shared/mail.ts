@@ -66,6 +66,41 @@ export function germanDateTime(value: Date): string {
   return `${get('day')}.${get('month')}.${get('year')} um ${get('hour')}:${get('minute')} Uhr`
 }
 
+export function englishDateTime(value: Date): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Berlin', dateStyle: 'medium', timeStyle: 'short',
+  }).format(value)
+}
+
+export const withdrawalPolicyTextEn = `Withdrawal information
+
+Right of withdrawal
+You have the right to withdraw from this contract within fourteen days without giving any reason. The withdrawal period is fourteen days from the date the contract is concluded.
+To exercise this right, inform us (Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, telephone: +49 15510 338501, email: lookinsupport@gmail.com) of your decision by an unequivocal statement, such as a letter sent by post or an email. You may use the model form below, but this is not obligatory. You may also withdraw online at https://app.lookin-foodtracker.de/legal/en/widerruf-erklaeren.html without signing in, or in the app under Profile > Withdraw from contract. If you use this online function, we promptly send an acknowledgement on a durable medium, such as email, containing information about your declaration and the date and time it was received.
+To meet the deadline, sending your communication before the withdrawal period expires is sufficient.
+
+Effects of withdrawal
+If you withdraw, we reimburse all payments received from you, including delivery costs (except additional costs from choosing a delivery method other than our least expensive standard delivery), without undue delay and no later than fourteen days after being informed of your decision. We use the original payment method unless expressly agreed otherwise; you incur no fees for reimbursement.
+If you requested services to begin during the withdrawal period, you must pay a reasonable amount proportionate to services already provided up to the time you inform us of withdrawal, compared with the full contractual scope.
+
+End of withdrawal information
+
+Note: cancellation ends the subscription for the future only and is not withdrawal.
+
+Model withdrawal form
+(Complete and return this form only if you wish to withdraw.)
+To Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, lookinsupport@gmail.com:
+I/We (*) hereby withdraw from the contract concluded by me/us (*) for the purchase of the following goods (*) / provision of the following service (*): Lookin Premium (subscription)
+Ordered on (*) / received on (*): ____________
+Name of consumer(s): ____________
+Address of consumer(s): ____________
+Signature of consumer(s) (only for paper submissions): ____________
+Date: ____________
+(*) Delete as appropriate.
+
+Full version: https://app.lookin-foodtracker.de/legal/en/widerruf.html
+Terms: https://app.lookin-foodtracker.de/legal/en/agb.html`
+
 export const withdrawalPolicyText = `Widerrufsbelehrung
 
 Widerrufsrecht

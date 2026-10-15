@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,12 +11,14 @@ import 'features/auth/data/browser_url.dart';
 import 'features/auth/data/email_link.dart';
 import 'features/auth/data/recovery_marker.dart';
 import 'l10n/locale_controller.dart';
+import 'l10n/catalog_text.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // The language is known before the first frame, also for the texts below.
   final localeController = LocaleController();
   await localeController.load();
+  await CatalogText.load();
   final emailLink = EmailLink.fromUri(Uri.base);
 
   await Supabase.initialize(
@@ -51,21 +54,14 @@ Future<void> main() async {
       }
     }
     if (verified && emailLink.type == OtpType.emailChange) {
-      initialNotice =
-          'Bestätigt. Hast du auch an deine andere Adresse eine E-Mail '
-          'bekommen, bestätige die Änderung dort ebenfalls.';
+      initialNotice = L10n.current.appConfirmedIfYouAlsoReceivedAnEmail;
     }
     if (result == EmailLinkResult.offline) {
-      initialNotice =
-          'Keine Verbindung zum Server. Dein Link ist vermutlich noch gültig: '
-          'Lade die Seite neu oder tippe den Link in der E-Mail noch einmal an.';
+      initialNotice = L10n.current.appNoConnectionToTheServerYourLink;
     } else if (!verified) {
       initialNotice = emailLink.isPasswordRecovery
-          ? 'Der Link zum Zurücksetzen ist abgelaufen oder wurde schon '
-                'benutzt. Fordere unter „Passwort vergessen?“ einen neuen an.'
-          : 'Der Bestätigungslink ist abgelaufen oder wurde schon benutzt. '
-                'Melde dich an. Ist deine Adresse noch nicht bestätigt, '
-                'kannst du dort eine neue Bestätigungs-Mail anfordern.';
+          ? L10n.current.appYourResetLinkHasExpiredOrHas
+          : L10n.current.appYourConfirmationLinkHasExpiredOrHas;
     }
     // A reload must not try the spent link again; after a network error the
     // link may still be valid and stays in the address bar.

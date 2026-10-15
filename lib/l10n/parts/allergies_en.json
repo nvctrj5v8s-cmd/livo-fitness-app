@@ -1,0 +1,22 @@
+{
+  "allergiesAllergiesIntolerances": "Allergies & intolerances",
+  "allergiesSelect": "Select",
+  "allergiesChange": "Change",
+  "allergiesNoneSpecified": "None specified",
+  "allergiesPossibleAllergenConflict": "Possible allergen conflict",
+  "allergiesAllergyInformationMissing": "Allergy information missing",
+  "allergiesPleaseCheckTheIngredientsList": "Please check the ingredients list",
+  "allergiesTheAvailableProductOrIngredientInformationMentions": "The available product or ingredient information mentions: {arg0}.",
+  "allergiesNoReliableAllergenOrIngredientInformationIs": "No reliable allergen or ingredient information is available for this entry.",
+  "allergiesNoneOfYourSelectedTriggersWereRecognised": "None of your selected triggers were recognised in the available information. This is not a safety guarantee.",
+  "allergiesValueIfYouHaveAllergiesAlwaysCheck": "{arg0} If you have allergies, always check the current packaging and possible cross-contamination.",
+  "allergiesWhatShouldTheAppTakeIntoAccount": "What should the app take into account?",
+  "allergiesClose": "Close",
+  "allergiesSelectKnownAllergensLactoseIsListedSeparately": "Select known allergens. Lactose is listed separately as an intolerance.",
+  "allergiesOtherAllergiesIntolerances": "Other allergies / intolerances",
+  "allergiesEGCoconutHistamine": "e.g. coconut, histamine",
+  "allergiesSeparateMultipleEntriesWithCommas": "Separate multiple entries with commas.",
+  "allergiesProductInformationMayBeMissingOrOutdated": "Product information may be missing or outdated. If you have an allergy, always check the current packaging and possible cross-contamination.",
+  "allergiesOptionalHealthInformationItIsSavedIn": "Optional health information: it is saved in your account and shared with the Lookin Coach as context to help avoid unsuitable suggestions. You can change or clear it here at any time.",
+  "allergiesSaveSelection": "Save selection"
+}

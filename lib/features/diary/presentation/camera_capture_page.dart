@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class _CameraCapturePageState extends State<CameraCapturePage>
         _cameraIndex = back >= 0 ? back : 0;
       }
       if (_cameras.isEmpty) {
-        _fail('Es wurde keine Kamera gefunden.');
+        _fail(L10n.current.diaryNoCameraWasFound);
         return;
       }
       final controller = CameraController(
@@ -92,12 +93,11 @@ class _CameraCapturePageState extends State<CameraCapturePage>
           error.code.toLowerCase().contains('notallowed');
       _fail(
         denied
-            ? 'Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in '
-                  'den Browser- bzw. Geräteeinstellungen und versuche es erneut.'
-            : 'Die Kamera konnte nicht gestartet werden.',
+            ? L10n.current.diaryCameraAccessWasNotAllowedAllowThe
+            : L10n.current.diaryTheCameraCouldNotBeStarted,
       );
     } catch (_) {
-      _fail('Auf diesem Gerät ist keine Kamera verfügbar.');
+      _fail(L10n.current.diaryNoCameraIsAvailableOnThisDevice);
     }
   }
 
@@ -132,7 +132,7 @@ class _CameraCapturePageState extends State<CameraCapturePage>
       if (!mounted) return;
       setState(() => _capturing = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Foto konnte nicht aufgenommen werden.')),
+        SnackBar(content: Text(L10n.current.diaryThePhotoCouldNotBeTaken)),
       );
     }
   }
@@ -185,14 +185,14 @@ class _CameraCapturePageState extends State<CameraCapturePage>
                   child: Row(
                     children: [
                       IconButton(
-                        tooltip: 'Schließen',
+                        tooltip: context.l10n.diaryClose,
                         color: Colors.white,
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close_rounded),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Mahlzeit fotografieren',
+                          context.l10n.diaryTakeAMealPhoto,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -206,10 +206,10 @@ class _CameraCapturePageState extends State<CameraCapturePage>
                   ),
                 ),
                 const Spacer(),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.fromLTRB(24, 0, 24, 6),
                   child: Text(
-                    'Das ganze Essen gut sichtbar von oben aufnehmen.',
+                    context.l10n.diaryPhotographTheWholeMealClearlyFromAbove,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 13),
                   ),
@@ -222,7 +222,7 @@ class _CameraCapturePageState extends State<CameraCapturePage>
                       _RoundAction(
                         key: const Key('camera-gallery'),
                         icon: Icons.photo_library_outlined,
-                        label: 'Galerie',
+                        label: context.l10n.diaryGallery,
                         onTap: _capturing ? null : _pickFromGallery,
                       ),
                       _ShutterButton(
@@ -231,7 +231,7 @@ class _CameraCapturePageState extends State<CameraCapturePage>
                       ),
                       _RoundAction(
                         icon: Icons.cameraswitch_outlined,
-                        label: 'Wechseln',
+                        label: context.l10n.diarySwitch,
                         onTap: _cameras.length > 1 && ready && !_capturing
                             ? _switchCamera
                             : null,
@@ -310,7 +310,7 @@ class _ShutterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: 'Foto aufnehmen',
+    label: context.l10n.diaryTakePhoto,
     child: GestureDetector(
       key: const Key('camera-shutter'),
       onTap: onTap,
@@ -409,11 +409,11 @@ class _CameraError extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Erneut versuchen'),
+            label: Text(context.l10n.diaryTryAgain),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Alternativ unten über „Galerie“ ein Foto auswählen.',
+          Text(
+            context.l10n.diaryAlternativelyChooseAPhotoUsingGalleryBelow,
             textAlign: TextAlign.center,
             style: TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),

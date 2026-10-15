@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -154,43 +155,38 @@ class _PaywallPageState extends State<PaywallPage>
         case TrialStartStatus.started:
           _trialStarted = true;
         case TrialStartStatus.alreadyPremium:
-          _notice = const _Notice(
-            'Premium ist für dein Konto bereits aktiv.',
+          _notice = _Notice(
+            L10n.current.subscriptionPremiumIsAlreadyActiveForYourAccount,
             _Tone.success,
           );
         case TrialStartStatus.emailUnconfirmed:
-          _notice = const _Notice(
-            'Bitte bestätige zuerst deine E-Mail-Adresse über den Link in '
-            'unserer E-Mail. Danach kannst du die Testphase starten.',
+          _notice = _Notice(
+            L10n.current.subscriptionPleaseConfirmYourEmailAddressUsingThe,
             _Tone.info,
           );
         case TrialStartStatus.alreadyUsed:
-          _notice = const _Notice(
-            'Du hast deine kostenlose Testphase bereits genutzt – sie gilt '
-            'einmal pro E-Mail-Adresse.',
+          _notice = _Notice(
+            L10n.current.subscriptionYouHaveAlreadyUsedYourFreeTrial,
             _Tone.warning,
           );
         case TrialStartStatus.notConfigured:
-          _notice = const _Notice(
-            'Die Testphase wird gerade eingerichtet. Bitte versuche es später '
-            'noch einmal – es wurde nichts gestartet und nichts berechnet.',
+          _notice = _Notice(
+            L10n.current.subscriptionTheTrialIsBeingSetUpPlease,
             _Tone.info,
           );
         case TrialStartStatus.signedOut:
-          _notice = const _Notice(
-            'Bitte melde dich an, um die Testphase zu starten.',
+          _notice = _Notice(
+            L10n.current.subscriptionPleaseSignInToStartYourTrial,
             _Tone.warning,
           );
         case TrialStartStatus.previewOnly:
-          _notice = const _Notice(
-            'In der Vorschau ohne Konto startet keine Testphase. Melde dich '
-            'an, um Premium kostenlos zu testen.',
+          _notice = _Notice(
+            L10n.current.subscriptionNoTrialStartsInThePreviewWithout,
             _Tone.info,
           );
         case TrialStartStatus.unavailable:
-          _notice = const _Notice(
-            'Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe '
-            'deine Verbindung und versuche es erneut.',
+          _notice = _Notice(
+            L10n.current.subscriptionYourTrialCouldNotBeStartedJust,
             _Tone.warning,
           );
       }
@@ -402,15 +398,16 @@ class _PaywallPageState extends State<PaywallPage>
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Starte kostenlos',
+                            context.l10n.subscriptionStartForFree,
                             style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Alle Premium-Funktionen '
-                            '${SubscriptionPlans.trialDays} Tage lang – danach '
-                            'geht es automatisch kostenlos weiter.',
+                            context.l10n
+                                .subscriptionAllPremiumFeaturesForValueDaysThen(
+                                  (SubscriptionPlans.trialDays).toString(),
+                                ),
                             style: const TextStyle(
                               color: AppColors.textMuted,
                               height: 1.45,
@@ -456,7 +453,9 @@ class _PaywallPageState extends State<PaywallPage>
           const SizedBox(height: 10),
         ],
         _TrialButton(
-          label: canTrial ? PremiumCopy.trialCta : 'Testphase bereits genutzt',
+          label: canTrial
+              ? PremiumCopy.trialCta
+              : L10n.current.subscriptionTrialAlreadyUsed,
           busy: subscription.isStartingTrial,
           enabled: canTrial,
           shimmer: _intro,
@@ -466,8 +465,7 @@ class _PaywallPageState extends State<PaywallPage>
         _PromiseLine(
           text: canTrial
               ? PremiumCopy.trialPromise
-              : 'Premium kannst du abonnieren, sobald die Bezahlung '
-                    'eingerichtet ist.',
+              : L10n.current.subscriptionYouCanSubscribeToPremiumOncePayments,
         ),
         SizedBox(height: compact ? 2 : 6),
         TextButton.icon(
@@ -483,8 +481,8 @@ class _PaywallPageState extends State<PaywallPage>
             ),
           ),
           icon: const Icon(Icons.arrow_forward_rounded, size: 19),
-          label: const Text(
-            'Weiter mit der kostenlosen Version',
+          label: Text(
+            L10n.current.subscriptionContinueWithTheFreeVersion,
             textAlign: TextAlign.center,
           ),
         ),
@@ -683,7 +681,7 @@ class _TopBar extends StatelessWidget {
         const SizedBox(width: 12),
         IconButton(
           key: const Key('paywall-close'),
-          tooltip: 'Schließen',
+          tooltip: context.l10n.subscriptionClose,
           onPressed: onClose,
           style: IconButton.styleFrom(
             backgroundColor: AppColors.surfaceHigh,
@@ -709,19 +707,19 @@ class _Headline extends StatelessWidget {
     final contextLine = switch (source) {
       PaywallSource.onboarding => (
         Icons.celebration_rounded,
-        'Schön, dass du da bist',
+        context.l10n.subscriptionGladYouAreHere,
       ),
       PaywallSource.coach => (
         Icons.auto_awesome_rounded,
-        'Der Lookin Coach ist Teil von Premium',
+        context.l10n.subscriptionTheLookinCoachIsPartOfPremium,
       ),
       PaywallSource.mealPhoto => (
         Icons.photo_camera_rounded,
-        'KI-Foto ist Teil von Premium',
+        context.l10n.subscriptionAiPhotoIsPartOfPremium,
       ),
       PaywallSource.recipes => (
         Icons.restaurant_menu_rounded,
-        'Alle Rezepte gibt es mit Premium',
+        context.l10n.subscriptionAllRecipesAreAvailableWithPremium,
       ),
       PaywallSource.profile => null,
     };
@@ -764,7 +762,7 @@ class _Headline extends StatelessWidget {
           child: Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: 'Hol dir '),
+                TextSpan(text: context.l10n.subscriptionGet),
                 TextSpan(
                   text: 'Lookin Premium',
                   style: TextStyle(
@@ -791,8 +789,7 @@ class _Headline extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 440),
           child: Text(
-            'KI-Foto, dein persönlicher Coach und alle Rezepte – für weniger '
-            'Aufwand und mehr Klarheit beim Essen.',
+            context.l10n.subscriptionAiPhotoYourPersonalCoachAndAll,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: AppColors.textMuted,
@@ -817,29 +814,26 @@ class _Benefits extends StatelessWidget {
       (
         Icons.photo_camera_rounded,
         AppColors.primary,
-        'KI-Foto-Erkennung',
-        'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles '
-            'vor dem Speichern.',
+        context.l10n.subscriptionAiPhotoRecognition,
+        context.l10n.subscriptionTakeAPhotoLookinEstimatesFoodsAnd,
       ),
       (
         Icons.auto_awesome_rounded,
         AppColors.mint,
         'Lookin Coach',
-        'Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und '
-            'deine Tageswerte.',
+        context.l10n.subscriptionYourAiChatForNutritionAndFitness,
       ),
       (
         Icons.restaurant_menu_rounded,
         AppColors.orange,
-        'Alle Rezepte',
+        context.l10n.subscriptionAllRecipes,
         '${PremiumCopy.premiumRecipes}. ${PremiumCopy.freeRecipes}.',
       ),
       (
         Icons.bolt_rounded,
         AppColors.purple,
-        'Großzügiges KI-Kontingent',
-        'Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), '
-            'in der Testphase bis zu 50.',
+        context.l10n.subscriptionGenerousAiAllowance,
+        context.l10n.subscriptionUpTo100AiRequestsADay,
       ),
     ];
     return Container(
@@ -1041,7 +1035,7 @@ class _TrialButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = enabled && !busy;
     final foreground = enabled ? AppColors.black : AppColors.textMuted;
-    final text = busy ? 'Testphase wird gestartet …' : label;
+    final text = busy ? context.l10n.subscriptionStartingTrial : label;
     return Semantics(
       button: true,
       enabled: active,
@@ -1268,13 +1262,15 @@ class _ActiveCard extends StatelessWidget {
     final expiresAt = entitlement.expiresAt;
     final detail = trialing
         ? expiresAt == null
-              ? 'Deine kostenlose Testphase läuft. Sie endet automatisch – '
-                    'ohne Kosten.'
-              : 'Kostenlose Testphase bis ${formatPremiumDateTime(expiresAt)}. '
-                    'Sie endet automatisch – ohne Kosten.'
+              ? context.l10n.subscriptionYourFreeTrialIsActiveItEnds
+              : context.l10n.subscriptionFreeTrialUntilValueItEndsAutomatically(
+                  (formatPremiumDateTime(expiresAt)).toString(),
+                )
         : expiresAt == null
-        ? 'Dein Premium-Abo ist aktiv.'
-        : 'Dein Premium-Abo ist aktiv bis ${formatPremiumDateTime(expiresAt)}.';
+        ? context.l10n.subscriptionYourPremiumSubscriptionIsActive
+        : context.l10n.subscriptionYourPremiumSubscriptionIsActiveUntilValue(
+            (formatPremiumDateTime(expiresAt)).toString(),
+          );
     return Container(
       key: const Key('paywall-active'),
       padding: const EdgeInsets.all(16),
@@ -1296,7 +1292,7 @@ class _ActiveCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Premium ist aktiv',
+                  context.l10n.subscriptionPremiumIsActive,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -1313,7 +1309,7 @@ class _ActiveCard extends StatelessWidget {
           FilledButton(
             key: const Key('paywall-active-done'),
             onPressed: onDone,
-            child: const Text('Fertig'),
+            child: Text(context.l10n.subscriptionDone),
           ),
         ],
       ),
@@ -1357,7 +1353,7 @@ class _PlanSection extends StatelessWidget {
           runSpacing: 8,
           children: [
             Text(
-              'Premium-Abo wählen',
+              context.l10n.subscriptionChooseAPremiumSubscription,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -1368,7 +1364,7 @@ class _PlanSection extends StatelessWidget {
         const SizedBox(height: 14),
         Semantics(
           container: true,
-          label: 'Abo-Pläne',
+          label: context.l10n.subscriptionSubscriptionPlans,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -1392,7 +1388,7 @@ class _PlanSection extends StatelessWidget {
             controlAffinity: ListTileControlAffinity.leading,
             contentPadding: EdgeInsets.zero,
             dense: true,
-            title: const Text(
+            title: Text(
               ConsentTexts.immediateStart,
               style: TextStyle(fontSize: 12.5, height: 1.4),
             ),
@@ -1486,14 +1482,14 @@ class _SoonTag extends StatelessWidget {
       borderRadius: BorderRadius.circular(99),
       border: Border.all(color: AppColors.borderBright),
     ),
-    child: const Row(
+    child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.schedule_rounded, size: 13, color: AppColors.textMuted),
         SizedBox(width: 5),
         Flexible(
           child: Text(
-            'Bald verfügbar',
+            context.l10n.subscriptionComingSoon,
             style: TextStyle(
               color: AppColors.text,
               fontSize: 11.5,
@@ -1531,8 +1527,7 @@ class _PlanCard extends StatelessWidget {
       selected: selected,
       inMutuallyExclusiveGroup: true,
       label:
-          '$title${plan.isYearly ? ', beliebt, $savings Prozent günstiger als '
-                    'monatlich' : ''}: $price $unit, $detail, $billing',
+          '$title${plan.isYearly ? context.l10n.subscriptionPopularSavings(savings.toString()) : ''}: $price $unit, $detail, $billing',
       onTap: onTap,
       excludeSemantics: true,
       child: Material(
@@ -1621,7 +1616,9 @@ class _PlanCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(99),
                               ),
                               child: Text(
-                                'Beliebt · −$savings %',
+                                context.l10n.subscriptionPopularValue(
+                                  (savings).toString(),
+                                ),
                                 style: const TextStyle(
                                   color: AppColors.black,
                                   fontSize: 11,
@@ -1698,12 +1695,16 @@ class _ComparisonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = <(String, Object, Object)>[
-      ('Tagebuch, Makros & Serie', true, true),
-      ('Suche, Barcode & eigene Lebensmittel', true, true),
-      ('Profil & Tagesziele', true, true),
-      ('Rezepte', '${SubscriptionPlans.freeRecipeSharePercent} %', 'Alle'),
-      ('KI-Foto-Erkennung', false, true),
-      ('Lookin Coach (KI-Chat)', false, true),
+      (context.l10n.subscriptionDiaryMacrosStreak, true, true),
+      (context.l10n.subscriptionSearchBarcodeCustomFoods, true, true),
+      (context.l10n.subscriptionProfileDailyTargets, true, true),
+      (
+        context.l10n.subscriptionRecipes,
+        '${SubscriptionPlans.freeRecipeSharePercent} %',
+        context.l10n.subscriptionAll,
+      ),
+      (context.l10n.subscriptionAiPhotoRecognition, false, true),
+      (context.l10n.subscriptionLookinCoachAiChat, false, true),
     ];
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 10),
@@ -1716,7 +1717,7 @@ class _ComparisonCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Kostenlos oder Premium?',
+            context.l10n.subscriptionFreeOrPremium,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -1726,13 +1727,13 @@ class _ComparisonCard extends StatelessWidget {
             child: Row(
               children: [
                 const Expanded(flex: 5, child: SizedBox()),
-                const Expanded(
+                Expanded(
                   flex: 3,
                   child: Center(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        'Kostenlos',
+                        context.l10n.subscriptionFree,
                         style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 12,
@@ -1774,9 +1775,11 @@ class _ComparisonCard extends StatelessWidget {
           for (final (label, free, premium) in rows) ...[
             const Divider(height: 20, color: AppColors.border),
             Semantics(
-              label:
-                  '$label. Kostenlos: ${_spoken(free)}. '
-                  'Premium: ${_spoken(premium)}.',
+              label: context.l10n.subscriptionValueFreeValuePremiumValue(
+                (label).toString(),
+                (_spoken(free)).toString(),
+                (_spoken(premium)).toString(),
+              ),
               excludeSemantics: true,
               child: Row(
                 children: [
@@ -1809,9 +1812,9 @@ class _ComparisonCard extends StatelessWidget {
   }
 
   static String _spoken(Object value) => switch (value) {
-    true => 'enthalten',
-    false => 'nicht enthalten',
-    final String text => text == 'Alle' ? 'alle' : text,
+    true => L10n.current.subscriptionIncluded,
+    false => L10n.current.subscriptionNotIncluded,
+    final String text => text.toLowerCase(),
     _ => '',
   };
 }
@@ -1862,11 +1865,12 @@ class _LegalFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final terms =
-        'Kostenlose Testphase: ${SubscriptionPlans.trialDays} Tage, einmal '
-        'pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne '
-        'automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n'
-        '${PremiumCopy.priceTermsFor(billingAvailable: billingAvailable)}';
+    final terms = context.l10n.subscriptionFreeTrialValueDaysOncePerEmail(
+      (SubscriptionPlans.trialDays).toString(),
+      (PremiumCopy.priceTermsFor(
+        billingAvailable: billingAvailable,
+      )).toString(),
+    );
     final linkStyle = TextButton.styleFrom(
       foregroundColor: AppColors.textMuted,
       minimumSize: const Size(48, 44),
@@ -1902,8 +1906,8 @@ class _LegalFooter extends StatelessWidget {
               ),
               label: Text(
                 billingAvailable
-                    ? 'Käufe wiederherstellen'
-                    : 'Käufe wiederherstellen – bald verfügbar',
+                    ? context.l10n.subscriptionRestorePurchases
+                    : context.l10n.subscriptionRestorePurchasesComingSoon,
               ),
             ),
             if (onManage != null)
@@ -1911,7 +1915,7 @@ class _LegalFooter extends StatelessWidget {
                 key: const Key('paywall-manage'),
                 onPressed: onManage,
                 style: linkStyle,
-                child: const Text('Abo verwalten'),
+                child: Text(context.l10n.subscriptionManageSubscription),
               ),
           ],
         ),
@@ -1944,10 +1948,12 @@ class _TrialSuccessView extends StatelessWidget {
   Widget build(BuildContext context) {
     final reducedMotion = MediaQuery.disableAnimationsOf(context);
     final until = expiresAt == null
-        ? 'Deine kostenlose Testphase läuft ${SubscriptionPlans.trialDays} '
-              'Tage.'
-        : 'Deine kostenlose Testphase läuft bis '
-              '${formatPremiumDateTime(expiresAt!)}.';
+        ? context.l10n.subscriptionYourFreeTrialLastsValueDays(
+            (SubscriptionPlans.trialDays).toString(),
+          )
+        : context.l10n.subscriptionYourFreeTrialRunsUntilValue(
+            (formatPremiumDateTime(expiresAt!)).toString(),
+          );
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         24,
@@ -2007,14 +2013,16 @@ class _TrialSuccessView extends StatelessWidget {
                 liveRegion: true,
                 header: true,
                 child: Text(
-                  'Premium ist aktiv',
+                  context.l10n.subscriptionPremiumIsActive,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                '$until Sie endet automatisch – ohne Kosten und ohne Abo.',
+                context.l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
+                  (until).toString(),
+                ),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppColors.textMuted,
@@ -2032,10 +2040,10 @@ class _TrialSuccessView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    for (final (i, label) in const [
-                      'KI-Foto-Erkennung',
+                    for (final (i, label) in [
+                      context.l10n.subscriptionAiPhotoRecognition,
                       'Lookin Coach',
-                      'Alle Rezepte',
+                      context.l10n.subscriptionAllRecipes,
                     ].indexed) ...[
                       if (i > 0) const SizedBox(height: 12),
                       Row(
@@ -2048,7 +2056,9 @@ class _TrialSuccessView extends StatelessWidget {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              '$label freigeschaltet',
+                              context.l10n.subscriptionValueUnlocked(
+                                (label).toString(),
+                              ),
                               style: const TextStyle(
                                 color: AppColors.text,
                                 fontWeight: FontWeight.w700,
@@ -2068,7 +2078,7 @@ class _TrialSuccessView extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
                 ),
-                child: const Text('Los geht’s'),
+                child: Text(context.l10n.subscriptionLetSGo),
               ),
             ],
           ),

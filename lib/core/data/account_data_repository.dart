@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -37,13 +38,13 @@ class AccountDataRepository {
 
   String _requireUserId() {
     final id = _client.auth.currentUser?.id;
-    if (id == null) throw StateError('Bitte melde dich zuerst an.');
+    if (id == null) throw StateError(L10n.current.corePleaseSignInFirst);
     return id;
   }
 
   void _checkAccount(String expectedId) {
     if (_client.auth.currentUser?.id != expectedId) {
-      throw StateError('Das angemeldete Konto hat sich ge\u00E4ndert.');
+      throw StateError(L10n.current.coreTheSignedInAccountHasChanged);
     }
   }
 
@@ -52,7 +53,7 @@ class AccountDataRepository {
     if (response.data case final Map data) {
       return Map<String, dynamic>.from(data);
     }
-    throw StateError('Die Antwort des Servers ist ung\u00FCltig.');
+    throw StateError(L10n.current.coreTheServerResponseIsInvalid);
   }
 
   Future<Uint8List> exportCurrentAccount() async {
@@ -71,13 +72,13 @@ class AccountDataRepository {
         _checkAccount(userId);
         final batch = data['rows'];
         if (batch is! List) {
-          throw StateError('Der Datenexport ist unvollst\u00E4ndig.');
+          throw StateError(L10n.current.coreTheDataExportIsIncomplete);
         }
         rows.addAll(batch);
         final next = data['next_page'];
         if (next == null) break;
         if (next is! int || next != page + 1) {
-          throw StateError('Der Datenexport ist unvollst\u00E4ndig.');
+          throw StateError(L10n.current.coreTheDataExportIsIncomplete);
         }
         page = next;
       }
@@ -116,14 +117,16 @@ class AccountDataRepository {
 
   Future<void> deleteCurrentAccount(String password) async {
     final userId = _requireUserId();
-    if (password.isEmpty) throw ArgumentError('Bitte Passwort eingeben.');
+    if (password.isEmpty) {
+      throw ArgumentError(L10n.current.corePleaseEnterYourPassword);
+    }
     final data = await _invoke({
       'action': 'delete',
       'confirmation': 'DELETE',
       'password': password,
     });
     if (data['deleted'] != true) {
-      throw StateError('Das Konto konnte nicht gel\u00F6scht werden.');
+      throw StateError(L10n.current.coreYourAccountCouldNotBeDeleted);
     }
     // The server has already removed the account. Remove per-account device
     // data before discarding the local session.
@@ -135,9 +138,7 @@ class AccountDataRepository {
     }
     await _client.auth.signOut(scope: SignOutScope.local);
     if (cleanupError != null) {
-      throw StateError(
-        'Das Konto wurde gel\u00F6scht, aber lokale Daten konnten nicht vollst\u00E4ndig entfernt werden.',
-      );
+      throw StateError(L10n.current.coreYourAccountWasDeletedButSomeLocal);
     }
   }
 

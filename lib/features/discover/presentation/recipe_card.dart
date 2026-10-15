@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -114,7 +115,8 @@ class RecipeArtwork extends StatelessWidget {
         : tags.contains('High Protein')
         ? AppColors.primary
         : AppColors.orange;
-    final icon = tags.contains('Frühstück')
+    final icon =
+        tags.contains('Frühstück') // l10n-ignore: canonical tag comparison
         ? Icons.egg_alt_rounded
         : tags.contains('Snack')
         ? Icons.cookie_outlined
@@ -223,7 +225,9 @@ class _FavoriteButton extends StatelessWidget {
     final reduceMotion =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     return IconButton.filled(
-      tooltip: favorite ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen',
+      tooltip: favorite
+          ? context.l10n.discoverRemoveFromFavourites
+          : context.l10n.discoverAddToFavourites,
       onPressed: onPressed,
       style: IconButton.styleFrom(
         minimumSize: const Size(44, 44),
@@ -375,7 +379,7 @@ class RecipeCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      recipe.title,
+                      recipe.displayTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -399,11 +403,13 @@ class RecipeCard extends StatelessWidget {
                         RecipeMeta(
                           icon: Icons.egg_alt_rounded,
                           color: AppColors.mint,
-                          text: '${recipe.protein} g Protein',
+                          text: context.l10n.discoverValueGProtein(
+                            (recipe.protein).toString(),
+                          ),
                         ),
                         RecipeMeta(
                           icon: difficultyIcon(recipe.difficulty),
-                          text: recipe.difficulty,
+                          text: recipe.displayDifficulty,
                           textColor: AppColors.textMuted,
                         ),
                       ],
@@ -474,7 +480,7 @@ class RecipeListCard extends StatelessWidget {
                       const SizedBox(height: 6),
                     ],
                     Text(
-                      recipe.title,
+                      recipe.displayTitle,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -502,11 +508,13 @@ class RecipeListCard extends StatelessWidget {
                         RecipeMeta(
                           icon: Icons.egg_alt_rounded,
                           color: AppColors.mint,
-                          text: '${recipe.protein} g Protein',
+                          text: context.l10n.discoverValueGProtein(
+                            (recipe.protein).toString(),
+                          ),
                         ),
                         RecipeMeta(
                           icon: difficultyIcon(recipe.difficulty),
-                          text: recipe.difficulty,
+                          text: recipe.displayDifficulty,
                           textColor: AppColors.textMuted,
                         ),
                       ],

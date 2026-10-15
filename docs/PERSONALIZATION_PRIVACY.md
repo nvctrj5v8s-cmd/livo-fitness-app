@@ -5,6 +5,14 @@ Datenschutzerklärung oder juristische Freigabe.
 
 ## Neu seit 14. Oktober 2026: Kopie der Antworten im Konto
 
+Seit 15. Oktober 2026 enthält die Einwilligungs-Textversion zusätzlich die
+angezeigte Sprache (`2026-10-14:de` oder `2026-10-14:en`). Inhaltliche Grundlage
+bleibt die Fassung vom 14. Oktober. Die Sprachwahl liegt geräteweit unter
+`lookin.locale.v1` (`system`/`de`/`en`). Die aufgelöste Sprache wird im angemeldeten
+Konto unter `user_metadata.locale` für E-Mails gespeichert; sie enthält keine
+Gesundheitsangaben. Die Einführung und die Fragen funktionieren in beiden
+Sprachen bereits vor der Anmeldung.
+
 - **Warum:** Die Antworten lagen nur auf dem Gerät. Neues Handy, Neuinstallation,
   anderer Browser oder ein anderer Adressraum (Umzug auf
   `app.lookin-foodtracker.de`) fragten alles noch einmal.

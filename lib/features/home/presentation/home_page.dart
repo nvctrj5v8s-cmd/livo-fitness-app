@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -121,20 +122,22 @@ class _DiaryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    const weekdays = [
-      'Montag',
-      'Dienstag',
-      'Mittwoch',
-      'Donnerstag',
-      'Freitag',
-      'Samstag',
-      'Sonntag',
+    final weekdays = [
+      context.l10n.homeMonday,
+      context.l10n.homeTuesday,
+      context.l10n.homeWednesday,
+      context.l10n.homeThursday,
+      context.l10n.homeFriday,
+      context.l10n.homeSaturday,
+      context.l10n.homeSunday,
     ];
     final greeting = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${weekdays[now.weekday - 1]}, ${now.day}.${now.month}.',
+          L10n.isEnglish
+              ? '${weekdays[now.weekday - 1]}, ${AppFormat.dayMonth(now)}'
+              : '${weekdays[now.weekday - 1]}, ${now.day}.${now.month}.',
           style: const TextStyle(
             color: AppColors.textMuted,
             fontSize: 12,
@@ -143,7 +146,7 @@ class _DiaryHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Hallo, $name',
+          context.l10n.homeHelloValue((name).toString()),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headlineLarge,
@@ -158,7 +161,7 @@ class _DiaryHeader extends StatelessWidget {
         IconButton(
           key: const ValueKey('reminder-button'),
           onPressed: onNotifications,
-          tooltip: 'Erinnerungen',
+          tooltip: context.l10n.homeReminders,
           style: IconButton.styleFrom(
             minimumSize: const Size(46, 46),
             backgroundColor: AppColors.surface,
@@ -220,7 +223,9 @@ class _StreakPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: loading ? 'Serie wird geladen' : '$days Tage Tracking-Serie',
+    label: loading
+        ? context.l10n.homeLoadingStreak
+        : context.l10n.homeValueDayTrackingStreak((days).toString()),
     child: Container(
       height: 46,
       padding: const EdgeInsets.symmetric(horizontal: 11),
@@ -342,7 +347,7 @@ class _CalorieRing extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$consumed kcal gegessen',
+                  context.l10n.homeValueKcalEaten((consumed).toString()),
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
@@ -351,8 +356,12 @@ class _CalorieRing extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   remaining >= 0
-                      ? '$remaining kcal übrig'
-                      : '${remaining.abs()} kcal über deinem Ziel',
+                      ? context.l10n.homeValueKcalRemaining(
+                          (remaining).toString(),
+                        )
+                      : context.l10n.homeValueKcalAboveYourTarget(
+                          (remaining.abs()).toString(),
+                        ),
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontSize: 12,
@@ -386,15 +395,17 @@ class _CalorieRing extends StatelessWidget {
                     letterSpacing: -1,
                   ),
                 ),
-                const Text(
-                  'kcal gegessen',
+                Text(
+                  context.l10n.homeKcalEaten,
                   style: TextStyle(color: AppColors.textMuted, fontSize: 11),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   remaining >= 0
-                      ? '$remaining übrig'
-                      : '${remaining.abs()} darüber',
+                      ? context.l10n.homeValueRemaining((remaining).toString())
+                      : context.l10n.homeValueAbove(
+                          (remaining.abs()).toString(),
+                        ),
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontSize: 11,
@@ -459,12 +470,14 @@ class _MacroSummary extends StatelessWidget {
         runSpacing: 3,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          const Text(
-            'Dein Tag',
+          Text(
+            context.l10n.homeYourDay,
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           Text(
-            '${controller.calorieGoal} kcal Ziel',
+            context.l10n.homeValueKcalTarget(
+              (controller.calorieGoal).toString(),
+            ),
             style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
         ],
@@ -479,7 +492,7 @@ class _MacroSummary extends StatelessWidget {
       ),
       const SizedBox(height: 13),
       _MacroBar(
-        label: 'Kohlenhydrate',
+        label: context.l10n.homeCarbohydrates,
         value: controller.consumedCarbs,
         goal: controller.diaryCarbohydrateGoal,
         color: AppColors.mint,
@@ -487,7 +500,7 @@ class _MacroSummary extends StatelessWidget {
       ),
       const SizedBox(height: 13),
       _MacroBar(
-        label: 'Fett',
+        label: context.l10n.homeFat,
         value: controller.consumedFat,
         goal: controller.diaryFatGoal,
         color: AppColors.orange,
@@ -558,11 +571,11 @@ class _MacroBar extends StatelessWidget {
 class _MealHeading extends StatelessWidget {
   const _MealHeading();
   @override
-  Widget build(BuildContext context) => const Column(
+  Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
-        'Deine Mahlzeiten',
+        context.l10n.homeYourMeals,
         style: TextStyle(
           fontSize: 21,
           fontWeight: FontWeight.w800,
@@ -571,7 +584,7 @@ class _MealHeading extends StatelessWidget {
       ),
       SizedBox(height: 5),
       Text(
-        'Tippe auf eine Mahlzeit, um Essen einzutragen.',
+        context.l10n.homeTapAMealToLogFood,
         style: TextStyle(color: AppColors.textMuted, fontSize: 12),
       ),
     ],
@@ -662,8 +675,11 @@ class _MealSection extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             entries.isEmpty
-                                ? 'Noch nichts eingetragen'
-                                : '${entries.length} ${entries.length == 1 ? 'Eintrag' : 'Einträge'} · $calories kcal',
+                                ? context.l10n.homeNothingLoggedYet
+                                : context.l10n.homeMealEntries(
+                                    entries.length,
+                                    AppFormat.integer(calories),
+                                  ),
                             style: const TextStyle(
                               color: AppColors.textMuted,
                               fontSize: 11,
@@ -674,7 +690,7 @@ class _MealSection extends StatelessWidget {
                     ),
                     IconButton.filledTonal(
                       key: ValueKey('add-${slot.name}'),
-                      tooltip: '$title hinzufügen',
+                      tooltip: context.l10n.homeAddValue(title),
                       onPressed: onAdd,
                       style: IconButton.styleFrom(
                         backgroundColor: color.withValues(alpha: 0.11),
@@ -755,13 +771,17 @@ class _TrackedMealRow extends StatelessWidget {
           ),
         ),
         title: Text(
-          entry.name,
+          entry.displayName,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
         ),
         subtitle: Text(
-          '${entry.protein} P · ${entry.carbs} K · ${entry.fat} F',
+          context.l10n.homeValuePValueCValueF(
+            (entry.protein).toString(),
+            (entry.carbs).toString(),
+            (entry.fat).toString(),
+          ),
           style: const TextStyle(fontSize: 10),
         ),
         trailing: Row(

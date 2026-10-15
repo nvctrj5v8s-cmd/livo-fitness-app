@@ -1,0 +1,2 @@
+"NSCameraUsageDescription" = "Lookin needs camera access to scan food barcodes and capture meals.";
+"NSPhotoLibraryUsageDescription" = "Lookin needs access to selected food photos for AI analysis.";

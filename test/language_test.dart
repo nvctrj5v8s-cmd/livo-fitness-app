@@ -36,23 +36,22 @@ void main() {
     expect(chosen, L10n.english);
   });
 
-  testWidgets('erster Start: Sprachseite, danach die App in der Sprache', (
+  testWidgets('erster Start verwendet sofort die Handysprache ohne Auswahl', (
     tester,
   ) async {
     final store = MemoryLocaleStore();
     final locales = LocaleController(store: store, device: const Locale('fr'));
+    addTearDown(locales.dispose);
     await locales.load();
     await tester.pumpWidget(
       FitnessAiApp(useAuth: false, localeController: locales),
     );
     await tester.pumpAndSettle();
-    // Not German on the device: English is suggested.
-    expect(find.text('Continue in English'), findsOneWidget);
-
-    await tester.tap(find.byKey(const Key('language-continue')));
-    await tester.pumpAndSettle();
-    expect(store.code, 'en');
-    expect(locales.hasChoice, isTrue);
+    expect(find.text('Hello, Alex'), findsOneWidget);
+    expect(find.text('Your day'), findsOneWidget);
+    expect(find.text('Breakfast'), findsOneWidget);
+    expect(store.code, isNull);
+    expect(locales.followsDevice, isTrue);
     expect(find.byType(LanguagePage), findsNothing);
     final context = tester.element(find.byType(Scaffold).first);
     expect(context.l10n.commonSave, 'Save');
@@ -64,6 +63,7 @@ void main() {
     tester,
   ) async {
     final locales = LocaleController(store: MemoryLocaleStore('de'));
+    addTearDown(locales.dispose);
     await locales.load();
     await tester.pumpWidget(
       FitnessAiApp(useAuth: false, localeController: locales),
@@ -76,6 +76,7 @@ void main() {
 
   testWidgets('Sprache im Profil-Blatt wechseln', (tester) async {
     final locales = LocaleController(store: MemoryLocaleStore('de'));
+    addTearDown(locales.dispose);
     await locales.load();
     await tester.pumpWidget(
       LocaleScope(

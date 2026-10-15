@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -13,18 +14,22 @@ Future<bool> confirmDeleteDiaryEntry(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: const Text('Eintrag löschen?'),
-      content: Text('„${entry.name}“ wird aus deinem Tagebuch entfernt.'),
+      title: Text(context.l10n.diaryDeleteEntry),
+      content: Text(
+        context.l10n.diaryValueWillBeRemovedFromYourDiary(
+          (entry.displayName).toString(),
+        ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text('Abbrechen'),
+          child: Text(context.l10n.diaryCancel),
         ),
         FilledButton(
           key: const Key('delete-entry-confirm'),
           onPressed: () => Navigator.pop(dialogContext, true),
           style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-          child: const Text('Löschen'),
+          child: Text(context.l10n.diaryDelete),
         ),
       ],
     ),
@@ -49,7 +54,7 @@ class DeleteEntryButton extends StatelessWidget {
         minimumSize: const Size(48, 48),
       ),
       icon: const Icon(Icons.delete_outline_rounded),
-      label: const Text('Eintrag löschen'),
+      label: Text(context.l10n.diaryDeleteEntry2),
     ),
   );
 }

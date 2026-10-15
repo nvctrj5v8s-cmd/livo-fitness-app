@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../domain/allergy_safety.dart';
@@ -18,7 +20,7 @@ class AllergyProfileField extends StatelessWidget {
     final selected = AllergySafety.selectedIds(value);
     final labels = [
       for (final option in AllergySafety.allergens)
-        if (selected.contains(option.id)) option.label,
+        if (selected.contains(option.id)) DisplayText.of(option.label),
       ...AllergySafety.otherEntries(value),
     ];
     return Column(
@@ -29,21 +31,25 @@ class AllergyProfileField extends StatelessWidget {
           alignment: WrapAlignment.spaceBetween,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            const Text(
-              'Allergien & Unvertr\u00E4glichkeiten',
+            Text(
+              context.l10n.allergiesAllergiesIntolerances,
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             TextButton.icon(
               key: const Key('edit-allergies'),
               onPressed: enabled ? () => _openEditor(context) : null,
               icon: const Icon(Icons.tune_rounded, size: 17),
-              label: Text(labels.isEmpty ? 'Ausw\u00E4hlen' : '\u00C4ndern'),
+              label: Text(
+                labels.isEmpty
+                    ? context.l10n.allergiesSelect
+                    : context.l10n.allergiesChange,
+              ),
             ),
           ],
         ),
         if (labels.isEmpty)
-          const Text(
-            'Keine angegeben',
+          Text(
+            context.l10n.allergiesNoneSpecified,
             style: TextStyle(color: AppColors.textMuted, fontSize: 13),
           )
         else
@@ -80,18 +86,21 @@ class AllergySafetyNotice extends StatelessWidget {
     if (!assessment.hasProfile) return const SizedBox.shrink();
     final conflict = assessment.hasConflict;
     final unknown = assessment.dataUnknown;
-    final conflictNames = assessment.conflicts.join(', ');
+    final conflictNames = assessment.conflicts.map(DisplayText.of).join(', ');
     final color = conflict ? AppColors.error : AppColors.orange;
     final title = conflict
-        ? 'M\u00F6glicher Allergenkonflikt'
+        ? context.l10n.allergiesPossibleAllergenConflict
         : unknown
-        ? 'Allergieangaben fehlen'
-        : 'Bitte Zutatenliste pr\u00FCfen';
+        ? context.l10n.allergiesAllergyInformationMissing
+        : context.l10n.allergiesPleaseCheckTheIngredientsList;
     final details = conflict
-        ? 'Die verf\u00FCgbaren Produkt-/Zutatenangaben nennen: $conflictNames.'
+        ? context.l10n
+              .allergiesTheAvailableProductOrIngredientInformationMentions(
+                (conflictNames).toString(),
+              )
         : unknown
-        ? 'Zu diesem Eintrag liegen keine verl\u00E4sslichen Allergen- oder Zutatenangaben vor.'
-        : 'In den vorhandenen Angaben wurde kein gew\u00E4hlter Ausl\u00F6ser erkannt. Das ist keine Sicherheitsgarantie.';
+        ? context.l10n.allergiesNoReliableAllergenOrIngredientInformationIs
+        : context.l10n.allergiesNoneOfYourSelectedTriggersWereRecognised;
     return Container(
       key: const Key('allergy-safety-notice'),
       padding: const EdgeInsets.all(13),
@@ -119,7 +128,9 @@ class AllergySafetyNotice extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '$details Pr\u00FCfe bei Allergien immer die aktuelle Verpackung und m\u00F6gliche Kreuzkontamination.',
+                  context.l10n.allergiesValueIfYouHaveAllergiesAlwaysCheck(
+                    (details).toString(),
+                  ),
                   style: const TextStyle(
                     color: AppColors.text,
                     fontSize: 12,
@@ -166,36 +177,39 @@ class _AllergyEditorState extends State<_AllergyEditor> {
     heightFactor: .88,
     child: Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 12, 10),
-          child: Row(
-            children: [
-              const Expanded(
-                child: Text(
-                  'Was soll die App beachten?',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
-                ),
-              ),
-              IconButton(
-                tooltip: 'Schlie\u00DFen',
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close_rounded),
-              ),
-            ],
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'W\u00E4hle bekannte Allergene aus. Laktose ist separat als Unvertr\u00E4glichkeit aufgef\u00FChrt.',
-            style: TextStyle(color: AppColors.textMuted, fontSize: 13),
-          ),
-        ),
-        const SizedBox(height: 12),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(20, 4, 20, 14),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 14),
             children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      context.l10n.allergiesWhatShouldTheAppTakeIntoAccount,
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: context.l10n.allergiesClose,
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                context
+                    .l10n
+                    .allergiesSelectKnownAllergensLactoseIsListedSeparately,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -203,7 +217,7 @@ class _AllergyEditorState extends State<_AllergyEditor> {
                   for (final option in AllergySafety.allergens)
                     FilterChip(
                       key: ValueKey(option.id),
-                      label: Text(option.label),
+                      label: Text(DisplayText.of(option.label)),
                       selected: _selected.contains(option.id),
                       showCheckmark: true,
                       onSelected: (selected) => setState(() {
@@ -221,16 +235,17 @@ class _AllergyEditorState extends State<_AllergyEditor> {
                 key: const Key('other-allergies'),
                 controller: _other,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Weitere Allergien / Unvertr\u00E4glichkeiten',
-                  hintText: 'z. B. Kokos, Histamin',
-                  helperText: 'Mehrere Angaben mit Komma trennen.',
+                decoration: InputDecoration(
+                  labelText: context.l10n.allergiesOtherAllergiesIntolerances,
+                  hintText: context.l10n.allergiesEGCoconutHistamine,
+                  helperText:
+                      context.l10n.allergiesSeparateMultipleEntriesWithCommas,
                   prefixIcon: Icon(Icons.edit_note_rounded),
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Produktangaben k\u00F6nnen fehlen oder veraltet sein. Pr\u00FCfe bei einer Allergie immer die aktuelle Verpackung und m\u00F6gliche Kreuzkontamination.',
+              Text(
+                context.l10n.allergiesProductInformationMayBeMissingOrOutdated,
                 style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
@@ -238,11 +253,8 @@ class _AllergyEditorState extends State<_AllergyEditor> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Freiwillige Gesundheitsangabe: Sie wird in deinem Konto '
-                'gespeichert und dem Lookin Coach als Kontext mitgegeben, damit er '
-                'nichts Unpassendes vorschl\u00E4gt. Du kannst sie hier jederzeit '
-                '\u00E4ndern oder leeren.',
+              Text(
+                context.l10n.allergiesOptionalHealthInformationItIsSavedIn,
                 key: Key('allergy-privacy-note'),
                 style: TextStyle(
                   color: AppColors.textMuted,
@@ -263,7 +275,7 @@ class _AllergyEditorState extends State<_AllergyEditor> {
                 context,
                 AllergySafety.encode(_selected, _other.text),
               ),
-              child: const Text('Auswahl speichern'),
+              child: Text(context.l10n.allergiesSaveSelection),
             ),
           ),
         ),

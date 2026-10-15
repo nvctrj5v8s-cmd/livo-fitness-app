@@ -1,0 +1,231 @@
+{
+  "profileChooseAnImageNoLargerThan8": "Wähle ein Bild mit höchstens 8 MB.",
+  "profilePleaseChooseAJpgOrPngImage": "Wähle bitte ein JPG- oder PNG-Bild.",
+  "profileThisImageCouldNotBeOpened": "Dieses Bild konnte nicht geöffnet werden.",
+  "profileTheImageIsVeryLargeChooseA": "Das Bild ist sehr groß. Wähle ein Foto mit höchstens 24 Megapixeln.",
+  "profileSelectTheCropAgain": "Wähle den Bildausschnitt erneut.",
+  "profilePleaseChooseTheImageAgain": "Wähle das Bild bitte erneut aus.",
+  "profileTheImageCouldNotBeResized": "Das Bild konnte nicht verkleinert werden.",
+  "profileSavingCancelled": "Speichern abgebrochen.",
+  "profileYourDataHasBeenSavedAsA": "Deine Daten wurden als JSON-Datei gespeichert.",
+  "profileExportFailedPleaseCheckYourConnectionAnd": "Der Export hat nicht geklappt. Bitte prüfe deine Verbindung und versuche es erneut.",
+  "profileYourPasswordIsIncorrectYourAccountWas": "Das Passwort stimmt nicht. Dein Konto wurde nicht gelöscht.",
+  "profileYourAccountCouldNotBeDeletedPlease": "Das Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
+  "profileYourAccountCouldNotBeCompletelyDeleted": "Das Konto konnte nicht vollständig gelöscht werden. Bitte prüfe, ob du noch angemeldet bist.",
+  "profileExportMyData": "Meine Daten exportieren",
+  "profileTheExportAlsoContainsHealthAndChat": "Der Export enthält auch Gesundheits- und Chatdaten. Bewahre die Datei sicher auf.",
+  "profileDeleteAccountAndAccountData": "Konto und Kontodaten löschen",
+  "profilePermanentlyDeleteAccount": "Konto endgültig löschen?",
+  "profileYourAccountValueAndItsAssociatedData": "Dein Konto{arg0} und die dazugehörigen Daten werden gelöscht. Das kann nicht rückgängig gemacht werden. Ein späteres Store-Abo müsstest du separat im Store kündigen.",
+  "@profileYourAccountValueAndItsAssociatedData": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileYourPremiumSubscriptionWillContinue": "Dein Premium-Abo läuft weiter!",
+  "profileDeletingYourAccountDoesNotCancelYour": "Das Löschen des Kontos kündigt dein Abo nicht. Der Store bucht weiter ab, bis du es dort kündigst. Kündige zuerst, dann lösche das Konto.",
+  "profileOpenStoreSubscriptions": "Abos im Store öffnen",
+  "profilePasswordToConfirm": "Passwort zur Bestätigung",
+  "profileShowPassword": "Passwort anzeigen",
+  "profileHidePassword": "Passwort verbergen",
+  "profileCancel": "Abbrechen",
+  "profileDeleteAccount": "Konto löschen",
+  "profileImages": "Bilder",
+  "profileTheImageCouldNotBeOpenedTry": "Das Bild ließ sich nicht öffnen. Versuche es mit einem anderen JPG oder PNG.",
+  "profileYourProfilePictureWasNotSavedPlease": "Das Profilbild wurde nicht gespeichert. Versuche es erneut.",
+  "profileYourProfilePictureWasNotSavedYour": "Das Profilbild wurde nicht gespeichert. Dein bisheriges Bild bleibt erhalten.",
+  "profileYourProfilePictureCouldNotBeRemoved": "Das Profilbild konnte nicht entfernt werden.",
+  "profileYourProfilePictureCouldNotBeRemoved2": "Das Profilbild konnte nicht entfernt werden. Versuche es erneut.",
+  "profileYourProfilePicture": "Dein Profilbild",
+  "profileALittlePieceOfYou": "Ein kleines Stück von dir.",
+  "profileClose": "Schließen",
+  "profileCropYourImageDragItOrUse": "Bildausschnitt. Ziehe das Bild oder nutze die Regler.",
+  "profileMoveTheImageToChooseYourCrop": "Verschiebe das Bild für deinen Ausschnitt.",
+  "profileValueZoom": "{arg0}-fache Vergrößerung",
+  "@profileValueZoom": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileFineTuneTheCrop": "Ausschnitt fein einstellen",
+  "profileLeftRight": "Links – rechts",
+  "profileUpDown": "Oben – unten",
+  "profileOneMoment": "Einen Moment …",
+  "profileChooseImage": "Bild auswählen",
+  "profileChooseAnotherImage": "Anderes Bild auswählen",
+  "profileSaveProfilePicture": "Profilbild speichern",
+  "profileRemoveProfilePicture": "Profilbild entfernen",
+  "profileJpgOrPngUpTo8Mb": "JPG oder PNG · bis 8 MB\nDein Profilbild ist nur für dein Konto sichtbar.",
+  "profileValueValuePerCent": "{arg0}: {arg1} Prozent",
+  "@profileValueValuePerCent": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "profileMyDailyTargets": "Meine täglichen Ziele",
+  "profileNutritionProfile": "Ernährungsprofil",
+  "profileAppPrivacy": "App & Datenschutz",
+  "profileProfile": "Profil",
+  "profileEditProfile": "Profil bearbeiten",
+  "profileNoGoalSelectedYet": "Noch kein Ziel gewählt",
+  "profileChangeProfilePicture": "Profilbild ändern",
+  "profileEntryToday": "Eintrag heute",
+  "profileEntriesToday": "Einträge heute",
+  "profileDayStreak": "Tag Serie",
+  "profileDayStreak2": "Tage Serie",
+  "profileKcalToday": "kcal heute",
+  "profileWeCalculateTheseGuidelineValuesFromYour": "Diese Richtwerte berechnen wir aus deinem Alter, deiner Größe, deinem Gewicht und deinem Alltag. Sie dienen zur Orientierung und ersetzen keine ärztliche Beratung.",
+  "profileWeCalculateYourDailyTargetsFromYour": "Deine Tagesziele berechnen wir aus deinem Alter, deiner Größe, deinem Gewicht und deinem Alltag. Wenn du möchtest, beantworte dazu ein paar kurze Fragen. Du kannst Lookin aber auch ganz ohne Ziele nutzen.",
+  "profileLookinDoesNotCalculateCalorieTargetsFor": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen Arzt oder eine Ernährungsfachkraft.",
+  "profileBecauseYouIndicatedThatYourNutritionNeeds": "Weil du angegeben hast, dass deine Ernährung gerade besondere Aufmerksamkeit braucht, berechnet Lookin keine Kalorienziele. Besprich deine Ziele bitte mit deiner Ärztin, deinem Arzt oder einer Ernährungsfachkraft. Tagebuch und Rezepte kannst du trotzdem nutzen.",
+  "profileCalories": "Kalorien",
+  "profileFat": "Fett",
+  "profileChangeInformation": "Angaben ändern",
+  "profileAnswerQuestions": "Fragen beantworten",
+  "profileNutritionStyle": "Ernährungsstil",
+  "profileRemaining": "Noch offen",
+  "profileAllergies": "Allergien",
+  "profileActivity": "Aktivität",
+  "profileMeals": "Mahlzeiten",
+  "profileFlexible": "Flexibel",
+  "profileValuePerDay": "{arg0} pro Tag",
+  "@profileValuePerDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileDeveloperPremium": "Entwickler: Premium",
+  "profileOnlyVisibleToYourDeveloperAccount": "Nur für dein Entwickler-Konto sichtbar",
+  "profilePremiumCouldNotBeSwitchedJustNow": "Premium konnte gerade nicht umgeschaltet werden.",
+  "profileWithdrawFromContract": "Vertrag widerrufen",
+  "profileWithin14DaysOfPurchaseWithoutGiving": "Innerhalb von 14 Tagen nach dem Kauf, ohne Grund",
+  "profileReminders": "Erinnerungen",
+  "profileComingSoon": "Bald verfügbar",
+  "profilePrivacyData": "Datenschutz & Daten",
+  "profileExportDeleteConsents": "Exportieren, löschen, Einwilligungen",
+  "profileHelpSafety": "Hilfe & Sicherheit",
+  "profileInformationAndContact": "Hinweise und Kontakt",
+  "profileImprintLegal": "Impressum & Rechtliches",
+  "profileImprintTermsPrivacyWithdrawal": "Impressum, AGB, Datenschutz, Widerruf",
+  "profileStartFromTheBeginning": "Von vorne zeigen",
+  "profileIntroductionQuestionsAndPremiumAsOnThe": "Einführung, Fragen und Premium wie beim ersten Start",
+  "profileSignOut": "Abmelden",
+  "profileLeaveThisAccountOnThisDevice": "Dieses Konto auf dem Gerät verlassen",
+  "profileSignOut2": "Abmelden?",
+  "profileYourSavedAccountDataWillBeKept": "Deine gespeicherten Kontodaten bleiben erhalten. Du kannst dich später wieder anmelden.",
+  "profileSignOutFailedPleaseTryAgain": "Abmelden fehlgeschlagen. Bitte versuche es erneut.",
+  "profileTrialActive": "Testphase aktiv",
+  "profileTrialActiveUntilValue": "Testphase aktiv bis {arg0}",
+  "@profileTrialActiveUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profilePremiumActive": "Premium aktiv",
+  "profileValueDayFreeTrial": "{arg0} Tage kostenlos testen",
+  "@profileValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileViewPlansAndBenefits": "Pläne und Vorteile ansehen",
+  "profileChangeYourPreferredNameAndPersonalPreferences": "Rufname und persönliche Wünsche änderst du im Profil unter „Antworten ändern“. Die folgenden Zahlen sind deine separat eingestellten Ziele.",
+  "profileMyGoal": "Mein Ziel",
+  "profileLoseFat": "Fett verlieren",
+  "profileMaintainWeight": "Gewicht halten",
+  "profileBuildMuscle": "Muskeln aufbauen",
+  "profileYourCalorieTargetIsCalculatedFromYour": "Dein Kalorienziel wird aus deinen Angaben berechnet.",
+  "profileCalorieTargetValueKcal": "Kalorienziel: {arg0} kcal",
+  "@profileCalorieTargetValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTargetWeightValueKg": "Zielgewicht: {arg0} kg",
+  "@profileTargetWeightValueKg": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileApplyChanges": "Änderungen übernehmen",
+  "profileDemoChangesLastUntilTheAppRestarts": "Demo: Änderungen bleiben bis zum Neustart erhalten.",
+  "profileImprint": "Impressum",
+  "profileTerms": "AGB",
+  "profilePrivacyPolicy": "Datenschutzerklärung",
+  "profileWithdrawalInformation": "Widerrufsbelehrung",
+  "profileOpensInBrowser": "Öffnet sich im Browser",
+  "profileForLookinPremiumWithoutGivingAReason": "Für Lookin Premium, ohne Angabe von Gründen",
+  "profileMealWaterAndWeeklyReviewRemindersWill": "Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.",
+  "profileYourSavedProfileInformation": "Deine gespeicherten Profilangaben",
+  "profileChangeNutritionStyleAndActivityUnderChange": "Ernährungsweise und Aktivität änderst du unter „Antworten ändern“.",
+  "profileBalanced": "Ausgewogen",
+  "profileVegetarian": "Vegetarisch",
+  "profileActivityLevel": "Aktivitätsniveau",
+  "profileLowActivity": "Wenig aktiv",
+  "profileModeratelyActive": "Moderat aktiv",
+  "profileVeryActive": "Sehr aktiv",
+  "profileSaveNutritionProfile": "Ernährungsprofil speichern",
+  "profileTransparentAndUnderYourControl": "Transparent und unter deiner Kontrolle",
+  "profileProfileTargets": "Profil & Ziele",
+  "profileInAccount": "IM KONTO",
+  "profileMealsNutrition": "Mahlzeiten & Nährwerte",
+  "profileAiPhotoAiChat": "KI-Foto & KI-Chat",
+  "profileAiService": "KI-DIENST",
+  "profileProfilePictureReminders": "Profilbild & Erinnerungen",
+  "profileDeviceOnly": "NUR GERÄT",
+  "profileLocalDataOverview": "Lokale Datenübersicht",
+  "profileNameValueGoalValueMealsValueWeight": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nGewicht: {arg3} kg\nFavoriten: {arg4}",
+  "@profileNameValueGoalValueMealsValueWeight": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      },
+      "arg4": {
+        "type": "String"
+      }
+    }
+  },
+  "profileViewLocalData": "Lokale Daten ansehen",
+  "profileDeleteLocalDemoData": "Lokale Demodaten löschen",
+  "profileLegal": "Rechtliches",
+  "profileYourProfileTargetsAndDiaryAreSaved": "Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.",
+  "profileDeleteDemoData": "Demodaten löschen?",
+  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.",
+  "profileSavedListsAndYourWaterTotalAre": "Gespeicherte Listen und dein Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.",
+  "profileDelete": "Löschen",
+  "profileHealthAlwaysComesBeforeTracking": "Gesundheit geht immer vor Tracking",
+  "profileNotMedicalAdvice": "Keine medizinische Beratung",
+  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
+  "profileEatingDisorderOrAcuteSymptoms": "Essstörung oder akute Beschwerden",
+  "profileDoNotFollowDietOrCalorieTargets": "Nutze keine Diät- oder Kalorienziele auf eigene Faust. Hole dir persönliche Hilfe bei medizinischem oder psychotherapeutischem Fachpersonal. Bei einem akuten Notfall wende dich an den örtlichen Notruf.",
+  "profileNumbersAreAGuide": "Zahlen sind Orientierung",
+  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nährwerte und Ziele sind Schätzungen. Achte zusätzlich auf Energie, Wohlbefinden, Schlaf und ein entspanntes Verhältnis zum Essen."
+}

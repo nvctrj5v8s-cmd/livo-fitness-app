@@ -1,4 +1,6 @@
 import '../../l10n/l10n.dart';
+import '../../l10n/catalog_text.dart';
+import '../../l10n/display_text.dart';
 import 'custom_food.dart';
 
 enum MealSlot { breakfast, lunch, dinner, snack }
@@ -42,6 +44,16 @@ class MealEntry {
 
   final String id;
   final String name;
+  String get displayName => foodId != null
+      ? CatalogText.foodName(foodId!, name)
+      : recipeId != null ||
+            const {
+              'breakfast-oats',
+              'lunch-salmon',
+              'snack-yogurt',
+            }.contains(id)
+      ? CatalogText.of(name)
+      : name;
   final MealSlot slot;
   final int calories;
   final int protein;
@@ -119,6 +131,7 @@ class FoodItem {
 
   final String id;
   final String name;
+  String get displayName => CatalogText.foodName(id, name);
   final double servingGrams;
   final double calories;
   final double protein;
@@ -206,6 +219,11 @@ class Recipe {
   final String slug;
   final String title;
   final String subtitle;
+  String get displayTitle => CatalogText.of(title);
+  String get displaySubtitle => CatalogText.of(subtitle);
+  String get displayDifficulty => DisplayText.of(difficulty);
+  List<String> get displayTags => tags.map(DisplayText.of).toList();
+  List<String> get displayEquipment => CatalogText.list(equipment);
 
   /// Total time in minutes, including cooking and resting.
   final int minutes;
@@ -322,6 +340,10 @@ class RecipeIngredient {
 
   final String foodId;
   final String name;
+  String get displayName => CatalogText.foodName(foodId, name);
+  String? get displayMeasure =>
+      measure == null ? null : CatalogText.of(measure!);
+  String? get displayNote => note == null ? null : CatalogText.of(note!);
 
   /// Amount for the whole recipe (all servings).
   final double amountGrams;
@@ -342,7 +364,7 @@ class RecipeIngredient {
   static String formatGrams(double grams) {
     final rounded = grams.round();
     if (rounded == grams || grams >= 20) return '$rounded g';
-    return '${grams.toStringAsFixed(1).replaceAll('.', ',')} g';
+    return '${L10n.isEnglish ? grams.toStringAsFixed(1) : grams.toStringAsFixed(1).replaceAll('.', ',')} g';
   }
 }
 
@@ -351,6 +373,8 @@ class RecipeStep {
 
   final String? title;
   final String text;
+  String? get displayTitle => title == null ? null : CatalogText.of(title!);
+  String get displayText => CatalogText.of(text);
 
   /// Suggested timer for this step; 0 when the step needs no timer.
   final int minutes;
@@ -375,6 +399,12 @@ class RecipePremiumDetails {
   final String mealPrep;
   final List<String> variations;
   final String servingTip;
+  List<String> get displayStepTips => CatalogText.list(stepTips);
+  List<String> get displayCommonMistakes => CatalogText.list(commonMistakes);
+  List<String> get displaySubstitutions => CatalogText.list(substitutions);
+  String get displayMealPrep => CatalogText.of(mealPrep);
+  List<String> get displayVariations => CatalogText.list(variations);
+  String get displayServingTip => CatalogText.of(servingTip);
 
   String tipForStep(int index) =>
       index >= 0 && index < stepTips.length ? stepTips[index].trim() : '';

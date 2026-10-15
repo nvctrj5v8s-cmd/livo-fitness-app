@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -32,16 +33,25 @@ class PersonalizationArtwork extends StatelessWidget {
     final caption = switch (step) {
       0 =>
         profile.displayName.trim().isEmpty
-            ? 'Platz für dich.'
-            : 'Hallo, ${profile.displayName.trim()}.',
-      1 => profile.goal?.label ?? 'Du bestimmst die Richtung.',
-      2 => profile.activity?.label ?? 'Jeder Alltag ist anders.',
-      3 => profile.nutrition?.label ?? 'Was dir guttut, zählt.',
+            ? context.l10n.onboardingSpaceForYou
+            : context.l10n.onboardingHelloValue(
+                (profile.displayName.trim()).toString(),
+              ),
+      1 => profile.goal?.label ?? context.l10n.onboardingYouChooseTheDirection,
+      2 =>
+        profile.activity?.label ??
+            context.l10n.onboardingEveryRoutineIsDifferent,
+      3 =>
+        profile.nutrition?.label ??
+            context.l10n.onboardingWhatFeelsRightForYouMatters,
       4 =>
         profile.cookingMinutes == null
             ? profile.routineLabel
-            : '${profile.routineLabel} · bis ${profile.cookingMinutes} Min.',
-      _ => 'Deine Wünsche auf einen Blick.',
+            : context.l10n.onboardingValueUpToValueMin(
+                (profile.routineLabel).toString(),
+                (profile.cookingMinutes).toString(),
+              ),
+      _ => context.l10n.onboardingYourPreferencesAtAGlance,
     };
     final token = (
       step,
@@ -100,8 +110,8 @@ class PersonalizationArtwork extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'DEINE AUSWAHL',
+                        Text(
+                          context.l10n.onboardingYourChoices,
                           textScaler: TextScaler.noScaling,
                           style: TextStyle(
                             color: AppColors.textMuted,

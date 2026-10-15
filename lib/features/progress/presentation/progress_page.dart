@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -46,7 +47,7 @@ class _ProgressPageState extends State<ProgressPage> {
       if (!mounted) return;
       setState(() {
         _snapshot ??= const ProgressSnapshot(nutrition: [], weights: []);
-        _error = 'Deine Fortschrittsdaten konnten nicht geladen werden.';
+        _error = L10n.current.progressYourProgressDataCouldNotBeLoaded;
       });
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -78,15 +79,15 @@ class _ProgressPageState extends State<ProgressPage> {
       );
       await _load();
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Messung gespeichert.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(L10n.current.progressMeasurementSaved)),
+        );
       }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Messung konnte nicht gespeichert werden.'),
+          SnackBar(
+            content: Text(L10n.current.progressMeasurementCouldNotBeSaved),
           ),
         );
       }
@@ -117,15 +118,16 @@ class _ProgressPageState extends State<ProgressPage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: PageHeader(
-                            title: 'Dein Fortschritt',
-                            subtitle:
-                                'Klare Trends aus deinem echten Tagebuch – ohne Druck durch einzelne Tage.',
+                            title: context.l10n.progressYourProgress,
+                            subtitle: context
+                                .l10n
+                                .progressClearTrendsFromYourActualDiaryWithout,
                           ),
                         ),
                         IconButton.filledTonal(
-                          tooltip: 'Aktualisieren',
+                          tooltip: context.l10n.progressRefresh,
                           onPressed: _loading ? null : _load,
                           icon: _loading
                               ? const SizedBox.square(
@@ -175,10 +177,11 @@ class _ProgressPageState extends State<ProgressPage> {
                             ),
                           ),
                           const SizedBox(height: 26),
-                          const _SectionTitle(
-                            title: 'Ernährungstrend',
-                            subtitle:
-                                'Durchschnitt pro Zeitabschnitt im Vergleich zu deinen Zielen',
+                          _SectionTitle(
+                            title: context.l10n.progressNutritionTrend,
+                            subtitle: context
+                                .l10n
+                                .progressAveragePerTimePeriodComparedWithYour,
                           ),
                           const SizedBox(height: 11),
                           AnimatedReveal(
@@ -222,10 +225,11 @@ class _ProgressPageState extends State<ProgressPage> {
                             },
                           ),
                           const SizedBox(height: 26),
-                          const _SectionTitle(
-                            title: 'Körperverlauf',
-                            subtitle:
-                                'Gewicht und optionaler Taillenumfang – ruhig und langfristig betrachtet',
+                          _SectionTitle(
+                            title: context.l10n.progressBodyTrend,
+                            subtitle: context
+                                .l10n
+                                .progressWeightAndOptionalWaistCircumferenceViewedCalmly,
                           ),
                           const SizedBox(height: 11),
                           AnimatedReveal(
@@ -334,12 +338,12 @@ class _ProgressHero extends StatelessWidget {
     final tracked = snapshot.trackedDayCount;
     final total = period.days ?? math.max(tracked, 1);
     final text = tracked == 0
-        ? 'Dein erster Eintrag macht Trends sichtbar.'
+        ? context.l10n.progressYourFirstEntryMakesTrendsVisible
         : score >= .85
-        ? 'Du liegst sehr nah an deinen persönlichen Zielen.'
+        ? context.l10n.progressYouAreVeryCloseToYourPersonal
         : score >= .65
-        ? 'Deine Richtung stimmt – Beständigkeit bringt jetzt am meisten.'
-        : 'Regelmäßiges Tracken schafft zuerst Klarheit.';
+        ? context.l10n.progressYouAreHeadingInTheRightDirection
+        : context.l10n.progressRegularTrackingHelpsYouUnderstandYourHabits;
     return SurfaceCard(
       padding: const EdgeInsets.all(20),
       gradient: LinearGradient(
@@ -357,8 +361,8 @@ class _ProgressHero extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StatusPill(
-                  label: 'DEIN RHYTHMUS',
+                StatusPill(
+                  label: context.l10n.progressYourRhythm,
                   icon: Icons.auto_graph_rounded,
                 ),
                 const SizedBox(height: 13),
@@ -373,8 +377,12 @@ class _ProgressHero extends StatelessWidget {
                 const SizedBox(height: 9),
                 Text(
                   tracked == 0
-                      ? 'Trage Mahlzeiten ein und ergänze dein Gewicht. Lookin berechnet danach nur aus deinen echten Daten.'
-                      : '$tracked von $total Tagen mit Einträgen · ${snapshot.mealCount} Mahlzeiten ausgewertet',
+                      ? context.l10n.progressLogMealsAndAddYourWeightLookin
+                      : context.l10n.progressValueOfValueDaysWithEntriesValue(
+                          (tracked).toString(),
+                          (total).toString(),
+                          (snapshot.mealCount).toString(),
+                        ),
                   style: const TextStyle(
                     color: AppColors.textMuted,
                     height: 1.45,
@@ -425,8 +433,8 @@ class _ScoreRing extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const Text(
-                    'Zielnähe',
+                  Text(
+                    context.l10n.progressClosenessToTarget,
                     style: TextStyle(color: AppColors.textMuted, fontSize: 9),
                   ),
                 ],
@@ -451,25 +459,25 @@ class _OverviewGrid extends StatelessWidget {
         Icons.local_fire_department_outlined,
         AppColors.orange,
         '${snapshot.average((day) => day.calories).round()}',
-        'Ø kcal / Track-Tag',
+        context.l10n.progressAvgKcalTrackedDay,
       ),
       _Metric(
         Icons.fitness_center_rounded,
         AppColors.mint,
         '${snapshot.average((day) => day.protein).round()} g',
-        'Ø Protein / Track-Tag',
+        context.l10n.progressAvgProteinTrackedDay,
       ),
       _Metric(
         Icons.check_circle_outline_rounded,
         AppColors.primary,
         '${snapshot.calorieGoalDays(controller.calorieGoal)}',
-        'Tage im Kalorienbereich',
+        context.l10n.progressDaysInCalorieRange,
       ),
       _Metric(
         Icons.bolt_rounded,
         AppColors.blue,
-        '${controller.streakDays} Tage',
-        'Aktuelle Serie',
+        context.l10n.progressValueDays((controller.streakDays).toString()),
+        context.l10n.progressCurrentStreak,
       ),
     ];
     return LayoutBuilder(
@@ -576,22 +584,29 @@ class _NutritionTrendCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Wrap(
+          Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              StatusPill(label: 'KALORIEN', color: AppColors.primary),
+              StatusPill(
+                label: context.l10n.progressCalories,
+                color: AppColors.primary,
+              ),
               StatusPill(label: 'PROTEIN', color: AppColors.mint),
-              StatusPill(label: 'ZIEL = 100 %', color: AppColors.textMuted),
+              StatusPill(
+                label: context.l10n.progressTarget100,
+                color: AppColors.textMuted,
+              ),
             ],
           ),
           const SizedBox(height: 22),
           if (buckets.isEmpty)
-            const _EmptyPanel(
+            _EmptyPanel(
               icon: Icons.bar_chart_rounded,
-              title: 'Noch kein Ernährungstrend',
-              text:
-                  'Nach deinem ersten Tagebucheintrag entsteht hier automatisch ein echter Verlauf.',
+              title: context.l10n.progressNoNutritionTrendYet,
+              text: context
+                  .l10n
+                  .progressAnActualTrendStartsHereAutomaticallyAfter,
             )
           else
             SizedBox(
@@ -607,8 +622,11 @@ class _NutritionTrendCard extends StatelessWidget {
                       : bucket.protein / proteinGoal;
                   return Expanded(
                     child: Tooltip(
-                      message:
-                          '${bucket.label}: ${bucket.calories.round()} kcal · ${bucket.protein.round()} g Protein',
+                      message: context.l10n.progressValueValueKcalValueGProtein(
+                        (bucket.label).toString(),
+                        (bucket.calories.round()).toString(),
+                        (bucket.protein.round()).toString(),
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -690,13 +708,13 @@ class _MacroBalanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Makro-Balance',
+          Text(
+            context.l10n.progressMacroBalance,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Durchschnitt an getrackten Tagen',
+          Text(
+            context.l10n.progressAverageOnTrackedDays,
             style: TextStyle(color: AppColors.textMuted, fontSize: 11),
           ),
           const SizedBox(height: 19),
@@ -708,14 +726,14 @@ class _MacroBalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           _MacroRow(
-            label: 'Kohlenhydrate',
+            label: context.l10n.progressCarbohydrates,
             value: snapshot.average((day) => day.carbs),
             goal: controller.diaryCarbohydrateGoal.toDouble(),
             color: AppColors.blue,
           ),
           const SizedBox(height: 15),
           _MacroRow(
-            label: 'Fett',
+            label: context.l10n.progressFat,
             value: snapshot.average((day) => day.fat),
             goal: controller.diaryFatGoal.toDouble(),
             color: AppColors.orange,
@@ -813,9 +831,9 @@ class _ConsistencyCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Tracking-Konstanz',
+                  context.l10n.progressTrackingConsistency,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
               ),
@@ -829,8 +847,8 @@ class _ConsistencyCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Die letzten maximal 28 Tage',
+          Text(
+            context.l10n.progressUpToTheLast28Days,
             style: TextStyle(color: AppColors.textMuted, fontSize: 11),
           ),
           const SizedBox(height: 18),
@@ -857,7 +875,12 @@ class _ConsistencyCard extends StatelessWidget {
                   : AppColors.mint.withValues(alpha: .55);
               return Tooltip(
                 message: data == null || !data.tracked
-                    ? '${cell.date.day}.${cell.date.month}. · kein Eintrag'
+                    ? context.l10n.progressValueValueNoEntry(
+                        (cell.date.day).toString(),
+                        (cell.date.month).toString(),
+                      )
+                    : L10n.isEnglish
+                    ? '${AppFormat.dayMonth(cell.date)} · ${AppFormat.integer(data.calories)} kcal'
                     : '${cell.date.day}.${cell.date.month}. · ${data.calories.round()} kcal',
                 child: Container(
                   decoration: BoxDecoration(
@@ -869,11 +892,14 @@ class _ConsistencyCard extends StatelessWidget {
             },
           ),
           const SizedBox(height: 13),
-          const Wrap(
+          Wrap(
             spacing: 13,
             runSpacing: 7,
             children: [
-              _LegendDot(color: AppColors.primary, label: 'im Zielbereich'),
+              _LegendDot(
+                color: AppColors.primary,
+                label: context.l10n.progressInTargetRange,
+              ),
               _LegendDot(color: AppColors.mint, label: 'getrackt'),
             ],
           ),
@@ -944,8 +970,8 @@ class _WeightCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Gewicht',
+                    Text(
+                      context.l10n.progressWeight,
                       style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 11,
@@ -954,7 +980,7 @@ class _WeightCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       latest == null
-                          ? 'Noch keine Messung'
+                          ? context.l10n.progressNoMeasurementYet
                           : '${latest.weightKg.toStringAsFixed(1)} kg',
                       style: const TextStyle(
                         fontSize: 25,
@@ -964,7 +990,10 @@ class _WeightCard extends StatelessWidget {
                     ),
                     if (change != null)
                       Text(
-                        '${change > 0 ? '+' : ''}${change.toStringAsFixed(1)} kg im Zeitraum',
+                        context.l10n.progressValueValueKgInThisPeriod(
+                          (change > 0 ? '+' : '').toString(),
+                          (change.toStringAsFixed(1)).toString(),
+                        ),
                         style: const TextStyle(
                           color: AppColors.mint,
                           fontSize: 11,
@@ -976,17 +1005,16 @@ class _WeightCard extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onAdd,
                 icon: const Icon(Icons.add_rounded, size: 18),
-                label: const Text('Eintragen'),
+                label: Text(context.l10n.progressLog),
               ),
             ],
           ),
           const SizedBox(height: 18),
           if (records.isEmpty)
-            const _EmptyPanel(
+            _EmptyPanel(
               icon: Icons.monitor_weight_outlined,
-              title: 'Dein echter Verlauf beginnt hier',
-              text:
-                  'Ein bis zwei Messungen pro Woche reichen. Tages-Schwankungen sind normal.',
+              title: context.l10n.progressYourActualTrendStartsHere,
+              text: context.l10n.progressOneOrTwoMeasurementsAWeekAre,
             )
           else
             SizedBox(
@@ -1107,14 +1135,18 @@ class _InsightsCard extends StatelessWidget {
     final proteinDays = snapshot.proteinGoalDays(controller.proteinGoal);
     final insights = <String>[
       tracked == 0
-          ? 'Trage auch an normalen Tagen ein. So wird dein Trend ehrlich und nützlich.'
-          : '$tracked Tage liefern bereits eine bessere Grundlage als ein einzelner Tageswert.',
+          ? context.l10n.progressLogOrdinaryDaysTooThisMakesYour
+          : context.l10n.progressValueDaysAlreadyGiveABetterFoundation(
+              (tracked).toString(),
+            ),
       avgProtein >= controller.proteinGoal * .9
-          ? 'Dein Proteindurchschnitt liegt nah am Ziel. Das unterstützt Sättigung und Muskelerhalt.'
-          : 'An $proteinDays Tagen lag Protein nahe am Ziel. Eine feste Proteinquelle pro Mahlzeit kann helfen.',
+          ? context.l10n.progressYourAverageProteinIsCloseToYour
+          : context.l10n.progressProteinWasCloseToTargetOnValue(
+              (proteinDays).toString(),
+            ),
       snapshot.weights.length < 2
-          ? 'Für einen Gewichtstrend genügen ein bis zwei Messungen pro Woche unter ähnlichen Bedingungen.'
-          : 'Bewerte Gewicht über mehrere Wochen; Wasser und Salz verschieben einzelne Messungen.',
+          ? context.l10n.progressOneOrTwoMeasurementsAWeekUnder
+          : context.l10n.progressLookAtWeightOverSeveralWeeksWater,
     ];
     return Container(
       padding: const EdgeInsets.all(19),
@@ -1126,13 +1158,13 @@ class _InsightsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.lightbulb_outline_rounded, color: AppColors.primary),
               SizedBox(width: 9),
               Expanded(
                 child: Text(
-                  'Was deine Daten sagen',
+                  context.l10n.progressWhatYourDataSays,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
               ),
@@ -1203,14 +1235,15 @@ class _WeightSheetState extends State<_WeightSheet> {
     final waist = _waist.text.trim().isEmpty ? null : _parse(_waist.text);
     if (weight == null || weight < 25 || weight > 400) {
       setState(
-        () => _error =
-            'Bitte gib ein realistisches Gewicht zwischen 25 und 400 kg ein.',
+        () =>
+            _error = L10n.current.progressPleaseEnterARealisticWeightBetween25,
       );
       return;
     }
     if (waist != null && (waist < 30 || waist > 300)) {
       setState(
-        () => _error = 'Der Taillenumfang muss zwischen 30 und 300 cm liegen.',
+        () =>
+            _error = L10n.current.progressWaistCircumferenceMustBeBetween30And,
       );
       return;
     }
@@ -1237,13 +1270,13 @@ class _WeightSheetState extends State<_WeightSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Neue Messung',
+              Text(
+                context.l10n.progressNewMeasurement,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 5),
-              const Text(
-                'Eine Messung ersetzt den Wert desselben Tages.',
+              Text(
+                context.l10n.progressAMeasurementReplacesTheValueFromThe,
                 style: TextStyle(color: AppColors.textMuted, fontSize: 11),
               ),
               const SizedBox(height: 18),
@@ -1252,7 +1285,7 @@ class _WeightSheetState extends State<_WeightSheet> {
                   Expanded(
                     child: _NumberField(
                       controller: _weight,
-                      label: 'Gewicht',
+                      label: context.l10n.progressWeight,
                       suffix: 'kg',
                       autofocus: true,
                     ),
@@ -1261,7 +1294,7 @@ class _WeightSheetState extends State<_WeightSheet> {
                   Expanded(
                     child: _NumberField(
                       controller: _waist,
-                      label: 'Taille (optional)',
+                      label: context.l10n.progressWaistOptional,
                       suffix: 'cm',
                     ),
                   ),
@@ -1298,7 +1331,7 @@ class _WeightSheetState extends State<_WeightSheet> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        '${_date.day.toString().padLeft(2, '0')}.${_date.month.toString().padLeft(2, '0')}.${_date.year}',
+                        AppFormat.date(_date),
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -1317,7 +1350,7 @@ class _WeightSheetState extends State<_WeightSheet> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: _submit,
-                  child: const Text('Messung speichern'),
+                  child: Text(context.l10n.progressSaveMeasurement),
                 ),
               ),
             ],
@@ -1460,13 +1493,13 @@ class _LoadError extends StatelessWidget {
         _EmptyPanel(
           icon: Icons.cloud_off_outlined,
           title: message,
-          text: 'Prüfe deine Verbindung und versuche es erneut.',
+          text: context.l10n.progressCheckYourConnectionAndTryAgain,
         ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: onRetry,
           icon: const Icon(Icons.refresh_rounded),
-          label: const Text('Erneut versuchen'),
+          label: Text(context.l10n.progressTryAgain),
         ),
       ],
     );
@@ -1504,6 +1537,8 @@ List<_TrendBucket> _buckets(List<NutritionDay> days, ProgressPeriod period) {
       _TrendBucket(
         label: period == ProgressPeriod.sevenDays
             ? _weekday(date.weekday)
+            : L10n.isEnglish
+            ? AppFormat.dayMonth(date)
             : '${date.day}.${date.month}.',
         calories: calories,
         protein: protein,

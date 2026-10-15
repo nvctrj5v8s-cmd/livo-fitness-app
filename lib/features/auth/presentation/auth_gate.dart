@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -52,7 +53,7 @@ class _AuthLoading extends StatelessWidget {
       key: const ValueKey('auth-loading'),
       backgroundColor: AppColors.background,
       body: Semantics(
-        label: 'Anmeldung wird geprüft',
+        label: context.l10n.authCheckingYourSignIn,
         child: const SizedBox.expand(),
       ),
     );

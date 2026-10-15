@@ -12,7 +12,6 @@ import '../features/auth/presentation/email_status_pages.dart';
 import '../features/auth/data/account_locale.dart';
 import '../features/auth/data/recovery_marker.dart';
 import '../features/auth/presentation/password_recovery_page.dart';
-import '../features/language/presentation/language_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/data/introduction_store.dart';
 import '../features/onboarding/data/personalization_store.dart';
@@ -36,7 +35,7 @@ class FitnessAiApp extends StatefulWidget {
   final bool useAuth;
 
   /// The app language. Without it (tests, previews) the app stays German and
-  /// the language page is skipped.
+  /// without a stored device preference.
   final LocaleController? localeController;
   final bool initialPasswordRecovery;
 
@@ -75,7 +74,7 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
         unawaited(syncLocaleToAccount(locale.languageCode));
         _rebuildForLanguage();
       };
-      if (_userId != null && locales.hasChoice) {
+      if (_userId != null) {
         unawaited(syncLocaleToAccount(locales.locale.languageCode));
       }
     }
@@ -126,7 +125,7 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
             });
             previous.dispose();
             final language = widget.localeController;
-            if (nextUserId != null && language != null && language.hasChoice) {
+            if (nextUserId != null && language != null) {
               unawaited(syncLocaleToAccount(language.locale.languageCode));
             }
           });
@@ -182,7 +181,6 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
   }
 
   Widget _app(Locale locale) {
-    final locales = widget.localeController;
     return AppScope(
       controller: _controller,
       child: MaterialApp(
@@ -195,14 +193,10 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.dark,
         darkTheme: AppTheme.dark,
-        // First start: the language comes before everything else.
-        home: locales != null && !locales.hasChoice
-            ? LanguagePage(initial: locales.suggested, onChosen: locales.choose)
-            // The demo/test mode without account skips all gates, including
-            // the paywall; premium features stay locked there.
-            : widget.useAuth
-            ? _authHome()
-            : const AppShell(),
+        // The phone language is applied before introduction and sign-in.
+        // The demo/test mode without account skips all gates, including
+        // the paywall; premium features stay locked there.
+        home: widget.useAuth ? _authHome() : const AppShell(),
       ),
     );
   }

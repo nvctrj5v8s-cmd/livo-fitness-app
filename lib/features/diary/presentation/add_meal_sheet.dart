@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/data/food_search_service.dart';
@@ -69,7 +71,7 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     super.dispose();
   }
 
-  static const _demoFoods = [
+  static const List<FoodItem> _demoFoods = [
     FoodItem(
       id: 'demo-chickpeas',
       name: 'Kichererbsen-Reis-Bowl',
@@ -81,7 +83,8 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     ),
     FoodItem(
       id: 'demo-bread',
-      name: 'Vollkornbrot mit Ei',
+      name:
+          'Vollkornbrot mit Ei', // l10n-ignore: source data; displayName translates it
       servingGrams: 100,
       calories: 360,
       protein: 24,
@@ -108,7 +111,8 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     ),
     FoodItem(
       id: 'demo-omelet',
-      name: 'Gemüse-Omelett',
+      name:
+          'Gemüse-Omelett', // l10n-ignore: source data; displayName translates it
       servingGrams: 100,
       calories: 390,
       protein: 32,
@@ -136,13 +140,13 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
     final sheetHeight = MediaQuery.sizeOf(context).height * .94;
     final sectionTitle = _query.trim().isNotEmpty
-        ? 'Suchergebnisse'
+        ? context.l10n.diarySearchResults
         : switch (_filter) {
-            FoodCatalogFilter.all => 'Lebensmittel',
-            FoodCatalogFilter.recent => 'Zuletzt verwendet',
-            FoodCatalogFilter.saved => 'Gemerkte Lebensmittel',
-            FoodCatalogFilter.highProtein => 'Proteinreich',
-            FoodCatalogFilter.light => 'Leichte Lebensmittel',
+            FoodCatalogFilter.all => context.l10n.diaryFood,
+            FoodCatalogFilter.recent => context.l10n.diaryRecentlyUsed,
+            FoodCatalogFilter.saved => context.l10n.diarySavedFoods,
+            FoodCatalogFilter.highProtein => context.l10n.diaryHighInProtein,
+            FoodCatalogFilter.light => context.l10n.diaryLightFoods,
           };
 
     return SizedBox(
@@ -170,12 +174,12 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                     textInputAction: TextInputAction.search,
                     onChanged: (value) => setState(() => _query = value),
                     decoration: InputDecoration(
-                      hintText: 'Lebensmittel suchen',
+                      hintText: context.l10n.diarySearchFoods,
                       prefixIcon: const Icon(Icons.search_rounded),
                       suffixIcon: _query.isEmpty
                           ? null
                           : IconButton(
-                              tooltip: 'Suche löschen',
+                              tooltip: context.l10n.diaryClearSearch,
                               onPressed: () {
                                 _searchController.clear();
                                 setState(() => _query = '');
@@ -193,7 +197,7 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                         child: _MealActionCard(
                           key: const Key('scan-barcode'),
                           icon: Icons.qr_code_scanner_rounded,
-                          label: 'Barcode scannen',
+                          label: context.l10n.diaryScanBarcode,
                           onTap: _savingFoodId == null ? _scan : null,
                         ),
                       ),
@@ -202,7 +206,7 @@ class _AddMealSheetState extends State<_AddMealSheet> {
                         child: _MealActionCard(
                           key: const Key('open-custom-food'),
                           icon: Icons.edit_note_rounded,
-                          label: 'Selbst eintragen',
+                          label: context.l10n.diaryEnterManually,
                           onTap: _savingFoodId == null
                               ? () => Navigator.pop(context, _slot)
                               : null,
@@ -326,22 +330,24 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     final controller = AppScope.of(context);
     final assessment = AllergySafety.assessFood(food, controller.allergies);
     if (assessment.hasConflict) {
-      final conflicts = assessment.conflicts.join(', ');
+      final conflicts = assessment.conflicts.map(DisplayText.of).join(', ');
       final proceed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Allergiehinweis'),
+          title: Text(L10n.current.diaryAllergyNotice),
           content: Text(
-            'Die verf\u00FCgbaren Angaben nennen m\u00F6glicherweise: $conflicts. Bei einer Allergie nicht als Empfehlung verstehen. Nur fortfahren, wenn du das Essen dokumentieren m\u00F6chtest.',
+            L10n.current.diaryTheAvailableInformationMayMentionValueIf(
+              (conflicts).toString(),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text('Abbrechen'),
+              child: Text(L10n.current.diaryCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text('Trotzdem protokollieren'),
+              child: Text(L10n.current.diaryLogAnyway),
             ),
           ],
         ),
@@ -386,14 +392,14 @@ class _AddMealSheetState extends State<_AddMealSheet> {
         setState(
           () => _error =
               AppScope.of(context).diaryError ??
-              'Das Lebensmittel konnte nicht gespeichert werden.',
+              L10n.current.diaryTheFoodCouldNotBeSaved,
         );
       }
     } catch (_) {
       if (mounted) {
         setState(() {
           _savingFoodId = null;
-          _error = 'Speichern fehlgeschlagen. Bitte erneut versuchen.';
+          _error = L10n.current.diarySavingFailedPleaseTryAgain;
         });
       }
     }
@@ -417,7 +423,7 @@ class _AddMealSheetState extends State<_AddMealSheet> {
     if (_filter == FoodCatalogFilter.highProtein) {
       return second.protein.compareTo(first.protein);
     }
-    return first.name.compareTo(second.name);
+    return first.displayName.compareTo(second.displayName);
   }
 }
 
@@ -446,7 +452,7 @@ class _MealSheetHeader extends StatelessWidget {
           children: [
             IconButton.outlined(
               key: const Key('close-add-meal'),
-              tooltip: 'Schließen',
+              tooltip: context.l10n.diaryClose,
               onPressed: enabled ? onClose : null,
               icon: const Icon(Icons.close_rounded),
             ),
@@ -455,7 +461,7 @@ class _MealSheetHeader extends StatelessWidget {
                 child: PopupMenuButton<MealSlot>(
                   key: ValueKey('add-slot-${slot.name}'),
                   enabled: enabled,
-                  tooltip: 'Mahlzeit auswählen',
+                  tooltip: context.l10n.diarySelectMeal,
                   initialValue: slot,
                   onSelected: onSlotChanged,
                   itemBuilder: (context) => MealSlot.values
@@ -615,13 +621,13 @@ class _EmptyFoodResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final message = query.trim().isNotEmpty
-        ? 'Kein Treffer. Prüfe die Schreibweise oder trage das Lebensmittel selbst ein.'
+        ? context.l10n.diaryNoResultsCheckTheSpellingOrEnter
         : switch (filter) {
             FoodCatalogFilter.recent =>
-              'Noch nichts verwendet. Hinzugefügte Lebensmittel erscheinen später hier.',
+              context.l10n.diaryNothingUsedYetFoodsYouAddWill,
             FoodCatalogFilter.saved =>
-              'Noch nichts gemerkt. Speichere Lebensmittel über die Detailansicht.',
-            _ => 'In diesem Bereich wurden noch keine Lebensmittel gefunden.',
+              context.l10n.diaryNothingSavedYetSaveFoodsFromTheir,
+            _ => context.l10n.diaryNoFoodsHaveBeenFoundInThis,
           };
     return Center(
       child: Padding(
@@ -692,7 +698,9 @@ class _FoodResultTile extends StatelessWidget {
                 children: [
                   if (allergyConflicts.isNotEmpty) ...[
                     Text(
-                      'Allergiehinweis: $_allergySummary',
+                      context.l10n.diaryAllergyNoticeValue(
+                        (_allergySummary).toString(),
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -707,7 +715,7 @@ class _FoodResultTile extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          food.name,
+                          food.displayName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -728,7 +736,11 @@ class _FoodResultTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '$calories kcal · ${amountGrams.toInt()} g · ${protein.toStringAsFixed(0)} g Protein',
+                    context.l10n.diaryValueKcalValueGValueGProtein(
+                      (calories).toString(),
+                      (amountGrams.toInt()).toString(),
+                      (protein.toStringAsFixed(0)).toString(),
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -742,7 +754,7 @@ class _FoodResultTile extends StatelessWidget {
             const SizedBox(width: 8),
             IconButton.filledTonal(
               key: ValueKey('add-food-${food.id}'),
-              tooltip: 'Zu ${slot.label} hinzufügen',
+              tooltip: context.l10n.diaryAddToValue((slot.label).toString()),
               onPressed: enabled ? onAdd : null,
               icon: loading
                   ? const SizedBox.square(
@@ -765,12 +777,12 @@ class _FoodFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labels = {
-      FoodCatalogFilter.all: 'Alle',
-      FoodCatalogFilter.recent: 'Zuletzt',
-      FoodCatalogFilter.saved: 'Gemerkte',
-      FoodCatalogFilter.highProtein: 'Proteinreich',
-      FoodCatalogFilter.light: 'Leicht',
+    final labels = {
+      FoodCatalogFilter.all: context.l10n.diaryAll,
+      FoodCatalogFilter.recent: context.l10n.diaryRecent,
+      FoodCatalogFilter.saved: context.l10n.diarySaved,
+      FoodCatalogFilter.highProtein: context.l10n.diaryHighInProtein,
+      FoodCatalogFilter.light: context.l10n.diaryLight,
     };
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

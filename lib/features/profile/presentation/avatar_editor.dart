@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
@@ -51,9 +52,9 @@ class _AvatarEditorState extends State<AvatarEditor> {
     });
     try {
       final file = await openFile(
-        acceptedTypeGroups: const [
+        acceptedTypeGroups: [
           XTypeGroup(
-            label: 'Bilder',
+            label: L10n.current.profileImages,
             extensions: ['jpg', 'jpeg', 'png'],
             mimeTypes: ['image/jpeg', 'image/png'],
             uniformTypeIdentifiers: ['public.jpeg', 'public.png'],
@@ -62,7 +63,9 @@ class _AvatarEditorState extends State<AvatarEditor> {
       );
       if (file == null || !mounted) return;
       if (await file.length() > maxAvatarSourceBytes) {
-        throw const AvatarImageException('Wähle ein Bild mit höchstens 8 MB.');
+        throw AvatarImageException(
+          L10n.current.profileChooseAnImageNoLargerThan8,
+        );
       }
       final prepared = await compute(
         prepareAvatarImage,
@@ -93,8 +96,7 @@ class _AvatarEditorState extends State<AvatarEditor> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error =
-              'Das Bild ließ sich nicht öffnen. Versuche es mit einem anderen JPG oder PNG.',
+          () => _error = L10n.current.profileTheImageCouldNotBeOpenedTry,
         );
       }
     } finally {
@@ -128,15 +130,14 @@ class _AvatarEditorState extends State<AvatarEditor> {
       setState(
         () => _error =
             widget.controller.avatarError ??
-            'Das Profilbild wurde nicht gespeichert. Versuche es erneut.',
+            L10n.current.profileYourProfilePictureWasNotSavedPlease,
       );
     } on AvatarImageException catch (error) {
       if (mounted) setState(() => _error = error.message);
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error =
-              'Das Profilbild wurde nicht gespeichert. Dein bisheriges Bild bleibt erhalten.',
+          () => _error = L10n.current.profileYourProfilePictureWasNotSavedYour,
         );
       }
     } finally {
@@ -160,13 +161,13 @@ class _AvatarEditorState extends State<AvatarEditor> {
       setState(
         () => _error =
             widget.controller.avatarError ??
-            'Das Profilbild konnte nicht entfernt werden.',
+            L10n.current.profileYourProfilePictureCouldNotBeRemoved,
       );
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error =
-              'Das Profilbild konnte nicht entfernt werden. Versuche es erneut.',
+          () =>
+              _error = L10n.current.profileYourProfilePictureCouldNotBeRemoved2,
         );
       }
     } finally {
@@ -215,12 +216,12 @@ class _AvatarEditorState extends State<AvatarEditor> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Dein Profilbild',
+                            context.l10n.profileYourProfilePicture,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(height: 5),
-                          const Text(
-                            'Ein kleines Stück von dir.',
+                          Text(
+                            context.l10n.profileALittlePieceOfYou,
                             style: TextStyle(color: AppColors.textMuted),
                           ),
                         ],
@@ -228,7 +229,7 @@ class _AvatarEditorState extends State<AvatarEditor> {
                     ),
                     IconButton(
                       onPressed: _busy ? null : () => Navigator.pop(context),
-                      tooltip: 'Schließen',
+                      tooltip: context.l10n.profileClose,
                       icon: const Icon(Icons.close_rounded),
                     ),
                   ],
@@ -260,8 +261,9 @@ class _AvatarEditorState extends State<AvatarEditor> {
                           child: _preview == null
                               ? AppAvatar(radius: size / 2)
                               : Semantics(
-                                  label:
-                                      'Bildausschnitt. Ziehe das Bild oder nutze die Regler.',
+                                  label: context
+                                      .l10n
+                                      .profileCropYourImageDragItOrUse,
                                   child: GestureDetector(
                                     onPanUpdate: (details) =>
                                         _move(details, size),
@@ -282,8 +284,8 @@ class _AvatarEditorState extends State<AvatarEditor> {
                 ),
                 const SizedBox(height: 20),
                 if (_prepared != null) ...[
-                  const Text(
-                    'Verschiebe das Bild für deinen Ausschnitt.',
+                  Text(
+                    context.l10n.profileMoveTheImageToChooseYourCrop,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.textMuted, fontSize: 12),
                   ),
@@ -301,7 +303,9 @@ class _AvatarEditorState extends State<AvatarEditor> {
                           max: 3,
                           label: '${_zoom.toStringAsFixed(1)}×',
                           semanticFormatterCallback: (value) =>
-                              '${value.toStringAsFixed(1)}-fache Vergrößerung',
+                              context.l10n.profileValueZoom(
+                                (value.toStringAsFixed(1)).toString(),
+                              ),
                           onChanged: _busy
                               ? null
                               : (value) => setState(() => _zoom = value),
@@ -315,20 +319,20 @@ class _AvatarEditorState extends State<AvatarEditor> {
                   ),
                   ExpansionTile(
                     tilePadding: EdgeInsets.zero,
-                    title: const Text(
-                      'Ausschnitt fein einstellen',
+                    title: Text(
+                      context.l10n.profileFineTuneTheCrop,
                       style: TextStyle(fontSize: 12),
                     ),
                     children: [
                       _PositionSlider(
-                        label: 'Links – rechts',
+                        label: context.l10n.profileLeftRight,
                         value: _horizontal,
                         onChanged: _busy
                             ? null
                             : (value) => setState(() => _horizontal = value),
                       ),
                       _PositionSlider(
-                        label: 'Oben – unten',
+                        label: context.l10n.profileUpDown,
                         value: _vertical,
                         onChanged: _busy
                             ? null
@@ -338,10 +342,10 @@ class _AvatarEditorState extends State<AvatarEditor> {
                   ),
                 ],
                 if (_busy)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Text(
-                      'Einen Moment …',
+                      context.l10n.profileOneMoment,
                       style: TextStyle(color: AppColors.primary),
                     ),
                   ),
@@ -365,8 +369,8 @@ class _AvatarEditorState extends State<AvatarEditor> {
                     icon: const Icon(Icons.photo_library_outlined),
                     label: Text(
                       _prepared == null
-                          ? 'Bild auswählen'
-                          : 'Anderes Bild auswählen',
+                          ? context.l10n.profileChooseImage
+                          : context.l10n.profileChooseAnotherImage,
                     ),
                   ),
                 ),
@@ -378,7 +382,7 @@ class _AvatarEditorState extends State<AvatarEditor> {
                       key: const ValueKey('avatar-save'),
                       onPressed: _busy ? null : _save,
                       icon: const Icon(Icons.check_rounded),
-                      label: const Text('Profilbild speichern'),
+                      label: Text(context.l10n.profileSaveProfilePicture),
                     ),
                   ),
                 ],
@@ -387,11 +391,11 @@ class _AvatarEditorState extends State<AvatarEditor> {
                     key: const ValueKey('avatar-remove'),
                     onPressed: _busy ? null : _remove,
                     icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                    label: const Text('Profilbild entfernen'),
+                    label: Text(context.l10n.profileRemoveProfilePicture),
                   ),
                 const SizedBox(height: 10),
-                const Text(
-                  'JPG oder PNG · bis 8 MB\nDein Profilbild ist nur für dein Konto sichtbar.',
+                Text(
+                  context.l10n.profileJpgOrPngUpTo8Mb,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textMuted,
@@ -428,7 +432,10 @@ class _PositionSlider extends StatelessWidget {
         value: value,
         onChanged: onChanged,
         semanticFormatterCallback: (value) =>
-            '$label: ${(value * 100).round()} Prozent',
+            context.l10n.profileValueValuePerCent(
+              (label).toString(),
+              ((value * 100).round()).toString(),
+            ),
       ),
     ],
   );

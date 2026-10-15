@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -30,32 +31,32 @@ class IntroductionArtwork extends StatelessWidget {
       0 => (
         Icons.menu_book_rounded,
         Icons.check_circle_outline_rounded,
-        'Vier Mahlzeiten. Ein Überblick.',
+        context.l10n.onboardingFourMealsOneOverview,
       ),
       1 => (
         Icons.add_rounded,
         Icons.touch_app_outlined,
-        'Foto, Barcode oder selbst eintragen',
+        context.l10n.onboardingPhotoBarcodeOrManualEntry,
       ),
       2 => (
         Icons.photo_camera_rounded,
         Icons.tune_rounded,
-        'Schätzung prüfen, dann speichern',
+        context.l10n.onboardingCheckTheEstimateThenSave,
       ),
       3 => (
         Icons.auto_awesome_rounded,
         Icons.chat_bubble_outline_rounded,
-        'Nur Ernährung und Fitness',
+        context.l10n.onboardingNutritionAndFitnessOnly,
       ),
       4 => (
         Icons.restaurant_menu_rounded,
         Icons.soup_kitchen_outlined,
-        'Kochen mit dem, was da ist',
+        context.l10n.onboardingCookWithWhatYouHave,
       ),
       _ => (
         Icons.person_rounded,
         Icons.local_fire_department_outlined,
-        'Richtwerte nur, wenn du möchtest',
+        context.l10n.onboardingGuidelineValuesOnlyIfYouWantThem,
       ),
     };
 
@@ -309,10 +310,10 @@ class _DiaryPreview extends StatelessWidget {
   final double progress;
   final Color accent;
 
-  static const _meals = [
-    (Icons.free_breakfast_rounded, 'Frühstück', 420),
-    (Icons.lunch_dining_rounded, 'Mittagessen', 610),
-    (Icons.dinner_dining_rounded, 'Abendessen', 230),
+  static List<(IconData, String, int)> get _meals => [
+    (Icons.free_breakfast_rounded, L10n.current.onboardingBreakfast, 420),
+    (Icons.lunch_dining_rounded, L10n.current.onboardingLunch, 610),
+    (Icons.dinner_dining_rounded, L10n.current.onboardingDinner, 230),
     (Icons.cookie_rounded, 'Snacks', 0),
   ];
 
@@ -322,7 +323,11 @@ class _DiaryPreview extends StatelessWidget {
     final calories = (1260 * ring).round();
     return Column(
       children: [
-        _PreviewTitle('DEIN TAG', Icons.wb_sunny_outlined, accent),
+        _PreviewTitle(
+          context.l10n.onboardingYourDay,
+          Icons.wb_sunny_outlined,
+          accent,
+        ),
         const SizedBox(height: 10),
         SizedBox(
           height: 90,
@@ -348,8 +353,8 @@ class _DiaryPreview extends StatelessWidget {
                               weight: FontWeight.w900,
                               alignment: Alignment.center,
                             ),
-                            const _FitText(
-                              'von 2.100',
+                            _FitText(
+                              context.l10n.onboardingOf2100,
                               size: 8,
                               color: AppColors.textMuted,
                               alignment: Alignment.center,
@@ -367,7 +372,7 @@ class _DiaryPreview extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _MacroBar(
-                      'Kohlenhydrate',
+                      context.l10n.onboardingCarbohydrates,
                       '${(145 * ring).round()} g',
                       0.58 * _phase(progress, 0.2, 0.85),
                       AppColors.blue,
@@ -381,7 +386,7 @@ class _DiaryPreview extends StatelessWidget {
                     ),
                     const SizedBox(height: 9),
                     _MacroBar(
-                      'Fett',
+                      context.l10n.onboardingFat,
                       '${(42 * ring).round()} g',
                       0.6 * _phase(progress, 0.34, 0.95),
                       AppColors.purple,
@@ -495,7 +500,7 @@ class _MealRow extends StatelessWidget {
           SizedBox(
             width: 52,
             child: _FitText(
-              eaten ? '$calories kcal' : 'Noch leer',
+              eaten ? '$calories kcal' : context.l10n.onboardingStillEmpty,
               size: 9,
               color: eaten ? AppColors.text : AppColors.textMuted,
               alignment: Alignment.centerRight,
@@ -526,10 +531,22 @@ class _QuickAddPreview extends StatelessWidget {
     final pressScale = 1 - 0.14 * math.sin(press * math.pi);
     final ripple = _linear(progress, 0.12, 0.42);
     final sheet = _phase(progress, 0.26, 0.58);
-    const options = [
-      (Icons.photo_camera_rounded, 'KI-Foto', 'KI schätzt Lebensmittel'),
-      (Icons.qr_code_scanner_rounded, 'Barcode scannen', 'Produkt finden'),
-      (Icons.edit_note_rounded, 'Manuell eintragen', 'Suchen oder selbst'),
+    final options = [
+      (
+        Icons.photo_camera_rounded,
+        context.l10n.onboardingAiPhoto,
+        context.l10n.onboardingAiEstimatesFoods,
+      ),
+      (
+        Icons.qr_code_scanner_rounded,
+        context.l10n.onboardingScanBarcode,
+        context.l10n.onboardingFindProduct,
+      ),
+      (
+        Icons.edit_note_rounded,
+        context.l10n.onboardingEnterManually,
+        context.l10n.onboardingSearchOrEnterManually,
+      ),
     ];
     return Stack(
       children: [
@@ -540,9 +557,17 @@ class _QuickAddPreview extends StatelessWidget {
             opacity: 1 - 0.55 * sheet,
             child: Column(
               children: [
-                _PreviewTitle('DEIN TAG', Icons.wb_sunny_outlined, accent),
+                _PreviewTitle(
+                  context.l10n.onboardingYourDay,
+                  Icons.wb_sunny_outlined,
+                  accent,
+                ),
                 const SizedBox(height: 12),
-                for (final label in ['Frühstück', 'Mittagessen', 'Abendessen'])
+                for (final label in [
+                  context.l10n.onboardingBreakfast,
+                  context.l10n.onboardingLunch,
+                  context.l10n.onboardingDinner,
+                ])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Container(
@@ -594,8 +619,8 @@ class _QuickAddPreview extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const _FitText(
-                      'Mahlzeit hinzufügen',
+                    _FitText(
+                      context.l10n.onboardingAddMeal,
                       size: 12.5,
                       weight: FontWeight.w900,
                     ),
@@ -826,13 +851,13 @@ class _PhotoPreview extends StatelessWidget {
                     start: 0.02,
                     end: 0.2,
                     distance: -8,
-                    child: const _PhotoBadge('KI-Schätzung'),
+                    child: _PhotoBadge(context.l10n.onboardingAiEstimate),
                   ),
                 ),
-                for (final (i, (label, x, y)) in const [
-                  ('Reis', 34.0, 70.0),
-                  ('Lachs', 132.0, 42.0),
-                  ('Salat', 150.0, 90.0),
+                for (final (i, (label, x, y)) in [
+                  (context.l10n.onboardingRice, 34.0, 70.0),
+                  (context.l10n.onboardingSalmon, 132.0, 42.0),
+                  (context.l10n.onboardingSalad, 150.0, 90.0),
                 ].indexed)
                   Positioned(
                     left: x,
@@ -883,15 +908,18 @@ class _PhotoPreview extends StatelessWidget {
                     Expanded(
                       child: Column(
                         children: [
-                          const _FitText(
-                            'Reis',
+                          _FitText(
+                            context.l10n.onboardingRice,
                             size: 11.5,
                             weight: FontWeight.w800,
                           ),
                           const SizedBox(height: 2),
                           _FitText(
-                            '$kcal kcal · K ${(grams * 0.28).round()} g · '
-                            'P ${(grams * 0.027).round()} g',
+                            context.l10n.onboardingValueKcalCValueGPValue(
+                              (kcal).toString(),
+                              ((grams * 0.28).round()).toString(),
+                              ((grams * 0.027).round()).toString(),
+                            ),
                             size: 8,
                             color: AppColors.textMuted,
                           ),
@@ -917,9 +945,9 @@ class _PhotoPreview extends StatelessWidget {
                   child: Row(
                     children: [
                       const SizedBox(width: 6),
-                      const Expanded(
+                      Expanded(
                         child: _FitText(
-                          'Menge',
+                          context.l10n.onboardingAmount,
                           size: 9,
                           color: AppColors.textMuted,
                           weight: FontWeight.w700,
@@ -956,7 +984,9 @@ class _PhotoPreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(11),
             ),
             child: _FitText(
-              'Zu Mittagessen hinzufügen · ${kcal + 310} kcal',
+              context.l10n.onboardingAddToLunchValueKcal(
+                (kcal + 310).toString(),
+              ),
               size: 9.5,
               weight: FontWeight.w800,
               color: AppColors.black,
@@ -1147,9 +1177,8 @@ class _CoachPreview extends StatelessWidget {
   final double progress;
   final Color accent;
 
-  static const _answer =
-      'Du hast heute noch etwa 650 kcal frei. Wie wäre eine '
-      'Lachs-Tomaten-Bowl? Rund 35 g Protein.';
+  static String get _answer =>
+      L10n.current.onboardingYouHaveAbout650KcalLeftToday;
 
   @override
   Widget build(BuildContext context) {
@@ -1176,12 +1205,12 @@ class _CoachPreview extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 9),
-            const Expanded(
+            Expanded(
               child: Column(
                 children: [
                   _FitText('Lookin Coach', size: 12, weight: FontWeight.w900),
                   _FitText(
-                    'KI · Ernährung & Fitness',
+                    context.l10n.onboardingAiNutritionFitness,
                     size: 8,
                     color: AppColors.textMuted,
                   ),
@@ -1199,7 +1228,7 @@ class _CoachPreview extends StatelessWidget {
             end: 0.32,
             distance: 12,
             child: _Bubble(
-              text: 'Was kann ich heute Abend noch essen?',
+              text: context.l10n.onboardingWhatCanIStillEatThisEvening,
               mine: true,
               accent: accent,
             ),
@@ -1223,10 +1252,10 @@ class _CoachPreview extends StatelessWidget {
         const Spacer(),
         Row(
           children: [
-            for (final (i, label) in const [
-              'Mehr Protein',
-              'Tagesziel',
-              'Abendessen',
+            for (final (i, label) in [
+              context.l10n.onboardingMoreProtein,
+              context.l10n.onboardingDailyTarget,
+              context.l10n.onboardingDinner,
             ].indexed) ...[
               if (i > 0) const SizedBox(width: 5),
               Expanded(
@@ -1272,9 +1301,9 @@ class _CoachPreview extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: _FitText(
-                    'Frag deinen Coach …',
+                    context.l10n.onboardingAskYourCoach,
                     size: 9.5,
                     color: AppColors.textMuted,
                   ),
@@ -1394,14 +1423,18 @@ class _RecipesPreview extends StatelessWidget {
     final added = _linear(progress, 0.6, 0.66) >= 1;
     return Column(
       children: [
-        _PreviewTitle('FÜR DICH', Icons.restaurant_menu_rounded, accent),
+        _PreviewTitle(
+          context.l10n.onboardingForYou,
+          Icons.restaurant_menu_rounded,
+          accent,
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
-            for (final (i, label) in const [
-              'Schnell',
+            for (final (i, label) in [
+              context.l10n.onboardingQuick,
               'High Protein',
-              'Vegetarisch',
+              context.l10n.onboardingVegetarian,
             ].indexed) ...[
               if (i > 0) const SizedBox(width: 5),
               Expanded(
@@ -1485,8 +1518,8 @@ class _RecipesPreview extends StatelessWidget {
                             color: AppColors.black.withValues(alpha: 0.55),
                             borderRadius: BorderRadius.circular(99),
                           ),
-                          child: const Text(
-                            '20 Min.',
+                          child: Text(
+                            context.l10n.onboarding20Min,
                             style: TextStyle(
                               color: AppColors.white,
                               fontSize: 8,
@@ -1502,14 +1535,14 @@ class _RecipesPreview extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(10, 7, 10, 8),
                   child: Column(
                     children: [
-                      const _FitText(
-                        'Lachs-Avocado-Reis',
+                      _FitText(
+                        context.l10n.onboardingSalmonAvocadoRice,
                         size: 11.5,
                         weight: FontWeight.w900,
                       ),
                       const SizedBox(height: 2),
-                      const _FitText(
-                        '560 kcal · 34 g Protein',
+                      _FitText(
+                        context.l10n.onboarding560Kcal34GProtein,
                         size: 8,
                         color: AppColors.textMuted,
                       ),
@@ -1533,8 +1566,11 @@ class _RecipesPreview extends StatelessWidget {
                   end: 0.86,
                   child: _MiniPlanCard(
                     icon: Icons.soup_kitchen_outlined,
-                    title: 'Zu Hause',
-                    items: const ['Kartoffeln', 'Eier'],
+                    title: context.l10n.onboardingAtHome,
+                    items: [
+                      context.l10n.onboardingPotatoes,
+                      context.l10n.onboardingEggs,
+                    ],
                     checked: _linear(progress, 0.8, 0.95),
                     accent: accent,
                   ),
@@ -1549,7 +1585,7 @@ class _RecipesPreview extends StatelessWidget {
                   child: _MiniPlanCard(
                     icon: Icons.tune_rounded,
                     title: 'Filter',
-                    items: const ['Schnell', 'High Protein'],
+                    items: [context.l10n.onboardingQuick, 'High Protein'],
                     checked: _linear(progress, 0.86, 1),
                     accent: accent,
                   ),
@@ -1588,7 +1624,9 @@ class _DiaryButton extends StatelessWidget {
         const SizedBox(width: 4),
         Flexible(
           child: _FitText(
-            added ? 'Im Tagebuch' : 'Zum Tagebuch hinzufügen',
+            added
+                ? context.l10n.onboardingInDiary
+                : context.l10n.onboardingAddToDiary,
             size: 8.5,
             weight: FontWeight.w800,
             color: added ? accent : AppColors.black,
@@ -1723,8 +1761,8 @@ class _ProfilePreview extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        const _FitText(
-          'Dein Profil',
+        _FitText(
+          context.l10n.onboardingYourProfile,
           size: 14,
           weight: FontWeight.w900,
           alignment: Alignment.center,
@@ -1741,7 +1779,7 @@ class _ProfilePreview extends StatelessWidget {
               Icon(Icons.flag_rounded, size: 11, color: accent),
               const SizedBox(width: 4),
               Text(
-                'Muskeln aufbauen',
+                context.l10n.onboardingBuildMuscle,
                 style: TextStyle(
                   color: accent,
                   fontSize: 9.5,
@@ -1770,14 +1808,14 @@ class _ProfilePreview extends StatelessWidget {
                   Icons.checklist_rounded,
                   AppColors.mint,
                   '${(4 * count).round()}',
-                  'Einträge heute',
+                  context.l10n.onboardingEntriesToday,
                 ),
                 const VerticalDivider(width: 1, color: AppColors.border),
                 _Stat(
                   Icons.local_fire_department_rounded,
                   AppColors.orange,
                   '${(12 * count).round()}',
-                  'Tage Serie',
+                  context.l10n.onboardingDayStreak,
                   glow: count >= 1,
                 ),
                 const VerticalDivider(width: 1, color: AppColors.border),
@@ -1785,7 +1823,7 @@ class _ProfilePreview extends StatelessWidget {
                   Icons.restaurant_rounded,
                   accent,
                   _thousands((1480 * count).round()),
-                  'kcal heute',
+                  context.l10n.onboardingKcalToday,
                 ),
               ],
             ),
@@ -1796,8 +1834,8 @@ class _ProfilePreview extends StatelessWidget {
           progress: progress,
           start: 0.5,
           end: 0.72,
-          child: const _FitText(
-            'MEINE TÄGLICHEN ZIELE',
+          child: _FitText(
+            context.l10n.onboardingMyDailyTargets,
             size: 8.5,
             spacing: 1.2,
             weight: FontWeight.w700,
@@ -1822,7 +1860,11 @@ class _ProfilePreview extends StatelessWidget {
                 'Protein',
               ),
               const SizedBox(width: 6),
-              _GoalTile(AppColors.blue, '${(78 * goals).round()} g', 'Fett'),
+              _GoalTile(
+                AppColors.blue,
+                '${(78 * goals).round()} g',
+                context.l10n.onboardingFat,
+              ),
             ],
           ),
         ),

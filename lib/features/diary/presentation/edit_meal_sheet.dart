@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -84,14 +85,16 @@ class _EditMealSheetState extends State<_EditMealSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              entry.isRecipe ? 'Rezept bearbeiten' : 'Mahlzeit bearbeiten',
+              entry.isRecipe
+                  ? context.l10n.diaryEditRecipe
+                  : context.l10n.diaryEditMeal,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 6),
             Text(
               entry.isRecipe
-                  ? 'Die Mahlzeitenart kann angepasst werden. Zutaten und Werte bleiben mit dem Rezept verbunden.'
-                  : 'Änderungen werden direkt in deinem Tagebuch gespeichert.',
+                  ? context.l10n.diaryYouCanChangeTheMealTypeIngredients
+                  : context.l10n.diaryChangesAreSavedDirectlyToYourDiary,
               style: const TextStyle(color: AppColors.textMuted),
             ),
             const SizedBox(height: 20),
@@ -99,32 +102,39 @@ class _EditMealSheetState extends State<_EditMealSheet> {
               TextField(
                 controller: _nameController,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
-                  labelText: 'Name der Mahlzeit',
+                decoration: InputDecoration(
+                  labelText: context.l10n.diaryMealName,
                 ),
               ),
               const SizedBox(height: 16),
             ] else
-              _ReadOnlyName(name: entry.name, isRecipe: entry.isRecipe),
-            Text('Mahlzeit', style: Theme.of(context).textTheme.labelLarge),
+              _ReadOnlyName(name: entry.displayName, isRecipe: entry.isRecipe),
+            Text(
+              context.l10n.diaryMeal,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
             const SizedBox(height: 8),
             _EditSlotPicker(
               selected: _slot,
               onSelected: (value) => setState(() => _slot = value),
             ),
             const SizedBox(height: 18),
-            Text('Tag', style: Theme.of(context).textTheme.labelLarge),
+            Text(
+              context.l10n.diaryDay,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
               onPressed: _saving ? null : _pickDate,
               icon: const Icon(Icons.calendar_today_outlined),
-              label: Text(
-                '${selectedDate.day.toString().padLeft(2, '0')}.${selectedDate.month.toString().padLeft(2, '0')}.${selectedDate.year}',
-              ),
+              label: Text(AppFormat.date(selectedDate)),
             ),
             if (entry.foodId != null) ...[
               const SizedBox(height: 18),
-              Text('Menge', style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                context.l10n.diaryAmount,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -142,7 +152,10 @@ class _EditMealSheetState extends State<_EditMealSheet> {
             ],
             if (entry.isCustom) ...[
               const SizedBox(height: 18),
-              Text('Nährwerte', style: Theme.of(context).textTheme.labelLarge),
+              Text(
+                context.l10n.diaryNutrition,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -167,14 +180,14 @@ class _EditMealSheetState extends State<_EditMealSheet> {
                   Expanded(
                     child: _NumberField(
                       controller: _carbController,
-                      label: 'Kohlenhydrate g',
+                      label: context.l10n.diaryCarbsG,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: _NumberField(
                       controller: _fatController,
-                      label: 'Fett g',
+                      label: context.l10n.diaryFatG,
                     ),
                   ),
                 ],
@@ -187,7 +200,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
                   child: OutlinedButton.icon(
                     onPressed: _saving ? null : _duplicate,
                     icon: const Icon(Icons.copy_rounded),
-                    label: const Text('Duplizieren'),
+                    label: Text(context.l10n.diaryDuplicate),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -201,7 +214,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.check_rounded),
-                    label: const Text('Speichern'),
+                    label: Text(context.l10n.diarySave),
                   ),
                 ),
               ],
@@ -227,7 +240,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
     Navigator.pop(context);
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Eintrag wurde gelöscht.')));
+    ).showSnackBar(SnackBar(content: Text(L10n.current.diaryEntryDeleted)));
   }
 
   List<double> _amountOptions(double? current) {
@@ -253,7 +266,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
             protein < 0 ||
             carbs < 0 ||
             fat < 0)) {
-      _showError('Bitte Name und gültige, positive Werte eintragen.');
+      _showError(L10n.current.diaryPleaseEnterANameAndValidPositive);
       return;
     }
     setState(() => _saving = true);
@@ -273,14 +286,14 @@ class _EditMealSheetState extends State<_EditMealSheet> {
     if (!saved) {
       _showError(
         AppScope.of(context).diaryError ??
-            'Die Mahlzeit konnte nicht gespeichert werden.',
+            L10n.current.diaryTheMealCouldNotBeSaved,
       );
       return;
     }
     Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Mahlzeit wurde aktualisiert.')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(L10n.current.diaryMealUpdated)));
   }
 
   Future<void> _duplicate() async {
@@ -293,14 +306,14 @@ class _EditMealSheetState extends State<_EditMealSheet> {
     if (!copied) {
       _showError(
         AppScope.of(context).diaryError ??
-            'Die Mahlzeit konnte nicht dupliziert werden.',
+            L10n.current.diaryTheMealCouldNotBeDuplicated,
       );
       return;
     }
     Navigator.pop(context);
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Mahlzeit wurde dupliziert.')));
+    ).showSnackBar(SnackBar(content: Text(L10n.current.diaryMealDuplicated)));
   }
 
   Future<void> _pickDate() async {
@@ -310,7 +323,7 @@ class _EditMealSheetState extends State<_EditMealSheet> {
       initialDate: initialDate,
       firstDate: DateTime(2020),
       lastDate: DateTime(2035),
-      helpText: 'Mahlzeit verschieben',
+      helpText: L10n.current.diaryMoveMeal,
     );
     if (date != null && mounted) setState(() => _selectedDate = date);
   }

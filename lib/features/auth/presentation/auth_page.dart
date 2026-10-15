@@ -132,7 +132,7 @@ class _AuthPageState extends State<AuthPage>
             _message = null;
             _startResendCooldown();
           } else {
-            _message = 'Dein Lookin-Konto ist bereit.';
+            _message = L10n.current.authYourLookinAccountIsReady;
             _messageIsError = false;
           }
         });
@@ -152,7 +152,7 @@ class _AuthPageState extends State<AuthPage>
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+        _message = L10n.current.authConnectionFailedPleaseTryAgain;
         _messageIsError = true;
       });
     } finally {
@@ -165,7 +165,7 @@ class _AuthPageState extends State<AuthPage>
     final email = _inboxEmail ?? _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       setState(() {
-        _message = 'Gib zuerst deine E-Mail-Adresse ein.';
+        _message = L10n.current.authEnterYourEmailAddressFirst;
         _messageIsError = true;
       });
       return;
@@ -178,9 +178,7 @@ class _AuthPageState extends State<AuthPage>
       );
       if (!mounted) return;
       setState(() {
-        _message =
-            'Falls die Adresse noch nicht bestätigt ist, haben wir dir eine '
-            'neue Bestätigungs-Mail geschickt. Schau auch im Spam-Ordner nach.';
+        _message = L10n.current.authIfYourAddressHasNotBeenConfirmed;
         _messageIsError = false;
         _startResendCooldown();
       });
@@ -195,7 +193,7 @@ class _AuthPageState extends State<AuthPage>
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+        _message = L10n.current.authConnectionFailedPleaseTryAgain;
         _messageIsError = true;
       });
     } finally {
@@ -208,7 +206,7 @@ class _AuthPageState extends State<AuthPage>
     final email = _emailController.text.trim();
     if (email.isEmpty || !email.contains('@')) {
       setState(() {
-        _message = 'Gib zuerst deine E-Mail-Adresse ein.';
+        _message = L10n.current.authEnterYourEmailAddressFirst;
         _messageIsError = true;
       });
       return;
@@ -224,10 +222,7 @@ class _AuthPageState extends State<AuthPage>
       if (!mounted) return;
       setState(() {
         // Supabase does not reveal whether an account exists.
-        _message =
-            'Falls es ein Lookin-Konto mit dieser Adresse gibt, haben wir dir '
-            'einen Link zum Zurücksetzen geschickt. Schau auch im Spam-Ordner '
-            'nach.';
+        _message = L10n.current.authIfALookinAccountExistsWithThis;
         _messageIsError = false;
       });
     } on AuthException catch (error) {
@@ -239,7 +234,7 @@ class _AuthPageState extends State<AuthPage>
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+        _message = L10n.current.authConnectionFailedPleaseTryAgain;
         _messageIsError = true;
       });
     } finally {
@@ -263,32 +258,29 @@ class _AuthPageState extends State<AuthPage>
   String _friendlyAuthError(String message) {
     final lower = message.toLowerCase();
     if (lower.contains('invalid login credentials')) {
-      return 'E-Mail oder Passwort ist nicht korrekt. Hast du dich mit dieser '
-          'Adresse schon einmal registriert, gilt das damalige Passwort. '
-          'Setze es sonst über „Passwort vergessen?“ zurück.';
+      return L10n.current.authYourEmailOrPasswordIsIncorrectIf;
     }
     if (_isUnconfirmed(message)) {
-      return 'Deine E-Mail-Adresse ist noch nicht bestätigt. Tippe auf den '
-          'Link in unserer E-Mail oder fordere unten eine neue an.';
+      return L10n.current.authYourEmailAddressHasNotBeenConfirmed;
     }
     if (lower.contains('user already registered')) {
-      return 'Für diese E-Mail gibt es bereits ein Konto.';
+      return L10n.current.authAnAccountAlreadyExistsForThisEmail;
     }
     if (lower.contains('security purposes') ||
         lower.contains('rate limit') ||
         lower.contains('too many')) {
-      return 'Zu viele Versuche. Bitte warte kurz und versuche es dann erneut.';
+      return L10n.current.authTooManyAttemptsPleaseWaitAMoment;
     }
     if (lower.contains('weak') || lower.contains('pwned')) {
-      return 'Dieses Passwort ist zu unsicher. Wähle ein anderes.';
+      return L10n.current.authThisPasswordIsTooEasyToGuess;
     }
     if (lower.contains('password')) {
-      return 'Das Passwort muss mindestens acht Zeichen haben.';
+      return L10n.current.authYourPasswordMustContainAtLeastEight;
     }
     if (lower.contains('email') && lower.contains('invalid')) {
-      return 'Bitte prüfe deine E-Mail-Adresse.';
+      return L10n.current.authPleaseCheckYourEmailAddress;
     }
-    return 'Das hat gerade nicht geklappt. Bitte versuche es später erneut.';
+    return L10n.current.authThatDidNotWorkJustNowPlease;
   }
 
   @override
@@ -321,9 +313,7 @@ class _AuthPageState extends State<AuthPage>
       if (!mounted || silent) return;
       if (_isUnconfirmed(error.message)) {
         setState(() {
-          _message =
-              'Deine Adresse ist noch nicht bestätigt. Tippe zuerst auf den Link '
-              'in der E-Mail und komm dann hierher zurück.';
+          _message = L10n.current.authYourAddressHasNotBeenConfirmedYet;
           _messageIsError = true;
         });
       } else {
@@ -332,7 +322,7 @@ class _AuthPageState extends State<AuthPage>
     } catch (_) {
       if (mounted && !silent) {
         setState(() {
-          _message = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.';
+          _message = L10n.current.authConnectionFailedPleaseTryAgain;
           _messageIsError = true;
         });
       }
@@ -558,14 +548,16 @@ class _AuthPanel extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isSignUp ? 'Dein Start.' : 'Willkommen zurück.',
+                      isSignUp
+                          ? context.l10n.authYourStart
+                          : context.l10n.authWelcomeBack,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 7),
                     Text(
                       isSignUp
-                          ? 'Ein Konto für Ziele, Ernährung und Fortschritt.'
-                          : 'Einloggen und direkt dort weitermachen, wo du aufgehört hast.',
+                          ? context.l10n.authOneAccountForYourGoalsNutritionAnd
+                          : context.l10n.authSignInAndPickUpWhereYou,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -582,13 +574,13 @@ class _AuthPanel extends StatelessWidget {
                             controller: nameController,
                             textInputAction: TextInputAction.next,
                             autofillHints: const [AutofillHints.name],
-                            decoration: const InputDecoration(
-                              labelText: 'Dein Name',
+                            decoration: InputDecoration(
+                              labelText: context.l10n.authYourName,
                               prefixIcon: Icon(Icons.person_outline_rounded),
                             ),
                             validator: (value) =>
                                 value == null || value.trim().isEmpty
-                                ? 'Bitte gib deinen Namen ein.'
+                                ? context.l10n.authPleaseEnterYourName
                                 : null,
                           ),
                           const SizedBox(height: 13),
@@ -601,12 +593,12 @@ class _AuthPanel extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 autofillHints: const [AutofillHints.email],
-                decoration: const InputDecoration(
-                  labelText: 'E-Mail-Adresse',
+                decoration: InputDecoration(
+                  labelText: context.l10n.authEmailAddress,
                   prefixIcon: Icon(Icons.alternate_email_rounded),
                 ),
                 validator: (value) => value == null || !value.contains('@')
-                    ? 'Bitte gib eine gültige E-Mail ein.'
+                    ? context.l10n.authPleaseEnterAValidEmailAddress
                     : null,
               ),
               const SizedBox(height: 13),
@@ -619,13 +611,13 @@ class _AuthPanel extends StatelessWidget {
                 ],
                 onFieldSubmitted: (_) => onSubmit(),
                 decoration: InputDecoration(
-                  labelText: 'Passwort',
+                  labelText: context.l10n.authPassword,
                   prefixIcon: const Icon(Icons.lock_outline_rounded),
                   suffixIcon: IconButton(
                     onPressed: onTogglePassword,
                     tooltip: obscurePassword
-                        ? 'Passwort anzeigen'
-                        : 'Passwort verbergen',
+                        ? context.l10n.authShowPassword
+                        : context.l10n.authHidePassword,
                     icon: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 180),
                       child: Icon(
@@ -638,7 +630,7 @@ class _AuthPanel extends StatelessWidget {
                   ),
                 ),
                 validator: (value) => value == null || value.length < 8
-                    ? 'Mindestens acht Zeichen.'
+                    ? context.l10n.authAtLeastEightCharacters
                     : null,
               ),
               if (!isSignUp)
@@ -646,7 +638,7 @@ class _AuthPanel extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: loading ? null : onResetPassword,
-                    child: const Text('Passwort vergessen?'),
+                    child: Text(context.l10n.authForgotPassword),
                   ),
                 )
               else
@@ -714,15 +706,17 @@ class _AuthPanel extends StatelessWidget {
                               ? Icons.arrow_forward_rounded
                               : Icons.login_rounded,
                         ),
-                  label: Text(isSignUp ? 'Kostenlos starten' : 'Einloggen'),
+                  label: Text(
+                    isSignUp
+                        ? context.l10n.authGetStartedForFree
+                        : context.l10n.authSignIn,
+                  ),
                 ),
               ),
               if (isSignUp) ...[
                 const SizedBox(height: 10),
-                const Text(
-                  'Mit „Kostenlos starten“ bestätigst du, dass du mindestens 18 '
-                  'Jahre alt bist, und akzeptierst die AGB. Hinweise zum '
-                  'Datenschutz findest du in der Datenschutzerklärung.',
+                Text(
+                  context.l10n.authByTappingGetStartedForFreeYou,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textMuted,
@@ -744,7 +738,7 @@ class _AuthPanel extends StatelessWidget {
                   pages: [LegalPage.withdrawalForm, LegalPage.imprint],
                 ),
               const SizedBox(height: 16),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
@@ -755,7 +749,7 @@ class _AuthPanel extends StatelessWidget {
                   SizedBox(width: 6),
                   Flexible(
                     child: Text(
-                      'Sicher gespeichert · jederzeit löschbar',
+                      context.l10n.authSecurelyStoredDeleteAtAnyTime,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.textMuted,
@@ -792,14 +786,14 @@ class _ModeSwitch extends StatelessWidget {
         children: [
           Expanded(
             child: _ModeButton(
-              label: 'Anmelden',
+              label: context.l10n.authSignIn2,
               selected: !isSignUp,
               onTap: () => onChanged(false),
             ),
           ),
           Expanded(
             child: _ModeButton(
-              label: 'Registrieren',
+              label: context.l10n.authSignUp,
               selected: isSignUp,
               onTap: () => onChanged(true),
             ),
@@ -871,7 +865,7 @@ class _AuthStory extends StatelessWidget {
           const _OrbitVisual(),
           const SizedBox(height: 34),
           Text(
-            'Dein Essen.\nDein Rhythmus.',
+            context.l10n.authYourFoodYourRhythm,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: 56,
               height: 0.96,
@@ -879,8 +873,8 @@ class _AuthStory extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          const Text(
-            'Tracken, verstehen und besser entscheiden — ohne komplizierte Tabellen.',
+          Text(
+            context.l10n.authTrackUnderstandAndMakeBetterChoicesWithout,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 16,
@@ -888,13 +882,13 @@ class _AuthStory extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const Wrap(
+          Wrap(
             spacing: 9,
             runSpacing: 9,
             children: [
-              _FeatureChip(Icons.bolt_rounded, 'Schnell'),
-              _FeatureChip(Icons.auto_graph_rounded, 'Persönlich'),
-              _FeatureChip(Icons.shield_outlined, 'Privat'),
+              _FeatureChip(Icons.bolt_rounded, context.l10n.authQuick),
+              _FeatureChip(Icons.auto_graph_rounded, context.l10n.authPersonal),
+              _FeatureChip(Icons.shield_outlined, context.l10n.authPrivate),
             ],
           ),
           const Spacer(),
@@ -920,13 +914,12 @@ class _AnswersReadyIntro extends StatelessWidget {
         const _BrandMark(),
         const SizedBox(height: 24),
         Text(
-          'Fast geschafft!',
+          context.l10n.authAlmostThere,
           style: Theme.of(context).textTheme.displaySmall,
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Erstelle dein kostenloses Konto. Dann speichert Lookin deine '
-          'Antworten und dein Tagebuch – auch auf deinen anderen Geräten.',
+        Text(
+          context.l10n.authCreateYourFreeAccountLookinWillThen,
           style: TextStyle(
             color: AppColors.textMuted,
             fontSize: 15,
@@ -940,7 +933,7 @@ class _AnswersReadyIntro extends StatelessWidget {
             onPressed: onEdit,
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             icon: const Icon(Icons.arrow_back_rounded, size: 18),
-            label: const Text('Antworten ändern'),
+            label: Text(context.l10n.authChangeAnswers),
           ),
         ],
       ],
@@ -959,12 +952,12 @@ class _MobileIntro extends StatelessWidget {
         const _BrandMark(),
         const SizedBox(height: 24),
         Text(
-          'Dein Alltag.\nDein Rhythmus.',
+          context.l10n.authYourDayYourRhythm,
           style: Theme.of(context).textTheme.displaySmall,
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Einfach essen. Klarer entscheiden.',
+        Text(
+          context.l10n.authEatSimplyChooseClearly,
           style: TextStyle(color: AppColors.textMuted, fontSize: 15),
         ),
       ],
@@ -1068,7 +1061,7 @@ class _OrbitVisual extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -1078,7 +1071,7 @@ class _OrbitVisual extends StatelessWidget {
                       ),
                       SizedBox(height: 7),
                       Text(
-                        'HEUTE',
+                        context.l10n.authToday,
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.7,
@@ -1092,10 +1085,10 @@ class _OrbitVisual extends StatelessWidget {
                   top: 23,
                   child: _OrbitTag('PROTEIN', AppColors.mint),
                 ),
-                const Positioned(
+                Positioned(
                   right: 0,
                   top: 62,
-                  child: _OrbitTag('ENERGIE', AppColors.orange),
+                  child: _OrbitTag(context.l10n.authEnergy, AppColors.orange),
                 ),
                 const Positioned(
                   left: 25,

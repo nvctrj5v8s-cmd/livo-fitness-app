@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -59,22 +60,26 @@ Future<bool> _confirmClearHistory(
     context: context,
     builder: (context) => AlertDialog(
       backgroundColor: AppColors.surfaceHigh,
-      title: Text(newChat ? 'Neuen Chat beginnen?' : 'Chatverlauf löschen?'),
+      title: Text(
+        newChat
+            ? context.l10n.coachStartANewChat
+            : context.l10n.coachDeleteChatHistory,
+      ),
       content: Text(
-        '${newChat ? 'Dafür wird dein bisheriger Chatverlauf' : 'Dein Chatverlauf wird'} '
-        'dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig '
-        'machen. Dein Tageslimit bleibt unverändert.',
+        newChat
+            ? context.l10n.coachNewChatExplanation
+            : context.l10n.coachDeleteHistoryExplanation,
         style: const TextStyle(color: AppColors.textMuted, height: 1.45),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Abbrechen'),
+          child: Text(context.l10n.coachCancel),
         ),
         FilledButton(
           key: const Key('coach-confirm-clear'),
           onPressed: () => Navigator.of(context).pop(true),
-          child: const Text('Verlauf löschen'),
+          child: Text(context.l10n.coachDeleteHistory),
         ),
       ],
     ),
@@ -207,9 +212,9 @@ class _CoachChatState extends State<_CoachChat>
     final consent = AppScope.of(context).consent;
     if (!await ensureAiConsent(context, consent) || !mounted) return;
     final file = await openFile(
-      acceptedTypeGroups: const [
+      acceptedTypeGroups: [
         XTypeGroup(
-          label: 'Lebensmittel-Foto',
+          label: L10n.current.coachFoodPhoto,
           extensions: ['jpg', 'jpeg', 'png', 'webp'],
         ),
       ],
@@ -219,7 +224,7 @@ class _CoachChatState extends State<_CoachChat>
     final sourceBytes = await file.readAsBytes();
     final decoded = img.decodeImage(sourceBytes);
     if (decoded == null) {
-      _chat.showIssue('Dieses Bild konnte nicht gelesen werden.');
+      _chat.showIssue(L10n.current.coachThisImageCouldNotBeRead);
       return;
     }
     final resized = decoded.width > 1280 || decoded.height > 1280
@@ -231,7 +236,7 @@ class _CoachChatState extends State<_CoachChat>
         : decoded;
     final bytes = Uint8List.fromList(img.encodeJpg(resized, quality: 78));
     if (bytes.length > 4 * 1024 * 1024) {
-      _chat.showIssue('Das Foto ist zu groß. Bitte wähle ein kleineres Bild.');
+      _chat.showIssue(L10n.current.coachThePhotoIsTooLargePleaseChoose);
       return;
     }
     if (!mounted) return;
@@ -301,7 +306,7 @@ class _CoachChatState extends State<_CoachChat>
             _QuotaPill(remaining: chat.remaining!, dailyLimit: limit),
           IconButton(
             key: const Key('coach-new-chat'),
-            tooltip: 'Neuer Chat (Verlauf löschen)',
+            tooltip: context.l10n.coachNewChatDeleteHistory,
             onPressed: chat.hasMessages && !chat.busy
                 ? () => unawaited(_clearHistory())
                 : null,
@@ -362,7 +367,7 @@ class _CoachChatState extends State<_CoachChat>
 
   Widget _buildMessages(CoachChatController chat) {
     if (!chat.hasMessages && chat.historyLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -372,7 +377,7 @@ class _CoachChatState extends State<_CoachChat>
             ),
             SizedBox(height: 12),
             Text(
-              'Dein Verlauf wird geladen …',
+              L10n.current.coachLoadingYourHistory,
               style: TextStyle(color: AppColors.textMuted, fontSize: 13),
             ),
           ],
@@ -425,7 +430,10 @@ class _QuotaPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = 'Noch $remaining von $dailyLimit KI-Anfragen heute';
+    final label = context.l10n.coachValueOfValueAiRequestsLeftToday(
+      (remaining).toString(),
+      (dailyLimit).toString(),
+    );
     return Padding(
       padding: const EdgeInsets.only(right: 2),
       child: Center(
@@ -471,7 +479,7 @@ class _CoachTitle extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        const Flexible(
+        Flexible(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -487,7 +495,7 @@ class _CoachTitle extends StatelessWidget {
                   SizedBox(width: 5),
                   Flexible(
                     child: Text(
-                      'KI · Ernährung & Fitness',
+                      context.l10n.coachAiNutritionFitness,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -567,8 +575,8 @@ class _CoachUnavailable extends StatelessWidget {
               size: 34,
             ),
             const SizedBox(height: 14),
-            const Text(
-              'Der Coach kann gerade nicht geöffnet werden.',
+            Text(
+              context.l10n.coachTheCoachCannotBeOpenedJustNow,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.text,
@@ -577,9 +585,8 @@ class _CoachUnavailable extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Dein Premium-Status konnte nicht geladen werden. Bitte prüfe '
-              'deine Internetverbindung.',
+            Text(
+              context.l10n.coachYourPremiumStatusCouldNotBeLoaded,
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.textMuted, height: 1.45),
             ),
@@ -588,7 +595,7 @@ class _CoachUnavailable extends StatelessWidget {
               key: const Key('coach-subscription-retry'),
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Erneut versuchen'),
+              label: Text(context.l10n.coachTryAgain),
             ),
           ],
         ),
@@ -604,16 +611,19 @@ class _CoachLocked extends StatelessWidget {
   final CoachChatController? chat;
   final bool canStartTrial;
 
-  static const _benefits = [
+  static List<(IconData, String)> get _benefits => [
     (
       Icons.dinner_dining_rounded,
-      'Ideen, die zu deinen restlichen Kalorien passen',
+      L10n.current.coachIdeasThatFitYourRemainingCalories,
     ),
     (
       Icons.fitness_center_rounded,
-      'Protein- und Trainingstipps für deinen Alltag',
+      L10n.current.coachProteinAndTrainingTipsForYourDay,
     ),
-    (Icons.photo_camera_rounded, 'Fotos deiner Mahlzeiten einschätzen lassen'),
+    (
+      Icons.photo_camera_rounded,
+      L10n.current.coachGetEstimatesFromPhotosOfYourMeals,
+    ),
   ];
 
   @override
@@ -642,19 +652,19 @@ class _CoachLocked extends StatelessWidget {
                   delay: const Duration(milliseconds: 90),
                   child: Column(
                     children: [
-                      const PremiumBadge(label: 'Premium-Funktion'),
+                      PremiumBadge(label: context.l10n.coachPremiumFeature),
                       const SizedBox(height: 12),
                       Text(
-                        'Dein persönlicher KI-Coach',
+                        context.l10n.coachYourPersonalAiCoach,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(fontWeight: FontWeight.w900),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Frag nach Mahlzeiten, Nährwerten oder Training – die '
-                        'Antworten berücksichtigen dein Ziel und deine '
-                        'Tageswerte.',
+                      Text(
+                        context
+                            .l10n
+                            .coachAskAboutMealsNutritionOrTrainingAnswers,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.textMuted,
@@ -711,16 +721,18 @@ class _CoachLocked extends StatelessWidget {
                           minimumSize: const Size.fromHeight(56),
                         ),
                         icon: const Icon(Icons.workspace_premium_rounded),
-                        label: const Text('Premium freischalten'),
+                        label: Text(context.l10n.coachUnlockPremium),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         canStartTrial
-                            ? '${SubscriptionPlans.trialDays} Tage kostenlos '
-                                  'testen · endet automatisch · keine '
-                                  'Zahlungsdaten'
-                            : 'Deine Testphase ist vorbei. Mit Premium '
-                                  'schreibst du weiter mit deinem Coach.',
+                            ? context.l10n
+                                  .coachValueDayFreeTrialEndsAutomaticallyNo(
+                                    (SubscriptionPlans.trialDays).toString(),
+                                  )
+                            : context
+                                  .l10n
+                                  .coachYourTrialHasEndedContinueChattingWith,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: AppColors.textMuted,
@@ -732,8 +744,8 @@ class _CoachLocked extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 22),
-                const Text(
-                  'KI kann Fehler machen · Keine medizinische Beratung',
+                Text(
+                  context.l10n.coachAiCanMakeMistakesNotMedicalAdvice,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textMuted,
@@ -796,7 +808,7 @@ class _StoredHistoryDelete extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.delete_outline_rounded, size: 18),
-                label: const Text('Gespeicherten Coach-Verlauf löschen'),
+                label: Text(context.l10n.coachDeleteSavedCoachHistory),
               ),
             if (issue != null)
               Text(
@@ -818,7 +830,7 @@ class _LockedPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Beispiel eines Coach-Gesprächs, mit Premium verfügbar',
+      label: context.l10n.coachExampleCoachConversationAvailableWithPremium,
       excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
@@ -844,13 +856,13 @@ class _LockedPreview extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Row(
+            Row(
               children: [
                 _CoachOrb(size: 30),
                 SizedBox(width: 9),
                 Expanded(
                   child: Text(
-                    'Beispiel',
+                    context.l10n.coachExample,
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
@@ -882,8 +894,8 @@ class _LockedPreview extends StatelessWidget {
                     bottomRight: Radius.circular(5),
                   ),
                 ),
-                child: const Text(
-                  'Was kann ich heute Abend noch essen?',
+                child: Text(
+                  context.l10n.coachWhatCanIStillEatThisEvening,
                   style: TextStyle(
                     color: AppColors.black,
                     fontSize: 13.5,
@@ -922,10 +934,8 @@ class _LockedPreview extends StatelessWidget {
                         colors: [Colors.white, Colors.transparent],
                         stops: [0.35, 1],
                       ).createShader(bounds),
-                      child: const Text(
-                        'Du hast heute noch etwa 650 kcal frei. Wie wäre eine '
-                        'Lachs-Bowl mit Reis und Gemüse? Das bringt dir rund '
-                        '35 g Protein und hält lange satt.',
+                      child: Text(
+                        context.l10n.coachYouHaveAbout650KcalLeftToday,
                         maxLines: 3,
                         overflow: TextOverflow.clip,
                         style: TextStyle(
@@ -954,7 +964,7 @@ class _LockedPreview extends StatelessWidget {
                           color: AppColors.primary.withValues(alpha: 0.5),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
@@ -964,7 +974,7 @@ class _LockedPreview extends StatelessWidget {
                           ),
                           SizedBox(width: 6),
                           Text(
-                            'Mit Premium',
+                            context.l10n.coachWithPremium,
                             style: TextStyle(
                               color: AppColors.text,
                               fontSize: 12,
@@ -996,20 +1006,20 @@ class _WelcomeState extends StatelessWidget {
   final ValueChanged<String> onSuggestion;
   final String? notice;
 
-  static const _suggestions = [
+  static List<(String, String, IconData)> get _suggestions => [
     (
-      'Abendessen',
-      'Was kann ich heute Abend noch essen?',
+      L10n.current.coachDinner,
+      L10n.current.coachWhatCanIStillEatThisEvening,
       Icons.dinner_dining_rounded,
     ),
     (
-      'Mehr Protein',
-      'Gib mir eine einfache proteinreiche Idee.',
+      L10n.current.coachMoreProtein,
+      L10n.current.coachGiveMeASimpleHighProteinIdea,
       Icons.fitness_center_rounded,
     ),
     (
-      'Tagesziel',
-      'Wie erreiche ich heute sinnvoll mein Kalorienziel?',
+      L10n.current.coachDailyTarget,
+      L10n.current.coachHowCanISensiblyReachMyCalorie,
       Icons.track_changes_rounded,
     ),
   ];
@@ -1062,16 +1072,15 @@ class _WelcomeState extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'Was brauchst du heute?',
+            context.l10n.coachWhatDoYouNeedToday,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           const SizedBox(height: 9),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 470),
-            child: const Text(
-              'Frag nach Mahlzeiten, Rezepten, Nährwerten oder Training. Dein '
-              'Ziel und deine heutigen Werte werden dabei berücksichtigt.',
+            child: Text(
+              context.l10n.coachAskAboutMealsRecipesNutritionOrTraining,
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.textMuted, height: 1.45),
             ),
@@ -1098,11 +1107,8 @@ class _WelcomeState extends StatelessWidget {
           const SizedBox(height: 14),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 470),
-            child: const Text(
-              'Mit jeder Frage gehen dein Ziel, deine Tagesziele, heutigen '
-              'Tageswerte, Ernährungsstil, Allergien und Aktivität an den '
-              'KI-Dienst – nicht dein Name. Der Chat wird in deinem Konto '
-              'gespeichert und lässt sich jederzeit löschen.',
+            child: Text(
+              context.l10n.coachEachQuestionSendsYourGoalDailyTargets,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.textMuted,
@@ -1207,14 +1213,14 @@ class _ScopeNote extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.mint.withValues(alpha: 0.13)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.shield_outlined, color: AppColors.mint, size: 16),
           SizedBox(width: 7),
           Flexible(
             child: Text(
-              'Fokussiert auf Ernährung, Fitness und gesunden Alltag',
+              context.l10n.coachFocusedOnNutritionFitnessAndAHealthy,
               style: TextStyle(color: AppColors.textMuted, fontSize: 11),
             ),
           ),
@@ -1236,7 +1242,7 @@ class _HistoryNote extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         children: [
-          const Row(
+          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
@@ -1247,10 +1253,10 @@ class _HistoryNote extends StatelessWidget {
               SizedBox(width: 6),
               Flexible(
                 child: Text(
-                  'Dein Verlauf ist in deinem Konto gespeichert – höchstens '
-                  'die letzten ${CoachChatController.historyMessageLimit} '
-                  'Nachrichten der letzten '
-                  '${CoachChatController.historyRetentionDays} Tage.',
+                  context.l10n.coachYourHistoryIsSavedInYourAccount(
+                    (CoachChatController.historyMessageLimit).toString(),
+                    (CoachChatController.historyRetentionDays).toString(),
+                  ),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textMuted,
@@ -1265,7 +1271,7 @@ class _HistoryNote extends StatelessWidget {
             key: const Key('coach-clear-history-inline'),
             onPressed: onClear,
             style: TextButton.styleFrom(foregroundColor: AppColors.primary),
-            child: const Text('Verlauf löschen'),
+            child: Text(context.l10n.coachDeleteHistory),
           ),
         ],
       ),
@@ -1315,8 +1321,10 @@ class _MessageBubble extends StatelessWidget {
     return Semantics(
       container: true,
       label: fromUser
-          ? (entry.failed ? 'Deine Frage, nicht gesendet' : 'Deine Frage')
-          : 'Antwort vom Coach',
+          ? (entry.failed
+                ? context.l10n.coachYourQuestionNotSent
+                : context.l10n.coachYourQuestion)
+          : context.l10n.coachCoachSAnswer,
       child: Column(
         crossAxisAlignment: fromUser
             ? CrossAxisAlignment.end
@@ -1372,7 +1380,7 @@ class _MessageBubble extends StatelessWidget {
                 : CoachFormattedText(entry.text, style: assistantStyle),
           ),
           if (entry.failed)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(bottom: 12, right: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -1384,7 +1392,7 @@ class _MessageBubble extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Text(
-                    'Nicht gesendet',
+                    context.l10n.coachNotSent,
                     style: TextStyle(color: AppColors.error, fontSize: 11.5),
                   ),
                 ],
@@ -1445,7 +1453,7 @@ class _TypingBubbleState extends State<_TypingBubble>
   Widget build(BuildContext context) {
     return Semantics(
       liveRegion: true,
-      label: 'Der Coach schreibt eine Antwort',
+      label: context.l10n.coachTheCoachIsWritingAnAnswer,
       excludeSemantics: true,
       child: Align(
         alignment: Alignment.centerLeft,
@@ -1496,8 +1504,8 @@ class _TypingBubbleState extends State<_TypingBubble>
               Flexible(
                 child: Text(
                   _slow
-                      ? 'Das dauert etwas länger als sonst …'
-                      : 'Coach schreibt …',
+                      ? context.l10n.coachThisIsTakingALittleLongerThan
+                      : context.l10n.coachCoachIsTyping,
                   style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
@@ -1582,7 +1590,7 @@ class _IssueBanner extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Hinweis schließen',
+                  tooltip: context.l10n.coachDismissNotice,
                   onPressed: onDismiss,
                   color: AppColors.textMuted,
                   iconSize: 18,
@@ -1603,7 +1611,7 @@ class _IssueBanner extends StatelessWidget {
                             foregroundColor: AppColors.primary,
                           ),
                           icon: const Icon(Icons.refresh_rounded, size: 18),
-                          label: const Text('Erneut versuchen'),
+                          label: Text(context.l10n.coachTryAgain),
                         )
                       : TextButton.icon(
                           key: const Key('coach-premium'),
@@ -1615,7 +1623,7 @@ class _IssueBanner extends StatelessWidget {
                             Icons.workspace_premium_rounded,
                             size: 18,
                           ),
-                          label: const Text('Premium ansehen'),
+                          label: Text(context.l10n.coachViewPremium),
                         ),
                 ),
               ),
@@ -1648,10 +1656,10 @@ class _Composer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hint = limitReached
-        ? 'Tageslimit erreicht – morgen geht es weiter'
+        ? context.l10n.coachDailyLimitReachedComeBackTomorrow
         : sending
-        ? 'Der Coach antwortet …'
-        : 'Frag deinen Coach …';
+        ? context.l10n.coachTheCoachIsReplying
+        : context.l10n.coachAskYourCoach;
     return Padding(
       padding: const EdgeInsets.fromLTRB(18, 4, 18, 0),
       child: DecoratedBox(
@@ -1681,7 +1689,7 @@ class _Composer extends StatelessWidget {
               children: [
                 IconButton(
                   key: const Key('coach-photo'),
-                  tooltip: 'Lebensmittel-Foto analysieren',
+                  tooltip: context.l10n.coachAnalyseAFoodPhoto,
                   onPressed: enabled ? onImage : null,
                   color: AppColors.mint,
                   disabledColor: AppColors.textMuted,
@@ -1720,7 +1728,7 @@ class _Composer extends StatelessWidget {
                     final canSend = enabled && value.text.trim().isNotEmpty;
                     return IconButton.filled(
                       key: const Key('coach-send'),
-                      tooltip: 'Nachricht senden',
+                      tooltip: context.l10n.coachSendMessage,
                       onPressed: canSend ? onSend : null,
                       style: IconButton.styleFrom(
                         backgroundColor: AppColors.primary,
@@ -1765,10 +1773,9 @@ class _ComposerFooter extends StatelessWidget {
     const max = CoachChatController.maxMessageLength;
     return Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Text(
-            'KI kann Fehler machen · Werte sind Schätzungen · Keine '
-            'medizinische Beratung',
+            context.l10n.coachAiCanMakeMistakesValuesAreEstimates,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 10.5,
@@ -1785,7 +1792,10 @@ class _ComposerFooter extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Semantics(
-                label: 'Noch ${max - length} von $max Zeichen frei',
+                label: context.l10n.coachValueOfValueCharactersRemaining(
+                  (max - length).toString(),
+                  (max).toString(),
+                ),
                 excludeSemantics: true,
                 child: Text(
                   '$length/$max',

@@ -1,6 +1,6 @@
 # Lookin Coach: Daten, Verlauf und Grenzen
 
-Stand: 27. September 2026. Technische Dokumentation, keine abschließende
+Stand: 15. Oktober 2026. Technische Dokumentation, keine abschließende
 Datenschutzerklärung oder juristische Freigabe.
 
 ## Was an den KI-Dienst geht
@@ -9,6 +9,8 @@ Der Coach läuft ausschließlich über die Supabase Edge Function `ai-coach`.
 Die App kennt keinen KI-Schlüssel. Mit jeder Frage überträgt die App:
 
 - die Frage selbst (höchstens 600 Zeichen),
+- die aufgelöste App-Sprache (`de` oder `en`), damit Antworten und
+  Foto-Beschreibungen in derselben Sprache erfolgen,
 - Ziel, Kalorien- und Proteinziel. Berechnet Lookin bewusst keine Ziele (unter
   18 Jahren oder nach einem Gesundheitshinweis in den Einstiegsfragen),
   fehlen beide; stattdessen geht nur `calorie_targets_paused: true` mit –
@@ -51,7 +53,8 @@ das Konto wieder genutzt oder gelöscht wird; ein täglicher Aufräumjob
 
 Gespeichert werden nur Frage und Antwort als Text, nicht der mitgeschickte
 App-Kontext und keine Fotos. Bei der Fotoanalyse im Coach steht als Frage nur
-„📷 Lebensmittel-Foto zur Analyse“.
+„📷 Lebensmittel-Foto zur Analyse“ bzw. „📷 Food photo for analysis“.
+Bestehende Nachrichten werden beim Sprachwechsel nicht nachträglich übersetzt.
 
 ## Löschen
 
@@ -77,13 +80,15 @@ App-Kontext und keine Fotos. Bei der Fotoanalyse im Coach steht als Frage nur
 
 ## Inhaltliche Grenzen
 
-Die Systemanweisung verpflichtet den Coach auf: Deutsch, kurz und freundlich;
+Die Systemanweisung verpflichtet den Coach auf: die ausgewählte App-Sprache
+(Deutsch oder Englisch), kurz und freundlich;
 nur Ernährung, Fitness und Alltag; Halal-Inhaltsregel
 (`HALAL_CONTENT_POLICY.md`); keine Diagnose, Behandlung, Medikamente,
 Supplement-Dosierung, Heilversprechen oder extremen Diäten; bei
 Minderjährigen, Schwangerschaft/Stillzeit, Essstörungen und relevanten
 Erkrankungen keine Pläne, sondern Verweis auf qualifizierte Hilfe; bei akuter
-Gefahr Notruf 112. Nährwerte sind Schätzungen („ca.“). Die App zeigt
+Gefahr qualifizierte Hilfe bzw. örtlichen Notruf (deutsche Fassung: 112).
+Nährwerte sind Schätzungen („ca.“/„approx.“). Die App zeigt
 dauerhaft „KI kann Fehler machen · Werte sind Schätzungen · Keine
 medizinische Beratung“.
 

@@ -1,6 +1,240 @@
 {
   "@@locale": "de",
+  "allergiesAllergiesIntolerances": "Allergien & Unverträglichkeiten",
+  "allergiesAllergyInformationMissing": "Allergieangaben fehlen",
+  "allergiesChange": "Ändern",
+  "allergiesClose": "Schließen",
+  "allergiesEGCoconutHistamine": "z. B. Kokos, Histamin",
+  "allergiesNoReliableAllergenOrIngredientInformationIs": "Zu diesem Eintrag liegen keine verlässlichen Allergen- oder Zutatenangaben vor.",
+  "allergiesNoneOfYourSelectedTriggersWereRecognised": "In den vorhandenen Angaben wurde kein gewählter Auslöser erkannt. Das ist keine Sicherheitsgarantie.",
+  "allergiesNoneSpecified": "Keine angegeben",
+  "allergiesOptionalHealthInformationItIsSavedIn": "Freiwillige Gesundheitsangabe: Sie wird in deinem Konto gespeichert und dem Lookin Coach als Kontext mitgegeben, damit er nichts Unpassendes vorschlägt. Du kannst sie hier jederzeit ändern oder leeren.",
+  "allergiesOtherAllergiesIntolerances": "Weitere Allergien / Unverträglichkeiten",
+  "allergiesPleaseCheckTheIngredientsList": "Bitte Zutatenliste prüfen",
+  "allergiesPossibleAllergenConflict": "Möglicher Allergenkonflikt",
+  "allergiesProductInformationMayBeMissingOrOutdated": "Produktangaben können fehlen oder veraltet sein. Prüfe bei einer Allergie immer die aktuelle Verpackung und mögliche Kreuzkontamination.",
+  "allergiesSaveSelection": "Auswahl speichern",
+  "allergiesSelect": "Auswählen",
+  "allergiesSelectKnownAllergensLactoseIsListedSeparately": "Wähle bekannte Allergene aus. Laktose ist separat als Unverträglichkeit aufgeführt.",
+  "allergiesSeparateMultipleEntriesWithCommas": "Mehrere Angaben mit Komma trennen.",
+  "allergiesTheAvailableProductOrIngredientInformationMentions": "Die verfügbaren Produkt-/Zutatenangaben nennen: {arg0}.",
+  "@allergiesTheAvailableProductOrIngredientInformationMentions": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "allergiesValueIfYouHaveAllergiesAlwaysCheck": "{arg0} Prüfe bei Allergien immer die aktuelle Verpackung und mögliche Kreuzkontamination.",
+  "@allergiesValueIfYouHaveAllergiesAlwaysCheck": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "allergiesWhatShouldTheAppTakeIntoAccount": "Was soll die App beachten?",
+  "appConfirmedIfYouAlsoReceivedAnEmail": "Bestätigt. Hast du auch an deine andere Adresse eine E-Mail bekommen, bestätige die Änderung dort ebenfalls.",
+  "appNoConnectionToTheServerYourLink": "Keine Verbindung zum Server. Dein Link ist vermutlich noch gültig: Lade die Seite neu oder tippe den Link in der E-Mail noch einmal an.",
   "appOpeningSemantics": "Lookin wird geöffnet",
+  "appYourConfirmationLinkHasExpiredOrHas": "Der Bestätigungslink ist abgelaufen oder wurde schon benutzt. Melde dich an. Ist deine Adresse noch nicht bestätigt, kannst du dort eine neue Bestätigungs-Mail anfordern.",
+  "appYourResetLinkHasExpiredOrHas": "Der Link zum Zurücksetzen ist abgelaufen oder wurde schon benutzt. Fordere unter „Passwort vergessen?“ einen neuen an.",
+  "authAlmostThere": "Fast geschafft!",
+  "authAnAccountAlreadyExistsForThisEmail": "Für diese E-Mail gibt es bereits ein Konto.",
+  "authAtLeastEightCharacters": "Mindestens acht Zeichen.",
+  "authBack": "Zurück",
+  "authByTappingGetStartedForFreeYou": "Mit „Kostenlos starten“ bestätigst du, dass du mindestens 18 Jahre alt bist, und akzeptierst die AGB. Hinweise zum Datenschutz findest du in der Datenschutzerklärung.",
+  "authCancelAndReturnToSignIn": "Abbrechen und zum Login",
+  "authChangeAnswers": "Antworten ändern",
+  "authCheckYourInbox": "Schau in dein Postfach",
+  "authCheckingYourSignIn": "Anmeldung wird geprüft",
+  "authChooseANewPasswordYouWillThen": "Wähle ein neues Passwort. Danach meldest du dich damit erneut an.",
+  "authConnectionFailedPleaseTryAgain": "Verbindung fehlgeschlagen. Bitte versuche es erneut.",
+  "authCreateYourFreeAccountLookinWillThen": "Erstelle dein kostenloses Konto. Dann speichert Lookin deine Antworten und dein Tagebuch – auch auf deinen anderen Geräten.",
+  "authEatSimplyChooseClearly": "Einfach essen. Klarer entscheiden.",
+  "authEmailAddress": "E-Mail-Adresse",
+  "authEmailConfirmed": "E-Mail bestätigt",
+  "authEnergy": "ENERGIE",
+  "authEnterYourEmailAddressFirst": "Gib zuerst deine E-Mail-Adresse ein.",
+  "authForgotPassword": "Passwort vergessen?",
+  "authGetStartedForFree": "Kostenlos starten",
+  "authHidePassword": "Passwort verbergen",
+  "authIHaveConfirmedContinue": "Ich habe bestätigt – weiter",
+  "authIfALookinAccountExistsWithThis": "Falls es ein Lookin-Konto mit dieser Adresse gibt, haben wir dir einen Link zum Zurücksetzen geschickt. Schau auch im Spam-Ordner nach.",
+  "authIfNoLookinAccountExistsForThis": " geschickt, falls es dort noch kein Lookin-Konto gibt. Tippe auf den Link darin, um dein Konto zu aktivieren.",
+  "authIfYourAddressHasNotBeenConfirmed": "Falls die Adresse noch nicht bestätigt ist, haben wir dir eine neue Bestätigungs-Mail geschickt. Schau auch im Spam-Ordner nach.",
+  "authNewPassword": "Neues Passwort",
+  "authNothingArrivedCheckYourSpamFolderToo": "Nichts angekommen? Schau auch im Spam-Ordner nach. Es kann ein bis zwei Minuten dauern. Hast du dich mit dieser Adresse schon einmal registriert? Dann melde dich an oder nutze dort „Passwort vergessen?“.",
+  "authOneAccountForYourGoalsNutritionAnd": "Ein Konto für Ziele, Ernährung und Fortschritt.",
+  "authOpenYourInbox": "Postfach öffnen",
+  "authPassword": "Passwort",
+  "authPersonal": "Persönlich",
+  "authPleaseCheckYourEmailAddress": "Bitte prüfe deine E-Mail-Adresse.",
+  "authPleaseEnterAValidEmailAddress": "Bitte gib eine gültige E-Mail ein.",
+  "authPleaseEnterYourName": "Bitte gib deinen Namen ein.",
+  "authPrivate": "Privat",
+  "authQuick": "Schnell",
+  "authRepeatPassword": "Passwort wiederholen",
+  "authResendConfirmationEmail": "Bestätigungs-Mail erneut senden",
+  "authSavePassword": "Passwort speichern",
+  "authSecurelyStoredDeleteAtAnyTime": "Sicher gespeichert · jederzeit löschbar",
+  "authSendAgainInValueS": "Erneut senden in {arg0} s",
+  "@authSendAgainInValueS": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "authShowPassword": "Passwort anzeigen",
+  "authSignIn": "Einloggen",
+  "authSignIn2": "Anmelden",
+  "authSignInAndPickUpWhereYou": "Einloggen und direkt dort weitermachen, wo du aufgehört hast.",
+  "authSignInNow": "Jetzt anmelden",
+  "authSignOutFailedPleaseTryAgain": "Abmelden fehlgeschlagen. Bitte versuche es erneut.",
+  "authSignUp": "Registrieren",
+  "authTapConfirmEmail": "Auf „E-Mail bestätigen“ tippen",
+  "authThatDidNotWorkJustNowPlease": "Das hat gerade nicht geklappt. Bitte versuche es später erneut.",
+  "authTheEmailComesFromLookinNoreplyLookin": "Die Mail kommt von Lookin (noreply@lookin-foodtracker.de).",
+  "authTheLinkCanOnlyBeUsedOnce": "Der Link funktioniert nur einmal und ist begrenzt gültig.",
+  "authThePasswordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
+  "authThisPasswordIsTooEasyToGuess": "Dieses Passwort ist zu unsicher. Wähle ein anderes.",
+  "authTipReturnToLookinInTheWindow": "Tipp: Kehre einfach zu Lookin zurück, in dem Fenster oder der App, in der du dich registriert hast. Dort wirst du automatisch angemeldet.",
+  "authToday": "HEUTE",
+  "authTooManyAttemptsPleaseWaitAMoment": "Zu viele Versuche. Bitte warte kurz und versuche es dann erneut.",
+  "authTrackUnderstandAndMakeBetterChoicesWithout": "Tracken, verstehen und besser entscheiden — ohne komplizierte Tabellen.",
+  "authUseADifferentEmailAddress": "Andere E-Mail-Adresse verwenden",
+  "authUsingYourEmailAddressAndPassword": "Mit deiner E-Mail-Adresse und deinem Passwort.",
+  "authWeHaveSentAConfirmationEmailTo": "Wir haben eine Bestätigungs-Mail an ",
+  "authWelcomeBack": "Willkommen zurück.",
+  "authYourAddressHasNotBeenConfirmedYet": "Deine Adresse ist noch nicht bestätigt. Tippe zuerst auf den Link in der E-Mail und komm dann hierher zurück.",
+  "authYourDayYourRhythm": "Dein Alltag.\nDein Rhythmus.",
+  "authYourEmailAddressHasNotBeenConfirmed": "Deine E-Mail-Adresse ist noch nicht bestätigt. Tippe auf den Link in unserer E-Mail oder fordere unten eine neue an.",
+  "authYourEmailOrPasswordIsIncorrectIf": "E-Mail oder Passwort ist nicht korrekt. Hast du dich mit dieser Adresse schon einmal registriert, gilt das damalige Passwort. Setze es sonst über „Passwort vergessen?“ zurück.",
+  "authYourFoodYourRhythm": "Dein Essen.\nDein Rhythmus.",
+  "authYourLookinAccountIsNowActiveYou": "Dein Lookin-Konto ist jetzt aktiv. Du kannst dich mit deiner E-Mail-Adresse und deinem Passwort anmelden.",
+  "authYourLookinAccountIsReady": "Dein Lookin-Konto ist bereit.",
+  "authYourName": "Dein Name",
+  "authYourNewPasswordHasBeenSavedSign": "Dein neues Passwort ist gespeichert. Melde dich jetzt damit an.",
+  "authYourNewPasswordMustBeDifferentFrom": "Das neue Passwort muss sich von deinem bisherigen unterscheiden.",
+  "authYourPasswordCouldNotBeSetRequest": "Das Passwort konnte nicht gesetzt werden. Fordere unter „Passwort vergessen?“ einen neuen Link an.",
+  "authYourPasswordIsTooWeakPleaseUse": "Das Passwort ist zu schwach. Wähle mindestens acht Zeichen.",
+  "authYourPasswordMustContainAtLeastEight": "Das Passwort muss mindestens acht Zeichen haben.",
+  "authYourStart": "Dein Start.",
+  "coachAiCanMakeMistakesNotMedicalAdvice": "KI kann Fehler machen · Keine medizinische Beratung",
+  "coachAiCanMakeMistakesValuesAreEstimates": "KI kann Fehler machen · Werte sind Schätzungen · Keine medizinische Beratung",
+  "coachAiNutritionFitness": "KI · Ernährung & Fitness",
+  "coachAnalyseAFoodPhoto": "Lebensmittel-Foto analysieren",
+  "coachAskAboutMealsNutritionOrTrainingAnswers": "Frag nach Mahlzeiten, Nährwerten oder Training – die Antworten berücksichtigen dein Ziel und deine Tageswerte.",
+  "coachAskAboutMealsRecipesNutritionOrTraining": "Frag nach Mahlzeiten, Rezepten, Nährwerten oder Training. Dein Ziel und deine heutigen Werte werden dabei berücksichtigt.",
+  "coachAskYourCoach": "Frag deinen Coach …",
+  "coachCancel": "Abbrechen",
+  "coachCoachIsTyping": "Coach schreibt …",
+  "coachCoachSAnswer": "Antwort vom Coach",
+  "coachDailyLimitReachedComeBackTomorrow": "Tageslimit erreicht – morgen geht es weiter",
+  "coachDailyTarget": "Tagesziel",
+  "coachDeleteChatHistory": "Chatverlauf löschen?",
+  "coachDeleteHistory": "Verlauf löschen",
+  "coachDeleteHistoryExplanation": "Dein Chatverlauf wird dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "coachDeleteSavedCoachHistory": "Gespeicherten Coach-Verlauf löschen",
+  "coachDinner": "Abendessen",
+  "coachDismissNotice": "Hinweis schließen",
+  "coachEachQuestionSendsYourGoalDailyTargets": "Mit jeder Frage gehen dein Ziel, deine Tagesziele, heutigen Tageswerte, Ernährungsstil, Allergien und Aktivität an den KI-Dienst – nicht dein Name. Der Chat wird in deinem Konto gespeichert und lässt sich jederzeit löschen.",
+  "coachExample": "Beispiel",
+  "coachExampleCoachConversationAvailableWithPremium": "Beispiel eines Coach-Gesprächs, mit Premium verfügbar",
+  "coachFocusedOnNutritionFitnessAndAHealthy": "Fokussiert auf Ernährung, Fitness und gesunden Alltag",
+  "coachFoodPhoto": "Lebensmittel-Foto",
+  "coachFoodPhotoForAnalysis": "📷 Lebensmittel-Foto zur Analyse",
+  "coachGetEstimatesFromPhotosOfYourMeals": "Fotos deiner Mahlzeiten einschätzen lassen",
+  "coachGiveMeASimpleHighProteinIdea": "Gib mir eine einfache proteinreiche Idee.",
+  "coachHowCanISensiblyReachMyCalorie": "Wie erreiche ich heute sinnvoll mein Kalorienziel?",
+  "coachIdeasThatFitYourRemainingCalories": "Ideen, die zu deinen restlichen Kalorien passen",
+  "coachLoadingYourHistory": "Dein Verlauf wird geladen …",
+  "coachMoreProtein": "Mehr Protein",
+  "coachNewChatDeleteHistory": "Neuer Chat (Verlauf löschen)",
+  "coachNewChatExplanation": "Dafür wird dein bisheriger Chatverlauf dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "coachNotSent": "Nicht gesendet",
+  "coachPremiumFeature": "Premium-Funktion",
+  "coachProteinAndTrainingTipsForYourDay": "Protein- und Trainingstipps für deinen Alltag",
+  "coachSendMessage": "Nachricht senden",
+  "coachStartANewChat": "Neuen Chat beginnen?",
+  "coachTheCoachCannotBeOpenedJustNow": "Der Coach kann gerade nicht geöffnet werden.",
+  "coachTheCoachIsReplying": "Der Coach antwortet …",
+  "coachTheCoachIsWritingAnAnswer": "Der Coach schreibt eine Antwort",
+  "coachTheLookinCoachIsPartOfLookin": "Der Lookin Coach ist Teil von Lookin Premium. Deine Testphase oder dein Abo ist nicht mehr aktiv.",
+  "coachThePhotoIsTooLargePleaseChoose": "Das Foto ist zu groß. Bitte wähle ein kleineres Bild.",
+  "coachThisImageCouldNotBeRead": "Dieses Bild konnte nicht gelesen werden.",
+  "coachThisIsTakingALittleLongerThan": "Das dauert etwas länger als sonst …",
+  "coachTryAgain": "Erneut versuchen",
+  "coachUnlockPremium": "Premium freischalten",
+  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · endet automatisch · keine Zahlungsdaten",
+  "@coachValueDayFreeTrialEndsAutomaticallyNo": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachValueOfValueAiRequestsLeftToday": "Noch {arg0} von {arg1} KI-Anfragen heute",
+  "@coachValueOfValueAiRequestsLeftToday": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "coachValueOfValueCharactersRemaining": "Noch {arg0} von {arg1} Zeichen frei",
+  "@coachValueOfValueCharactersRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "coachValuePermanentlyDeletedFromYourAccountThis": "{arg0} dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.",
+  "@coachValuePermanentlyDeletedFromYourAccountThis": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachViewPremium": "Premium ansehen",
+  "coachWhatCanIStillEatThisEvening": "Was kann ich heute Abend noch essen?",
+  "coachWhatDoYouNeedToday": "Was brauchst du heute?",
+  "coachWithPremium": "Mit Premium",
+  "coachYouHaveAbout650KcalLeftToday": "Du hast heute noch etwa 650 kcal frei. Wie wäre eine Lachs-Bowl mit Reis und Gemüse? Das bringt dir rund 35 g Protein und hält lange satt.",
+  "coachYourChatHistoryHasBeenDeleted": "Dein Chatverlauf wurde gelöscht.",
+  "coachYourHistoryIsSavedInYourAccount": "Dein Verlauf ist in deinem Konto gespeichert – höchstens die letzten {arg0} Nachrichten der letzten {arg1} Tage.",
+  "@coachYourHistoryIsSavedInYourAccount": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "coachYourPersonalAiCoach": "Dein persönlicher KI-Coach",
+  "coachYourPremiumStatusCouldNotBeLoaded": "Dein Premium-Status konnte nicht geladen werden. Bitte prüfe deine Internetverbindung.",
+  "coachYourQuestion": "Deine Frage",
+  "coachYourQuestionIsTooLongPleaseShorten": "Deine Frage ist zu lang. Bitte kürze sie auf höchstens {arg0} Zeichen.",
+  "@coachYourQuestionIsTooLongPleaseShorten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coachYourQuestionNotSent": "Deine Frage, nicht gesendet",
+  "coachYourTrialHasEndedContinueChattingWith": "Deine Testphase ist vorbei. Mit Premium schreibst du weiter mit deinem Coach.",
   "commonAppTitle": "Lookin – Ernährung",
   "@commonAppTitle": {
     "description": "Window/task title of the app."
@@ -22,10 +256,1533 @@
   "commonSave": "Speichern",
   "commonUnknownError": "Das hat gerade nicht geklappt. Bitte versuche es später erneut.",
   "commonYes": "Ja",
+  "consentAiCoachAndAiPhotoWillThen": "KI-Coach und KI-Foto senden dann nichts mehr an OpenAI und fragen dich vor der nächsten Nutzung erneut.",
+  "consentCancel": "Abbrechen",
+  "consentConsents": "Einwilligungen",
+  "consentContinueWithoutConsent": "Ohne Einwilligung weiter",
+  "consentGiveConsent": "Einwilligen",
+  "consentIConsentToLookinStoringMyOptional": "Ich willige ein, dass Lookin meine freiwilligen Gesundheitsangaben (Gewicht, Taillenumfang, Zielgewicht, Allergien und Unverträglichkeiten sowie meine Antworten aus der Einführung wie Geburtstag, Größe, Geschlecht und einen optionalen Gesundheitshinweis) in meinem Konto speichert und für Richtwerte, Rezeptfilter und Warnhinweise nutzt. So muss ich sie auf einem neuen Gerät nicht noch einmal eingeben.",
+  "consentIExpresslyConsentToMyQuestionsPhotos": "Ich willige ausdrücklich ein, dass meine Fragen, Fotos, die letzten Chat-Nachrichten und folgende Angaben zur Beantwortung an den KI-Dienst OpenAI übermittelt werden (Verarbeitung auch in den USA): Ziel, Tageswerte, Ernährungsstil, Aktivität, Angaben aus der Einführung (Motivation, Hürden, Erfahrung) und meine Allergien und Unverträglichkeiten, also Gesundheitsdaten. Name und E-Mail werden nicht übermittelt.",
+  "consentIExpresslyRequestThatLookinPremiumBegins": "Ich verlange ausdrücklich, dass Lookin Premium sofort, also vor Ablauf der Widerrufsfrist, beginnt. Mir ist bekannt, dass ich bei einem Widerruf einen anteiligen Betrag für die bis dahin erbrachte Leistung zahle und mein Widerrufsrecht bei vollständiger Vertragserfüllung erlischt.",
+  "consentLookinAlsoWorksWithoutTheseConsentsWithout": "Lookin funktioniert auch ohne diese Einwilligungen. Ohne sie bleiben Gesundheitsangaben nur auf diesem Gerät, und KI-Coach und KI-Foto fragen dich vor der ersten Nutzung noch einmal.",
+  "consentNotNow": "Nicht jetzt",
+  "consentOptionalYouCanWithdrawEachConsentAt": "Freiwillig. Du kannst jede Einwilligung jederzeit unter Profil › Datenschutz & Daten widerrufen.",
+  "consentSaveAndContinue": "Speichern und weiter",
+  "consentSaveHealthInformation": "Gesundheitsangaben speichern",
+  "consentSaveWeightTargetWeightAndAllergiesIn": "Gewicht, Zielgewicht und Allergien im Konto speichern",
+  "consentSendQuestionsAndPhotosToOpenaiUsa": "Fragen und Fotos an OpenAI (USA) senden",
+  "consentUseAiCoachAndAiPhoto": "KI-Coach und KI-Foto nutzen",
+  "consentWeWillThenDeleteYourHealthInformation": "Wir löschen dann deine Gesundheitsangaben in deinem Konto (Allergien, Zielgewicht, Gewichts- und Taillenwerte). Auf diesem Gerät bleiben deine Angaben erhalten.",
+  "consentWithdraw": "Widerrufen",
+  "consentWithdrawAndDelete": "Widerrufen und löschen",
+  "consentWithdrawConsent": "Einwilligung widerrufen?",
+  "consentYourConsents": "Deine Einwilligungen",
+  "coreAccountChanged": "Konto geändert.",
+  "coreBarcodeSearchDidNotReceiveAValid": "Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.",
+  "coreBarcodeSearchIsCurrentlyUnavailablePleaseTry": "Die Barcode-Suche ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+  "coreCatalogueSourceValue": "Katalogquelle: {arg0}",
+  "@coreCatalogueSourceValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coreImageAnalysisIsCurrentlyUnavailablePleaseTry": "Die Bildanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.",
+  "coreInvalidAiNutritionValue": "Ungültiger KI-Nährwert.",
+  "coreInvalidRecognisedFood": "Ungültiges erkanntes Lebensmittel.",
+  "coreLookinCatalogue": "Lookin-Katalog",
+  "coreMissingNutritionValueValue": "Nährwert fehlt: {arg0}",
+  "@coreMissingNutritionValueValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coreMustBeGreaterThan0": "Muss größer als 0 sein.",
+  "coreNoAccountAvailable": "Konto fehlt.",
+  "coreNoConnectionToTheCoachPleaseCheck": "Keine Verbindung zum Coach. Bitte prüfe deine Internetverbindung und versuche es erneut.",
+  "coreNoFoodsCouldBeConfidentlyRecognisedIn": "Auf dem Foto konnten keine Lebensmittel sicher erkannt werden.",
+  "coreNoPermittedFoodsCouldBeConfidentlyRecognised": "Auf dem Foto konnten keine erlaubten Lebensmittel sicher erkannt werden.",
+  "coreNothingCouldBeConfidentlyRecognisedInThis": "Auf dem Foto konnte gerade nichts sicher erkannt werden.",
+  "coreNutritionValuesMustBeValidNumbersOf": "Nährwerte müssen gültige Zahlen ab 0 sein.",
+  "corePhotoAnalysisDidNotReturnAValid": "Die Fotoanalyse hat keine gültige Antwort erhalten.",
+  "corePhotoAnalysisIsCurrentlyUnavailablePleaseCheck": "Die Fotoanalyse ist gerade nicht erreichbar. Bitte prüfe deine Verbindung.",
+  "corePhotoAnalysisIsCurrentlyUnavailablePleaseTry": "Die Fotoanalyse ist gerade nicht erreichbar. Bitte versuche es erneut.",
+  "corePleaseAddSugarSaturatedFatAndSalt": "Bitte Zucker, gesättigte Fettsäuren und Salz vom Etikett ergänzen.",
+  "corePleaseEnterAnAmountGreaterThan0": "Bitte eine Menge größer als 0 eingeben.",
+  "corePleaseEnterYourPassword": "Bitte Passwort eingeben.",
+  "corePleaseRephraseYourQuestion": "Bitte formuliere deine Frage etwas anders.",
+  "corePleaseSignInAgain": "Bitte erneut anmelden.",
+  "corePleaseSignInAgainThenTryScanning": "Bitte melde dich erneut an und versuche den Scan danach noch einmal.",
+  "corePleaseSignInAgainToUsePhoto": "Bitte melde dich erneut an, um die Fotoanalyse zu verwenden.",
+  "corePleaseSignInBeforeSavingAnything": "Bitte melde dich an, bevor du etwas speicherst.",
+  "corePleaseSignInFirst": "Bitte melde dich zuerst an.",
+  "corePleaseSignInFirst2": "Bitte zuerst anmelden.",
+  "corePleaseWaitAMomentBeforeSearchingFor": "Bitte kurz warten, bevor du den nächsten Barcode suchst.",
+  "coreSaturatedFatCannotExceedTotalFat": "Gesättigte Fettsäuren dürfen nicht höher als Fett sein.",
+  "coreSugarCannotExceedCarbohydrates": "Zucker darf nicht höher als die Kohlenhydrate sein.",
+  "coreTheAmountOrANutritionValueIs": "Die Menge oder ein Nährwert ist zu groß.",
+  "coreTheCoachCouldNotPutTogetherAn": "Der Coach konnte gerade keine Antwort formulieren. Bitte versuche es noch einmal.",
+  "coreTheCoachDidNotSendAValid": "Der Coach hat keine gültige Antwort geschickt. Bitte versuche es noch einmal.",
+  "coreTheCoachIsCurrentlyUnavailablePleaseTry": "Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich noch einmal.",
+  "coreTheCoachIsTakingTooLongPlease": "Der Coach braucht gerade zu lange. Bitte versuche es noch einmal.",
+  "coreTheCustomEntryHasNotBeenSaved": "Der eigene Eintrag ist nicht gespeichert.",
+  "coreTheDataExportIsIncomplete": "Der Datenexport ist unvollständig.",
+  "coreTheFoodEntryIsIncomplete": "Der Lebensmitteleintrag ist unvollständig.",
+  "coreTheMealEntryHasNotBeenSaved": "Der Mahlzeiteneintrag ist nicht gespeichert.",
+  "coreThePhotoIsTooLargePleaseChoose": "Das Foto ist zu groß. Bitte wähle ein kleineres Bild.",
+  "coreThePhotoIsTooLargePleaseTake": "Das Foto ist zu groß. Bitte nimm ein kleineres Bild auf.",
+  "coreTheProductResponseWasIncomplete": "Die Produktantwort war unvollständig.",
+  "coreTheRecognisedValuesWereIncompletePleaseTry": "Die erkannten Werte waren unvollständig. Bitte versuche es erneut.",
+  "coreTheServerResponseIsInvalid": "Die Antwort des Servers ist ungültig.",
+  "coreTheSignedInAccountHasChanged": "Das angemeldete Konto hat sich geändert.",
+  "coreThisAiFeatureIsPartOfLookin": "Diese KI-Funktion ist Teil von Lookin Premium.",
+  "coreThisBarcodeIsInvalid": "Dieser Barcode ist ungültig.",
+  "coreThisFoodCouldNoLongerBeFound": "Das Lebensmittel konnte nicht mehr gefunden werden.",
+  "coreThisProductDoesNotMeetLookinS": "Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "coreThisProductWasNotFound": "Dieses Produkt wurde nicht gefunden.",
+  "coreThisRecipeHasNoSavedIngredientsYet": "Dieses Rezept hat noch keine gespeicherten Zutaten.",
+  "coreUnknownNutritionBasis": "Unbekannte Nährwert-Basis.",
+  "coreUnknownNutritionDataVersion": "Unbekannte Nährwert-Version.",
+  "coreUsdaFoodData": "USDA-Lebensmitteldaten",
+  "coreWriteAShortQuestionFirst": "Schreib zuerst eine kurze Frage.",
+  "coreYouHaveReachedTodaySAiLimit": "Dein KI-Limit für heute ist erreicht. Morgen kannst du wieder analysieren.",
+  "coreYouHaveReachedYourDailyAiLimit": "Dein KI-Tageslimit ist erreicht. Morgen kannst du wieder schreiben.",
+  "coreYourAccountCouldNotBeDeleted": "Das Konto konnte nicht gelöscht werden.",
+  "coreYourAccountWasDeletedButSomeLocal": "Das Konto wurde gelöscht, aber lokale Daten konnten nicht vollständig entfernt werden.",
+  "coreYourChatHistoryCouldNotBeDeleted": "Dein Chatverlauf konnte gerade nicht gelöscht werden. Bitte versuche es gleich noch einmal.",
+  "coreYourChatHistoryCouldNotBeLoaded": "Dein Chatverlauf konnte nicht geladen werden.",
+  "coreYourChatHistoryCouldNotBeLoaded2": "Dein Chatverlauf konnte gerade nicht geladen werden.",
+  "coreYourMessageIsTooLongPleaseShorten": "Deine Nachricht ist zu lang. Bitte kürze sie auf höchstens {arg0} Zeichen.",
+  "@coreYourMessageIsTooLongPleaseShorten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "coreYourProfilePictureMustBeAJpeg": "Das Profilbild muss ein JPEG mit höchstens 1 MB sein.",
+  "coreYourSessionHasExpiredPleaseSignIn": "Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.",
+  "diary10GLess": "10 g weniger",
+  "diary10GMore": "10 g mehr",
+  "diaryAdd": "Hinzufügen",
+  "diaryAddAtLeastOneFood": "Füge mindestens ein Lebensmittel hinzu.",
+  "diaryAddManually": "Selbst hinzufügen",
+  "diaryAddMeal": "Mahlzeit hinzufügen",
+  "diaryAddToDiary": "Zum Tagebuch hinzufügen",
+  "diaryAddToValue": "Zu {arg0} hinzufügen",
+  "@diaryAddToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAddToValueValueKcal": "Zu {arg0} hinzufügen · {arg1} kcal",
+  "@diaryAddToValueValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAddedToValue": "Zu {arg0} hinzugefügt.",
+  "@diaryAddedToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAiEstimate": "KI-Schätzung",
+  "diaryAiIsRecognisingFoodsAndEstimatingAmounts": "KI erkennt Lebensmittel und schätzt die Mengen …",
+  "diaryAiPhoto": "KI-Foto",
+  "diaryAiPhotoRecognitionIsPartOfLookin": "Die KI-Foto-Erkennung ist Teil von Lookin Premium. Du kannst die Mahlzeit trotzdem über „Suchen“ oder „Selbst hinzufügen“ eintragen.",
+  "diaryAiValuesAreEstimatesAPhotoCannot": "KI-Werte sind Schätzungen. Ein Foto ersetzt keine Waage oder Verpackungsangabe – prüfe Mengen und Nährwerte vor dem Speichern.",
+  "diaryAll": "Alle",
+  "diaryAllLabelValuesAreRequiredFibreIs": "Alle Etikettwerte sind erforderlich. Ballaststoffe sind freiwillig.",
+  "diaryAllergensAccordingToProductData": "Allergene laut Produktdaten",
+  "diaryAllergyNotice": "Allergiehinweis",
+  "diaryAllergyNoticeValue": "Allergiehinweis: {arg0}",
+  "@diaryAllergyNoticeValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAlternativelyChooseAPhotoUsingGalleryBelow": "Alternativ unten über „Galerie“ ein Foto auswählen.",
+  "diaryAmount": "Menge",
+  "diaryAmountEaten": "Gegessene Menge",
+  "diaryAnotherMeal": "Weitere Mahlzeit",
+  "diaryCalories": "Kalorien",
+  "diaryCameraAccessWasNotAllowedAllowThe": "Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Browser- bzw. Geräteeinstellungen und versuche es erneut.",
+  "diaryCameraActiveHoldTheBarcodeInsideThe": "Kamera aktiv – Barcode in den Rahmen halten",
+  "diaryCancel": "Abbrechen",
+  "diaryCarbohydrates": "Kohlenhydrate",
+  "diaryCarbs": "Kohlenh.",
+  "diaryCarbsG": "Kohlenhydrate g",
+  "diaryChangesAreSavedDirectlyToYourDiary": "Änderungen werden direkt in deinem Tagebuch gespeichert.",
+  "diaryChickpeaRiceBowl": "Kichererbsen-Reis-Bowl",
+  "diaryChooseFromGallery": "Aus Galerie wählen",
+  "diaryClearSearch": "Suche löschen",
+  "diaryClose": "Schließen",
+  "diaryCopyTheNutritionValuesFromTheLabel": "Übernimm die Nährwerte vom Etikett. Wir rechnen deine gegessene Menge automatisch aus.",
+  "diaryCustomEntry": "Eigener Eintrag",
+  "diaryDay": "Tag",
+  "diaryDelete": "Löschen",
+  "diaryDeleteEntry": "Eintrag löschen?",
+  "diaryDeleteEntry2": "Eintrag löschen",
+  "diaryDiary": "Tagebuch",
+  "diaryDuplicate": "Duplizieren",
+  "diaryEG05": "z. B. 0,5",
+  "diaryEG3017620422003": "z. B. 3017620422003",
+  "diaryEaten": "Gegessen",
+  "diaryEditMeal": "Mahlzeit bearbeiten",
+  "diaryEditRecipe": "Rezept bearbeiten",
+  "diaryEditYourEntry": "Deinen Eintrag bearbeiten",
+  "diaryEnergy": "Energie",
+  "diaryEnterBarcode": "Barcode eingeben",
+  "diaryEnterBarcodeManually": "Barcode manuell eingeben",
+  "diaryEnterManually": "Selbst eintragen",
+  "diaryEnterManually2": "Manuell eintragen",
+  "diaryEntryDeleted": "Eintrag wurde gelöscht.",
+  "diaryFat": "Fett",
+  "diaryFatG": "Fett g",
+  "diaryFibre": "Ballaststoffe",
+  "diaryFibreOptional": "Ballaststoffe (optional)",
+  "diaryFindAPackagedProductUsingItsBarcode": "Verpacktes Produkt über den Barcode finden",
+  "diaryFood": "Lebensmittel",
+  "diaryFoodPhoto": "Lebensmittel-Foto",
+  "diaryForExampleMyChocolateCereal": "Zum Beispiel: Mein Schoko-Müsli",
+  "diaryForTheAmountYouAte": "Für deine gegessene Menge",
+  "diaryForWhichMeal": "Für welche Mahlzeit?",
+  "diaryFri": "Fr",
+  "diaryFromSearch": "Aus der Suche",
+  "diaryGallery": "Galerie",
+  "diaryGreekYoghurt": "Griechischer Joghurt",
+  "diaryHighInProtein": "Proteinreich",
+  "diaryIngredientsList": "Zutatenliste",
+  "diaryLeaveUnknownAdditionalValuesBlank": "Unbekannte Zusatzwerte bleiben leer.",
+  "diaryLight": "Leicht",
+  "diaryLightFoods": "Leichte Lebensmittel",
+  "diaryLogAnyway": "Trotzdem protokollieren",
+  "diaryLogInDiary": "Ins Tagebuch eintragen",
+  "diaryMeal": "Mahlzeit",
+  "diaryMealDuplicated": "Mahlzeit wurde dupliziert.",
+  "diaryMealName": "Name der Mahlzeit",
+  "diaryMealUpdated": "Mahlzeit wurde aktualisiert.",
+  "diaryMeals": "Mahlzeiten",
+  "diaryMon": "Mo",
+  "diaryMoveMeal": "Mahlzeit verschieben",
+  "diaryNewFood": "Neues Lebensmittel",
+  "diaryNextWeek": "Nächste Woche",
+  "diaryNoCameraIsAvailableOnThisDevice": "Auf diesem Gerät ist keine Kamera verfügbar.",
+  "diaryNoCameraWasFound": "Es wurde keine Kamera gefunden.",
+  "diaryNoFoodFoundYouCanAlsoLog": "Kein Lebensmittel gefunden. Du kannst es auch über „Selbst hinzufügen“ eintragen.",
+  "diaryNoFoodsHaveBeenFoundInThis": "In diesem Bereich wurden noch keine Lebensmittel gefunden.",
+  "diaryNoResultsCheckTheSpellingOrEnter": "Kein Treffer. Prüfe die Schreibweise oder trage das Lebensmittel selbst ein.",
+  "diaryNothingSavedYetSaveFoodsFromTheir": "Noch nichts gemerkt. Speichere Lebensmittel über die Detailansicht.",
+  "diaryNothingUsedYetFoodsYouAddWill": "Noch nichts verwendet. Hinzugefügte Lebensmittel erscheinen später hier.",
+  "diaryNutrition": "Nährwerte",
+  "diaryNutritionValuesApplyToTheAmountSelected": "Nährwerte gelten für die oben eingestellte Menge.",
+  "diaryNutritionValuesValue": "Nährwerte {arg0}",
+  "@diaryNutritionValuesValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryOfWhichSaturates": "davon gesättigte Fettsäuren",
+  "diaryOfWhichSugars": "davon Zucker",
+  "diaryOnceYouEnterTheAmountEnergyAnd": "Sobald Menge, Energie und Makros eingetragen sind, siehst du hier die Berechnung.",
+  "diaryPer100G": "Pro 100 g",
+  "diaryPer100Ml": "Pro 100 ml",
+  "diaryPerServing": "Pro Portion",
+  "diaryPhotoAiCannotReliablyRecogniseHiddenAllergens": "Die Foto-KI kann Allergene, die man nicht sieht, oder Spuren nicht zuverlässig erkennen. Zutatenliste und Verpackung selbst prüfen.",
+  "diaryPhotoFromGallery": "Foto aus Galerie",
+  "diaryPhotographTheWholeMealClearlyFromAbove": "Das ganze Essen gut sichtbar von oben aufnehmen.",
+  "diaryPleaseCheckBriefly": "Bitte kurz prüfen",
+  "diaryPleaseCheckTheHighlightedFieldsAbove": "Bitte prüfe die markierten Felder weiter oben.",
+  "diaryPleaseCheckTheNutritionValuesForValue": "Bitte prüfe die Nährwerte von „{arg0}“.",
+  "@diaryPleaseCheckTheNutritionValuesForValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPleaseEnterANameAndValidPositive": "Bitte Name und gültige, positive Werte eintragen.",
+  "diaryPleaseEnterAValidValueOf0": "Bitte einen gültigen Wert ab 0 eingeben.",
+  "diaryPleaseEnterAnAmountGreaterThan0": "Bitte eine Menge größer als 0 eingeben.",
+  "diaryPleaseEnterAnAmountGreaterThan02": "Bitte gib für „{arg0}“ eine Menge über 0 g an.",
+  "@diaryPleaseEnterAnAmountGreaterThan02": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPleaseGiveEveryFoodAName": "Bitte gib jedem Lebensmittel einen Namen.",
+  "diaryPleaseGiveYourFoodAName": "Bitte deinem Lebensmittel einen Namen geben.",
+  "diaryPleaseUseNoMoreThan100Characters": "Bitte höchstens 100 Zeichen verwenden.",
+  "diaryPleaseWaitAMomentBeforeSearchingFor": "Bitte kurz warten, bevor du den nächsten Barcode suchst.",
+  "diaryPremiumFeature": "Premium-Funktion",
+  "diaryPremiumFeatureValueDayFreeTrial": "Premium-Funktion · {arg0} Tage kostenlos testen",
+  "@diaryPremiumFeatureValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPreviousWeek": "Vorherige Woche",
+  "diaryProductInformation": "Produktinfos",
+  "diaryProtein": "Eiweiß / Protein",
+  "diaryProteinPasta": "Protein-Pasta",
+  "diaryRecent": "Zuletzt",
+  "diaryRecentlyUsed": "Zuletzt verwendet",
+  "diaryRecogniseMeal": "Mahlzeit erkennen",
+  "diaryRecognisedFoods": "Erkannte Lebensmittel",
+  "diaryRecognisedWell": "Gut erkannt",
+  "diaryRemaining": "Übrig",
+  "diaryRemove": "Entfernen",
+  "diaryRemoveFromSavedFoods": "Von Merkliste entfernen",
+  "diarySalt": "Salz",
+  "diarySat": "Sa",
+  "diarySaturatedFat": "gesättigte Fettsäuren",
+  "diarySaturatedFatCannotExceedTotalFat": "Gesättigte Fettsäuren dürfen Fett nicht überschreiten.",
+  "diarySave": "Speichern",
+  "diarySaveChanges": "Änderungen speichern",
+  "diarySaveFood": "Merken",
+  "diarySaved": "Gemerkte",
+  "diarySavedFoods": "Gemerkte Lebensmittel",
+  "diarySavedItemsRemoved": "Bereits gespeicherte Einträge wurden aus der Liste entfernt.",
+  "diarySaving": "Wird gespeichert …",
+  "diarySaving2": "Wird gespeichert ...",
+  "diarySavingDidNotWorkPleaseTryAgain": "Das Speichern hat nicht geklappt. Bitte versuche es erneut.",
+  "diarySavingDidNotWorkYourInformationStays": "Das Speichern hat nicht geklappt. Deine Angaben bleiben hier erhalten.",
+  "diarySavingFailedPleaseTryAgain": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+  "diaryScanBarcode": "Barcode scannen",
+  "diarySearch": "Suchen",
+  "diarySearchFoods": "Lebensmittel suchen",
+  "diarySearchForFoodsOrEnterThemYourself": "Lebensmittel suchen oder selbst eintragen",
+  "diarySearchResults": "Suchergebnisse",
+  "diarySearchingForProduct": "Produkt wird gesucht ...",
+  "diarySelectMeal": "Mahlzeit auswählen",
+  "diaryServingBasis": "BASIS: {grams} G",
+  "@diaryServingBasis": {
+    "placeholders": {
+      "grams": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryServings": "Portionen",
+  "diaryServingsEaten": "Gegessene Portionen",
+  "diarySourceOpenFoodFactsInformationMayBe": "Quelle: Open Food Facts. Angaben können fehlen oder sich ändern – bei Allergien und Unverträglichkeiten immer das Verpackungsetikett prüfen.",
+  "diarySugar": "Zucker",
+  "diarySugarCannotExceedCarbohydrates": "Zucker darf die Kohlenhydrate nicht überschreiten.",
+  "diarySun": "So",
+  "diarySwitch": "Wechseln",
+  "diaryTakeAMealPhoto": "Mahlzeit fotografieren",
+  "diaryTakeANewPhoto": "Neues Foto aufnehmen",
+  "diaryTakeAPhotoAiEstimatesFoodsAnd": "Foto machen, KI schätzt Lebensmittel und Mengen",
+  "diaryTakeAPhotoOfYourMealAi": "Fotografiere deine Mahlzeit – die KI schätzt Lebensmittel und Mengen.",
+  "diaryTakePhoto": "Foto aufnehmen",
+  "diaryTapAFoodToChangeItsName": "Tippe auf ein Lebensmittel, um Name und Nährwerte zu ändern. Wenn du die Menge änderst, passen sich Kalorien und Nährwerte automatisch an.",
+  "diaryTheAvailableInformationMayMentionValueIf": "Die verfügbaren Angaben nennen möglicherweise: {arg0}. Bei einer Allergie nicht als Empfehlung verstehen. Nur fortfahren, wenn du das Essen dokumentieren möchtest.",
+  "@diaryTheAvailableInformationMayMentionValueIf": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryTheBarcodeCouldNotBeProcessedJust": "Barcode konnte gerade nicht verarbeitet werden.",
+  "diaryTheCameraCouldNotBeStarted": "Die Kamera konnte nicht gestartet werden.",
+  "diaryTheFoodCouldNotBeSaved": "Das Lebensmittel konnte nicht gespeichert werden.",
+  "diaryTheLabelValuesBelowArePer100": "Unten stehen die Etikettwerte pro 100 g.",
+  "diaryTheLabelValuesBelowArePer1002": "Unten stehen die Etikettwerte pro 100 ml.",
+  "diaryTheMealCouldNotBeDuplicated": "Die Mahlzeit konnte nicht dupliziert werden.",
+  "diaryTheMealCouldNotBeSaved": "Die Mahlzeit konnte nicht gespeichert werden.",
+  "diaryTheNameYouEnteredSuggestsAPossible": "Der eingegebene Name deutet auf einen möglichen Konflikt: {arg0}. Die Nährwertangaben enthalten keine verlässliche Zutatenprüfung.",
+  "@diaryTheNameYouEnteredSuggestsAPossible": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryThePhotoCouldNotBeAnalysedJust": "Das Foto konnte gerade nicht analysiert werden.",
+  "diaryThePhotoCouldNotBeTaken": "Foto konnte nicht aufgenommen werden.",
+  "diaryTheProductInformationMayMentionValueOnly": "Die Produktdaten nennen möglicherweise: {arg0}. Nur fortfahren, wenn du das Lebensmittel bereits gegessen hast und es lediglich dokumentieren möchtest. Prüfe die Verpackung.",
+  "@diaryTheProductInformationMayMentionValueOnly": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryTheRecognisedNamesMayMatchYourProfile": "Die erkannten Namen können zu deinem Profil passen: {arg0}. KI-Fotos können versteckte Zutaten und Spuren nicht erkennen. Nur fortfahren, wenn du die Mahlzeit dokumentieren möchtest.",
+  "@diaryTheRecognisedNamesMayMatchYourProfile": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryTheValuesBelowAreForAWhole": "Unten stehen die Werte für eine ganze Portion. Eine halbe Portion ist 0,5.",
+  "diaryThisPhotoCouldNotBeRead": "Dieses Foto konnte nicht gelesen werden.",
+  "diaryThisProductDoesNotMeetLookinS": "Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "diaryThisProductIsNotInTheData": "Dieses Produkt ist noch nicht in der Datenquelle. Du kannst es selbst eintragen.",
+  "diaryThu": "Do",
+  "diaryTotalKcal": "kcal gesamt",
+  "diaryTryAgain": "Erneut versuchen",
+  "diaryTue": "Di",
+  "diaryUncertainPleaseCheck": "Unsicher – bitte prüfen",
+  "diaryUnknown": "Nicht bekannt",
+  "diaryValueGCarbs": "{arg0} g Kohlenhydrate",
+  "@diaryValueGCarbs": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueGFat": "{arg0} g Fett",
+  "@diaryValueGFat": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueGProtein": "{arg0} g Protein",
+  "@diaryValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueKcalCValueGPValue": "{arg0} kcal · K {arg1} g · P {arg2} g · F {arg3} g",
+  "@diaryValueKcalCValueGPValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueKcalValueGValueGProtein": "{arg0} kcal · {arg1} g · {arg2} g Protein",
+  "@diaryValueKcalValueGValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueOf8Glasses": "{arg0} von 8 Gläsern",
+  "@diaryValueOf8Glasses": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueValuePValueCValueF": "{arg0}{arg1} P · {arg2} K · {arg3} F",
+  "@diaryValueValuePValueCValueF": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueWasAdded": "{arg0} wurde hinzugefügt.",
+  "@diaryValueWasAdded": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueWillBeRemovedFromYourDiary": "„{arg0}“ wird aus deinem Tagebuch entfernt.",
+  "@diaryValueWillBeRemovedFromYourDiary": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryVegetableOmelette": "Gemüse-Omelett",
+  "diaryViewPremium": "Premium ansehen",
+  "diaryWater": "Wasser",
+  "diaryWed": "Mi",
+  "diaryWhatDoTheValuesReferTo": "Worauf beziehen sich die Werte?",
+  "diaryWhichMeal": "Zu welcher Mahlzeit?",
+  "diaryWholemealBreadWithEgg": "Vollkornbrot mit Ei",
+  "diaryYouAreAboveYourDailyTargetThis": "Du liegst über deinem Tagesziel. Das ist eine Orientierung, keine Bewertung.",
+  "diaryYouCanChangeTheMealTypeIngredients": "Die Mahlzeitenart kann angepasst werden. Zutaten und Werte bleiben mit dem Rezept verbunden.",
+  "diaryYourCustomFood": "Dein eigenes Lebensmittel",
+  "diaryYourMeal": "Deine Mahlzeit",
+  "diaryYourMealRhythm": "Dein Mahlzeitenrhythmus",
+  "diaryYourMealsClearlyOrganisedAndEasyTo": "Deine Mahlzeiten klar und ohne unnötigen Aufwand.",
+  "diaryYourPreferenceNotARequirementYouCan": "Dein Wunsch, kein Muss. Du kannst jederzeit weitere Mahlzeiten eintragen.",
+  "diaryYourPreviousValuesApplyToOneServing": "Deine bisherigen Werte gelten für eine Portion. Fehlende Etikettwerte kannst du ergänzen.",
+  "discover1Ingredient": "1 Zutat",
+  "discover1IngredientMissing": "1 Zutat fehlt",
+  "discover1Recipe": "1 Rezept",
+  "discover1ServingIsNowListedUnderValue": "1 Portion steht jetzt unter „{arg0}“ im Tagebuch.",
+  "@discover1ServingIsNowListedUnderValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discover1ServingValueKcalValueGProtein": "1 Portion · {arg0} kcal · {arg1} g Protein",
+  "@discover1ServingValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discover1Step": "1 Schritt",
+  "discoverAdaptToMyTarget": "An mein Ziel anpassen",
+  "discoverAdaptToMyTargetValue": "An mein Ziel anpassen · {arg0}",
+  "@discoverAdaptToMyTargetValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverAddIngredient": "Zutat hinzufügen",
+  "discoverAddToFavourites": "Zu Favoriten hinzufügen",
+  "discoverAll": "Alle",
+  "discoverAllRecipes": "Alle Rezepte",
+  "discoverAllergyLogWarning": "Die Zutatenangaben nennen möglicherweise: {conflicts}. Prüfe die Packungen und mögliche Kreuzkontamination. Möchtest du das Rezept trotzdem protokollieren?",
+  "@discoverAllergyLogWarning": {
+    "placeholders": {
+      "conflicts": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverAllergyNotice": "Allergiehinweis",
+  "discoverAny": "Egal",
+  "discoverApples": "Äpfel",
+  "discoverApply": "Übernehmen",
+  "discoverApproxValue": "ca. {arg0}",
+  "@discoverApproxValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverApproxValueKcal": "ca. {arg0} kcal",
+  "@discoverApproxValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverApproxValueValueProtein": "ca. {arg0} · {arg1} Protein",
+  "@discoverApproxValueValueProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverAsInTheOriginalRecipe": "wie im Originalrezept",
+  "discoverBack": "Zurück",
+  "discoverBag": "Beutel",
+  "discoverBalls": "Kugeln",
+  "discoverBananas": "Bananen",
+  "discoverBasedOnValueMealsADayWith": "Grundlage: {arg0} Mahlzeiten am Tag, davon {arg1} schon im Tagebuch. Das ist eine Schätzung zur Orientierung und keine Ernährungsberatung – hör auch auf deinen Hunger. „Übernehmen“ rechnet nur die Zutatenmengen um; ins Tagebuch wird weiterhin 1 Portion eingetragen.",
+  "@discoverBasedOnValueMealsADayWith": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverBasicIngredients": "Grundzutaten",
+  "discoverBasicIngredientsAreAvailable": "Grundzutaten sind vorhanden",
+  "discoverBreadRoll": "Brötchen",
+  "discoverBulbs": "Knollen",
+  "discoverBunch": "Bund",
+  "discoverCalculatedFromTheIngredientsValuesMayVary": "Berechnet aus den Zutaten. Je nach Produkt und Zubereitung können die Werte abweichen.",
+  "discoverCancel": "Abbrechen",
+  "discoverCarbohydrates": "Kohlenhydrate",
+  "discoverCarrots": "Karotten",
+  "discoverCarrots2": "Möhren",
+  "discoverChillies": "Chilischoten",
+  "discoverClearSearch": "Suche löschen",
+  "discoverClose": "Schließen",
+  "discoverCloves": "Zehen",
+  "discoverCommonIngredients": "Häufige Zutaten",
+  "discoverCommonMistakes": "Häufige Fehler",
+  "discoverContinue": "Weiter",
+  "discoverCooking": "Kochen",
+  "discoverCookingModeValue": "Kochmodus · {arg0}",
+  "@discoverCookingModeValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverCookingModeWithTimers": "Kochmodus mit Timern",
+  "discoverCube": "Würfel",
+  "discoverCucumbers": "Gurken",
+  "discoverCups": "Tassen",
+  "discoverDash": "Spritzer",
+  "discoverDifficulty": "Schwierigkeit",
+  "discoverDone": "Fertig",
+  "discoverDurationValue": "Dauer {arg0}",
+  "@discoverDurationValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverEggs": "Eier",
+  "discoverEnergy": "Energie",
+  "discoverEnergyShare": "Anteil an der Energie",
+  "discoverEnjoyYourMeal": "Guten Appetit!",
+  "discoverEnterAnIngredientEGPotatoes": "Zutat eingeben, z. B. Kartoffeln",
+  "discoverEquipment": "Utensilien",
+  "discoverEverythingAvailable": "Alles da",
+  "discoverExit": "Beenden",
+  "discoverExitCookingMode": "Kochmodus beenden?",
+  "discoverExitCookingMode2": "Kochmodus beenden",
+  "discoverExtraKnowledgeAboutThisRecipe": "Extra-Wissen zu diesem Rezept.",
+  "discoverFat": "Fett",
+  "discoverFavourites": "Favoriten",
+  "discoverFibre": "Ballaststoffe",
+  "discoverFillets": "Filets",
+  "discoverFiltersAndSorting": "Filter und Sortierung",
+  "discoverFiltersAndSortingValueActive": "Filter und Sortierung, {arg0} aktiv",
+  "@discoverFiltersAndSortingValueActive": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverFiltersSorting": "Filter & Sortierung",
+  "discoverFlatbreads": "Fladenbrote",
+  "discoverForThisMeal": "Für diese Mahlzeit",
+  "discoverForValue": "für {arg0}",
+  "@discoverForValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverForYou": "Für dich",
+  "discoverGlasses": "Gläser",
+  "discoverGoToStepValue": "Zu Schritt {arg0}",
+  "@discoverGoToStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverGuidelineValues": "Richtwerte",
+  "discoverHandful": "Handvoll",
+  "discoverHiddenForAllergies": "{count, plural, =1{1 Rezept} other{{count} Rezepte}} wegen deiner Allergieangaben ausgeblendet.",
+  "@discoverHiddenForAllergies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverHowThisSuggestionWasCalculated": "So ist der Vorschlag entstanden",
+  "discoverIHaveThese": "Das habe ich da",
+  "discoverIdeasThatFitYourGoalAndYour": "Ideen, die zu deinem Ziel und deinem Alltag passen.",
+  "discoverIngredientAmountsHaveNotBeenAddedFor": "Für dieses Rezept sind noch keine Zutatenmengen hinterlegt.",
+  "discoverIngredientSubstitutions": "Austausch-Zutaten",
+  "discoverIngredients": "Zutaten",
+  "discoverKeepCooking": "Weiterkochen",
+  "discoverLeaves": "Blätter",
+  "discoverLemons": "Zitronen",
+  "discoverLimes": "Limetten",
+  "discoverLog": "Eintragen",
+  "discoverLog1ServingInDiary": "1 Portion zum Tagebuch",
+  "discoverLogAnyway": "Trotzdem protokollieren",
+  "discoverLoggedToday": "Heute eingetragen",
+  "discoverMatchingRecipes": "Passende Rezepte",
+  "discoverMaximumPreparationTime": "Maximale Zubereitungszeit",
+  "discoverMealPrepStorage": "Meal-Prep & Aufbewahrung",
+  "discoverMealsStillToComeToday": "Mahlzeiten, die heute noch kommen",
+  "discoverMethod": "Zubereitung",
+  "discoverMissing": "Fehlt",
+  "discoverMissingNutrition": "Pro Portion, aus den Katalogwerten der Zutaten. {count, plural, =1{1 Zutat hat keine Katalogwerte und fehlt hier.} other{{count} Zutaten haben keine Katalogwerte und fehlen hier.}}",
+  "@discoverMissingNutrition": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverMoreKnowledgeForEveryRecipe": "Mehr Wissen zu jedem Rezept",
+  "discoverNoInstructionsHaveBeenAddedForThis": "Für dieses Rezept ist noch keine Anleitung hinterlegt.",
+  "discoverNoMatchingRecipes": "Keine passenden Rezepte",
+  "discoverNoRecipeFoundWithTheseIngredients": "Kein Rezept mit diesen Zutaten gefunden.",
+  "discoverNoRecipeMatchesYourSelection": "Kein Rezept passt zu deiner Auswahl.",
+  "discoverNoSteps": "Keine Schritte",
+  "discoverNotNow": "Jetzt nicht",
+  "discoverNotSpecified": "keine Angabe",
+  "discoverNutrition": "Nährwerte",
+  "discoverOneServingLess": "Eine Portion weniger",
+  "discoverOneServingMore": "Eine Portion mehr",
+  "discoverOneStepPerPageLargeTextAnd": "Ein Schritt pro Seite, große Schrift und Timer.",
+  "discoverOnions": "Zwiebeln",
+  "discoverOpenTimerInCookingMode": "Timer im Kochmodus öffnen",
+  "discoverOriginalAmount": "Originalmenge",
+  "discoverPack": "Pck.",
+  "discoverPack2": "Pkg.",
+  "discoverPacks": "Packungen",
+  "discoverPause": "Pausieren",
+  "discoverPaused": "Pausiert",
+  "discoverPeppers": "Paprika",
+  "discoverPerServing": "pro Portion",
+  "discoverPerServingBasedOnIngredientCatalogueValues": "Pro Portion, aus den Katalogwerten der Zutaten. {arg0} {arg1} keine Katalogwerte und fehlt hier.",
+  "@discoverPerServingBasedOnIngredientCatalogueValues": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverPerServingBasedOnIngredientCatalogueValues2": "Pro Portion, aus den Katalogwerten der Zutaten.",
+  "discoverPiece": "Stk.",
+  "discoverPiece2": "Stück",
+  "discoverPinch": "Msp.",
+  "discoverPinches": "Prisen",
+  "discoverPinches2": "Messerspitzen",
+  "discoverPods": "Schoten",
+  "discoverPot": "Becher",
+  "discoverPotatoes": "Kartoffeln",
+  "discoverPreparation": "Vorbereitung",
+  "discoverProTip": "Profi-Tipp: ",
+  "discoverProTipsForEveryStep": "Profi-Tipps zu jedem Schritt",
+  "discoverQuickUnder15Min": "Schnell unter 15 Min.",
+  "discoverRecipes": "Rezepte",
+  "discoverRecipesUsingWhatYouHaveAtHome": "Rezepte mit dem, was du zu Hause hast",
+  "discoverRemaining": "Noch offen",
+  "discoverRemoveFromFavourites": "Aus Favoriten entfernen",
+  "discoverRemoveValue": "{arg0} entfernen",
+  "@discoverRemoveValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverRemoveValue2": "„{arg0}“ entfernen",
+  "@discoverRemoveValue2": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverReset": "Zurücksetzen",
+  "discoverResetAllFilters": "Alle Filter zurücksetzen",
+  "discoverRestart": "Neu starten",
+  "discoverResume": "Fortsetzen",
+  "discoverRoughGuidelineValuesACompleteCalculationBased": "Grobe Richtwerte. Eine vollständige Berechnung aus den Zutaten liegt für dieses Rezept noch nicht vor.",
+  "discoverRunning": "Läuft",
+  "discoverRunningTimersWillBeStopped": "Laufende Timer werden dabei gestoppt.",
+  "discoverSalt": "Salz",
+  "discoverSaving": "Wird gespeichert …",
+  "discoverSearchRecipesOrIngredients": "Rezepte oder Zutaten suchen",
+  "discoverSelectWhatYouHaveAtHomeLookin": "Wähle, was du zu Hause hast. Lookin zeigt Rezepte mit diesen Zutaten – die mit den wenigsten fehlenden zuerst.",
+  "discoverServing": "Portion",
+  "discoverServingSuggestion": "Serviervorschlag",
+  "discoverServingUnit": "Portion",
+  "discoverServings": "Portionen",
+  "discoverServingsUnit": "Portionen",
+  "discoverShow": "Zeigen",
+  "discoverShow1Recipe": "1 Rezept anzeigen",
+  "discoverShowIngredients": "Zutaten anzeigen",
+  "discoverShowValueRecipes": "{arg0} Rezepte anzeigen",
+  "@discoverShowValueRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSlices": "Scheiben",
+  "discoverSortBy": "Sortieren nach",
+  "discoverSortedByValue": "Sortiert: {arg0}",
+  "@discoverSortedByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSortedForYouByValueSortingDoes": "Für dich sortiert nach {arg0}. Die Sortierung blendet keine Rezepte aus.",
+  "@discoverSortedForYouByValueSortingDoes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSpokenMinutes": "{count, plural, =1{1 Minute} other{{count} Minuten}}",
+  "@discoverSpokenMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverSpokenSeconds": "{count, plural, =1{1 Sekunde} other{{count} Sekunden}}",
+  "@discoverSpokenSeconds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "discoverSprigs": "Zweige",
+  "discoverSpringOnions": "Frühlingszwiebeln",
+  "discoverStartCookingMode": "Kochmodus starten",
+  "discoverStartTimer": "Timer starten",
+  "discoverStepValue": "Schritt {arg0}",
+  "@discoverStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverStepValueOfValue": "Schritt {arg0} von {arg1}",
+  "@discoverStepValueOfValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverStepValueTimeIsUp": "Schritt {arg0} · Zeit ist um",
+  "@discoverStepValueTimeIsUp": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverStepValueValue": "Schritt {arg0} · {arg1}",
+  "@discoverStepValueValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSticks": "Stangen",
+  "discoverSubstitutions": "Austausch-Möglichkeiten",
+  "discoverSugar": "Zucker",
+  "discoverSuggestion": "Vorschlag",
+  "discoverSuggestionEstimate": "VORSCHLAG · SCHÄTZUNG",
+  "discoverSweetPotatoes": "Süßkartoffeln",
+  "discoverTapACommonIngredientOrEnterOne": "Tippe auf eine häufige Zutat oder gib selbst etwas ein, zum Beispiel „Kartoffeln“.",
+  "discoverTbsp": "EL",
+  "discoverTheIngredientInformationMayMentionValueCheck": "Die Zutatenangaben nennen möglicherweise: {arg0}. Prüfe die Packungen und mögliche Kreuzkontamination. Möchtest du das Rezept trotzdem {arg1}?",
+  "@discoverTheIngredientInformationMayMentionValueCheck": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTheRecipeCouldNotBeLogged": "Das Rezept konnte nicht eingetragen werden.",
+  "discoverTheServingCalculatorAndAllNutritionValues": "Den Portionsrechner und alle Nährwerte kannst du weiterhin kostenlos nutzen.",
+  "discoverThingsToWatch": "Darauf achten",
+  "discoverThisServingSizeIsASuggestionTo": "Damit dieses Rezept gut zu deinem heutigen Tagesziel passt, wäre diese Portionsgröße ein Vorschlag:",
+  "discoverTickWhatYouAlreadyHaveTicksOnly": "Hake ab, was du schon da hast. Die Haken gelten nur, solange dieses Rezept geöffnet ist.",
+  "discoverTimeIsUp": "Zeit ist um!",
+  "discoverTimeIsUpForStepValue": "Die Zeit für Schritt {arg0} ist um.",
+  "@discoverTimeIsUpForStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTimeRemainingValue": "Verbleibende Zeit: {arg0}",
+  "@discoverTimeRemainingValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTins": "Dosen",
+  "discoverTomatoes": "Tomaten",
+  "discoverTotalTime": "Gesamtzeit",
+  "discoverTryAnotherIngredientOrADifferentName": "Probiere eine weitere Zutat oder einen anderen Namen, zum Beispiel „Nudeln“ statt „Spaghetti“.",
+  "discoverTryAnotherSearchTermOrRemoveA": "Probiere einen anderen Suchbegriff oder entferne einen Filter.",
+  "discoverTryValue": "{arg0} testen",
+  "@discoverTryValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTryValueFreeForValueDays": "{arg0} {arg1} Tage kostenlos testen",
+  "@discoverTryValueFreeForValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTsp": "TL",
+  "discoverTubes": "Tuben",
+  "discoverUpToValueMin": "bis {arg0} Min.",
+  "@discoverUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueAnyway": "Trotzdem {arg0}",
+  "@discoverValueAnyway": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueGProtein": "{arg0} g Protein",
+  "@discoverValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueHiddenBecauseOfYourAllergyInformation": "{arg0} wegen deiner Allergieangaben ausgeblendet.",
+  "@discoverValueHiddenBecauseOfYourAllergyInformation": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueHr": "{arg0} Std.",
+  "@discoverValueHr": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueHrValueMin": "{arg0} Std. {arg1} Min.",
+  "@discoverValueHrValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueIngredients": "{arg0} Zutaten",
+  "@discoverValueIngredients": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueIngredientsMissing": "{arg0} Zutaten fehlen",
+  "@discoverValueIngredientsMissing": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueKcalValueGProtein": "{arg0} kcal · {arg1} g Protein",
+  "@discoverValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueMin": "{arg0} Min.",
+  "@discoverValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueOfValueAvailable": "{arg0} von {arg1} da",
+  "@discoverValueOfValueAvailable": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueOfValueIngredientsAvailable": "{arg0} von {arg1} Zutaten vorhanden",
+  "@discoverValueOfValueIngredientsAvailable": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueRecipes": "{arg0} Rezepte",
+  "@discoverValueRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueSteps": "{arg0} Schritte",
+  "@discoverValueSteps": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueValueProtein": "{arg0} · {arg1} Protein",
+  "@discoverValueValueProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverVariations": "Variationen",
+  "discoverViewValue": "{arg0} ansehen",
+  "@discoverViewValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverWhatCanICook": "Was kann ich kochen?",
+  "discoverWhatDoYouHaveAtHome": "Was hast du zu Hause?",
+  "discoverWhereDoTheNutritionValuesComeFrom": "Woher kommen die Nährwerte?",
+  "discoverWhichMeal": "Zu welcher Mahlzeit?",
+  "discoverWithValueLookinSuggestsAServingSize": "Mit {arg0} schlägt dir Lookin eine Portionsgröße vor, die zu deinem heutigen Tagesziel passt – geschätzt aus deinem Tagebuch. Die Zutatenmengen werden dafür automatisch umgerechnet.",
+  "@discoverWithValueLookinSuggestsAServingSize": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverYouCanCookThisEntireRecipeFor": "Dieses Rezept kannst du komplett kostenlos nachkochen. {arg0} ergänzt:",
+  "@discoverYouCanCookThisEntireRecipeFor": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverYouHave": "Hast du",
+  "discoverYouHaveNoFavouritesYetTapA": "Du hast noch keine Favoriten. Tippe auf das Herz eines Rezepts, um es dir zu merken.",
+  "discoverYourDailyTarget": "Dein Tagesziel",
+  "discoverYourDiaryShowsYouHaveAlreadyReached": "Laut deinem Tagebuch ist dein Tagesziel heute schon erreicht. Wenn du Hunger hast, ist eine kleinere Portion eine Möglichkeit.",
+  "display1Fillet": "1 Filet",
+  "display1Year": "1 Jahr",
+  "display30Days": "30 Tage",
+  "display3Months": "3 Monate",
+  "display45MinutesOrMore": "45 Minuten und mehr",
+  "display6Months": "6 Monate",
+  "display7Days": "7 Tage",
+  "displayAConditionRequiringMedicalGuidanceOnNutrition": "Erkrankung, bei der die Ernährung ärztlich begleitet wird",
+  "displayAQuickAfterWorkMeal": "Schnelles Feierabendgericht",
+  "displayAbout30Minutes": "Etwa 30 Minuten",
+  "displayActive": "Aktiv",
+  "displayAddTheTopping": "Toppen",
+  "displayAllTime": "Alles",
+  "displayAllspice": "Piment",
+  "displayAlmondFlour": "Mandelmehl",
+  "displayAlmondMilk": "Mandelmilch",
+  "displayApple": "Apfel",
+  "displayApril": "April",
+  "displayAubergine": "Melanzani",
+  "displayAubergine2": "Aubergine",
+  "displayAugust": "August",
+  "displayBalance": "BALANCE",
+  "displayBall": "Kugel",
+  "displayBanana": "Banane",
+  "displayBasil": "Basilikum",
+  "displayBasilLeaves": "Basilikumblätter",
+  "displayBayLeaf": "Lorbeerblatt",
+  "displayBayLeaf2": "Lorbeer",
+  "displayBayLeaves": "Lorbeerblätter",
+  "displayBeARoleModelForFamilyChildren": "Vorbild für Familie & Kinder",
+  "displayBeef": "Rind",
+  "displayBetterHabits": "Bessere Gewohnheiten",
+  "displayBreadcrumbs": "Paniermehl",
+  "displayBreakfastInEightMinutes": "Frühstück in acht Minuten",
+  "displayBringPlentyOfWaterWith1Tsp": "Reichlich Wasser mit 1 TL Salz aufkochen und die Pasta nach Packungsangabe bissfest garen.",
+  "displayBrusselsSprouts": "Rosenkohl",
+  "displayBulb": "Knolle",
+  "displayButtermilk": "Buttermilch",
+  "displayCaraway": "Kümmel",
+  "displayCarrot": "Möhre",
+  "displayCarrot2": "Karotte",
+  "displayCarrot3": "Mohrrübe",
+  "displayCarrot4": "Rübli",
+  "displayCauliflower": "Karfiol",
+  "displayCauliflower2": "Blumenkohl",
+  "displayCelery": "Sellerie",
+  "displayCerealsContainingGluten": "Glutenhaltiges Getreide",
+  "displayChallenging": "Anspruchsvoll",
+  "displayCheese": "Käse",
+  "displayChicken": "Hähnchen",
+  "displayChicken2": "Hühnchen",
+  "displayChicken3": "Huhn",
+  "displayChicken4": "Hendl",
+  "displayChickpea": "Kichererbse",
+  "displayChickpeaFlour": "Kichererbsenmehl",
+  "displayChickpeas": "Kichererbsen",
+  "displayChilli": "Chilischote",
+  "displayChilliFlakes": "Chiliflocken",
+  "displayChilliPowder": "Chilipulver",
+  "displayCinnamon": "Zimt",
+  "displayCinnamonStick": "Zimtstange",
+  "displayClove": "Nelke",
+  "displayClove2": "Zehe",
+  "displayCocoaButter": "Kakaobutter",
+  "displayCoconut": "Kokosnuss",
+  "displayCoconutCream": "Kokossahne",
+  "displayCoconutFlour": "Kokosmehl",
+  "displayCoconutMilk": "Kokosmilch",
+  "displayCoconutWater": "Kokoswasser",
+  "displayCoconutYoghurt": "Kokosjoghurt",
+  "displayCombine": "Vermengen",
+  "displayCondensedMilk": "Kondensmilch",
+  "displayConnectingToYourDiaryDidNotWork": "Die Verbindung zu deinem Tagebuch hat gerade nicht geklappt. Bitte prüfe dein Internet und versuche es erneut.",
+  "displayCookThePasta": "Pasta kochen",
+  "displayCottageCheese": "Hüttenkäse",
+  "displayCourgette": "Zucchetti",
+  "displayCourgette2": "Zucchini",
+  "displayCravingsSnacking": "Heißhunger & Naschen",
+  "displayCream": "Rahm",
+  "displayCream2": "Sahne",
+  "displayCream3": "Obers",
+  "displayCreamCheese": "Frischkäse",
+  "displayCreamyProteinPasta": "Cremige Protein-Pasta",
+  "displayCrustaceans": "Krebstiere",
+  "displayCucumber": "Gurke",
+  "displayCumin": "Kreuzkümmel",
+  "displayCup": "Tasse",
+  "displayCurryPowder": "Currypulver",
+  "displayDrainThePastaMixWithTheSauce": "Pasta abgießen, mit der Sauce vermengen und mit Pfeffer abschmecken.",
+  "displayEasy": "Einfach",
+  "displayEatHealthier": "Gesünder ernähren",
+  "displayEatHealthier2": "Gesünder essen",
+  "displayEatingDisorderCurrentOrPast": "Essstörung – aktuell oder früher",
+  "displayEatingWhenStressed": "Essen bei Stress",
+  "displayEgg": "Ei",
+  "displayEggWhite": "Eiklar",
+  "displayEggYolk": "Eigelb",
+  "displayEntriesPlural": "Einträge",
+  "displayEntrySingular": "Eintrag",
+  "displayFeelBetterInMyBody": "Wohler im eigenen Körper",
+  "displayFemale": "Weiblich",
+  "displayFewestCalories": "Wenigste kcal",
+  "displayFillet": "Filet",
+  "displayFillingFreshAndRichInProtein": "Sättigend, frisch und proteinreich",
+  "displayFish": "Fisch",
+  "displayFishNoMeat": "Mit Fisch, ohne Fleisch",
+  "displayFlatbread": "Fladenbrot",
+  "displayFlour": "Mehl",
+  "displayGarlic": "Knoblauch",
+  "displayGarlicClove": "Knoblauchzehe",
+  "displayGarlicPowder": "Knoblauchpulver",
+  "displayGentle": "Sanft",
+  "displayGinger": "Ingwerknolle",
+  "displayGinger2": "Ingwer",
+  "displayGingerPowder": "Ingwerpulver",
+  "displayGingerRoot": "Ingwerwurzel",
+  "displayGlass": "Glas",
+  "displayHerbesDeProvence": "Kräuter der Provence",
+  "displayImproveMyFitness": "Sportlich stärker werden",
+  "displayIngredientSingular": "Zutat",
+  "displayIngredientsPlural": "Zutaten",
+  "displayIrregularMeals": "Unregelmäßige Mahlzeiten",
+  "displayItVaries": "Mal so, mal so",
+  "displayItalianHerbs": "Italienische Kräuter",
+  "displayKale": "Grünkohl",
+  "displayLactoseIntolerance": "Laktose (Unverträglichkeit)",
+  "displayLeaf": "Blatt",
+  "displayLeek": "Porree",
+  "displayLeek2": "Lauch",
+  "displayLemon": "Zitrone",
+  "displayLemonJuice": "Zitronensaft",
+  "displayLemongrass": "Zitronengras",
+  "displayLentil": "Linse",
+  "displayLentils": "Linsen",
+  "displayLime": "Limette",
+  "displayLimeJuice": "Limettensaft",
+  "displayLittleTimeToCook": "Wenig Zeit zum Kochen",
+  "displayLiveHealthier": "Gesünder leben",
+  "displayLookinCoachPremium": "LOOKIN COACH · PREMIUM",
+  "displayLupin": "Lupinen",
+  "displayMale": "Männlich",
+  "displayMarjoram": "Majoran",
+  "displayMeatFromLandAnimalsIsOnlyIncluded": "Fleisch von Landtieren wird nur mit eindeutiger Halal-Kennzeichnung aufgenommen.",
+  "displayMedium": "Mittel",
+  "displayMilk": "Milch",
+  "displayMint": "Minze",
+  "displayMintLeaves": "Minzblätter",
+  "displayMixTheOatsWith80MlOf": "Haferflocken mit 80 ml Wasser verrühren und 3 Minuten quellen lassen.",
+  "displayMixTheSauce": "Sauce rühren",
+  "displayMixed": "Gemischt",
+  "displayMolluscs": "Weichtiere",
+  "displayMoreConsistency": "Mehr Regelmäßigkeit",
+  "displayMoreEnergyDayToDay": "Mehr Energie im Alltag",
+  "displayMostProtein": "Meistes Protein",
+  "displayMostlySeated": "Meist sitzend",
+  "displayMotivationDoesNotLast": "Motivation hält nicht lange",
+  "displayMushroom": "Champignon",
+  "displayMushroom2": "Pilz",
+  "displayMushrooms": "Champignons",
+  "displayMustard": "Senf",
+  "displayNever": "Noch nie",
+  "displayNewMealIdeas": "Neue Essensideen",
+  "displayNonStickFryingPan": "Beschichtete Pfanne",
+  "displayNovember": "November",
+  "displayNutmeg": "Muskatnuss",
+  "displayNutmeg2": "Muskat",
+  "displayNuts": "Nüsse",
+  "displayOatCream": "Hafersahne",
+  "displayOatMilk": "Hafermilch",
+  "displayOats": "Haferflocken",
+  "displayOats2": "Hafer",
+  "displayOftenEatOnTheGo": "Viel unterwegs essen",
+  "displayOftenOnTheMove": "Viel in Bewegung",
+  "displayOil": "Öl",
+  "displayOnion": "Zwiebel",
+  "displayOnionPowder": "Zwiebelpulver",
+  "displayOpenProfile": "Profil öffnen",
+  "displayPack": "Packung",
+  "displayPanFryTheSalmon": "Lachs braten",
+  "displayPaprika": "Paprikapulver",
+  "displayPasta": "Nudeln",
+  "displayPasta2": "Nudel",
+  "displayPatTheSalmonDryAndFrySkin": "Den Lachs trocken tupfen und mit der Hautseite nach unten bei mittlerer Hitze 5 Minuten braten. Wenden und weitere 3 Minuten garen, bis er innen nicht mehr glasig ist.",
+  "displayPeanutButter": "Erdnussbutter",
+  "displayPeanuts": "Erdnüsse",
+  "displayPepper": "Paprikaschote",
+  "displayPepper2": "Pfeffer",
+  "displayPeppercorns": "Pfefferkörner",
+  "displayPiece": "½ Stück",
+  "displayPinch": "Prise",
+  "displayPinch2": "Messerspitze",
+  "displayPleaseGiveYourFoodAName": "Bitte gib deinem Lebensmittel einen Namen.",
+  "displayPod": "Schote",
+  "displayPollock": "Seelachs",
+  "displayPortionsPlural": "Portionen",
+  "displayPotato": "Kartoffel",
+  "displayPotatoes": "Erdäpfel",
+  "displayPreferNotToSay": "Möchte ich nicht angeben",
+  "displayPregnantOrBreastfeeding": "Schwanger oder stillend",
+  "displayPreview": "VORSCHAU",
+  "displayProtein": "PROTEIN",
+  "displayProteinBerryOats": "Protein-Beeren-Oats",
+  "displayProteinG": "Protein g",
+  "displayPutTheRiceInABowlPlace": "Reis in eine Schüssel geben, Lachs und Avocado darauf legen und sofort servieren.",
+  "displayQuark": "Topfen",
+  "displayRecipe": "Rezept",
+  "displayRiceCooked": "Reis, gekocht",
+  "displayRiceFlour": "Reismehl",
+  "displayRiceMilk": "Reismilch",
+  "displayRoseWater": "Rosenwasser",
+  "displayRosemary": "Rosmarin",
+  "displayRosemarySprig": "Rosmarinzweig",
+  "displayRosemarySprigs": "Rosmarinzweige",
+  "displaySalmonFillet": "Lachsfilet",
+  "displaySalmonPowerBowl": "Lachs Power Bowl",
+  "displaySaltPepperOilWaterAndCommonSpices": "Salz, Pfeffer, Öl, Wasser und gängige Gewürze wie Paprikapulver, Currypulver, Kreuzkümmel, Zimt oder Oregano",
+  "displaySavedRecipe": "Gespeichertes Rezept",
+  "displayScatterTheBerriesOverTheTopAnd": "Beeren darauf verteilen und sofort servieren.",
+  "displaySeptember": "September",
+  "displayServe": "Anrichten",
+  "displaySesame": "Sesam",
+  "displaySheepSCheese": "Schafskäse",
+  "displayShortOnTime": "Wenig Zeit",
+  "displaySkyrWithAlmonds": "Skyr mit Mandeln",
+  "displaySlice": "Scheibe",
+  "displaySliced": "in Scheiben",
+  "displaySmallSaucepanWithLid": "Kleiner Topf mit Deckel",
+  "displaySoakTheOats": "Hafer quellen lassen",
+  "displaySourCream": "Sauerrahm",
+  "displaySourCream2": "Schmand",
+  "displaySoya": "Soja",
+  "displaySoyaCream": "Sojasahne",
+  "displaySoyaMilk": "Sojamilch",
+  "displaySoyaYoghurt": "Sojajoghurt",
+  "displaySpiceMix": "Gewürzmischung",
+  "displaySpices": "Gewürze",
+  "displaySprig": "Zweig",
+  "displaySpringOnion": "Frühlingslauch",
+  "displaySpringOnion2": "Frühlingszwiebel",
+  "displaySpringOnion3": "Lauchzwiebel",
+  "displayStepSingular": "Schritt",
+  "displayStepsPlural": "Schritte",
+  "displayStick": "Stange",
+  "displayStirInTheSkyr": "Skyr unterrühren",
+  "displayStirInTheSkyrUntilEvenlyCreamy": "Skyr unterrühren, bis alles gleichmäßig cremig ist.",
+  "displayStirTheSkyrWithALittlePasta": "Skyr mit etwas Nudelwasser glatt rühren, bis eine cremige Sauce entsteht.",
+  "displayStock": "Brühe",
+  "displayStockCube": "Brühwürfel",
+  "displaySugarSnapPea": "Zuckerschote",
+  "displaySulphurDioxideSulphites": "Schwefeldioxid / Sulfite",
+  "displaySweetPotato": "Süßkartoffel",
+  "displayThisEntryContainsAnIngredientExcludedFrom": "Dieser Eintrag enthält einen in Lookin ausgeschlossenen Bestandteil.",
+  "displayThisEntryDoesNotMeetLookinS": "Dieser Eintrag entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "displayThisFoodDoesNotMeetLookinS": "Dieses Lebensmittel entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "displayThisRecipeCouldNoLongerBeFound": "Das Rezept konnte nicht mehr gefunden werden.",
+  "displayThisRecipeDoesNotMeetLookinS": "Dieses Rezept entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "displayThyme": "Thymian",
+  "displayThymeSprig": "Thymianzweig",
+  "displayThymeSprigs": "Thymianzweige",
+  "displayTin": "Dose",
+  "displayTinnedTomatoes": "Dosentomaten",
+  "displayTomato": "Tomate",
+  "displayTomatoes": "Paradeiser",
+  "displayTreeNuts": "Schalenfrüchte",
+  "displayTriedItBefore": "Schon mal ausprobiert",
+  "displayTurkey": "Pute",
+  "displayTurmeric": "Kurkuma",
+  "displayUnsureWhatIsGoodForMe": "Unsicher, was gut für mich ist",
+  "displayUpTo15Minutes": "Bis 15 Minuten",
+  "displayVanilla": "Vanille",
+  "displayVanillaPod": "Vanilleschote",
+  "displayWarmTheCookedRiceWith1Tbsp": "Den gekochten Reis mit 1 EL Wasser in einem kleinen Topf mit Deckel bei niedriger Hitze etwa 4 Minuten erwärmen.",
+  "displayWarmTheRice": "Reis erwärmen",
+  "displayWatchMyBudget": "Aufs Budget achten",
+  "displayWhippingCream": "Schlagobers",
+  "displayWhiteBrinedCheese": "Hirtenkäse",
+  "displayYesRegularly": "Ja, regelmäßig",
+  "displayYoghurt": "Joghurt",
+  "displayYoghurt2": "Jogurt",
+  "displayYourLocalProfilePictureCouldNotBe": "Dein lokales Profilbild konnte nicht geladen werden.",
+  "displayYourPictureCouldNotBeRemovedPlease": "Dein Bild konnte nicht entfernt werden. Bitte versuche es erneut.",
+  "displayYourPictureCouldNotBeSavedOn": "Dein Bild konnte nur auf diesem Gerät nicht gespeichert werden. Bitte versuche es erneut.",
+  "displayYourSelectionCouldNotBeSavedPermanently": "Die Auswahl konnte nicht dauerhaft gespeichert werden.",
+  "displayYourStreakCouldNotBeLoaded": "Deine Serie konnte nicht geladen werden.",
+  "displayYourStreakCouldNotBeUpdated": "Deine Serie konnte nicht aktualisiert werden.",
+  "homeAddValue": "{name} hinzufügen",
+  "@homeAddValue": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCarbohydrates": "Kohlenhydrate",
+  "homeFat": "Fett",
+  "homeFriday": "Freitag",
+  "homeHelloValue": "Hallo, {arg0}",
+  "@homeHelloValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeKcalEaten": "kcal gegessen",
+  "homeLoadingStreak": "Serie wird geladen",
+  "homeMealEntries": "{count, plural, =1{1 Eintrag} other{{count} Einträge}} · {calories} kcal",
+  "@homeMealEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "calories": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMonday": "Montag",
+  "homeNothingLoggedYet": "Noch nichts eingetragen",
+  "homeReminders": "Erinnerungen",
+  "homeSaturday": "Samstag",
+  "homeSunday": "Sonntag",
+  "homeTapAMealToLogFood": "Tippe auf eine Mahlzeit, um Essen einzutragen.",
+  "homeThursday": "Donnerstag",
+  "homeTuesday": "Dienstag",
+  "homeValueAbove": "{arg0} darüber",
+  "@homeValueAbove": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueDayTrackingStreak": "{arg0} Tage Tracking-Serie",
+  "@homeValueDayTrackingStreak": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalAboveYourTarget": "{arg0} kcal über deinem Ziel",
+  "@homeValueKcalAboveYourTarget": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalEaten": "{arg0} kcal gegessen",
+  "@homeValueKcalEaten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalRemaining": "{arg0} kcal übrig",
+  "@homeValueKcalRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalTarget": "{arg0} kcal Ziel",
+  "@homeValueKcalTarget": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValuePValueCValueF": "{arg0} P · {arg1} K · {arg2} F",
+  "@homeValuePValueCValueF": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueRemaining": "{arg0} übrig",
+  "@homeValueRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeWednesday": "Mittwoch",
+  "homeYourDay": "Dein Tag",
+  "homeYourMeals": "Deine Mahlzeiten",
   "languageContinue": "Weiter auf Deutsch",
   "@languageContinue": {
     "description": "Button on the first-start language page, names the selected language."
   },
+  "languageDeviceActive": "Handysprache",
+  "languageDeviceSubtitle": "Automatisch Deutsch oder Englisch",
+  "languageDeviceTitle": "Handysprache verwenden",
   "languageSelectedSemantics": "{language}, ausgewählt",
   "@languageSelectedSemantics": {
     "placeholders": {
@@ -39,6 +1796,1104 @@
   "languageSheetTitle": "Sprache wählen",
   "languageSubtitle": "Du kannst sie später jederzeit im Profil ändern.",
   "languageTitle": "Wähle deine Sprache",
+  "navigationAdd": "Hinzufügen",
+  "navigationAddMeal": "Mahlzeit hinzufügen",
+  "navigationAi": "KI",
+  "navigationDiary": "Tagebuch",
+  "navigationProfile": "Profil",
+  "navigationRecipes": "Rezepte",
+  "navigationYourDayYourRhythm": "Dein Alltag. Dein Rhythmus.",
+  "onboarding20Min": "20 Min.",
+  "onboarding560Kcal34GProtein": "560 kcal · 34 g Protein",
+  "onboardingARoughEstimateAtAValuePace": "Grobe Schätzung bei {arg0} Tempo – dein Körper hält sich nicht an Kalender.",
+  "@onboardingARoughEstimateAtAValuePace": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingARoughEstimateYourBodyDoesNot": "Grobe Schätzung – dein Körper hält sich nicht an Kalender.",
+  "onboardingATargetThatFitsYouNotA": "Ein Ziel, das zu dir passt – kein Muss. Du kannst es jederzeit ändern.",
+  "onboardingAddMeal": "Mahlzeit hinzufügen",
+  "onboardingAddToDiary": "Zum Tagebuch hinzufügen",
+  "onboardingAddToLunchValueKcal": "Zu Mittagessen hinzufügen · {arg0} kcal",
+  "@onboardingAddToLunchValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingAge": "Alter",
+  "onboardingAiEstimate": "KI-Schätzung",
+  "onboardingAiEstimates": "KI schätzt.",
+  "onboardingAiEstimatesFoods": "KI schätzt Lebensmittel",
+  "onboardingAiNutritionFitness": "KI · Ernährung & Fitness",
+  "onboardingAiPhoto": "KI-Foto",
+  "onboardingAiPhotoPremium": "KI-FOTO · PREMIUM",
+  "onboardingAiRecognisesFoodsAndEstimatesAmountsYou": "Die KI erkennt Lebensmittel und schätzt die Mengen. Du prüfst Gramm und Nährwerte, ergänzt, was fehlt – und speicherst erst dann.",
+  "onboardingAlreadyAMember": "Schon dabei? ",
+  "onboardingAlreadyHaveAnAccountSignIn": "Schon ein Konto? Anmelden",
+  "onboardingAmount": "Menge",
+  "onboardingAnswerTheQuestionsInYourProfileAt": "Beantworte die Fragen jederzeit im Profil, dann passt sich Lookin an dich an.",
+  "onboardingAnswersAboutNutritionAndFitnessTailoredTo": "Antworten zu Ernährung und Fitness, passend zu deinem Ziel und deinen Tageswerten.",
+  "onboardingAskYourCoach": "Frag deinen Coach …",
+  "onboardingAtAGlance": "Auf einen Blick.",
+  "onboardingAtHome": "Zu Hause",
+  "onboardingBack": "Zurück",
+  "onboardingBreakfast": "Frühstück",
+  "onboardingBreakfastLunchDinnerAndSnacksInOne": "Frühstück, Mittagessen, Abendessen und Snacks an einem Ort – mit Kalorien, Kohlenhydraten, Protein und Fett.",
+  "onboardingBuildMuscle": "Muskeln aufbauen",
+  "onboardingCalculateEnergyNeedsFromValue": "Energiebedarf aus {arg0} berechnen",
+  "@onboardingCalculateEnergyNeedsFromValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCarbohydrates": "Kohlenhydrate",
+  "onboardingChangeAnswers": "Antworten ändern",
+  "onboardingCheckTheEstimateThenSave": "Schätzung prüfen, dann speichern",
+  "onboardingChooseTheUnitThatFeelsNaturalTo": "Wähle die Einheit, die für dich natürlich ist, und wische zum passenden Wert.",
+  "onboardingClose": "Schließen",
+  "onboardingContinue": "Weiter",
+  "onboardingContinueForNow": "Für jetzt fortfahren",
+  "onboardingCookSimply": "Einfach kochen.",
+  "onboardingCookWithWhatYouHave": "Kochen mit dem, was da ist",
+  "onboardingCreatingPlanValuePerCent": "Plan wird erstellt, {arg0} Prozent",
+  "@onboardingCreatingPlanValuePerCent": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCreatingYourPlan": "Dein Plan wird erstellt …",
+  "onboardingDailyRoutine": "Alltag",
+  "onboardingDailyTarget": "Tagesziel",
+  "onboardingDateOfBirth": "Geburtsdatum",
+  "onboardingDayStreak": "Tage Serie",
+  "onboardingDec": "Dez",
+  "onboardingDecember": "Dezember",
+  "onboardingDinner": "Abendessen",
+  "onboardingDragTheRulerLeftOrRightThis": "Ziehe das Lineal nach links oder rechts. Es ist dein aktuelles Gewicht, kein Ziel.",
+  "onboardingDragTheRulerLeftOrRightYour": "Ziehe das Lineal nach links oder rechts. Dein Gewicht wird nicht bewertet.",
+  "onboardingEggs": "Eier",
+  "onboardingEnterManually": "Manuell eintragen",
+  "onboardingEntriesToday": "Einträge heute",
+  "onboardingEstimateProteinAndFatFromYourWeight": "Eiweiß und Fett aus deinem Gewicht ableiten",
+  "onboardingEstimateTimeToYourTargetWeight": "Zeit bis zu deinem Wunschgewicht abschätzen",
+  "onboardingEstimatesAreAlwaysLabelledAsEstimates": "Schätzungen sind immer als Schätzung markiert.",
+  "onboardingEveryRoutineIsDifferent": "Jeder Alltag ist anders.",
+  "onboardingEverythingIsBasedOnYourAnswersAnd": "Alles basiert auf deinen Antworten und lässt sich jederzeit im Profil anpassen.",
+  "onboardingExampleView": "Beispielansicht",
+  "onboardingFat": "Fett",
+  "onboardingFebruary": "Februar",
+  "onboardingFilterByQuickHighProteinOrVegetarian": "Filtere nach Schnell, High Protein oder Vegetarisch und finde Rezepte mit dem, was du zu Hause hast.",
+  "onboardingFilterOutRecipesContainingYourAllergens": "Rezepte mit deinen Allergenen aussortieren",
+  "onboardingFindProduct": "Produkt finden",
+  "onboardingFindRecipes": "Rezepte finden.",
+  "onboardingFocusedOnNutritionAndFitness": "Konzentriert auf Ernährung und Fitness.",
+  "onboardingForExampleAlex": "Zum Beispiel Alex",
+  "onboardingForYou": "FÜR DICH",
+  "onboardingFourMealsOneOverview": "Vier Mahlzeiten. Ein Überblick.",
+  "onboardingGiveYourCoachYourAnswersAsBackground": "Deinem Coach deine Antworten als Hintergrund mitgeben",
+  "onboardingGuidelineValuesForOrientationNotMedicalAdvice": "Richtwerte zur Orientierung, keine medizinische Beratung. Du kannst alles jederzeit im Profil anpassen.",
+  "onboardingGuidelineValuesOnlyIfYouWantThem": "Richtwerte nur, wenn du möchtest",
+  "onboardingHaveYouCountedCaloriesBefore": "Hast du schon einmal Kalorien gezählt?",
+  "onboardingHeight": "Größe",
+  "onboardingHelloValue": "Hallo, {arg0}.",
+  "@onboardingHelloValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingHowActiveAreYouUsually": "Wie aktiv bist du meistens?",
+  "onboardingHowDoYouEat": "Wie isst du?",
+  "onboardingHowDoYouLikeToEatSet": "Wie isst du gern? Richte deinen Rhythmus und deine Rezeptideen in wenigen Schritten ein.",
+  "onboardingHowTallAreYou": "Wie groß bist du?",
+  "onboardingIdeasMarkedAsBudgetRecipesAppearHigher": "Für deinen Einkauf stehen als Budget-Rezept markierte Ideen weiter oben.",
+  "onboardingIdeasMarkedAsBudgetRecipesMoveUp": "Als Budget-Rezept markierte Ideen rücken nach vorne.",
+  "onboardingIfYouWishLookinCalculatesGuidelineValues": "Wenn du möchtest, berechnet Lookin Richtwerte aus Alter, Größe und Gewicht. Deine Serie zeigt, wie regelmäßig du dabei bist.",
+  "onboardingInDiary": "Im Tagebuch",
+  "onboardingIntentionallyLeaveOutCalorieTargetsForYou": "Kalorienziele für dich bewusst weglassen",
+  "onboardingIsThereAnythingLookinShouldTakeInto": "Gibt es etwas, worauf Lookin achten soll?",
+  "onboardingJanuary": "Januar",
+  "onboardingJuly": "Juli",
+  "onboardingJune": "Juni",
+  "onboardingJustAsk": "Frag einfach.",
+  "onboardingKcalToday": "kcal heute",
+  "onboardingLetSGo": "Los geht’s",
+  "onboardingLogInYourDiaryWithOneTap": "Mit einem Tipp ins Tagebuch.",
+  "onboardingLogMealsThroughSearchOrBarcodeAnd": "Mahlzeiten per Suche oder Barcode eintragen – mit Premium auch per Foto.",
+  "onboardingLookinDoesNotCalculateCalorieTargetsFor": "Für dich berechnet Lookin keine Kalorienziele. Tagebuch, Rezepte und Coach kannst du trotzdem nutzen – deine Ziele besprichst du am besten mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.",
+  "onboardingLookinDoesNotCalculateCalorieTargetsFor2": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Rezepte, Tagebuch und Tipps kannst du trotzdem nutzen.",
+  "onboardingLookinDoesNotCalculateDailyTargetsWithout": "Ohne Alter, Größe und Gewicht berechnet Lookin keine Tagesziele. Du kannst sie jederzeit im Profil ergänzen.",
+  "onboardingLookinHidesRecipesContainingYourAllergens": "Rezepte mit deinen Allergenen blendet Lookin aus.",
+  "onboardingLookinIsProcessingYourAnswers": "Lookin verarbeitet gerade deine Antworten.",
+  "onboardingLookinOnlyOffersTargetsWithinTheHealthy": "Lookin bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und höchstens etwa ein halbes Kilo pro Woche an.",
+  "onboardingLookinWorksWithoutThisInformationToo": "Ohne Angaben funktioniert Lookin genauso.",
+  "onboardingLunch": "Mittagessen",
+  "onboardingMakeLookinFitYou": "So passt Lookin zu dir",
+  "onboardingMar": "Mär",
+  "onboardingMarch": "März",
+  "onboardingMay": "Mai",
+  "onboardingMealPrepForYourDay": "Vorkochen für deinen Alltag",
+  "onboardingMetricCmKg": "Metrisch · cm / kg",
+  "onboardingMoreProtein": "Mehr Protein",
+  "onboardingMostlySeatedOfficeStudyCarOftenMoving": "Meist sitzend: Büro, Studium, Auto. Viel in Bewegung: Pflege, Handwerk, Verkauf oder viele Wege zu Fuß.",
+  "onboardingMuscleGrowsSlowlyEnoughProteinAndTraining": "Muskeln wachsen langsam. Genug Eiweiß und Training sind wichtiger als schnelle Zahlen.",
+  "onboardingMyDailyTargets": "MEINE TÄGLICHEN ZIELE",
+  "onboardingNoneOfTheseApplySimplyTapContinue": "Trifft nichts davon zu? Dann tippe einfach auf „Weiter“.",
+  "onboardingNutritionAndFitnessOnly": "Nur Ernährung und Fitness",
+  "onboardingNutritionStyle": "Ernährungsweise",
+  "onboardingOct": "Okt",
+  "onboardingOctober": "Oktober",
+  "onboardingOf2100": "von 2.100",
+  "onboardingOneMoment": "Einen Moment …",
+  "onboardingOnlyUsedToEstimateYourEnergyNeeds": "Nur für die Schätzung deines Energiebedarfs – Körper verbrauchen je nach Geschlecht unterschiedlich viel. Du kannst das auch offenlassen.",
+  "onboardingOpeningLookin": "Lookin wird geöffnet",
+  "onboardingOptionalAndOnlyForYourSafetyThis": "Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät.",
+  "onboardingPageValueOfValue": "Seite {arg0} von {arg1}",
+  "@onboardingPageValueOfValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingPersonalise": "Persönlich einrichten",
+  "onboardingPescatarian": "Pescetarisch",
+  "onboardingPhotoBarcodeOrManualEntry": "Foto, Barcode oder selbst eintragen",
+  "onboardingPotatoes": "Kartoffeln",
+  "onboardingPreparingYourLookin": "Dein Lookin wird vorbereitet …",
+  "onboardingProtein": "Eiweiß",
+  "onboardingQuick": "Schnell",
+  "onboardingQuickToLog": "SCHNELL EINGETRAGEN",
+  "onboardingRecipeIdeasLabelledAsValueAppearFirst": "Passend gekennzeichnete {arg0} Rezeptideen erscheinen zuerst.",
+  "@onboardingRecipeIdeasLabelledAsValueAppearFirst": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRecipes": "REZEPTE",
+  "onboardingRecipesAreSortedByValue": "Rezepte erscheinen sortiert nach {arg0}.",
+  "@onboardingRecipesAreSortedByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRecipesTakingUpToValueMinutesGet": "Rezepte bis {arg0} Minuten bekommen Vorrang, wenn passende vorhanden sind.",
+  "@onboardingRecipesTakingUpToValueMinutesGet": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRemovalDidNotWorkPleaseTryAgain": "Entfernen hat nicht geklappt. Bitte versuche es erneut.",
+  "onboardingRemoveAnswers": "Antworten entfernen",
+  "onboardingReplayAnimation": "Animation wiederholen",
+  "onboardingRice": "Reis",
+  "onboardingSalad": "Salat",
+  "onboardingSalmon": "Lachs",
+  "onboardingSalmonAvocadoRice": "Lachs-Avocado-Reis",
+  "onboardingSaving": "Wird gespeichert …",
+  "onboardingScanBarcode": "Barcode scannen",
+  "onboardingSearchAndCustomFoodsIncluded": "Suchen und eigene Lebensmittel inklusive.",
+  "onboardingSearchOrEnterManually": "Suchen oder selbst",
+  "onboardingSeeWhatYouHaveAlreadyEatenToday": "Sehen, was du heute schon gegessen hast.",
+  "onboardingSelectEverythingThatFitsItIsCompletely": "Wähle alles, was passt – das ist völlig normal. Lookin gibt dir dazu passende Tipps.",
+  "onboardingSelectEverythingThatFitsYourCoachUses": "Wähle alles, was passt. Dein Coach greift das auf, wenn es mal schwerfällt.",
+  "onboardingSetProteinAndFatToFitYour": "Eiweiß und Fett passend zu deinem Ziel festlegen",
+  "onboardingSex": "Geschlecht",
+  "onboardingShortOnTimeTodayQuickMealsAppear": "Wenig Zeit heute? In deinen Rezeptideen stehen schnelle Gerichte weiter oben.",
+  "onboardingSignIn": "Anmelden",
+  "onboardingSkip": "Überspringen",
+  "onboardingSoLookinCanAddressYouProperly": "Damit Lookin dich richtig anspricht.",
+  "onboardingSoRecipesSuggestionsAndTheCoachFit": "Damit Rezepte, Vorschläge und der Coach zu dir passen.",
+  "onboardingSortRecipesByValue": "Rezepte nach {arg0} sortieren",
+  "@onboardingSortRecipesByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingSpaceForYou": "Platz für dich.",
+  "onboardingSteadyPace": "Ausgewogen",
+  "onboardingStillEmpty": "Noch leer",
+  "onboardingSummariseYourAnswers": "Deine Antworten zusammenfassen",
+  "onboardingSwipeTheWheelsUpOrDown": "Wische direkt in den Rädern nach oben oder unten.",
+  "onboardingTakeAPhoto": "Foto machen.",
+  "onboardingTakeAPhotoScanABarcodeOr": "Foto machen, Barcode scannen oder selbst eintragen. Das Plus in der Mitte ist immer nur einen Tipp entfernt.",
+  "onboardingTapThePlus": "Ein Tipp aufs Plus.",
+  "onboardingThankYouForSharingThisLookinDoes": "Danke, dass du das teilst. Lookin berechnet für dich keine Kalorienziele und schlägt keine Diät vor. Tagebuch, Rezepte und Coach kannst du trotzdem nutzen – deine Ziele besprichst du am besten mit deiner Ärztin, deinem Arzt oder einer Ernährungsfachkraft.",
+  "onboardingThatDidNotWorkJustNowPlease": "Das hat gerade nicht geklappt. Bitte versuche es noch einmal.",
+  "onboardingThatFitsUseThisValue": "Passt genau so – Wert übernehmen",
+  "onboardingTheIntroductionMayAppearAgainAtThe": "Die Einführung erscheint beim nächsten Start eventuell erneut.",
+  "onboardingThisHelpsLookinSuggestRecipesThatFit": "So schlägt Lookin Rezepte vor, die in deinen Tag passen.",
+  "onboardingThreeWays": "Drei Wege.",
+  "onboardingTimeToCookOnANormalDay": "Zeit zum Kochen an einem normalen Tag",
+  "onboardingTodayValue": "Heute · {arg0}",
+  "@onboardingTodayValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingTryAgain": "Erneut versuchen",
+  "onboardingUpToValueMin": "Bis {arg0} Min.",
+  "@onboardingUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueAndValue": "{arg0} und {arg1}",
+  "@onboardingValueAndValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueAroundValue": "{arg0} etwa im {arg1}",
+  "@onboardingValueAroundValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueKcalCValueGPValue": "{arg0} kcal · K {arg1} g · P {arg2} g",
+  "@onboardingValueKcalCValueGPValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueKilocaloriesPerDay": "{arg0} Kilokalorien pro Tag",
+  "@onboardingValueKilocaloriesPerDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueMealsFitIntoYourDay": "{arg0} Mahlzeiten passen in deinen Tag",
+  "@onboardingValueMealsFitIntoYourDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueUpToValueMin": "{arg0} · bis {arg1} Min.",
+  "@onboardingValueUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingValueValueKgWeek": "{arg0}\n{arg1} kg/Woche",
+  "@onboardingValueValueKgWeek": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingVegetarian": "Vegetarisch",
+  "onboardingViewRecipeIdeas": "Rezeptideen ansehen",
+  "onboardingWeight": "Gewicht",
+  "onboardingWhatCanIStillEatThisEvening": "Was kann ich heute Abend noch essen?",
+  "onboardingWhatFeelsRightForYouMatters": "Was dir guttut, zählt.",
+  "onboardingWhatHasHeldYouBackSoFar": "Was hat dich bisher gebremst?",
+  "onboardingWhatIsYourGoal": "Was ist dein Ziel?",
+  "onboardingWhatIsYourKitchenRoutine": "Wie sieht es in deiner Küche aus?",
+  "onboardingWhatIsYourTargetWeight": "Was ist dein Wunschgewicht?",
+  "onboardingWhatLookinDoesForYouNow": "Das macht Lookin jetzt für dich",
+  "onboardingWhatShouldWeCallYouOptional": "Wie dürfen wir dich nennen? (optional)",
+  "onboardingWhenIsYourBirthday": "Wann hast du Geburtstag?",
+  "onboardingWhereAreYouNow": "Wo stehst du gerade?",
+  "onboardingWhereWouldYouLikeToBe": "Wohin möchtest du?",
+  "onboardingWhyDoesItMatterToYou": "Warum ist dir das wichtig?",
+  "onboardingYouAreStartingWithACleanSlate": "Du startest ganz neutral.",
+  "onboardingYouCanContinueTheQuestionsMayAppear": "Du kannst weitermachen. Die Fragen erscheinen beim nächsten Start möglicherweise erneut.",
+  "onboardingYouCanSkipAboveLookinWorksWithout": "Du kannst oben überspringen. Lookin funktioniert auch ohne diese Antworten.",
+  "onboardingYouChooseTheDirection": "Du bestimmst die Richtung.",
+  "onboardingYouHaveAbout650KcalLeftToday": "Du hast heute noch etwa 650 kcal frei. Wie wäre eine Lachs-Tomaten-Bowl? Rund 35 g Protein.",
+  "onboardingYouHaveNotProvidedAnyInformationLookin": "Du hast keine Angaben gemacht. Darum berechnet Lookin noch keine Tagesziele und sortiert Rezepte nicht für dich. Sobald du im Profil etwas ergänzt, passt sich Lookin an.",
+  "onboardingYourAiCoach": "Dein KI-Coach.",
+  "onboardingYourBudget": "deinem Budget",
+  "onboardingYourChoices": "DEINE AUSWAHL",
+  "onboardingYourCoachKnowsYourGoalsAndObstacles": "Dein Coach kennt deine Ziele und Hürden und richtet Tipps daran aus.",
+  "onboardingYourCoachTakesIntoAccountValue": "Dein Coach berücksichtigt: {arg0}.",
+  "@onboardingYourCoachTakesIntoAccountValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourCookingTime": "deiner Zeit zum Kochen",
+  "onboardingYourDailyGuideline": "Dein Tagesrichtwert",
+  "onboardingYourDay": "DEIN TAG",
+  "onboardingYourDay2": "Dein Tag.",
+  "onboardingYourDayYourLookin": "Dein Alltag. Dein Lookin.",
+  "onboardingYourDiary": "DEIN TAGEBUCH",
+  "onboardingYourFocusValue": "Dein Fokus: {arg0}.",
+  "@onboardingYourFocusValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourGoal": "deinem Ziel",
+  "onboardingYourGoals": "Deine Ziele.",
+  "onboardingYourHeight": "Deine Größe",
+  "onboardingYourInformationCouldNotBeSavedPlease": "Deine Angaben konnten nicht gespeichert werden. Bitte versuche es erneut.",
+  "onboardingYourLookinPlanIsReady": "Dein Lookin-Plan ist bereit.",
+  "onboardingYourMealRhythmStaysFlexible": "Dein Rhythmus bleibt flexibel",
+  "onboardingYourNameIsOptionalYouCanChange": "Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.",
+  "onboardingYourNormalEverydayRoutineWithoutDedicatedExercise": "Dein ganz normaler Alltag, ohne gezieltes Training.",
+  "onboardingYourNutritionStyle": "deiner Ernährungsweise",
+  "onboardingYourOptionalInformationHelpsLookinAndThe": "Deine freiwilligen Angaben helfen Lookin und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.",
+  "onboardingYourPreferencesAtAGlance": "Deine Wünsche auf einen Blick.",
+  "onboardingYourProfile": "Dein Profil",
+  "onboardingYourProfile2": "DEIN PROFIL",
+  "onboardingYourRecipeIdeasReflectThePreferencesYou": "Deine Rezeptideen richten sich nach den Vorlieben, die du angegeben hast.",
+  "onboardingYourRecipeIdeasTakeYourCookingTime": "Deine Rezeptideen berücksichtigen deine Kochzeit.",
+  "onboardingYourRhythmIsAGuideYouCan": "Dein Rhythmus ist eine Orientierung. Du kannst ihn jederzeit ändern.",
+  "onboardingYourRoutineValue": "Dein Alltag: {arg0}.",
+  "@onboardingYourRoutineValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourSettingsCouldNotBeLoaded": "Deine Einstellungen konnten nicht geladen werden.",
+  "onboardingYourSetupAnswersHaveBeenRemovedFrom": "Deine Einrichtungsantworten wurden von diesem Gerät entfernt.",
+  "onboardingYourSex": "Dein Geschlecht",
+  "onboardingYourStreak": "Deine Serie.",
+  "onboardingYourWeightIsAlreadyAtTheLower": "Dein Gewicht liegt bereits im unteren gesunden Bereich. Lookin schlägt dir deshalb kein Abnehmziel vor – wir helfen dir, gut und ausgewogen zu essen.",
+  "profileALittlePieceOfYou": "Ein kleines Stück von dir.",
+  "profileActivity": "Aktivität",
+  "profileActivityLevel": "Aktivitätsniveau",
+  "profileAiPhotoAiChat": "KI-Foto & KI-Chat",
+  "profileAiService": "KI-DIENST",
+  "profileAllergies": "Allergien",
+  "profileAnswerQuestions": "Fragen beantworten",
+  "profileAppPrivacy": "App & Datenschutz",
+  "profileApplyChanges": "Änderungen übernehmen",
+  "profileBalanced": "Ausgewogen",
+  "profileBecauseYouIndicatedThatYourNutritionNeeds": "Weil du angegeben hast, dass deine Ernährung gerade besondere Aufmerksamkeit braucht, berechnet Lookin keine Kalorienziele. Besprich deine Ziele bitte mit deiner Ärztin, deinem Arzt oder einer Ernährungsfachkraft. Tagebuch und Rezepte kannst du trotzdem nutzen.",
+  "profileBuildMuscle": "Muskeln aufbauen",
+  "profileCalorieTargetValueKcal": "Kalorienziel: {arg0} kcal",
+  "@profileCalorieTargetValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCalories": "Kalorien",
+  "profileCancel": "Abbrechen",
+  "profileChangeInformation": "Angaben ändern",
+  "profileChangeNutritionStyleAndActivityUnderChange": "Ernährungsweise und Aktivität änderst du unter „Antworten ändern“.",
+  "profileChangeProfilePicture": "Profilbild ändern",
+  "profileChangeYourPreferredNameAndPersonalPreferences": "Rufname und persönliche Wünsche änderst du im Profil unter „Antworten ändern“. Die folgenden Zahlen sind deine separat eingestellten Ziele.",
+  "profileChooseAnImageNoLargerThan8": "Wähle ein Bild mit höchstens 8 MB.",
+  "profileChooseAnotherImage": "Anderes Bild auswählen",
+  "profileChooseImage": "Bild auswählen",
+  "profileClose": "Schließen",
+  "profileComingSoon": "Bald verfügbar",
+  "profileCropYourImageDragItOrUse": "Bildausschnitt. Ziehe das Bild oder nutze die Regler.",
+  "profileDayStreak": "Tag Serie",
+  "profileDayStreak2": "Tage Serie",
+  "profileDelete": "Löschen",
+  "profileDeleteAccount": "Konto löschen",
+  "profileDeleteAccountAndAccountData": "Konto und Kontodaten löschen",
+  "profileDeleteDemoData": "Demodaten löschen?",
+  "profileDeleteLocalDemoData": "Lokale Demodaten löschen",
+  "profileDeletingYourAccountDoesNotCancelYour": "Das Löschen des Kontos kündigt dein Abo nicht. Der Store bucht weiter ab, bis du es dort kündigst. Kündige zuerst, dann lösche das Konto.",
+  "profileDemoChangesLastUntilTheAppRestarts": "Demo: Änderungen bleiben bis zum Neustart erhalten.",
+  "profileDeveloperPremium": "Entwickler: Premium",
+  "profileDeviceOnly": "NUR GERÄT",
+  "profileDoNotFollowDietOrCalorieTargets": "Nutze keine Diät- oder Kalorienziele auf eigene Faust. Hole dir persönliche Hilfe bei medizinischem oder psychotherapeutischem Fachpersonal. Bei einem akuten Notfall wende dich an den örtlichen Notruf.",
+  "profileEatingDisorderOrAcuteSymptoms": "Essstörung oder akute Beschwerden",
+  "profileEditProfile": "Profil bearbeiten",
+  "profileEntriesToday": "Einträge heute",
+  "profileEntryToday": "Eintrag heute",
+  "profileExportDeleteConsents": "Exportieren, löschen, Einwilligungen",
+  "profileExportFailedPleaseCheckYourConnectionAnd": "Der Export hat nicht geklappt. Bitte prüfe deine Verbindung und versuche es erneut.",
+  "profileExportMyData": "Meine Daten exportieren",
+  "profileFat": "Fett",
+  "profileFineTuneTheCrop": "Ausschnitt fein einstellen",
+  "profileFlexible": "Flexibel",
+  "profileForLookinPremiumWithoutGivingAReason": "Für Lookin Premium, ohne Angabe von Gründen",
+  "profileHealthAlwaysComesBeforeTracking": "Gesundheit geht immer vor Tracking",
+  "profileHelpSafety": "Hilfe & Sicherheit",
+  "profileHidePassword": "Passwort verbergen",
+  "profileImages": "Bilder",
+  "profileImprint": "Impressum",
+  "profileImprintLegal": "Impressum & Rechtliches",
+  "profileImprintTermsPrivacyWithdrawal": "Impressum, AGB, Datenschutz, Widerruf",
+  "profileInAccount": "IM KONTO",
+  "profileInformationAndContact": "Hinweise und Kontakt",
+  "profileIntroductionQuestionsAndPremiumAsOnThe": "Einführung, Fragen und Premium wie beim ersten Start",
+  "profileJpgOrPngUpTo8Mb": "JPG oder PNG · bis 8 MB\nDein Profilbild ist nur für dein Konto sichtbar.",
+  "profileKcalToday": "kcal heute",
+  "profileLeaveThisAccountOnThisDevice": "Dieses Konto auf dem Gerät verlassen",
+  "profileLeftRight": "Links – rechts",
+  "profileLegal": "Rechtliches",
+  "profileLocalDataOverview": "Lokale Datenübersicht",
+  "profileLookinDoesNotCalculateCalorieTargetsFor": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen Arzt oder eine Ernährungsfachkraft.",
+  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
+  "profileLoseFat": "Fett verlieren",
+  "profileLowActivity": "Wenig aktiv",
+  "profileMaintainWeight": "Gewicht halten",
+  "profileMealWaterAndWeeklyReviewRemindersWill": "Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.",
+  "profileMeals": "Mahlzeiten",
+  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.",
+  "profileMealsNutrition": "Mahlzeiten & Nährwerte",
+  "profileModeratelyActive": "Moderat aktiv",
+  "profileMoveTheImageToChooseYourCrop": "Verschiebe das Bild für deinen Ausschnitt.",
+  "profileMyDailyTargets": "Meine täglichen Ziele",
+  "profileMyGoal": "Mein Ziel",
+  "profileNameValueGoalValueMealsValueWeight": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nGewicht: {arg3} kg\nFavoriten: {arg4}",
+  "@profileNameValueGoalValueMealsValueWeight": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      },
+      "arg4": {
+        "type": "String"
+      }
+    }
+  },
+  "profileNoGoalSelectedYet": "Noch kein Ziel gewählt",
+  "profileNotMedicalAdvice": "Keine medizinische Beratung",
+  "profileNumbersAreAGuide": "Zahlen sind Orientierung",
+  "profileNutritionProfile": "Ernährungsprofil",
+  "profileNutritionStyle": "Ernährungsstil",
+  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nährwerte und Ziele sind Schätzungen. Achte zusätzlich auf Energie, Wohlbefinden, Schlaf und ein entspanntes Verhältnis zum Essen.",
+  "profileOneMoment": "Einen Moment …",
+  "profileOnlyVisibleToYourDeveloperAccount": "Nur für dein Entwickler-Konto sichtbar",
+  "profileOpenStoreSubscriptions": "Abos im Store öffnen",
+  "profileOpensInBrowser": "Öffnet sich im Browser",
+  "profilePasswordToConfirm": "Passwort zur Bestätigung",
+  "profilePermanentlyDeleteAccount": "Konto endgültig löschen?",
+  "profilePleaseChooseAJpgOrPngImage": "Wähle bitte ein JPG- oder PNG-Bild.",
+  "profilePleaseChooseTheImageAgain": "Wähle das Bild bitte erneut aus.",
+  "profilePremiumActive": "Premium aktiv",
+  "profilePremiumCouldNotBeSwitchedJustNow": "Premium konnte gerade nicht umgeschaltet werden.",
+  "profilePrivacyData": "Datenschutz & Daten",
+  "profilePrivacyPolicy": "Datenschutzerklärung",
+  "profileProfile": "Profil",
+  "profileProfilePictureReminders": "Profilbild & Erinnerungen",
+  "profileProfileTargets": "Profil & Ziele",
+  "profileRemaining": "Noch offen",
+  "profileReminders": "Erinnerungen",
+  "profileRemoveProfilePicture": "Profilbild entfernen",
+  "profileSaveNutritionProfile": "Ernährungsprofil speichern",
+  "profileSaveProfilePicture": "Profilbild speichern",
+  "profileSavedListsAndYourWaterTotalAre": "Gespeicherte Listen und dein Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.",
+  "profileSavingCancelled": "Speichern abgebrochen.",
+  "profileSelectTheCropAgain": "Wähle den Bildausschnitt erneut.",
+  "profileShowPassword": "Passwort anzeigen",
+  "profileSignOut": "Abmelden",
+  "profileSignOut2": "Abmelden?",
+  "profileSignOutFailedPleaseTryAgain": "Abmelden fehlgeschlagen. Bitte versuche es erneut.",
+  "profileStartFromTheBeginning": "Von vorne zeigen",
+  "profileTargetWeightValueKg": "Zielgewicht: {arg0} kg",
+  "@profileTargetWeightValueKg": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTerms": "AGB",
+  "profileTheExportAlsoContainsHealthAndChat": "Der Export enthält auch Gesundheits- und Chatdaten. Bewahre die Datei sicher auf.",
+  "profileTheImageCouldNotBeOpenedTry": "Das Bild ließ sich nicht öffnen. Versuche es mit einem anderen JPG oder PNG.",
+  "profileTheImageCouldNotBeResized": "Das Bild konnte nicht verkleinert werden.",
+  "profileTheImageIsVeryLargeChooseA": "Das Bild ist sehr groß. Wähle ein Foto mit höchstens 24 Megapixeln.",
+  "profileThisImageCouldNotBeOpened": "Dieses Bild konnte nicht geöffnet werden.",
+  "profileTransparentAndUnderYourControl": "Transparent und unter deiner Kontrolle",
+  "profileTrialActive": "Testphase aktiv",
+  "profileTrialActiveUntilValue": "Testphase aktiv bis {arg0}",
+  "@profileTrialActiveUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileUpDown": "Oben – unten",
+  "profileValueDayFreeTrial": "{arg0} Tage kostenlos testen",
+  "@profileValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileValuePerDay": "{arg0} pro Tag",
+  "@profileValuePerDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileValueValuePerCent": "{arg0}: {arg1} Prozent",
+  "@profileValueValuePerCent": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "profileValueZoom": "{arg0}-fache Vergrößerung",
+  "@profileValueZoom": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileVegetarian": "Vegetarisch",
+  "profileVeryActive": "Sehr aktiv",
+  "profileViewLocalData": "Lokale Daten ansehen",
+  "profileViewPlansAndBenefits": "Pläne und Vorteile ansehen",
+  "profileWeCalculateTheseGuidelineValuesFromYour": "Diese Richtwerte berechnen wir aus deinem Alter, deiner Größe, deinem Gewicht und deinem Alltag. Sie dienen zur Orientierung und ersetzen keine ärztliche Beratung.",
+  "profileWeCalculateYourDailyTargetsFromYour": "Deine Tagesziele berechnen wir aus deinem Alter, deiner Größe, deinem Gewicht und deinem Alltag. Wenn du möchtest, beantworte dazu ein paar kurze Fragen. Du kannst Lookin aber auch ganz ohne Ziele nutzen.",
+  "profileWithdrawFromContract": "Vertrag widerrufen",
+  "profileWithdrawalInformation": "Widerrufsbelehrung",
+  "profileWithin14DaysOfPurchaseWithoutGiving": "Innerhalb von 14 Tagen nach dem Kauf, ohne Grund",
+  "profileYourAccountCouldNotBeCompletelyDeleted": "Das Konto konnte nicht vollständig gelöscht werden. Bitte prüfe, ob du noch angemeldet bist.",
+  "profileYourAccountCouldNotBeDeletedPlease": "Das Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
+  "profileYourAccountValueAndItsAssociatedData": "Dein Konto{arg0} und die dazugehörigen Daten werden gelöscht. Das kann nicht rückgängig gemacht werden. Ein späteres Store-Abo müsstest du separat im Store kündigen.",
+  "@profileYourAccountValueAndItsAssociatedData": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "profileYourCalorieTargetIsCalculatedFromYour": "Dein Kalorienziel wird aus deinen Angaben berechnet.",
+  "profileYourDataHasBeenSavedAsA": "Deine Daten wurden als JSON-Datei gespeichert.",
+  "profileYourPasswordIsIncorrectYourAccountWas": "Das Passwort stimmt nicht. Dein Konto wurde nicht gelöscht.",
+  "profileYourPremiumSubscriptionWillContinue": "Dein Premium-Abo läuft weiter!",
+  "profileYourProfilePicture": "Dein Profilbild",
+  "profileYourProfilePictureCouldNotBeRemoved": "Das Profilbild konnte nicht entfernt werden.",
+  "profileYourProfilePictureCouldNotBeRemoved2": "Das Profilbild konnte nicht entfernt werden. Versuche es erneut.",
+  "profileYourProfilePictureWasNotSavedPlease": "Das Profilbild wurde nicht gespeichert. Versuche es erneut.",
+  "profileYourProfilePictureWasNotSavedYour": "Das Profilbild wurde nicht gespeichert. Dein bisheriges Bild bleibt erhalten.",
+  "profileYourProfileTargetsAndDiaryAreSaved": "Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.",
+  "profileYourSavedAccountDataWillBeKept": "Deine gespeicherten Kontodaten bleiben erhalten. Du kannst dich später wieder anmelden.",
+  "profileYourSavedProfileInformation": "Deine gespeicherten Profilangaben",
+  "progressAMeasurementReplacesTheValueFromThe": "Eine Messung ersetzt den Wert desselben Tages.",
+  "progressAnActualTrendStartsHereAutomaticallyAfter": "Nach deinem ersten Tagebucheintrag entsteht hier automatisch ein echter Verlauf.",
+  "progressAverageOnTrackedDays": "Durchschnitt an getrackten Tagen",
+  "progressAveragePerTimePeriodComparedWithYour": "Durchschnitt pro Zeitabschnitt im Vergleich zu deinen Zielen",
+  "progressAvgKcalTrackedDay": "Ø kcal / Track-Tag",
+  "progressAvgProteinTrackedDay": "Ø Protein / Track-Tag",
+  "progressBodyTrend": "Körperverlauf",
+  "progressCalories": "KALORIEN",
+  "progressCarbohydrates": "Kohlenhydrate",
+  "progressCheckYourConnectionAndTryAgain": "Prüfe deine Verbindung und versuche es erneut.",
+  "progressClearTrendsFromYourActualDiaryWithout": "Klare Trends aus deinem echten Tagebuch – ohne Druck durch einzelne Tage.",
+  "progressClosenessToTarget": "Zielnähe",
+  "progressCurrentStreak": "Aktuelle Serie",
+  "progressDaysInCalorieRange": "Tage im Kalorienbereich",
+  "progressFat": "Fett",
+  "progressInTargetRange": "im Zielbereich",
+  "progressLog": "Eintragen",
+  "progressLogMealsAndAddYourWeightLookin": "Trage Mahlzeiten ein und ergänze dein Gewicht. Lookin berechnet danach nur aus deinen echten Daten.",
+  "progressLogOrdinaryDaysTooThisMakesYour": "Trage auch an normalen Tagen ein. So wird dein Trend ehrlich und nützlich.",
+  "progressLookAtWeightOverSeveralWeeksWater": "Bewerte Gewicht über mehrere Wochen; Wasser und Salz verschieben einzelne Messungen.",
+  "progressMacroBalance": "Makro-Balance",
+  "progressMeasurementCouldNotBeSaved": "Messung konnte nicht gespeichert werden.",
+  "progressMeasurementSaved": "Messung gespeichert.",
+  "progressNewMeasurement": "Neue Messung",
+  "progressNoMeasurementYet": "Noch keine Messung",
+  "progressNoNutritionTrendYet": "Noch kein Ernährungstrend",
+  "progressNutritionTrend": "Ernährungstrend",
+  "progressOneOrTwoMeasurementsAWeekAre": "Ein bis zwei Messungen pro Woche reichen. Tages-Schwankungen sind normal.",
+  "progressOneOrTwoMeasurementsAWeekUnder": "Für einen Gewichtstrend genügen ein bis zwei Messungen pro Woche unter ähnlichen Bedingungen.",
+  "progressPleaseEnterARealisticWeightBetween25": "Bitte gib ein realistisches Gewicht zwischen 25 und 400 kg ein.",
+  "progressProteinWasCloseToTargetOnValue": "An {arg0} Tagen lag Protein nahe am Ziel. Eine feste Proteinquelle pro Mahlzeit kann helfen.",
+  "@progressProteinWasCloseToTargetOnValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRefresh": "Aktualisieren",
+  "progressRegularTrackingHelpsYouUnderstandYourHabits": "Regelmäßiges Tracken schafft zuerst Klarheit.",
+  "progressSaveMeasurement": "Messung speichern",
+  "progressTarget100": "ZIEL = 100 %",
+  "progressTrackingConsistency": "Tracking-Konstanz",
+  "progressTryAgain": "Erneut versuchen",
+  "progressUpToTheLast28Days": "Die letzten maximal 28 Tage",
+  "progressValueDays": "{arg0} Tage",
+  "@progressValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressValueDaysAlreadyGiveABetterFoundation": "{arg0} Tage liefern bereits eine bessere Grundlage als ein einzelner Tageswert.",
+  "@progressValueDaysAlreadyGiveABetterFoundation": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressValueOfValueDaysWithEntriesValue": "{arg0} von {arg1} Tagen mit Einträgen · {arg2} Mahlzeiten ausgewertet",
+  "@progressValueOfValueDaysWithEntriesValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "progressValueValueKcalValueGProtein": "{arg0}: {arg1} kcal · {arg2} g Protein",
+  "@progressValueValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "progressValueValueKgInThisPeriod": "{arg0}{arg1} kg im Zeitraum",
+  "@progressValueValueKgInThisPeriod": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "progressValueValueNoEntry": "{arg0}.{arg1}. · kein Eintrag",
+  "@progressValueValueNoEntry": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "progressWaistCircumferenceMustBeBetween30And": "Der Taillenumfang muss zwischen 30 und 300 cm liegen.",
+  "progressWaistOptional": "Taille (optional)",
+  "progressWeight": "Gewicht",
+  "progressWeightAndOptionalWaistCircumferenceViewedCalmly": "Gewicht und optionaler Taillenumfang – ruhig und langfristig betrachtet",
+  "progressWhatYourDataSays": "Was deine Daten sagen",
+  "progressYouAreHeadingInTheRightDirection": "Deine Richtung stimmt – Beständigkeit bringt jetzt am meisten.",
+  "progressYouAreVeryCloseToYourPersonal": "Du liegst sehr nah an deinen persönlichen Zielen.",
+  "progressYourActualTrendStartsHere": "Dein echter Verlauf beginnt hier",
+  "progressYourAverageProteinIsCloseToYour": "Dein Proteindurchschnitt liegt nah am Ziel. Das unterstützt Sättigung und Muskelerhalt.",
+  "progressYourFirstEntryMakesTrendsVisible": "Dein erster Eintrag macht Trends sichtbar.",
+  "progressYourProgress": "Dein Fortschritt",
+  "progressYourProgressDataCouldNotBeLoaded": "Deine Fortschrittsdaten konnten nicht geladen werden.",
+  "progressYourRhythm": "DEIN RHYTHMUS",
+  "sharedImprint": "Impressum",
+  "sharedPrivacy": "Datenschutz",
+  "sharedTerms": "AGB",
+  "sharedTheLinkCouldNotBeOpenedPlease": "Der Link konnte nicht geöffnet werden. Bitte versuche es später noch einmal.",
+  "sharedWithdrawFromContract": "Vertrag widerrufen",
+  "sharedWithdrawal": "Widerruf",
+  "subscriptionAiPhoto": "KI-Foto",
+  "subscriptionAiPhotoIsPartOfPremium": "KI-Foto ist Teil von Premium",
+  "subscriptionAiPhotoRecognition": "KI-Foto-Erkennung",
+  "subscriptionAiPhotoYourPersonalCoachAndAll": "KI-Foto, dein persönlicher Coach und alle Rezepte – für weniger Aufwand und mehr Klarheit beim Essen.",
+  "subscriptionAll": "Alle",
+  "subscriptionAllPremiumFeaturesForValueDaysThen": "Alle Premium-Funktionen {arg0} Tage lang – danach geht es automatisch kostenlos weiter.",
+  "@subscriptionAllPremiumFeaturesForValueDaysThen": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionAllRecipes": "Alle Rezepte",
+  "subscriptionAllRecipesAreAvailableWithPremium": "Alle Rezepte gibt es mit Premium",
+  "subscriptionBilledEveryMonth": "jeden Monat berechnet",
+  "subscriptionBilledOnceAYearSaveValueCompared": "einmal im Jahr berechnet – du sparst {arg0} gegenüber monatlich",
+  "@subscriptionBilledOnceAYearSaveValueCompared": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionCancelMonthly": "monatlich kündbar",
+  "subscriptionChooseAPremiumSubscription": "Premium-Abo wählen",
+  "subscriptionClose": "Schließen",
+  "subscriptionComingSoon": "Bald verfügbar",
+  "subscriptionConfirmWithdrawal": "Widerruf bestätigen",
+  "subscriptionContinueWithTheFreeVersion": "Weiter mit der kostenlosen Version",
+  "subscriptionDiaryMacrosStreak": "Tagebuch, Makros & Serie",
+  "subscriptionDone": "Fertig",
+  "subscriptionEmailForAcknowledgement": "E-Mail für die Bestätigung",
+  "subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo": "Endet automatisch · keine Zahlungsdaten nötig · keine Kosten",
+  "subscriptionEquivalentToValuePerMonth": "entspricht {arg0} pro Monat",
+  "@subscriptionEquivalentToValuePerMonth": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionForExampleTheOrderNumberFromThe": "Zum Beispiel die Bestellnummer aus der Google-Play-Mail",
+  "subscriptionFree": "Kostenlos",
+  "subscriptionFreeOrPremium": "Kostenlos oder Premium?",
+  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Sie endet automatisch – ohne Kosten.",
+  "@subscriptionFreeTrialUntilValueItEndsAutomatically": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionFreeTrialValueDaysOncePerEmail": "Kostenlose Testphase: {arg0} Tage, einmal pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n{arg1}",
+  "@subscriptionFreeTrialValueDaysOncePerEmail": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionGenerousAiAllowance": "Großzügiges KI-Kontingent",
+  "subscriptionGet": "Hol dir ",
+  "subscriptionGladYouAreHere": "Schön, dass du da bist",
+  "subscriptionHereYouCanWithdrawFromYourLookin": "Hier widerrufst du deinen Vertrag über Lookin Premium. Einen Grund musst du nicht angeben. Du bekommst sofort eine Eingangsbestätigung mit Datum und Uhrzeit.",
+  "subscriptionIncluded": "enthalten",
+  "subscriptionLetSGo": "Los geht’s",
+  "subscriptionLookinCoachAiChat": "Lookin Coach (KI-Chat)",
+  "subscriptionManageSubscription": "Abo verwalten",
+  "subscriptionMonthly": "Monatlich",
+  "subscriptionMoreRecipesWithPremium": "Mehr Rezepte mit Premium",
+  "subscriptionNew": "Neues",
+  "subscriptionNoActiveSubscriptionWasFoundForThis": "Für dieses Store-Konto wurde kein aktives Abo gefunden.",
+  "subscriptionNoTrialStartsInThePreviewWithout": "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.",
+  "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
+  "subscriptionNotIncluded": "nicht enthalten",
+  "subscriptionOrderNumberOrNoteOptional": "Bestellnummer oder Hinweis (freiwillig)",
+  "subscriptionPaymentIsHandledSecurelyByTheStore": "Die Zahlung läuft sicher über den Store. Lookin sieht und speichert keine Zahlungsdaten.",
+  "subscriptionPaymentsAreBeingSetUp": "Bezahlung wird gerade eingerichtet",
+  "subscriptionPerMonth": "pro Monat",
+  "subscriptionPerYear": "pro Jahr",
+  "subscriptionPleaseConfirmFirstThatLookinPremiumShould": "Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.",
+  "subscriptionPleaseConfirmYourEmailAddressUsingThe": "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten.",
+  "subscriptionPleaseSignInToStartYourTrial": "Bitte melde dich an, um die Testphase zu starten.",
+  "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.",
+  "subscriptionPopularSavings": ", beliebt, {savings} Prozent günstiger als monatlich",
+  "@subscriptionPopularSavings": {
+    "placeholders": {
+      "savings": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPopularValue": "Beliebt · −{arg0} %",
+  "@subscriptionPopularValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPremiumIsActive": "Premium ist aktiv",
+  "subscriptionPremiumIsActiveThankYouForYour": "Premium ist aktiv. Danke für deine Unterstützung!",
+  "subscriptionPremiumIsAlreadyActiveForYourAccount": "Premium ist für dein Konto bereits aktiv.",
+  "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
+  "subscriptionProfileDailyTargets": "Profil & Tagesziele",
+  "subscriptionPurchaseCancelledNothingWasCharged": "Kauf abgebrochen. Es wurde nichts berechnet.",
+  "subscriptionRecipes": "Rezepte",
+  "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
+  "@subscriptionReferenceNumberValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRestorePurchases": "Käufe wiederherstellen",
+  "subscriptionRestorePurchasesComingSoon": "Käufe wiederherstellen – bald verfügbar",
+  "subscriptionRestoringPurchasesIsOnlyAvailableInThe": "Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die wiederhergestellt werden müssten.",
+  "subscriptionSearchBarcodeCustomFoods": "Suche, Barcode & eigene Lebensmittel",
+  "subscriptionStartForFree": "Starte kostenlos",
+  "subscriptionStartingTrial": "Testphase wird gestartet …",
+  "subscriptionSubscribeInTheLookinAppForAndroid": "Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird nichts gekauft oder berechnet.",
+  "subscriptionSubscribeMonthly": "Monatlich abonnieren",
+  "subscriptionSubscribeYearly": "Jährlich abonnieren",
+  "subscriptionSubscriptionManagementCouldNotBeOpenedOpen": "Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-Einstellungen direkt im Store.",
+  "subscriptionSubscriptionPlans": "Abo-Pläne",
+  "subscriptionSubscriptionPricesValuePaymentAndBillingAre": "Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.",
+  "@subscriptionSubscriptionPricesValuePaymentAndBillingAre": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSubscriptionPricesValueValueASubscriptionRenews": "Abo-Preise ({arg0}): {arg1} Ein Abo verlängert sich automatisch zum selben Preis und ist jederzeit zum Ende des Abrechnungszeitraums kündbar.",
+  "@subscriptionSubscriptionPricesValueValueASubscriptionRenews": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSubscriptionsAreAvailableInTheLookinApp": "Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet – teste Premium hier {arg0} Tage kostenlos.",
+  "@subscriptionSubscriptionsAreAvailableInTheLookinApp": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionTakeAPhotoLookinEstimatesFoodsAnd": "Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.",
+  "subscriptionTheAppStore": "dem App Store",
+  "subscriptionTheLookinCoachIsPartOfPremium": "Der Lookin Coach ist Teil von Premium",
+  "subscriptionTheStoreIsCurrentlyUnavailableNothingWas": "Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.",
+  "subscriptionTheTrialIsBeingSetUpPlease": "Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.",
+  "subscriptionTrialAlreadyUsed": "Testphase bereits genutzt",
+  "subscriptionUnexpectedResponse": "Unerwartete Antwort.",
+  "subscriptionUnlockAllRecipes": "Alle Rezepte freischalten",
+  "subscriptionUpTo100AiRequestsADay": "Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), in der Testphase bis zu 50.",
+  "subscriptionValueDayFreeTrial": "{arg0} Tage kostenlos testen",
+  "@subscriptionValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueDayFreeTrialEndsAutomatically": "{arg0} Tage kostenlos testen · endet automatisch",
+  "@subscriptionValueDayFreeTrialEndsAutomatically": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueFreeValuePremiumValue": "{arg0}. Kostenlos: {arg1}. Premium: {arg2}.",
+  "@subscriptionValueFreeValuePremiumValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Sie endet automatisch – ohne Kosten und ohne Abo.",
+  "@subscriptionValueItEndsAutomaticallyAtNoCost": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueNothingWasPurchasedOrChargedTry": "{arg0}. Es wurde nichts gekauft und nichts berechnet – teste Premium bis dahin {arg1} Tage kostenlos.",
+  "@subscriptionValueNothingWasPurchasedOrChargedTry": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueUnlocked": "{arg0} freigeschaltet",
+  "@subscriptionValueUnlocked": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueUntilThenNothingIsPurchasedOr": "{arg0} – bis dahin wird nichts gekauft oder berechnet.",
+  "@subscriptionValueUntilThenNothingIsPurchasedOr": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWeHaveSentAnAcknowledgementToValue": "Wir haben dir eine Eingangsbestätigung an {arg0} geschickt. Die Rückzahlung erfolgt über Google Play.",
+  "@subscriptionWeHaveSentAnAcknowledgementToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWithPremiumAllRecipes": "Mit Premium: alle Rezepte",
+  "subscriptionWithdrawFromContract": "Vertrag widerrufen",
+  "subscriptionWithoutASubscriptionValueValueOfRecipes": "Ohne Abo: {arg0}{arg1}% der Rezepte",
+  "@subscriptionWithoutASubscriptionValueValueOfRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYearly": "Jährlich",
+  "subscriptionYearlyValueValueBilledOnceAYear": "Jährlich {arg0} {arg1}, einmal im Jahr berechnet ({arg2}). Monatlich {arg3} {arg4}. Alle Preise inkl. MwSt.",
+  "@subscriptionYearlyValueValueBilledOnceAYear": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      },
+      "arg4": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYouCanSubscribeToPremiumOncePayments": "Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist.",
+  "subscriptionYouHaveAlreadyUsedYourFreeTrial": "Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse.",
+  "subscriptionYourAiChatForNutritionAndFitness": "Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und deine Tageswerte.",
+  "subscriptionYourConsentCouldNotBeSavedJust": "Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe deine Verbindung und versuche es erneut. Es wurde nichts gekauft.",
+  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten.",
+  "subscriptionYourFreeTrialLastsValueDays": "Deine kostenlose Testphase läuft {arg0} Tage.",
+  "@subscriptionYourFreeTrialLastsValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourFreeTrialRunsUntilValue": "Deine kostenlose Testphase läuft bis {arg0}.",
+  "@subscriptionYourFreeTrialRunsUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourName": "Dein Name",
+  "subscriptionYourPaymentIsStillBeingReviewedPremium": "Deine Zahlung ist noch in Prüfung. Premium wird freigeschaltet, sobald der Store sie bestätigt.",
+  "subscriptionYourPremiumSubscriptionIsActive": "Dein Premium-Abo ist aktiv.",
+  "subscriptionYourPremiumSubscriptionIsActiveUntilValue": "Dein Premium-Abo ist aktiv bis {arg0}.",
+  "@subscriptionYourPremiumSubscriptionIsActiveUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourPurchaseHasBeenReceivedActivationIs": "Dein Kauf ist angekommen. Die Freischaltung dauert noch einen Moment – öffne Lookin gleich noch einmal. Es wird nichts doppelt berechnet.",
+  "subscriptionYourTrialCouldNotBeStartedJust": "Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut.",
+  "subscriptionYourWithdrawalCouldNotBeSubmittedJust": "Der Widerruf konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder widerrufe per E-Mail an lookinsupport@gmail.com. Es zählt, dass du die Erklärung innerhalb der Frist absendest.",
+  "subscriptionYourWithdrawalWasReceivedOnValue": "Dein Widerruf ist am {arg0} eingegangen.",
+  "@subscriptionYourWithdrawalWasReceivedOnValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
   "valuesActivityActive": "Aktiv",
   "valuesActivityLow": "Wenig aktiv",
   "valuesActivityModerate": "Moderat aktiv",

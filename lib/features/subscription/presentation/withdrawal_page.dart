@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -61,9 +62,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       if (!mounted) return;
       setState(
         () => _error =
-            'Der Widerruf konnte gerade nicht übermittelt werden. Bitte versuche '
-            'es erneut oder widerrufe per E-Mail an lookinsupport@gmail.com. '
-            'Es zählt, dass du die Erklärung innerhalb der Frist absendest.',
+            L10n.current.subscriptionYourWithdrawalCouldNotBeSubmittedJust,
       );
     } finally {
       if (mounted) setState(() => _sending = false);
@@ -76,7 +75,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        title: const Text('Vertrag widerrufen'),
+        title: Text(context.l10n.subscriptionWithdrawFromContract),
       ),
       body: SafeArea(
         child: Center(
@@ -92,10 +91,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   Widget _form(BuildContext context) => ListView(
     padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
     children: [
-      const Text(
-        'Hier widerrufst du deinen Vertrag über Lookin Premium. Einen Grund '
-        'musst du nicht angeben. Du bekommst sofort eine Eingangsbestätigung '
-        'mit Datum und Uhrzeit.',
+      Text(
+        context.l10n.subscriptionHereYouCanWithdrawFromYourLookin,
         style: TextStyle(color: AppColors.textMuted, height: 1.45),
       ),
       const SizedBox(height: 18),
@@ -103,7 +100,9 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         key: const Key('withdrawal-name'),
         controller: _name,
         textCapitalization: TextCapitalization.words,
-        decoration: const InputDecoration(labelText: 'Dein Name'),
+        decoration: InputDecoration(
+          labelText: context.l10n.subscriptionYourName,
+        ),
         onChanged: (_) => setState(() {}),
       ),
       const SizedBox(height: 12),
@@ -111,8 +110,8 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         key: const Key('withdrawal-email'),
         controller: _email,
         keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(
-          labelText: 'E-Mail für die Bestätigung',
+        decoration: InputDecoration(
+          labelText: context.l10n.subscriptionEmailForAcknowledgement,
         ),
         onChanged: (_) => setState(() {}),
       ),
@@ -121,9 +120,9 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         key: const Key('withdrawal-note'),
         controller: _note,
         maxLength: 300,
-        decoration: const InputDecoration(
-          labelText: 'Bestellnummer oder Hinweis (freiwillig)',
-          helperText: 'Zum Beispiel die Bestellnummer aus der Google-Play-Mail',
+        decoration: InputDecoration(
+          labelText: context.l10n.subscriptionOrderNumberOrNoteOptional,
+          helperText: context.l10n.subscriptionForExampleTheOrderNumberFromThe,
         ),
       ),
       if (_error != null) ...[
@@ -140,7 +139,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
                 dimension: 20,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Text('Widerruf bestätigen'),
+            : Text(context.l10n.subscriptionConfirmWithdrawal),
       ),
       const SizedBox(height: 10),
       const LegalLinksRow(pages: [LegalPage.withdrawal]),
@@ -150,9 +149,10 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
   Widget _done(WithdrawalReceipt receipt) {
     final at = receipt.receivedAt;
     String two(int value) => value.toString().padLeft(2, '0');
-    final when =
-        '${two(at.day)}.${two(at.month)}.${at.year} um '
-        '${two(at.hour)}:${two(at.minute)} Uhr';
+    final when = L10n.isEnglish
+        ? AppFormat.dateTime(at)
+        : '${two(at.day)}.${two(at.month)}.${at.year} um '
+              '${two(at.hour)}:${two(at.minute)} Uhr';
     return ListView(
       key: const Key('withdrawal-done'),
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 28),
@@ -164,25 +164,30 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         ),
         const SizedBox(height: 14),
         Text(
-          'Dein Widerruf ist am $when eingegangen.',
+          L10n.current.subscriptionYourWithdrawalWasReceivedOnValue(
+            (when).toString(),
+          ),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 12),
         Text(
           receipt.emailSent
-              ? 'Wir haben dir eine Eingangsbestätigung an ${_email.text.trim()} '
-                    'geschickt. Die Rückzahlung erfolgt über Google Play.'
-              : 'Bitte mach einen Screenshot dieser Bestätigung. Eine '
-                    'Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand '
-                    'eingerichtet ist. Die Rückzahlung erfolgt über Google Play.',
+              ? L10n.current.subscriptionWeHaveSentAnAcknowledgementToValue(
+                  (_email.text.trim()).toString(),
+                )
+              : L10n
+                    .current
+                    .subscriptionPleaseTakeAScreenshotOfThisAcknowledgement,
           textAlign: TextAlign.center,
           style: const TextStyle(color: AppColors.textMuted, height: 1.45),
         ),
         if (receipt.reference != null) ...[
           const SizedBox(height: 10),
           Text(
-            'Vorgangsnummer: ${receipt.reference}',
+            L10n.current.subscriptionReferenceNumberValue(
+              (receipt.reference).toString(),
+            ),
             textAlign: TextAlign.center,
             style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
@@ -190,7 +195,7 @@ class _WithdrawalPageState extends State<WithdrawalPage> {
         const SizedBox(height: 22),
         OutlinedButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Fertig'),
+          child: Text(L10n.current.subscriptionDone),
         ),
       ],
     );

@@ -1,0 +1,318 @@
+{
+  "subscriptionIncluded": "enthalten",
+  "subscriptionPopularSavings": ", beliebt, {savings} Prozent günstiger als monatlich",
+  "@subscriptionPopularSavings": {"placeholders": {"savings": {"type": "String"}}},
+  "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
+  "subscriptionUnexpectedResponse": "Unerwartete Antwort.",
+  "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
+  "subscriptionPremiumIsAlreadyActiveForYourAccount": "Premium ist für dein Konto bereits aktiv.",
+  "subscriptionPleaseConfirmYourEmailAddressUsingThe": "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten.",
+  "subscriptionYouHaveAlreadyUsedYourFreeTrial": "Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse.",
+  "subscriptionTheTrialIsBeingSetUpPlease": "Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.",
+  "subscriptionPleaseSignInToStartYourTrial": "Bitte melde dich an, um die Testphase zu starten.",
+  "subscriptionNoTrialStartsInThePreviewWithout": "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.",
+  "subscriptionYourTrialCouldNotBeStartedJust": "Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut.",
+  "subscriptionStartForFree": "Starte kostenlos",
+  "subscriptionAllPremiumFeaturesForValueDaysThen": "Alle Premium-Funktionen {arg0} Tage lang – danach geht es automatisch kostenlos weiter.",
+  "@subscriptionAllPremiumFeaturesForValueDaysThen": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionTrialAlreadyUsed": "Testphase bereits genutzt",
+  "subscriptionYouCanSubscribeToPremiumOncePayments": "Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist.",
+  "subscriptionContinueWithTheFreeVersion": "Weiter mit der kostenlosen Version",
+  "subscriptionClose": "Schließen",
+  "subscriptionGladYouAreHere": "Schön, dass du da bist",
+  "subscriptionTheLookinCoachIsPartOfPremium": "Der Lookin Coach ist Teil von Premium",
+  "subscriptionAiPhotoIsPartOfPremium": "KI-Foto ist Teil von Premium",
+  "subscriptionAllRecipesAreAvailableWithPremium": "Alle Rezepte gibt es mit Premium",
+  "subscriptionGet": "Hol dir ",
+  "subscriptionAiPhotoYourPersonalCoachAndAll": "KI-Foto, dein persönlicher Coach und alle Rezepte – für weniger Aufwand und mehr Klarheit beim Essen.",
+  "subscriptionAiPhotoRecognition": "KI-Foto-Erkennung",
+  "subscriptionTakeAPhotoLookinEstimatesFoodsAnd": "Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.",
+  "subscriptionYourAiChatForNutritionAndFitness": "Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und deine Tageswerte.",
+  "subscriptionAllRecipes": "Alle Rezepte",
+  "subscriptionGenerousAiAllowance": "Großzügiges KI-Kontingent",
+  "subscriptionUpTo100AiRequestsADay": "Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), in der Testphase bis zu 50.",
+  "subscriptionStartingTrial": "Testphase wird gestartet …",
+  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten.",
+  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Sie endet automatisch – ohne Kosten.",
+  "@subscriptionFreeTrialUntilValueItEndsAutomatically": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourPremiumSubscriptionIsActive": "Dein Premium-Abo ist aktiv.",
+  "subscriptionYourPremiumSubscriptionIsActiveUntilValue": "Dein Premium-Abo ist aktiv bis {arg0}.",
+  "@subscriptionYourPremiumSubscriptionIsActiveUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPremiumIsActive": "Premium ist aktiv",
+  "subscriptionDone": "Fertig",
+  "subscriptionChooseAPremiumSubscription": "Premium-Abo wählen",
+  "subscriptionSubscriptionPlans": "Abo-Pläne",
+  "subscriptionComingSoon": "Bald verfügbar",
+  "subscriptionPopularValue": "Beliebt · −{arg0} %",
+  "@subscriptionPopularValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionDiaryMacrosStreak": "Tagebuch, Makros & Serie",
+  "subscriptionSearchBarcodeCustomFoods": "Suche, Barcode & eigene Lebensmittel",
+  "subscriptionProfileDailyTargets": "Profil & Tagesziele",
+  "subscriptionRecipes": "Rezepte",
+  "subscriptionAll": "Alle",
+  "subscriptionLookinCoachAiChat": "Lookin Coach (KI-Chat)",
+  "subscriptionFreeOrPremium": "Kostenlos oder Premium?",
+  "subscriptionFree": "Kostenlos",
+  "subscriptionValueFreeValuePremiumValue": "{arg0}. Kostenlos: {arg1}. Premium: {arg2}.",
+  "@subscriptionValueFreeValuePremiumValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionNotIncluded": "nicht enthalten",
+  "subscriptionFreeTrialValueDaysOncePerEmail": "Kostenlose Testphase: {arg0} Tage, einmal pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n{arg1}",
+  "@subscriptionFreeTrialValueDaysOncePerEmail": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRestorePurchases": "Käufe wiederherstellen",
+  "subscriptionRestorePurchasesComingSoon": "Käufe wiederherstellen – bald verfügbar",
+  "subscriptionManageSubscription": "Abo verwalten",
+  "subscriptionYourFreeTrialLastsValueDays": "Deine kostenlose Testphase läuft {arg0} Tage.",
+  "@subscriptionYourFreeTrialLastsValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourFreeTrialRunsUntilValue": "Deine kostenlose Testphase läuft bis {arg0}.",
+  "@subscriptionYourFreeTrialRunsUntilValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Sie endet automatisch – ohne Kosten und ohne Abo.",
+  "@subscriptionValueItEndsAutomaticallyAtNoCost": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueUnlocked": "{arg0} freigeschaltet",
+  "@subscriptionValueUnlocked": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionLetSGo": "Los geht’s",
+  "subscriptionAiPhoto": "KI-Foto",
+  "subscriptionNew": "Neues",
+  "subscriptionWithoutASubscriptionValueValueOfRecipes": "Ohne Abo: {arg0}{arg1}% der Rezepte",
+  "@subscriptionWithoutASubscriptionValueValueOfRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWithPremiumAllRecipes": "Mit Premium: alle Rezepte",
+  "subscriptionValueDayFreeTrial": "{arg0} Tage kostenlos testen",
+  "@subscriptionValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo": "Endet automatisch · keine Zahlungsdaten nötig · keine Kosten",
+  "subscriptionPaymentsAreBeingSetUp": "Bezahlung wird gerade eingerichtet",
+  "subscriptionYearly": "Jährlich",
+  "subscriptionMonthly": "Monatlich",
+  "subscriptionSubscribeYearly": "Jährlich abonnieren",
+  "subscriptionSubscribeMonthly": "Monatlich abonnieren",
+  "subscriptionPerYear": "pro Jahr",
+  "subscriptionPerMonth": "pro Monat",
+  "subscriptionEquivalentToValuePerMonth": "entspricht {arg0} pro Monat",
+  "@subscriptionEquivalentToValuePerMonth": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionCancelMonthly": "monatlich kündbar",
+  "subscriptionBilledOnceAYearSaveValueCompared": "einmal im Jahr berechnet – du sparst {arg0} gegenüber monatlich",
+  "@subscriptionBilledOnceAYearSaveValueCompared": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionBilledEveryMonth": "jeden Monat berechnet",
+  "subscriptionYearlyValueValueBilledOnceAYear": "Jährlich {arg0} {arg1}, einmal im Jahr berechnet ({arg2}). Monatlich {arg3} {arg4}. Alle Preise inkl. MwSt.",
+  "@subscriptionYearlyValueValueBilledOnceAYear": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      },
+      "arg4": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSubscriptionPricesValueValueASubscriptionRenews": "Abo-Preise ({arg0}): {arg1} Ein Abo verlängert sich automatisch zum selben Preis und ist jederzeit zum Ende des Abrechnungszeitraums kündbar.",
+  "@subscriptionSubscriptionPricesValueValueASubscriptionRenews": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSubscriptionPricesValuePaymentAndBillingAre": "Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.",
+  "@subscriptionSubscriptionPricesValuePaymentAndBillingAre": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionTheAppStore": "dem App Store",
+  "subscriptionPaymentIsHandledSecurelyByTheStore": "Die Zahlung läuft sicher über den Store. Lookin sieht und speichert keine Zahlungsdaten.",
+  "subscriptionSubscribeInTheLookinAppForAndroid": "Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird nichts gekauft oder berechnet.",
+  "subscriptionValueUntilThenNothingIsPurchasedOr": "{arg0} – bis dahin wird nichts gekauft oder berechnet.",
+  "@subscriptionValueUntilThenNothingIsPurchasedOr": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSubscriptionsAreAvailableInTheLookinApp": "Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet – teste Premium hier {arg0} Tage kostenlos.",
+  "@subscriptionSubscriptionsAreAvailableInTheLookinApp": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionValueNothingWasPurchasedOrChargedTry": "{arg0}. Es wurde nichts gekauft und nichts berechnet – teste Premium bis dahin {arg1} Tage kostenlos.",
+  "@subscriptionValueNothingWasPurchasedOrChargedTry": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRestoringPurchasesIsOnlyAvailableInThe": "Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die wiederhergestellt werden müssten.",
+  "subscriptionYourConsentCouldNotBeSavedJust": "Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe deine Verbindung und versuche es erneut. Es wurde nichts gekauft.",
+  "subscriptionPleaseConfirmFirstThatLookinPremiumShould": "Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.",
+  "subscriptionSubscriptionManagementCouldNotBeOpenedOpen": "Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-Einstellungen direkt im Store.",
+  "subscriptionPremiumIsActiveThankYouForYour": "Premium ist aktiv. Danke für deine Unterstützung!",
+  "subscriptionYourPurchaseHasBeenReceivedActivationIs": "Dein Kauf ist angekommen. Die Freischaltung dauert noch einen Moment – öffne Lookin gleich noch einmal. Es wird nichts doppelt berechnet.",
+  "subscriptionPurchaseCancelledNothingWasCharged": "Kauf abgebrochen. Es wurde nichts berechnet.",
+  "subscriptionYourPaymentIsStillBeingReviewedPremium": "Deine Zahlung ist noch in Prüfung. Premium wird freigeschaltet, sobald der Store sie bestätigt.",
+  "subscriptionNoActiveSubscriptionWasFoundForThis": "Für dieses Store-Konto wurde kein aktives Abo gefunden.",
+  "subscriptionTheStoreIsCurrentlyUnavailableNothingWas": "Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.",
+  "subscriptionMoreRecipesWithPremium": "Mehr Rezepte mit Premium",
+  "subscriptionUnlockAllRecipes": "Alle Rezepte freischalten",
+  "subscriptionValueDayFreeTrialEndsAutomatically": "{arg0} Tage kostenlos testen · endet automatisch",
+  "@subscriptionValueDayFreeTrialEndsAutomatically": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionYourWithdrawalCouldNotBeSubmittedJust": "Der Widerruf konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder widerrufe per E-Mail an lookinsupport@gmail.com. Es zählt, dass du die Erklärung innerhalb der Frist absendest.",
+  "subscriptionWithdrawFromContract": "Vertrag widerrufen",
+  "subscriptionHereYouCanWithdrawFromYourLookin": "Hier widerrufst du deinen Vertrag über Lookin Premium. Einen Grund musst du nicht angeben. Du bekommst sofort eine Eingangsbestätigung mit Datum und Uhrzeit.",
+  "subscriptionYourName": "Dein Name",
+  "subscriptionEmailForAcknowledgement": "E-Mail für die Bestätigung",
+  "subscriptionOrderNumberOrNoteOptional": "Bestellnummer oder Hinweis (freiwillig)",
+  "subscriptionForExampleTheOrderNumberFromThe": "Zum Beispiel die Bestellnummer aus der Google-Play-Mail",
+  "subscriptionConfirmWithdrawal": "Widerruf bestätigen",
+  "subscriptionYourWithdrawalWasReceivedOnValue": "Dein Widerruf ist am {arg0} eingegangen.",
+  "@subscriptionYourWithdrawalWasReceivedOnValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWeHaveSentAnAcknowledgementToValue": "Wir haben dir eine Eingangsbestätigung an {arg0} geschickt. Die Rückzahlung erfolgt über Google Play.",
+  "@subscriptionWeHaveSentAnAcknowledgementToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.",
+  "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
+  "@subscriptionReferenceNumberValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  }
+}

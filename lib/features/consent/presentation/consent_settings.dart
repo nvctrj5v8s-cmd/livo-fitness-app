@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -22,12 +23,9 @@ class ConsentSettingsCard extends StatelessWidget {
     }
     final confirmed = await _confirm(
       context,
-      title: 'Einwilligung widerrufen?',
-      text:
-          'Wir löschen dann deine Gesundheitsangaben in deinem Konto '
-          '(Allergien, Zielgewicht, Gewichts- und Taillenwerte). Auf diesem '
-          'Gerät bleiben deine Angaben erhalten.',
-      action: 'Widerrufen und löschen',
+      title: context.l10n.consentWithdrawConsent,
+      text: context.l10n.consentWeWillThenDeleteYourHealthInformation,
+      action: context.l10n.consentWithdrawAndDelete,
     );
     if (!confirmed) return;
     await consent.set(ConsentKind.healthData, false);
@@ -42,11 +40,9 @@ class ConsentSettingsCard extends StatelessWidget {
     }
     final confirmed = await _confirm(
       context,
-      title: 'Einwilligung widerrufen?',
-      text:
-          'KI-Coach und KI-Foto senden dann nichts mehr an OpenAI und fragen '
-          'dich vor der nächsten Nutzung erneut.',
-      action: 'Widerrufen',
+      title: context.l10n.consentWithdrawConsent,
+      text: context.l10n.consentAiCoachAndAiPhotoWillThen,
+      action: context.l10n.consentWithdraw,
     );
     if (confirmed) await consent.set(ConsentKind.aiProcessing, false);
   }
@@ -65,7 +61,7 @@ class ConsentSettingsCard extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Abbrechen'),
+            child: Text(context.l10n.consentCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
@@ -88,10 +84,10 @@ class ConsentSettingsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(12, 4, 12, 4),
               child: Text(
-                'Einwilligungen',
+                context.l10n.consentConsents,
                 style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
               ),
             ),
@@ -99,17 +95,19 @@ class ConsentSettingsCard extends StatelessWidget {
               key: const Key('consent-switch-health'),
               value: consent.healthGranted,
               onChanged: (value) => unawaited(_setHealth(context, value)),
-              title: const Text(ConsentTexts.healthTitle),
-              subtitle: const Text(
-                'Gewicht, Zielgewicht und Allergien im Konto speichern',
+              title: Text(ConsentTexts.healthTitle),
+              subtitle: Text(
+                context.l10n.consentSaveWeightTargetWeightAndAllergiesIn,
               ),
             ),
             SwitchListTile(
               key: const Key('consent-switch-ai'),
               value: consent.aiGranted,
               onChanged: (value) => unawaited(_setAi(context, value)),
-              title: const Text(ConsentTexts.aiTitle),
-              subtitle: const Text('Fragen und Fotos an OpenAI (USA) senden'),
+              title: Text(ConsentTexts.aiTitle),
+              subtitle: Text(
+                context.l10n.consentSendQuestionsAndPhotosToOpenaiUsa,
+              ),
             ),
           ],
         ),

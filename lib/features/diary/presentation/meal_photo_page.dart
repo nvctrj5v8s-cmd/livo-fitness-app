@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:file_selector/file_selector.dart' as file_selector;
@@ -119,9 +121,9 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       return photo?.readAsBytes();
     }
     final file = await file_selector.openFile(
-      acceptedTypeGroups: const [
+      acceptedTypeGroups: [
         file_selector.XTypeGroup(
-          label: 'Lebensmittel-Foto',
+          label: L10n.current.diaryFoodPhoto,
           extensions: ['jpg', 'jpeg', 'png', 'webp'],
         ),
       ],
@@ -150,7 +152,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       if (decoded == null) {
         setState(() {
           _takingPhoto = false;
-          _error = 'Dieses Foto konnte nicht gelesen werden.';
+          _error = L10n.current.diaryThisPhotoCouldNotBeRead;
         });
         return;
       }
@@ -167,7 +169,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       if (!mounted) return;
       setState(() {
         _takingPhoto = false;
-        _error = 'Das Foto konnte gerade nicht analysiert werden.';
+        _error = L10n.current.diaryThePhotoCouldNotBeAnalysedJust;
       });
       return;
     }
@@ -232,7 +234,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       if (!mounted) return;
       setState(() {
         _analyzing = false;
-        _error = 'Das Foto konnte gerade nicht analysiert werden.';
+        _error = L10n.current.diaryThePhotoCouldNotBeAnalysedJust;
       });
     }
   }
@@ -295,7 +297,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
   Future<void> _save() async {
     if (_saving) return;
     if (_items.isEmpty) {
-      setState(() => _error = 'Füge mindestens ein Lebensmittel hinzu.');
+      setState(() => _error = L10n.current.diaryAddAtLeastOneFood);
       return;
     }
     for (final item in _items) {
@@ -315,22 +317,24 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
       hasData: _items.isNotEmpty,
     );
     if (allergyCheck.hasConflict) {
-      final conflicts = allergyCheck.conflicts.join(', ');
+      final conflicts = allergyCheck.conflicts.map(DisplayText.of).join(', ');
       final proceed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Allergiehinweis'),
+          title: Text(L10n.current.diaryAllergyNotice),
           content: Text(
-            'Die erkannten Namen k\u00F6nnen zu deinem Profil passen: $conflicts. KI-Fotos k\u00F6nnen versteckte Zutaten und Spuren nicht erkennen. Nur fortfahren, wenn du die Mahlzeit dokumentieren m\u00F6chtest.',
+            L10n.current.diaryTheRecognisedNamesMayMatchYourProfile(
+              (conflicts).toString(),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text('Abbrechen'),
+              child: Text(L10n.current.diaryCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text('Trotzdem protokollieren'),
+              child: Text(L10n.current.diaryLogAnyway),
             ),
           ],
         ),
@@ -367,8 +371,8 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
           _items.removeWhere(saved.contains);
           _saving = false;
           _error =
-              '${controller.diaryError ?? 'Ein Lebensmittel konnte nicht gespeichert werden.'}'
-              '${saved.isEmpty ? '' : ' Bereits gespeicherte Einträge wurden aus der Liste entfernt.'}';
+              '${controller.diaryError ?? context.l10n.diaryTheFoodCouldNotBeSaved}'
+              '${saved.isEmpty ? '' : ' ${context.l10n.diarySavedItemsRemoved}'}';
         });
         _disposeLater(saved);
         return;
@@ -377,7 +381,11 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
     }
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Zu ${_slotLabel(_slot)} hinzugefügt.')),
+      SnackBar(
+        content: Text(
+          L10n.current.diaryAddedToValue((_slotLabel(_slot)).toString()),
+        ),
+      ),
     );
     Navigator.pop(context, true);
   }
@@ -398,17 +406,17 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
         backgroundColor: hasPhoto ? Colors.transparent : null,
         foregroundColor: hasPhoto ? AppColors.white : null,
         scrolledUnderElevation: hasPhoto ? 0 : null,
-        title: const Text('Mahlzeit erkennen'),
+        title: Text(context.l10n.diaryRecogniseMeal),
         actions: [
           if (hasPhoto) ...[
             _AppBarAction(
-              tooltip: 'Foto aus Galerie',
+              tooltip: context.l10n.diaryPhotoFromGallery,
               icon: Icons.photo_library_outlined,
               onPressed: busy ? null : () => _takeAndAnalyze(fromGallery: true),
             ),
             const SizedBox(width: 6),
             _AppBarAction(
-              tooltip: 'Neues Foto aufnehmen',
+              tooltip: context.l10n.diaryTakeANewPhoto,
               icon: Icons.camera_alt_outlined,
               onPressed: busy ? null : _takeAndAnalyze,
             ),
@@ -446,7 +454,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Deine Mahlzeit',
+                          context.l10n.diaryYourMeal,
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
@@ -474,8 +482,10 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      'Die Foto-KI kann Allergene, die man nicht sieht, oder Spuren nicht zuverl\u00E4ssig erkennen. Zutatenliste und Verpackung selbst pr\u00FCfen.',
+                    Text(
+                      context
+                          .l10n
+                          .diaryPhotoAiCannotReliablyRecogniseHiddenAllergens,
                       style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 12,
@@ -485,9 +495,10 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                   ],
                   const SizedBox(height: 16),
                   if (_analyzing) ...[
-                    const _MessageCard(
-                      message:
-                          'KI erkennt Lebensmittel und schätzt die Mengen …',
+                    _MessageCard(
+                      message: context
+                          .l10n
+                          .diaryAiIsRecognisingFoodsAndEstimatingAmounts,
                       loading: true,
                     ),
                     const SizedBox(height: 14),
@@ -520,8 +531,8 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                       Expanded(
                         child: Text(
                           _items.isEmpty
-                              ? 'Lebensmittel'
-                              : 'Erkannte Lebensmittel',
+                              ? context.l10n.diaryFood
+                              : context.l10n.diaryRecognisedFoods,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w800),
                         ),
@@ -547,10 +558,8 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Tippe auf ein Lebensmittel, um Name und Nährwerte zu '
-                    'ändern. Wenn du die Menge änderst, passen sich '
-                    'Kalorien und Nährwerte automatisch an.',
+                  Text(
+                    context.l10n.diaryTapAFoodToChangeItsName,
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12.5,
@@ -574,7 +583,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                         child: _AddTile(
                           key: const Key('photo-search-food'),
                           icon: Icons.search_rounded,
-                          label: 'Suchen',
+                          label: context.l10n.diarySearch,
                           onTap: _saving ? null : _searchFood,
                         ),
                       ),
@@ -583,14 +592,14 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                         child: _AddTile(
                           key: const Key('photo-add-food'),
                           icon: Icons.add_rounded,
-                          label: 'Selbst hinzufügen',
+                          label: context.l10n.diaryAddManually,
                           onTap: _saving ? null : _addEmptyItem,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const Row(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
@@ -601,9 +610,7 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'KI-Werte sind Schätzungen. Ein Foto ersetzt keine '
-                          'Waage oder Verpackungsangabe – prüfe Mengen und '
-                          'Nährwerte vor dem Speichern.',
+                          context.l10n.diaryAiValuesAreEstimatesAPhotoCannot,
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
@@ -643,8 +650,10 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
                     : FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          'Zu ${_slotLabel(_slot)} hinzufügen · '
-                          '${totalCalories.round()} kcal',
+                          context.l10n.diaryAddToValueValueKcal(
+                            (_slotLabel(_slot)).toString(),
+                            (totalCalories.round()).toString(),
+                          ),
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
@@ -693,7 +702,7 @@ class MealItemDraft {
   factory MealItemDraft.fromFood(FoodItem food) {
     final factor = 100 / food.servingGrams;
     return MealItemDraft(
-      name: food.name,
+      name: food.displayName,
       amount: 100,
       calories: food.calories * factor,
       protein: food.protein * factor,
@@ -767,14 +776,20 @@ class MealItemDraft {
 
   String? problem() {
     final label = name.text.trim();
-    if (label.isEmpty) return 'Bitte gib jedem Lebensmittel einen Namen.';
+    if (label.isEmpty) return L10n.current.diaryPleaseGiveEveryFoodAName;
     final restricted = HalalContentPolicy.restrictionReason(label);
     if (restricted != null) return restricted;
-    if (grams == null) return 'Bitte gib für „$label“ eine Menge über 0 g an.';
+    if (grams == null) {
+      return L10n.current.diaryPleaseEnterAnAmountGreaterThan02(
+        (label).toString(),
+      );
+    }
     for (final field in [calories, protein, carbohydrates, fat]) {
       final number = value(field);
       if (number == null || number < 0) {
-        return 'Bitte prüfe die Nährwerte von „$label“.';
+        return L10n.current.diaryPleaseCheckTheNutritionValuesForValue(
+          (label).toString(),
+        );
       }
     }
     return null;
@@ -782,9 +797,7 @@ class MealItemDraft {
 
   static String formatNumber(double value) {
     final rounded = (value * 10).round() / 10;
-    return rounded
-        .toStringAsFixed(rounded == rounded.roundToDouble() ? 0 : 1)
-        .replaceAll('.', ',');
+    return AppFormat.decimal(rounded, maxDecimals: 1);
   }
 
   void dispose() {
@@ -831,13 +844,13 @@ class _EstimateBadge extends StatelessWidget {
       borderRadius: BorderRadius.circular(99),
       border: Border.all(color: AppColors.primary.withValues(alpha: .3)),
     ),
-    child: const Row(
+    child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.auto_awesome_rounded, size: 14, color: AppColors.primary),
         SizedBox(width: 5),
         Text(
-          'KI-Schätzung',
+          context.l10n.diaryAiEstimate,
           style: TextStyle(
             color: AppColors.primary,
             fontSize: 12,
@@ -871,8 +884,8 @@ class _MealSlotPicker extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        'Zu welcher Mahlzeit?',
+      Text(
+        context.l10n.diaryWhichMeal,
         style: TextStyle(fontWeight: FontWeight.w700),
       ),
       const SizedBox(height: 9),
@@ -1007,8 +1020,8 @@ class _TotalsCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 3),
-                const Text(
-                  'kcal gesamt',
+                Text(
+                  context.l10n.diaryTotalKcal,
                   style: TextStyle(color: AppColors.textMuted, fontSize: 12),
                 ),
               ],
@@ -1017,13 +1030,20 @@ class _TotalsCard extends StatelessWidget {
           const VerticalDivider(width: 20, color: AppColors.border),
           Expanded(
             flex: 3,
-            child: _MacroValue('Kohlenh.', carbohydrates, AppColors.blue),
+            child: _MacroValue(
+              context.l10n.diaryCarbs,
+              carbohydrates,
+              AppColors.blue,
+            ),
           ),
           Expanded(
             flex: 3,
             child: _MacroValue('Protein', protein, AppColors.mint),
           ),
-          Expanded(flex: 3, child: _MacroValue('Fett', fat, AppColors.purple)),
+          Expanded(
+            flex: 3,
+            child: _MacroValue(context.l10n.diaryFat, fat, AppColors.purple),
+          ),
         ],
       ),
     ),
@@ -1141,7 +1161,7 @@ class _FoodItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          name.isEmpty ? 'Neues Lebensmittel' : name,
+                          name.isEmpty ? context.l10n.diaryNewFood : name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -1154,8 +1174,12 @@ class _FoodItemCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          '${kcal.round()} kcal · K ${c.round()} g · '
-                          'P ${p.round()} g · F ${f.round()} g',
+                          context.l10n.diaryValueKcalCValueGPValue(
+                            (kcal.round()).toString(),
+                            (c.round()).toString(),
+                            (p.round()).toString(),
+                            (f.round()).toString(),
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -1210,7 +1234,7 @@ class _FoodItemCard extends StatelessWidget {
                       Expanded(
                         child: _NutrientField(
                           controller: item.calories,
-                          label: 'Kalorien',
+                          label: context.l10n.diaryCalories,
                           suffix: 'kcal',
                           enabled: enabled,
                           onChanged: () {
@@ -1223,7 +1247,7 @@ class _FoodItemCard extends StatelessWidget {
                       Expanded(
                         child: _NutrientField(
                           controller: item.carbohydrates,
-                          label: 'Kohlenh.',
+                          label: context.l10n.diaryCarbs,
                           suffix: 'g',
                           enabled: enabled,
                           onChanged: () {
@@ -1253,7 +1277,7 @@ class _FoodItemCard extends StatelessWidget {
                       Expanded(
                         child: _NutrientField(
                           controller: item.fat,
-                          label: 'Fett',
+                          label: context.l10n.diaryFat,
                           suffix: 'g',
                           enabled: enabled,
                           onChanged: () {
@@ -1265,8 +1289,8 @@ class _FoodItemCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Nährwerte gelten für die oben eingestellte Menge.',
+                  Text(
+                    context.l10n.diaryNutritionValuesApplyToTheAmountSelected,
                     style: TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 11.5,
@@ -1280,7 +1304,7 @@ class _FoodItemCard extends StatelessWidget {
                         foregroundColor: AppColors.error,
                       ),
                       icon: const Icon(Icons.delete_outline_rounded, size: 19),
-                      label: const Text('Entfernen'),
+                      label: Text(context.l10n.diaryRemove),
                     ),
                   ),
                 ],
@@ -1300,11 +1324,31 @@ class _SourceBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color, icon) = switch (source) {
-      'high' => ('Gut erkannt', AppColors.mint, Icons.check_circle_rounded),
-      'medium' => ('Bitte kurz prüfen', AppColors.orange, Icons.help_rounded),
-      'catalog' => ('Aus der Suche', AppColors.blue, Icons.search_rounded),
-      'manual' => ('Eigener Eintrag', AppColors.purple, Icons.edit_rounded),
-      _ => ('Unsicher – bitte prüfen', AppColors.error, Icons.warning_rounded),
+      'high' => (
+        context.l10n.diaryRecognisedWell,
+        AppColors.mint,
+        Icons.check_circle_rounded,
+      ),
+      'medium' => (
+        context.l10n.diaryPleaseCheckBriefly,
+        AppColors.orange,
+        Icons.help_rounded,
+      ),
+      'catalog' => (
+        context.l10n.diaryFromSearch,
+        AppColors.blue,
+        Icons.search_rounded,
+      ),
+      'manual' => (
+        context.l10n.diaryCustomEntry,
+        AppColors.purple,
+        Icons.edit_rounded,
+      ),
+      _ => (
+        context.l10n.diaryUncertainPleaseCheck,
+        AppColors.error,
+        Icons.warning_rounded,
+      ),
     };
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -1348,11 +1392,11 @@ class _AmountStepper extends StatelessWidget {
     ),
     child: Row(
       children: [
-        const Expanded(
+        Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 9, right: 4),
             child: Text(
-              'Menge',
+              context.l10n.diaryAmount,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -1365,7 +1409,7 @@ class _AmountStepper extends StatelessWidget {
         ),
         _StepButton(
           icon: Icons.remove_rounded,
-          tooltip: '10 g weniger',
+          tooltip: context.l10n.diary10GLess,
           onTap: enabled
               ? () {
                   item.changeAmountBy(-10);
@@ -1398,7 +1442,7 @@ class _AmountStepper extends StatelessWidget {
         ),
         _StepButton(
           icon: Icons.add_rounded,
-          tooltip: '10 g mehr',
+          tooltip: context.l10n.diary10GMore,
           onTap: enabled
               ? () {
                   item.changeAmountBy(10);
@@ -1588,9 +1632,8 @@ class _PhotoPlaceholder extends StatelessWidget {
                   size: 34,
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Fotografiere deine Mahlzeit – die KI schätzt '
-                  'Lebensmittel und Mengen.',
+                Text(
+                  context.l10n.diaryTakeAPhotoOfYourMealAi,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: AppColors.textMuted, height: 1.4),
                 ),
@@ -1599,14 +1642,14 @@ class _PhotoPlaceholder extends StatelessWidget {
                   key: const Key('photo-open-camera'),
                   onPressed: onCamera,
                   icon: const Icon(Icons.camera_alt_rounded),
-                  label: const Text('Foto aufnehmen'),
+                  label: Text(context.l10n.diaryTakePhoto),
                 ),
                 const SizedBox(height: 8),
                 TextButton.icon(
                   key: const Key('photo-open-gallery'),
                   onPressed: onGallery,
                   icon: const Icon(Icons.photo_library_outlined),
-                  label: const Text('Aus Galerie wählen'),
+                  label: Text(context.l10n.diaryChooseFromGallery),
                 ),
               ],
             ),
@@ -1686,12 +1729,10 @@ class _PremiumRequiredCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PremiumBadge(label: 'Premium-Funktion'),
+          PremiumBadge(label: context.l10n.diaryPremiumFeature),
           const SizedBox(height: 10),
-          const Text(
-            'Die KI-Foto-Erkennung ist Teil von Lookin Premium. Du kannst die '
-            'Mahlzeit trotzdem über „Suchen“ oder „Selbst hinzufügen“ '
-            'eintragen.',
+          Text(
+            context.l10n.diaryAiPhotoRecognitionIsPartOfLookin,
             style: TextStyle(color: AppColors.text, height: 1.45),
           ),
           const SizedBox(height: 12),
@@ -1699,7 +1740,7 @@ class _PremiumRequiredCard extends StatelessWidget {
             key: const Key('photo-unlock-premium'),
             onPressed: onUnlock,
             icon: const Icon(Icons.workspace_premium_rounded, size: 19),
-            label: const Text('Premium ansehen'),
+            label: Text(context.l10n.diaryViewPremium),
           ),
         ],
       ),
@@ -1733,8 +1774,8 @@ class _CatalogFoodPickerState extends State<_CatalogFoodPicker> {
             padding: const EdgeInsets.all(18),
             child: TextField(
               autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Lebensmittel suchen',
+              decoration: InputDecoration(
+                hintText: context.l10n.diarySearchFoods,
                 prefixIcon: Icon(Icons.search_rounded),
               ),
               onChanged: (value) => setState(() => _query = value),
@@ -1742,12 +1783,11 @@ class _CatalogFoodPickerState extends State<_CatalogFoodPicker> {
           ),
           Expanded(
             child: foods.isEmpty
-                ? const Center(
+                ? Center(
                     child: Padding(
                       padding: EdgeInsets.all(24),
                       child: Text(
-                        'Kein Lebensmittel gefunden. Du kannst es auch über '
-                        '„Selbst hinzufügen“ eintragen.',
+                        context.l10n.diaryNoFoodFoundYouCanAlsoLog,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: AppColors.textMuted),
                       ),
@@ -1764,7 +1804,7 @@ class _CatalogFoodPickerState extends State<_CatalogFoodPicker> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        title: Text(food.name),
+                        title: Text(food.displayName),
                         subtitle: Text(
                           '${food.calories.round()} kcal · '
                           '${food.servingGrams.round()} g',

@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -88,7 +90,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
   }
 
   Future<void> _addToDiary(AppController controller, Recipe recipe) async {
-    if (!await _confirmAllergyOverride(controller, recipe, 'protokollieren')) {
+    if (!await _confirmAllergyOverride(controller, recipe)) {
       return;
     }
     if (!mounted) return;
@@ -102,37 +104,34 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     if (!mounted) return;
     _showMessage(
       saved
-          ? '1 Portion steht jetzt unter „${slot.label}“ im Tagebuch.'
+          ? L10n.current.discover1ServingIsNowListedUnderValue(
+              (slot.label).toString(),
+            )
           : controller.diaryError ??
-                'Das Rezept konnte nicht eingetragen werden.',
+                L10n.current.discoverTheRecipeCouldNotBeLogged,
     );
   }
 
   Future<bool> _confirmAllergyOverride(
     AppController controller,
     Recipe recipe,
-    String action,
   ) async {
     final assessment = AllergySafety.assessRecipe(recipe, controller.allergies);
     if (!assessment.hasConflict) return true;
-    final conflicts = assessment.conflicts.join(', ');
+    final conflicts = assessment.conflicts.map(DisplayText.of).join(', ');
     return await showDialog<bool>(
           context: context,
           builder: (dialogContext) => AlertDialog(
-            title: const Text('Allergiehinweis'),
-            content: Text(
-              'Die Zutatenangaben nennen m\u00F6glicherweise: $conflicts. '
-              'Pr\u00FCfe die Packungen und m\u00F6gliche Kreuzkontamination. '
-              'M\u00F6chtest du das Rezept trotzdem $action?',
-            ),
+            title: Text(L10n.current.discoverAllergyNotice),
+            content: Text(L10n.current.discoverAllergyLogWarning(conflicts)),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext, false),
-                child: const Text('Abbrechen'),
+                child: Text(L10n.current.discoverCancel),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(dialogContext, true),
-                child: Text('Trotzdem $action'),
+                child: Text(L10n.current.discoverLogAnyway),
               ),
             ],
           ),
@@ -184,9 +183,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     );
     if (finished != true || !mounted) return;
     _showMessage(
-      'Guten Appetit!',
+      L10n.current.discoverEnjoyYourMeal,
       action: SnackBarAction(
-        label: 'Eintragen',
+        label: L10n.current.discoverLog,
         onPressed: () => unawaited(_addToDiary(controller, recipe)),
       ),
     );
@@ -219,19 +218,23 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             key: const Key('goal-open'),
             onPressed: () => _openGoal(controller, recipe),
             icon: const Icon(Icons.track_changes_rounded, size: 19),
-            label: const Text('An mein Ziel anpassen'),
+            label: Text(context.l10n.discoverAdaptToMyTarget),
           )
         : showUpsell
         ? TextButton.icon(
             key: const Key('goal-locked'),
             onPressed: () => _openGoalLocked(subscription.canStartTrial),
             icon: const Icon(Icons.lock_outline_rounded, size: 18),
-            label: const Text('An mein Ziel anpassen · $recipePlusLabel'),
+            label: Text(
+              context.l10n.discoverAdaptToMyTargetValue(
+                (recipePlusLabel).toString(),
+              ),
+            ),
           )
         : null;
 
     final equipment = [
-      for (final item in recipe.equipment)
+      for (final item in recipe.displayEquipment)
         if (item.trim().isNotEmpty) item.trim(),
     ];
     final intro = Column(
@@ -366,7 +369,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             leading: Center(
               child: _OverlayButton(
                 icon: Icons.arrow_back_rounded,
-                tooltip: 'Zurück',
+                tooltip: context.l10n.discoverBack,
                 onPressed: () => Navigator.maybePop(context),
               ),
             ),
@@ -376,7 +379,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   ? Duration.zero
                   : const Duration(milliseconds: 180),
               child: Text(
-                recipe.title,
+                recipe.displayTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -388,8 +391,8 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
                 tooltip: favorite
-                    ? 'Aus Favoriten entfernen'
-                    : 'Zu Favoriten hinzufügen',
+                    ? context.l10n.discoverRemoveFromFavourites
+                    : context.l10n.discoverAddToFavourites,
                 color: favorite ? AppColors.error : AppColors.white,
                 onPressed: () => controller.toggleFavorite(recipe.id),
               ),
@@ -534,8 +537,8 @@ class _DiaryBar extends StatelessWidget {
                           children: [
                             Text(
                               saving
-                                  ? 'Wird gespeichert …'
-                                  : '1 Portion zum Tagebuch',
+                                  ? context.l10n.discoverSaving
+                                  : context.l10n.discoverLog1ServingInDiary,
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w800,
@@ -544,8 +547,10 @@ class _DiaryBar extends StatelessWidget {
                             Opacity(
                               opacity: 0.78,
                               child: Text(
-                                '${recipe.calories} kcal · '
-                                '${recipe.protein} g Protein',
+                                context.l10n.discoverValueKcalValueGProtein(
+                                  (recipe.calories).toString(),
+                                  (recipe.protein).toString(),
+                                ),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,

@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/data/halal_content_policy.dart';
@@ -120,15 +122,13 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
 
   String _number(double value) {
     // Keep the entire stored decimal value when opening an existing entry.
-    return (value == value.truncateToDouble()
-            ? value.toInt().toString()
-            : value.toString())
-        .replaceAll('.', ',');
+    final number = (value == value.truncateToDouble()
+        ? value.toInt().toString()
+        : value.toString());
+    return L10n.isEnglish ? number : number.replaceAll('.', ',');
   }
 
-  String _display(double value) => value
-      .toStringAsFixed(value == value.roundToDouble() ? 0 : 1)
-      .replaceAll('.', ',');
+  String _display(double value) => AppFormat.decimal(value, maxDecimals: 1);
 
   CustomFoodNutrition? _readNutrition() {
     final amount = parseNutritionNumber(_amount.text);
@@ -198,15 +198,15 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                   const SizedBox(height: 14),
                   Text(
                     widget.entry == null
-                        ? 'Dein eigenes Lebensmittel'
-                        : 'Deinen Eintrag bearbeiten',
+                        ? context.l10n.diaryYourCustomFood
+                        : context.l10n.diaryEditYourEntry,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _legacy
-                        ? 'Deine bisherigen Werte gelten für eine Portion. Fehlende Etikettwerte kannst du ergänzen.'
-                        : 'Übernimm die Nährwerte vom Etikett. Wir rechnen deine gegessene Menge automatisch aus.',
+                        ? context.l10n.diaryYourPreviousValuesApplyToOneServing
+                        : context.l10n.diaryCopyTheNutritionValuesFromTheLabel,
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
@@ -215,14 +215,14 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                     enabled: !_saving,
                     textCapitalization: TextCapitalization.sentences,
                     maxLength: 100,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Name',
-                      hintText: 'Zum Beispiel: Mein Schoko-Müsli',
+                      hintText: context.l10n.diaryForExampleMyChocolateCereal,
                     ),
                     validator: (value) => value == null || value.trim().isEmpty
-                        ? 'Bitte deinem Lebensmittel einen Namen geben.'
+                        ? context.l10n.diaryPleaseGiveYourFoodAName
                         : value.trim().length > 100
-                        ? 'Bitte höchstens 100 Zeichen verwenden.'
+                        ? context.l10n.diaryPleaseUseNoMoreThan100Characters
                         : HalalContentPolicy.restrictionReason(value.trim()),
                     onChanged: (_) => setState(() {}),
                   ),
@@ -238,7 +238,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                   ],
                   const SizedBox(height: 14),
                   Text(
-                    'Für welche Mahlzeit?',
+                    context.l10n.diaryForWhichMeal,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 10),
@@ -263,7 +263,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                   ),
                   const SizedBox(height: 26),
                   Text(
-                    'Worauf beziehen sich die Werte?',
+                    context.l10n.diaryWhatDoTheValuesReferTo,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 10),
@@ -275,9 +275,12 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                           (basis) => ChoiceChip(
                             key: ValueKey('custom-basis-${basis.name}'),
                             label: Text(switch (basis) {
-                              NutritionBasis.per100g => 'Pro 100 g',
-                              NutritionBasis.per100ml => 'Pro 100 ml',
-                              NutritionBasis.portion => 'Pro Portion',
+                              NutritionBasis.per100g =>
+                                context.l10n.diaryPer100G,
+                              NutritionBasis.per100ml =>
+                                context.l10n.diaryPer100Ml,
+                              NutritionBasis.portion =>
+                                context.l10n.diaryPerServing,
                             }),
                             selected: basis == _basis,
                             onSelected: _saving
@@ -301,11 +304,11 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                   const SizedBox(height: 14),
                   Text(switch (_basis) {
                     NutritionBasis.per100g =>
-                      'Unten stehen die Etikettwerte pro 100 g.',
+                      context.l10n.diaryTheLabelValuesBelowArePer100,
                     NutritionBasis.per100ml =>
-                      'Unten stehen die Etikettwerte pro 100 ml.',
+                      context.l10n.diaryTheLabelValuesBelowArePer1002,
                     NutritionBasis.portion =>
-                      'Unten stehen die Werte für eine ganze Portion. Eine halbe Portion ist 0,5.',
+                      context.l10n.diaryTheValuesBelowAreForAWhole,
                   }),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -317,53 +320,63 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                     ),
                     decoration: InputDecoration(
                       labelText: _basis == NutritionBasis.portion
-                          ? 'Gegessene Portionen'
-                          : 'Gegessene Menge',
+                          ? context.l10n.diaryServingsEaten
+                          : context.l10n.diaryAmountEaten,
                       suffixText: switch (_basis) {
                         NutritionBasis.per100g => 'g',
                         NutritionBasis.per100ml => 'ml',
-                        NutritionBasis.portion => 'Portionen',
+                        NutritionBasis.portion => context.l10n.diaryServings,
                       },
                     ),
                     onChanged: (_) => setState(() {}),
                     validator: (value) {
                       final number = parseNutritionNumber(value ?? '');
                       return number == null || number <= 0
-                          ? 'Bitte eine Menge größer als 0 eingeben.'
+                          ? context.l10n.diaryPleaseEnterAnAmountGreaterThan0
                           : null;
                     },
                   ),
                   const SizedBox(height: 26),
                   Text(
-                    'Nährwerte ${switch (_basis) {
-                      NutritionBasis.per100g => 'pro 100 g',
-                      NutritionBasis.per100ml => 'pro 100 ml',
-                      NutritionBasis.portion => 'pro Portion',
-                    }}',
+                    context.l10n.diaryNutritionValuesValue(switch (_basis) {
+                      NutritionBasis.per100g => context.l10n.diaryPer100G,
+                      NutritionBasis.per100ml => context.l10n.diaryPer100Ml,
+                      NutritionBasis.portion => context.l10n.diaryPerServing,
+                    }),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 6),
                   Text(
                     _legacy
-                        ? 'Unbekannte Zusatzwerte bleiben leer.'
-                        : 'Alle Etikettwerte sind erforderlich. Ballaststoffe sind freiwillig.',
+                        ? context.l10n.diaryLeaveUnknownAdditionalValuesBlank
+                        : context.l10n.diaryAllLabelValuesAreRequiredFibreIs,
                   ),
                   const SizedBox(height: 16),
-                  _nutrient('calories', 'Energie', 'kcal'),
-                  _nutrient('fat', 'Fett', 'g'),
+                  _nutrient('calories', context.l10n.diaryEnergy, 'kcal'),
+                  _nutrient('fat', context.l10n.diaryFat, 'g'),
                   _nutrient(
                     'saturated',
-                    'davon gesättigte Fettsäuren',
+                    context.l10n.diaryOfWhichSaturates,
                     'g',
                     optional: _legacy,
                   ),
-                  _nutrient('carbs', 'Kohlenhydrate', 'g'),
-                  _nutrient('sugar', 'davon Zucker', 'g', optional: _legacy),
-                  _nutrient('protein', 'Eiweiß / Protein', 'g'),
-                  _nutrient('salt', 'Salz', 'g', optional: _legacy),
+                  _nutrient('carbs', context.l10n.diaryCarbohydrates, 'g'),
+                  _nutrient(
+                    'sugar',
+                    context.l10n.diaryOfWhichSugars,
+                    'g',
+                    optional: _legacy,
+                  ),
+                  _nutrient('protein', context.l10n.diaryProtein, 'g'),
+                  _nutrient(
+                    'salt',
+                    context.l10n.diarySalt,
+                    'g',
+                    optional: _legacy,
+                  ),
                   _nutrient(
                     'fiber',
-                    'Ballaststoffe (optional)',
+                    context.l10n.diaryFibreOptional,
                     'g',
                     optional: true,
                   ),
@@ -388,7 +401,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Für deine gegessene Menge',
+                            context.l10n.diaryForTheAmountYouAte,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 8),
@@ -404,17 +417,27 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                               runSpacing: 6,
                               children: [
                                 Text(
-                                  '${_display(preview.totalProtein)} g Protein',
+                                  context.l10n.diaryValueGProtein(
+                                    (_display(preview.totalProtein)).toString(),
+                                  ),
                                 ),
                                 Text(
-                                  '${_display(preview.totalCarbohydrates)} g Kohlenhydrate',
+                                  context.l10n.diaryValueGCarbs(
+                                    (_display(
+                                      preview.totalCarbohydrates,
+                                    )).toString(),
+                                  ),
                                 ),
-                                Text('${_display(preview.totalFat)} g Fett'),
+                                Text(
+                                  context.l10n.diaryValueGFat(
+                                    (_display(preview.totalFat)).toString(),
+                                  ),
+                                ),
                               ],
                             ),
                           ] else
-                            const Text(
-                              'Sobald Menge, Energie und Makros eingetragen sind, siehst du hier die Berechnung.',
+                            Text(
+                              context.l10n.diaryOnceYouEnterTheAmountEnergyAnd,
                             ),
                         ],
                       ),
@@ -445,10 +468,10 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                           : const Icon(Icons.check_rounded),
                       label: Text(
                         _saving
-                            ? 'Wird gespeichert …'
+                            ? context.l10n.diarySaving
                             : widget.entry == null
-                            ? 'Ins Tagebuch eintragen'
-                            : 'Änderungen speichern',
+                            ? context.l10n.diaryLogInDiary
+                            : context.l10n.diarySaveChanges,
                       ),
                     ),
                   ),
@@ -483,7 +506,9 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
           enabled: !_saving,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           decoration: InputDecoration(
-            hintText: optional ? 'Nicht bekannt' : 'z. B. 0,5',
+            hintText: optional
+                ? L10n.current.diaryUnknown
+                : L10n.current.diaryEG05,
             suffixText: unit,
             errorMaxLines: 3,
           ),
@@ -492,18 +517,18 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
             if (optional && (text ?? '').trim().isEmpty) return null;
             final value = parseNutritionNumber(text ?? '');
             if (value == null) {
-              return 'Bitte einen gültigen Wert ab 0 eingeben.';
+              return L10n.current.diaryPleaseEnterAValidValueOf0;
             }
             if (key == 'sugar') {
               final carbs = parseNutritionNumber(_fields['carbs']!.text);
               if (carbs != null && value > carbs) {
-                return 'Zucker darf die Kohlenhydrate nicht überschreiten.';
+                return L10n.current.diarySugarCannotExceedCarbohydrates;
               }
             }
             if (key == 'saturated') {
               final fat = parseNutritionNumber(_fields['fat']!.text);
               if (fat != null && value > fat) {
-                return 'Gesättigte Fettsäuren dürfen Fett nicht überschreiten.';
+                return L10n.current.diarySaturatedFatCannotExceedTotalFat;
               }
             }
             return null;
@@ -535,7 +560,9 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
   Future<void> _save() async {
     if (_saving) return;
     if (!_formKey.currentState!.validate()) {
-      setState(() => _error = 'Bitte prüfe die markierten Felder weiter oben.');
+      setState(
+        () => _error = L10n.current.diaryPleaseCheckTheHighlightedFieldsAbove,
+      );
       return;
     }
     final nutrition = _readNutrition()!;
@@ -554,19 +581,20 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
       final proceed = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Allergiehinweis'),
+          title: Text(L10n.current.diaryAllergyNotice),
           content: Text(
-            'Der eingegebene Name deutet auf einen m\u00F6glichen Konflikt: ${assessment.conflicts.join(', ')}. '
-            'Die N\u00E4hrwertangaben enthalten keine verl\u00E4ssliche Zutatenpr\u00FCfung.',
+            L10n.current.diaryTheNameYouEnteredSuggestsAPossible(
+              (assessment.conflicts.map(DisplayText.of).join(', ')).toString(),
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: const Text('Abbrechen'),
+              child: Text(L10n.current.diaryCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: const Text('Trotzdem protokollieren'),
+              child: Text(L10n.current.diaryLogAnyway),
             ),
           ],
         ),
@@ -603,15 +631,14 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
           _saving = false;
           _error =
               controller.diaryError ??
-              'Das Speichern hat nicht geklappt. Deine Angaben bleiben hier erhalten.';
+              L10n.current.diarySavingDidNotWorkYourInformationStays;
         });
       }
     } catch (_) {
       if (mounted) {
         setState(() {
           _saving = false;
-          _error =
-              'Das Speichern hat nicht geklappt. Bitte versuche es erneut.';
+          _error = L10n.current.diarySavingDidNotWorkPleaseTryAgain;
         });
       }
     }

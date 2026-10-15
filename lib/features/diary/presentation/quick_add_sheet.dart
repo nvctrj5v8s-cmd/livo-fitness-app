@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -83,7 +84,7 @@ class _QuickAddSheet extends StatelessWidget {
         children: [
           const SizedBox(height: 4),
           Text(
-            'Mahlzeit hinzufügen',
+            context.l10n.diaryAddMeal,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
@@ -93,28 +94,29 @@ class _QuickAddSheet extends StatelessWidget {
             key: const Key('quick-add-photo'),
             option: QuickAddOption.photo,
             icon: Icons.photo_camera_rounded,
-            title: 'KI-Foto',
+            title: context.l10n.diaryAiPhoto,
             subtitle: premium
-                ? 'Foto machen, KI schätzt Lebensmittel und Mengen'
-                : 'Premium-Funktion · ${SubscriptionPlans.trialDays} Tage '
-                      'kostenlos testen',
+                ? context.l10n.diaryTakeAPhotoAiEstimatesFoodsAnd
+                : context.l10n.diaryPremiumFeatureValueDayFreeTrial(
+                    (SubscriptionPlans.trialDays).toString(),
+                  ),
             premiumBadge: !premium,
           ),
           const SizedBox(height: 10),
-          const _QuickAddTile(
+          _QuickAddTile(
             key: Key('quick-add-barcode'),
             option: QuickAddOption.barcode,
             icon: Icons.qr_code_scanner_rounded,
-            title: 'Barcode scannen',
-            subtitle: 'Verpacktes Produkt über den Barcode finden',
+            title: context.l10n.diaryScanBarcode,
+            subtitle: context.l10n.diaryFindAPackagedProductUsingItsBarcode,
           ),
           const SizedBox(height: 10),
-          const _QuickAddTile(
+          _QuickAddTile(
             key: Key('quick-add-manual'),
             option: QuickAddOption.manual,
             icon: Icons.edit_note_rounded,
-            title: 'Manuell eintragen',
-            subtitle: 'Lebensmittel suchen oder selbst eintragen',
+            title: context.l10n.diaryEnterManually2,
+            subtitle: context.l10n.diarySearchForFoodsOrEnterThemYourself,
           ),
         ],
       ),

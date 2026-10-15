@@ -1,13 +1,14 @@
 # Lookin auf Deutsch und Englisch: Regeln für die Übersetzung
 
-Stand: 14. Oktober 2026. Gilt für jede Änderung an sichtbaren Texten.
+Stand: 15. Oktober 2026. Gilt für jede Änderung an sichtbaren Texten.
 
 ## So funktioniert es
 
-- **Sprache wählen:** Beim ersten Start fragt `LanguagePage`
-  (`lib/features/language/`), danach Profil › Sprache. Gespeichert wird `de`
-  oder `en` auf dem Gerät (`lookin.locale.v1`, `LocaleController`) und im
-  Konto (`user_metadata.locale`, für E-Mails).
+- **Sprache wählen:** Beim ersten Start gilt die Gerätesprache (`de` → Deutsch,
+  sonst Englisch). Profil › Sprache bietet Automatik und eine manuelle Wahl.
+  Gespeichert wird `system`, `de` oder `en` auf dem Gerät (`lookin.locale.v1`,
+  `LocaleController`); die aufgelöste Sprache wird im Konto für E-Mails hinterlegt
+  (`user_metadata.locale`). `LanguagePage` bleibt als optionale Ansicht verfügbar.
 - **Texte:** Flutter-`gen-l10n` mit ARB. Quelle sind die Teil-Dateien
   `lib/l10n/parts/<bereich>_de.json` (Vorlage, optional mit `@key`-Metadaten)
   und `<bereich>_en.json` (nur Werte). `dart run tool/l10n_merge.dart` prüft
@@ -26,8 +27,31 @@ Stand: 14. Oktober 2026. Gilt für jede Änderung an sichtbaren Texten.
   `14:30`).
 - **Gespeicherte Werte** (Rezept-Tags, Schwierigkeit, Profil-Ziel,
   Ernährungsstil, Aktivität, „Keine angegeben“): Der Wert bleibt deutsch, die
-  Anzeige läuft über `ValueLabels` (`lib/l10n/value_labels.dart`). Mahlzeiten:
+  Anzeige läuft über `ValueLabels` und `DisplayText`. Mahlzeiten:
   `slot.labelOf(context.l10n)`.
+
+## Katalog, KI, E-Mails und Rechtsseiten
+
+- `CatalogText.load()` lädt vor dem ersten App-Bildschirm die lokalen Dateien
+  unter `assets/l10n/`. `catalog_en.json` enthält die Übersetzungen aller Texte
+  der 40 Rezepte und des kuratierten Katalogs. `usda_names_en.json` enthält die
+  ursprünglichen englischen USDA-Bezeichnungen, nach denselben Inhaltsregeln
+  gefiltert. Herkunft siehe `supabase/imports/i18n/` und `docs/CATALOG_DATA_SOURCES.md`.
+- Widgets zeigen die `display…`-Getter der Modelle. Rohfelder bleiben für
+  Speicherung, Berechnungen und Inhaltsprüfung unverändert. Neue Katalogtexte
+  brauchen eine englische Zuordnung und einen Abdeckungstest. Eigene Einträge
+  und bestehende Chatnachrichten bleiben in ihrer Originalsprache.
+- Jede KI-Anfrage enthält einen begrenzten Sprachcode `de`/`en`. Die Edge
+  Function wählt die Ausgabeanweisung und feste Antworten passend dazu;
+  JSON-Schlüssel und Sicherheitsregeln bleiben gleich. Die Serveränderung
+  muss zusammen mit der App veröffentlicht werden.
+- Englische Rechtsseiten liegen unter `web/legal/en/`. Die Mailvorlagen
+  wählen mit `{{ if eq .Data.locale "en" }}` die englische Fassung; sonst Deutsch.
+  Vorlagen im Auth-Dashboard und die Edge Functions für Transaktionsmails
+  benötigen eine eigene Veröffentlichung. Dokumentation der Vorlagenvariablen:
+  https://supabase.com/docs/guides/auth/auth-email-templates
+- Einwilligungen speichern die angezeigte Sprache als Suffix der Textversion.
+  Sprachwahl ergänzt keine Berechtigung und keine externe Übersetzungsanfrage.
 
 ## Schlüssel
 

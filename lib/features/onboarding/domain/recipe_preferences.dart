@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import '../../../core/models/app_models.dart';
 import 'personalization_profile.dart';
 
@@ -23,13 +24,13 @@ List<Recipe> prioritizeRecipes(
 List<String> recipeSortingReasons(PersonalizationProfile? profile) {
   if (profile == null) return const [];
   return [
-    if (_goalPreference(profile) != null) 'deinem Ziel',
+    if (_goalPreference(profile) != null) L10n.current.onboardingYourGoal,
     if (profile.nutrition != null &&
         profile.nutrition != NutritionPreference.mixed)
-      'deiner Ernährungsweise',
-    if (_maxMinutes(profile) != null) 'deiner Zeit zum Kochen',
-    if (_prefersMealPrep(profile)) 'Vorkochen für deinen Alltag',
-    if (profile.focus == RoutineFocus.budget) 'deinem Budget',
+      L10n.current.onboardingYourNutritionStyle,
+    if (_maxMinutes(profile) != null) L10n.current.onboardingYourCookingTime,
+    if (_prefersMealPrep(profile)) L10n.current.onboardingMealPrepForYourDay,
+    if (profile.focus == RoutineFocus.budget) L10n.current.onboardingYourBudget,
   ];
 }
 
@@ -101,4 +102,7 @@ int _score(Recipe recipe, PersonalizationProfile profile) {
 /// "a, b und c" for the reasons above.
 String joinGerman(List<String> parts) => parts.length < 2
     ? parts.join()
-    : '${parts.sublist(0, parts.length - 1).join(', ')} und ${parts.last}';
+    : L10n.current.onboardingValueAndValue(
+        (parts.sublist(0, parts.length - 1).join(', ')).toString(),
+        (parts.last).toString(),
+      );

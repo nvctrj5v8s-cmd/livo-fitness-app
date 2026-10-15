@@ -1,0 +1,412 @@
+{
+  "onboardingSteadyPace": "Ausgewogen",
+  "onboardingYourMealRhythmStaysFlexible": "Dein Rhythmus bleibt flexibel",
+  "onboardingValueMealsFitIntoYourDay": "{arg0} Mahlzeiten passen in deinen Tag",
+  "@onboardingValueMealsFitIntoYourDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourFocusValue": "Dein Fokus: {arg0}.",
+  "@onboardingYourFocusValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourRoutineValue": "Dein Alltag: {arg0}.",
+  "@onboardingYourRoutineValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRecipeIdeasLabelledAsValueAppearFirst": "Passend gekennzeichnete {arg0} Rezeptideen erscheinen zuerst.",
+  "@onboardingRecipeIdeasLabelledAsValueAppearFirst": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourCoachTakesIntoAccountValue": "Dein Coach berücksichtigt: {arg0}.",
+  "@onboardingYourCoachTakesIntoAccountValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingRecipesTakingUpToValueMinutesGet": "Rezepte bis {arg0} Minuten bekommen Vorrang, wenn passende vorhanden sind.",
+  "@onboardingRecipesTakingUpToValueMinutesGet": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingIdeasMarkedAsBudgetRecipesMoveUp": "Als Budget-Rezept markierte Ideen rücken nach vorne.",
+  "onboardingYourGoal": "deinem Ziel",
+  "onboardingYourNutritionStyle": "deiner Ernährungsweise",
+  "onboardingYourCookingTime": "deiner Zeit zum Kochen",
+  "onboardingMealPrepForYourDay": "Vorkochen für deinen Alltag",
+  "onboardingYourBudget": "deinem Budget",
+  "onboardingValueAndValue": "{arg0} und {arg1}",
+  "@onboardingValueAndValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingFourMealsOneOverview": "Vier Mahlzeiten. Ein Überblick.",
+  "onboardingPhotoBarcodeOrManualEntry": "Foto, Barcode oder selbst eintragen",
+  "onboardingCheckTheEstimateThenSave": "Schätzung prüfen, dann speichern",
+  "onboardingNutritionAndFitnessOnly": "Nur Ernährung und Fitness",
+  "onboardingCookWithWhatYouHave": "Kochen mit dem, was da ist",
+  "onboardingGuidelineValuesOnlyIfYouWantThem": "Richtwerte nur, wenn du möchtest",
+  "onboardingBreakfast": "Frühstück",
+  "onboardingLunch": "Mittagessen",
+  "onboardingDinner": "Abendessen",
+  "onboardingYourDay": "DEIN TAG",
+  "onboardingOf2100": "von 2.100",
+  "onboardingCarbohydrates": "Kohlenhydrate",
+  "onboardingFat": "Fett",
+  "onboardingStillEmpty": "Noch leer",
+  "onboardingAiPhoto": "KI-Foto",
+  "onboardingAiEstimatesFoods": "KI schätzt Lebensmittel",
+  "onboardingScanBarcode": "Barcode scannen",
+  "onboardingFindProduct": "Produkt finden",
+  "onboardingEnterManually": "Manuell eintragen",
+  "onboardingSearchOrEnterManually": "Suchen oder selbst",
+  "onboardingAddMeal": "Mahlzeit hinzufügen",
+  "onboardingAiEstimate": "KI-Schätzung",
+  "onboardingRice": "Reis",
+  "onboardingSalmon": "Lachs",
+  "onboardingSalad": "Salat",
+  "onboardingValueKcalCValueGPValue": "{arg0} kcal · K {arg1} g · P {arg2} g",
+  "@onboardingValueKcalCValueGPValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingAmount": "Menge",
+  "onboardingAddToLunchValueKcal": "Zu Mittagessen hinzufügen · {arg0} kcal",
+  "@onboardingAddToLunchValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYouHaveAbout650KcalLeftToday": "Du hast heute noch etwa 650 kcal frei. Wie wäre eine Lachs-Tomaten-Bowl? Rund 35 g Protein.",
+  "onboardingAiNutritionFitness": "KI · Ernährung & Fitness",
+  "onboardingWhatCanIStillEatThisEvening": "Was kann ich heute Abend noch essen?",
+  "onboardingMoreProtein": "Mehr Protein",
+  "onboardingDailyTarget": "Tagesziel",
+  "onboardingAskYourCoach": "Frag deinen Coach …",
+  "onboardingForYou": "FÜR DICH",
+  "onboardingQuick": "Schnell",
+  "onboardingVegetarian": "Vegetarisch",
+  "onboarding20Min": "20 Min.",
+  "onboardingSalmonAvocadoRice": "Lachs-Avocado-Reis",
+  "onboarding560Kcal34GProtein": "560 kcal · 34 g Protein",
+  "onboardingAtHome": "Zu Hause",
+  "onboardingPotatoes": "Kartoffeln",
+  "onboardingEggs": "Eier",
+  "onboardingInDiary": "Im Tagebuch",
+  "onboardingAddToDiary": "Zum Tagebuch hinzufügen",
+  "onboardingYourProfile": "Dein Profil",
+  "onboardingBuildMuscle": "Muskeln aufbauen",
+  "onboardingEntriesToday": "Einträge heute",
+  "onboardingDayStreak": "Tage Serie",
+  "onboardingKcalToday": "kcal heute",
+  "onboardingMyDailyTargets": "MEINE TÄGLICHEN ZIELE",
+  "onboardingTheIntroductionMayAppearAgainAtThe": "Die Einführung erscheint beim nächsten Start eventuell erneut.",
+  "onboardingOpeningLookin": "Lookin wird geöffnet",
+  "onboardingYourDiary": "DEIN TAGEBUCH",
+  "onboardingYourDay2": "Dein Tag.",
+  "onboardingAtAGlance": "Auf einen Blick.",
+  "onboardingBreakfastLunchDinnerAndSnacksInOne": "Frühstück, Mittagessen, Abendessen und Snacks an einem Ort – mit Kalorien, Kohlenhydraten, Protein und Fett.",
+  "onboardingSeeWhatYouHaveAlreadyEatenToday": "Sehen, was du heute schon gegessen hast.",
+  "onboardingQuickToLog": "SCHNELL EINGETRAGEN",
+  "onboardingTapThePlus": "Ein Tipp aufs Plus.",
+  "onboardingThreeWays": "Drei Wege.",
+  "onboardingTakeAPhotoScanABarcodeOr": "Foto machen, Barcode scannen oder selbst eintragen. Das Plus in der Mitte ist immer nur einen Tipp entfernt.",
+  "onboardingSearchAndCustomFoodsIncluded": "Suchen und eigene Lebensmittel inklusive.",
+  "onboardingAiPhotoPremium": "KI-FOTO · PREMIUM",
+  "onboardingTakeAPhoto": "Foto machen.",
+  "onboardingAiEstimates": "KI schätzt.",
+  "onboardingAiRecognisesFoodsAndEstimatesAmountsYou": "Die KI erkennt Lebensmittel und schätzt die Mengen. Du prüfst Gramm und Nährwerte, ergänzt, was fehlt – und speicherst erst dann.",
+  "onboardingEstimatesAreAlwaysLabelledAsEstimates": "Schätzungen sind immer als Schätzung markiert.",
+  "onboardingJustAsk": "Frag einfach.",
+  "onboardingYourAiCoach": "Dein KI-Coach.",
+  "onboardingAnswersAboutNutritionAndFitnessTailoredTo": "Antworten zu Ernährung und Fitness, passend zu deinem Ziel und deinen Tageswerten.",
+  "onboardingFocusedOnNutritionAndFitness": "Konzentriert auf Ernährung und Fitness.",
+  "onboardingRecipes": "REZEPTE",
+  "onboardingFindRecipes": "Rezepte finden.",
+  "onboardingCookSimply": "Einfach kochen.",
+  "onboardingFilterByQuickHighProteinOrVegetarian": "Filtere nach Schnell, High Protein oder Vegetarisch und finde Rezepte mit dem, was du zu Hause hast.",
+  "onboardingLogInYourDiaryWithOneTap": "Mit einem Tipp ins Tagebuch.",
+  "onboardingYourProfile2": "DEIN PROFIL",
+  "onboardingYourGoals": "Deine Ziele.",
+  "onboardingYourStreak": "Deine Serie.",
+  "onboardingIfYouWishLookinCalculatesGuidelineValues": "Wenn du möchtest, berechnet Lookin Richtwerte aus Alter, Größe und Gewicht. Deine Serie zeigt, wie regelmäßig du dabei bist.",
+  "onboardingLookinWorksWithoutThisInformationToo": "Ohne Angaben funktioniert Lookin genauso.",
+  "onboardingSkip": "Überspringen",
+  "onboardingPageValueOfValue": "Seite {arg0} von {arg1}",
+  "@onboardingPageValueOfValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingBack": "Zurück",
+  "onboardingOneMoment": "Einen Moment …",
+  "onboardingLetSGo": "Los geht’s",
+  "onboardingContinue": "Weiter",
+  "onboardingAlreadyAMember": "Schon dabei? ",
+  "onboardingSignIn": "Anmelden",
+  "onboardingExampleView": "Beispielansicht",
+  "onboardingReplayAnimation": "Animation wiederholen",
+  "onboardingSpaceForYou": "Platz für dich.",
+  "onboardingHelloValue": "Hallo, {arg0}.",
+  "@onboardingHelloValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYouChooseTheDirection": "Du bestimmst die Richtung.",
+  "onboardingEveryRoutineIsDifferent": "Jeder Alltag ist anders.",
+  "onboardingWhatFeelsRightForYouMatters": "Was dir guttut, zählt.",
+  "onboardingValueUpToValueMin": "{arg0} · bis {arg1} Min.",
+  "@onboardingValueUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourPreferencesAtAGlance": "Deine Wünsche auf einen Blick.",
+  "onboardingYourChoices": "DEINE AUSWAHL",
+  "onboardingYourDayYourLookin": "Dein Alltag. Dein Lookin.",
+  "onboardingMakeLookinFitYou": "So passt Lookin zu dir",
+  "onboardingHowDoYouLikeToEatSet": "Wie isst du gern? Richte deinen Rhythmus und deine Rezeptideen in wenigen Schritten ein.",
+  "onboardingUpToValueMin": "Bis {arg0} Min.",
+  "@onboardingUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingViewRecipeIdeas": "Rezeptideen ansehen",
+  "onboardingPersonalise": "Persönlich einrichten",
+  "onboardingChangeAnswers": "Antworten ändern",
+  "onboardingRemoveAnswers": "Antworten entfernen",
+  "onboardingYourOptionalInformationHelpsLookinAndThe": "Deine freiwilligen Angaben helfen Lookin und dem KI-Coach, Vorschläge persönlicher zu machen. Du kannst sie jederzeit ändern oder entfernen.",
+  "onboardingShortOnTimeTodayQuickMealsAppear": "Wenig Zeit heute? In deinen Rezeptideen stehen schnelle Gerichte weiter oben.",
+  "onboardingIdeasMarkedAsBudgetRecipesAppearHigher": "Für deinen Einkauf stehen als Budget-Rezept markierte Ideen weiter oben.",
+  "onboardingYourRhythmIsAGuideYouCan": "Dein Rhythmus ist eine Orientierung. Du kannst ihn jederzeit ändern.",
+  "onboardingYourRecipeIdeasTakeYourCookingTime": "Deine Rezeptideen berücksichtigen deine Kochzeit.",
+  "onboardingYourRecipeIdeasReflectThePreferencesYou": "Deine Rezeptideen richten sich nach den Vorlieben, die du angegeben hast.",
+  "onboardingYourSetupAnswersHaveBeenRemovedFrom": "Deine Einrichtungsantworten wurden von diesem Gerät entfernt.",
+  "onboardingRemovalDidNotWorkPleaseTryAgain": "Entfernen hat nicht geklappt. Bitte versuche es erneut.",
+  "onboardingYourSettingsCouldNotBeLoaded": "Deine Einstellungen konnten nicht geladen werden.",
+  "onboardingTryAgain": "Erneut versuchen",
+  "onboardingContinueForNow": "Für jetzt fortfahren",
+  "onboardingPreparingYourLookin": "Dein Lookin wird vorbereitet …",
+  "onboardingYouCanContinueTheQuestionsMayAppear": "Du kannst weitermachen. Die Fragen erscheinen beim nächsten Start möglicherweise erneut.",
+  "onboardingMar": "Mär",
+  "onboardingMay": "Mai",
+  "onboardingOct": "Okt",
+  "onboardingDec": "Dez",
+  "onboardingThatFitsUseThisValue": "Passt genau so – Wert übernehmen",
+  "onboardingThatDidNotWorkJustNowPlease": "Das hat gerade nicht geklappt. Bitte versuche es noch einmal.",
+  "onboardingYourInformationCouldNotBeSavedPlease": "Deine Angaben konnten nicht gespeichert werden. Bitte versuche es erneut.",
+  "onboardingSoLookinCanAddressYouProperly": "Damit Lookin dich richtig anspricht.",
+  "onboardingWhatIsYourGoal": "Was ist dein Ziel?",
+  "onboardingWhyDoesItMatterToYou": "Warum ist dir das wichtig?",
+  "onboardingYourSex": "Dein Geschlecht",
+  "onboardingWhenIsYourBirthday": "Wann hast du Geburtstag?",
+  "onboardingHowTallAreYou": "Wie groß bist du?",
+  "onboardingWhereAreYouNow": "Wo stehst du gerade?",
+  "onboardingWhereWouldYouLikeToBe": "Wohin möchtest du?",
+  "onboardingWhatIsYourTargetWeight": "Was ist dein Wunschgewicht?",
+  "onboardingHowActiveAreYouUsually": "Wie aktiv bist du meistens?",
+  "onboardingHowDoYouEat": "Wie isst du?",
+  "onboardingWhatIsYourKitchenRoutine": "Wie sieht es in deiner Küche aus?",
+  "onboardingWhatHasHeldYouBackSoFar": "Was hat dich bisher gebremst?",
+  "onboardingIsThereAnythingLookinShouldTakeInto": "Gibt es etwas, worauf Lookin achten soll?",
+  "onboardingYouAreStartingWithACleanSlate": "Du startest ganz neutral.",
+  "onboardingYourLookinPlanIsReady": "Dein Lookin-Plan ist bereit.",
+  "onboardingCreatingYourPlan": "Dein Plan wird erstellt …",
+  "onboardingYourNameIsOptionalYouCanChange": "Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.",
+  "onboardingSelectEverythingThatFitsYourCoachUses": "Wähle alles, was passt. Dein Coach greift das auf, wenn es mal schwerfällt.",
+  "onboardingOnlyUsedToEstimateYourEnergyNeeds": "Nur für die Schätzung deines Energiebedarfs – Körper verbrauchen je nach Geschlecht unterschiedlich viel. Du kannst das auch offenlassen.",
+  "onboardingSwipeTheWheelsUpOrDown": "Wische direkt in den Rädern nach oben oder unten.",
+  "onboardingChooseTheUnitThatFeelsNaturalTo": "Wähle die Einheit, die für dich natürlich ist, und wische zum passenden Wert.",
+  "onboardingDragTheRulerLeftOrRightThis": "Ziehe das Lineal nach links oder rechts. Es ist dein aktuelles Gewicht, kein Ziel.",
+  "onboardingATargetThatFitsYouNotA": "Ein Ziel, das zu dir passt – kein Muss. Du kannst es jederzeit ändern.",
+  "onboardingYourNormalEverydayRoutineWithoutDedicatedExercise": "Dein ganz normaler Alltag, ohne gezieltes Training.",
+  "onboardingSoRecipesSuggestionsAndTheCoachFit": "Damit Rezepte, Vorschläge und der Coach zu dir passen.",
+  "onboardingThisHelpsLookinSuggestRecipesThatFit": "So schlägt Lookin Rezepte vor, die in deinen Tag passen.",
+  "onboardingSelectEverythingThatFitsItIsCompletely": "Wähle alles, was passt – das ist völlig normal. Lookin gibt dir dazu passende Tipps.",
+  "onboardingOptionalAndOnlyForYourSafetyThis": "Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät.",
+  "onboardingAnswerTheQuestionsInYourProfileAt": "Beantworte die Fragen jederzeit im Profil, dann passt sich Lookin an dich an.",
+  "onboardingEverythingIsBasedOnYourAnswersAnd": "Alles basiert auf deinen Antworten und lässt sich jederzeit im Profil anpassen.",
+  "onboardingLookinIsProcessingYourAnswers": "Lookin verarbeitet gerade deine Antworten.",
+  "onboardingWhatShouldWeCallYouOptional": "Wie dürfen wir dich nennen? (optional)",
+  "onboardingForExampleAlex": "Zum Beispiel Alex",
+  "onboardingYouCanSkipAboveLookinWorksWithout": "Du kannst oben überspringen. Lookin funktioniert auch ohne diese Antworten.",
+  "onboardingAlreadyHaveAnAccountSignIn": "Schon ein Konto? Anmelden",
+  "onboardingDateOfBirth": "Geburtsdatum",
+  "onboardingYourHeight": "Deine Größe",
+  "onboardingDragTheRulerLeftOrRightYour": "Ziehe das Lineal nach links oder rechts. Dein Gewicht wird nicht bewertet.",
+  "onboardingMostlySeatedOfficeStudyCarOftenMoving": "Meist sitzend: Büro, Studium, Auto. Viel in Bewegung: Pflege, Handwerk, Verkauf oder viele Wege zu Fuß.",
+  "onboardingNutritionStyle": "Ernährungsweise",
+  "onboardingPescatarian": "Pescetarisch",
+  "onboardingTimeToCookOnANormalDay": "Zeit zum Kochen an einem normalen Tag",
+  "onboardingHaveYouCountedCaloriesBefore": "Hast du schon einmal Kalorien gezählt?",
+  "onboardingYourWeightIsAlreadyAtTheLower": "Dein Gewicht liegt bereits im unteren gesunden Bereich. Lookin schlägt dir deshalb kein Abnehmziel vor – wir helfen dir, gut und ausgewogen zu essen.",
+  "onboardingValueValueKgWeek": "{arg0}\n{arg1} kg/Woche",
+  "@onboardingValueValueKgWeek": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingLookinOnlyOffersTargetsWithinTheHealthy": "Lookin bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und höchstens etwa ein halbes Kilo pro Woche an.",
+  "onboardingMuscleGrowsSlowlyEnoughProteinAndTraining": "Muskeln wachsen langsam. Genug Eiweiß und Training sind wichtiger als schnelle Zahlen.",
+  "onboardingNoneOfTheseApplySimplyTapContinue": "Trifft nichts davon zu? Dann tippe einfach auf „Weiter“.",
+  "onboardingThankYouForSharingThisLookinDoes": "Danke, dass du das teilst. Lookin berechnet für dich keine Kalorienziele und schlägt keine Diät vor. Tagebuch, Rezepte und Coach kannst du trotzdem nutzen – deine Ziele besprichst du am besten mit deiner Ärztin, deinem Arzt oder einer Ernährungsfachkraft.",
+  "onboardingClose": "Schließen",
+  "onboardingSaving": "Wird gespeichert …",
+  "onboardingMetricCmKg": "Metrisch · cm / kg",
+  "onboardingAge": "Alter",
+  "onboardingHeight": "Größe",
+  "onboardingWeight": "Gewicht",
+  "onboardingSex": "Geschlecht",
+  "onboardingDailyRoutine": "Alltag",
+  "onboardingCalculateEnergyNeedsFromValue": "Energiebedarf aus {arg0} berechnen",
+  "@onboardingCalculateEnergyNeedsFromValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingSetProteinAndFatToFitYour": "Eiweiß und Fett passend zu deinem Ziel festlegen",
+  "onboardingEstimateProteinAndFatFromYourWeight": "Eiweiß und Fett aus deinem Gewicht ableiten",
+  "onboardingEstimateTimeToYourTargetWeight": "Zeit bis zu deinem Wunschgewicht abschätzen",
+  "onboardingIntentionallyLeaveOutCalorieTargetsForYou": "Kalorienziele für dich bewusst weglassen",
+  "onboardingSummariseYourAnswers": "Deine Antworten zusammenfassen",
+  "onboardingFilterOutRecipesContainingYourAllergens": "Rezepte mit deinen Allergenen aussortieren",
+  "onboardingSortRecipesByValue": "Rezepte nach {arg0} sortieren",
+  "@onboardingSortRecipesByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingGiveYourCoachYourAnswersAsBackground": "Deinem Coach deine Antworten als Hintergrund mitgeben",
+  "onboardingCreatingPlanValuePerCent": "Plan wird erstellt, {arg0} Prozent",
+  "@onboardingCreatingPlanValuePerCent": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingJanuary": "Januar",
+  "onboardingFebruary": "Februar",
+  "onboardingMarch": "März",
+  "onboardingJune": "Juni",
+  "onboardingJuly": "Juli",
+  "onboardingOctober": "Oktober",
+  "onboardingDecember": "Dezember",
+  "onboardingWhatLookinDoesForYouNow": "Das macht Lookin jetzt für dich",
+  "onboardingGuidelineValuesForOrientationNotMedicalAdvice": "Richtwerte zur Orientierung, keine medizinische Beratung. Du kannst alles jederzeit im Profil anpassen.",
+  "onboardingLookinHidesRecipesContainingYourAllergens": "Rezepte mit deinen Allergenen blendet Lookin aus.",
+  "onboardingRecipesAreSortedByValue": "Rezepte erscheinen sortiert nach {arg0}.",
+  "@onboardingRecipesAreSortedByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYourCoachKnowsYourGoalsAndObstacles": "Dein Coach kennt deine Ziele und Hürden und richtet Tipps daran aus.",
+  "onboardingLogMealsThroughSearchOrBarcodeAnd": "Mahlzeiten per Suche oder Barcode eintragen – mit Premium auch per Foto.",
+  "onboardingProtein": "Eiweiß",
+  "onboardingYourDailyGuideline": "Dein Tagesrichtwert",
+  "onboardingValueKilocaloriesPerDay": "{arg0} Kilokalorien pro Tag",
+  "@onboardingValueKilocaloriesPerDay": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingYouHaveNotProvidedAnyInformationLookin": "Du hast keine Angaben gemacht. Darum berechnet Lookin noch keine Tagesziele und sortiert Rezepte nicht für dich. Sobald du im Profil etwas ergänzt, passt sich Lookin an.",
+  "onboardingLookinDoesNotCalculateCalorieTargetsFor": "Für dich berechnet Lookin keine Kalorienziele. Tagebuch, Rezepte und Coach kannst du trotzdem nutzen – deine Ziele besprichst du am besten mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.",
+  "onboardingLookinDoesNotCalculateCalorieTargetsFor2": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Rezepte, Tagebuch und Tipps kannst du trotzdem nutzen.",
+  "onboardingLookinDoesNotCalculateDailyTargetsWithout": "Ohne Alter, Größe und Gewicht berechnet Lookin keine Tagesziele. Du kannst sie jederzeit im Profil ergänzen.",
+  "onboardingValueAroundValue": "{arg0} etwa im {arg1}",
+  "@onboardingValueAroundValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingTodayValue": "Heute · {arg0}",
+  "@onboardingTodayValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingARoughEstimateYourBodyDoesNot": "Grobe Schätzung – dein Körper hält sich nicht an Kalender.",
+  "onboardingARoughEstimateAtAValuePace": "Grobe Schätzung bei {arg0} Tempo – dein Körper hält sich nicht an Kalender.",
+  "@onboardingARoughEstimateAtAValuePace": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  }
+}

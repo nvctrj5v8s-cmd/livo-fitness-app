@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,11 +23,8 @@ Future<void> openExternalLink(
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Der Link konnte nicht geöffnet werden. Bitte versuche es '
-            'später noch einmal.',
-          ),
+        SnackBar(
+          content: Text(context.l10n.sharedTheLinkCouldNotBeOpenedPlease),
         ),
       );
   }
@@ -37,11 +35,11 @@ enum LegalPage { privacy, terms, withdrawal, imprint, withdrawalForm }
 
 extension on LegalPage {
   String get label => switch (this) {
-    LegalPage.privacy => 'Datenschutz',
-    LegalPage.terms => 'AGB',
-    LegalPage.withdrawal => 'Widerruf',
-    LegalPage.imprint => 'Impressum',
-    LegalPage.withdrawalForm => 'Vertrag widerrufen',
+    LegalPage.privacy => L10n.current.sharedPrivacy,
+    LegalPage.terms => L10n.current.sharedTerms,
+    LegalPage.withdrawal => L10n.current.sharedWithdrawal,
+    LegalPage.imprint => L10n.current.sharedImprint,
+    LegalPage.withdrawalForm => L10n.current.sharedWithdrawFromContract,
   };
 
   Uri get uri => switch (this) {

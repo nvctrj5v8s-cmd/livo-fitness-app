@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -169,16 +171,25 @@ class AppController extends ChangeNotifier {
       avatarRepository ?? const LocalAvatarRepository();
   final Set<DateTime> _trackedDays = {};
   bool streakLoading = false;
-  String? streakError;
+  String? _streakError;
+  String? get streakError =>
+      _streakError == null ? null : DisplayText.of(_streakError!);
+  set streakError(String? value) => _streakError = value;
   bool _hasTrackingDays = false;
   int _streakRevision = 0;
   Future<void>? _trackingLoad;
   int get streakDays => calculateTrackingStreak(_trackedDays, _now());
   Uint8List? avatarBytes;
   bool avatarSaving = false;
-  String? avatarError;
+  String? _avatarError;
+  String? get avatarError =>
+      _avatarError == null ? null : DisplayText.of(_avatarError!);
+  set avatarError(String? value) => _avatarError = value;
   int _avatarRevision = 0;
-  String? reminderError;
+  String? _reminderError;
+  String? get reminderError =>
+      _reminderError == null ? null : DisplayText.of(_reminderError!);
+  set reminderError(String? value) => _reminderError = value;
 
   Future<void> loadTrackingStreak() {
     if (_trackingLoad != null) return _trackingLoad!;
@@ -289,7 +300,7 @@ class AppController extends ChangeNotifier {
     notifyListeners();
     try {
       await _avatars.save(userId, jpeg);
-      if (_disposed) throw StateError('Konto geändert.');
+      if (_disposed) throw StateError(L10n.current.coreAccountChanged);
       avatarBytes = jpeg;
       return true;
     } catch (_) {
@@ -410,7 +421,7 @@ class AppController extends ChangeNotifier {
   Future<void> savePersonalization(PersonalizationProfile profile) async {
     final revision = ++_personalizationRevision;
     final userId = personalizationUserId;
-    if (userId == null) throw StateError('Bitte zuerst anmelden.');
+    if (userId == null) throw StateError(L10n.current.corePleaseSignInFirst2);
     await personalizationStore.save(userId, profile);
     if (_disposed || revision != _personalizationRevision) return;
     personalization = profile;
@@ -530,12 +541,21 @@ class AppController extends ChangeNotifier {
 
   final List<FoodItem> foods = [];
   bool catalogLoading = false;
-  String? catalogError;
+  String? _catalogError;
+  String? get catalogError =>
+      _catalogError == null ? null : DisplayText.of(_catalogError!);
+  set catalogError(String? value) => _catalogError = value;
   bool profileLoading = false;
-  String? profileError;
+  String? _profileError;
+  String? get profileError =>
+      _profileError == null ? null : DisplayText.of(_profileError!);
+  set profileError(String? value) => _profileError = value;
   bool diaryLoading = false;
   bool diarySaving = false;
-  String? diaryError;
+  String? _diaryError;
+  String? get diaryError =>
+      _diaryError == null ? null : DisplayText.of(_diaryError!);
+  set diaryError(String? value) => _diaryError = value;
   bool favoritesLoading = false;
   String? favoritesError;
   bool foodPreferencesLoading = false;
@@ -1181,9 +1201,7 @@ class AppController extends ChangeNotifier {
       if (entry.foodId != null) {
         final food = _foodForId(entry.foodId!);
         if (food == null || amountGrams == null) {
-          throw StateError(
-            'Das Lebensmittel konnte nicht mehr gefunden werden.',
-          );
+          throw StateError(L10n.current.coreThisFoodCouldNoLongerBeFound);
         }
         updated = await _diary.updateFoodEntry(
           entry: entry,
@@ -1410,15 +1428,13 @@ class AppController extends ChangeNotifier {
     }
   }
 
-  /// German text for the diary UI. Lookin's own `StateError`/`ArgumentError`
+  /// Localized text for the diary UI. Lookin's own `StateError`/`ArgumentError`
   /// messages are shown as they are; technical errors such as network or
   /// database messages (English, "Bad state: …") never reach the user.
   static String diaryErrorMessage(Object error) => switch (error) {
-    StateError(:final message) => message,
-    ArgumentError(:final String message) => message,
-    _ =>
-      'Die Verbindung zu deinem Tagebuch hat gerade nicht geklappt. '
-          'Bitte prüfe dein Internet und versuche es erneut.',
+    StateError(:final message) => DisplayText.of(message),
+    ArgumentError(:final String message) => DisplayText.of(message),
+    _ => L10n.current.displayConnectingToYourDiaryDidNotWork,
   };
 
   bool _isUuid(String value) => RegExp(

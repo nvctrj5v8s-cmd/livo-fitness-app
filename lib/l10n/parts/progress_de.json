@@ -1,0 +1,126 @@
+{
+  "progressYourProgressDataCouldNotBeLoaded": "Deine Fortschrittsdaten konnten nicht geladen werden.",
+  "progressMeasurementSaved": "Messung gespeichert.",
+  "progressMeasurementCouldNotBeSaved": "Messung konnte nicht gespeichert werden.",
+  "progressYourProgress": "Dein Fortschritt",
+  "progressClearTrendsFromYourActualDiaryWithout": "Klare Trends aus deinem echten Tagebuch – ohne Druck durch einzelne Tage.",
+  "progressRefresh": "Aktualisieren",
+  "progressNutritionTrend": "Ernährungstrend",
+  "progressAveragePerTimePeriodComparedWithYour": "Durchschnitt pro Zeitabschnitt im Vergleich zu deinen Zielen",
+  "progressBodyTrend": "Körperverlauf",
+  "progressWeightAndOptionalWaistCircumferenceViewedCalmly": "Gewicht und optionaler Taillenumfang – ruhig und langfristig betrachtet",
+  "progressYourFirstEntryMakesTrendsVisible": "Dein erster Eintrag macht Trends sichtbar.",
+  "progressYouAreVeryCloseToYourPersonal": "Du liegst sehr nah an deinen persönlichen Zielen.",
+  "progressYouAreHeadingInTheRightDirection": "Deine Richtung stimmt – Beständigkeit bringt jetzt am meisten.",
+  "progressRegularTrackingHelpsYouUnderstandYourHabits": "Regelmäßiges Tracken schafft zuerst Klarheit.",
+  "progressYourRhythm": "DEIN RHYTHMUS",
+  "progressLogMealsAndAddYourWeightLookin": "Trage Mahlzeiten ein und ergänze dein Gewicht. Lookin berechnet danach nur aus deinen echten Daten.",
+  "progressValueOfValueDaysWithEntriesValue": "{arg0} von {arg1} Tagen mit Einträgen · {arg2} Mahlzeiten ausgewertet",
+  "@progressValueOfValueDaysWithEntriesValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "progressClosenessToTarget": "Zielnähe",
+  "progressAvgKcalTrackedDay": "Ø kcal / Track-Tag",
+  "progressAvgProteinTrackedDay": "Ø Protein / Track-Tag",
+  "progressDaysInCalorieRange": "Tage im Kalorienbereich",
+  "progressValueDays": "{arg0} Tage",
+  "@progressValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressCurrentStreak": "Aktuelle Serie",
+  "progressCalories": "KALORIEN",
+  "progressTarget100": "ZIEL = 100 %",
+  "progressNoNutritionTrendYet": "Noch kein Ernährungstrend",
+  "progressAnActualTrendStartsHereAutomaticallyAfter": "Nach deinem ersten Tagebucheintrag entsteht hier automatisch ein echter Verlauf.",
+  "progressValueValueKcalValueGProtein": "{arg0}: {arg1} kcal · {arg2} g Protein",
+  "@progressValueValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "progressMacroBalance": "Makro-Balance",
+  "progressAverageOnTrackedDays": "Durchschnitt an getrackten Tagen",
+  "progressCarbohydrates": "Kohlenhydrate",
+  "progressFat": "Fett",
+  "progressTrackingConsistency": "Tracking-Konstanz",
+  "progressUpToTheLast28Days": "Die letzten maximal 28 Tage",
+  "progressValueValueNoEntry": "{arg0}.{arg1}. · kein Eintrag",
+  "@progressValueValueNoEntry": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "progressInTargetRange": "im Zielbereich",
+  "progressWeight": "Gewicht",
+  "progressNoMeasurementYet": "Noch keine Messung",
+  "progressValueValueKgInThisPeriod": "{arg0}{arg1} kg im Zeitraum",
+  "@progressValueValueKgInThisPeriod": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "progressLog": "Eintragen",
+  "progressYourActualTrendStartsHere": "Dein echter Verlauf beginnt hier",
+  "progressOneOrTwoMeasurementsAWeekAre": "Ein bis zwei Messungen pro Woche reichen. Tages-Schwankungen sind normal.",
+  "progressLogOrdinaryDaysTooThisMakesYour": "Trage auch an normalen Tagen ein. So wird dein Trend ehrlich und nützlich.",
+  "progressValueDaysAlreadyGiveABetterFoundation": "{arg0} Tage liefern bereits eine bessere Grundlage als ein einzelner Tageswert.",
+  "@progressValueDaysAlreadyGiveABetterFoundation": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressYourAverageProteinIsCloseToYour": "Dein Proteindurchschnitt liegt nah am Ziel. Das unterstützt Sättigung und Muskelerhalt.",
+  "progressProteinWasCloseToTargetOnValue": "An {arg0} Tagen lag Protein nahe am Ziel. Eine feste Proteinquelle pro Mahlzeit kann helfen.",
+  "@progressProteinWasCloseToTargetOnValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "progressOneOrTwoMeasurementsAWeekUnder": "Für einen Gewichtstrend genügen ein bis zwei Messungen pro Woche unter ähnlichen Bedingungen.",
+  "progressLookAtWeightOverSeveralWeeksWater": "Bewerte Gewicht über mehrere Wochen; Wasser und Salz verschieben einzelne Messungen.",
+  "progressWhatYourDataSays": "Was deine Daten sagen",
+  "progressPleaseEnterARealisticWeightBetween25": "Bitte gib ein realistisches Gewicht zwischen 25 und 400 kg ein.",
+  "progressWaistCircumferenceMustBeBetween30And": "Der Taillenumfang muss zwischen 30 und 300 cm liegen.",
+  "progressNewMeasurement": "Neue Messung",
+  "progressAMeasurementReplacesTheValueFromThe": "Eine Messung ersetzt den Wert desselben Tages.",
+  "progressWaistOptional": "Taille (optional)",
+  "progressSaveMeasurement": "Messung speichern",
+  "progressCheckYourConnectionAndTryAgain": "Prüfe deine Verbindung und versuche es erneut.",
+  "progressTryAgain": "Erneut versuchen"
+}

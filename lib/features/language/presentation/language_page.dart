@@ -503,7 +503,7 @@ class _LanguageSheetState extends State<_LanguageSheet> {
       widget.controller?.locale ?? L10n.resolve(Locale(L10n.code));
 
   Future<void> _pick(Locale locale) async {
-    if (locale == _selected) {
+    if (locale == _selected && widget.controller?.followsDevice != true) {
       Navigator.of(context).pop();
       return;
     }
@@ -519,43 +519,67 @@ class _LanguageSheetState extends State<_LanguageSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final texts = L10n.of(_selected);
+    final effective = widget.controller?.followsDevice == true
+        ? widget.controller!.locale
+        : _selected;
+    final texts = L10n.of(effective);
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                texts.languageSheetTitle,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  texts.languageSheetTitle,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                ),
               ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              texts.languageSheetSubtitle,
-              style: const TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 14,
-                height: 1.4,
+              const SizedBox(height: 6),
+              Text(
+                texts.languageSheetSubtitle,
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 14,
+                  height: 1.4,
+                ),
               ),
-            ),
-            const SizedBox(height: 18),
-            for (final (index, option) in LanguageOption.all.indexed) ...[
-              if (index > 0) const SizedBox(height: 12),
-              LanguageCard(
-                key: Key('language-sheet-${option.locale.languageCode}'),
-                option: option,
-                selected: option.locale == _selected,
-                onTap: () => unawaited(_pick(option.locale)),
+              const SizedBox(height: 18),
+              ListTile(
+                key: const Key('language-sheet-system'),
+                leading: const Icon(Icons.phone_android_rounded),
+                title: Text(texts.languageDeviceTitle),
+                subtitle: Text(texts.languageDeviceSubtitle),
+                trailing: widget.controller?.followsDevice == true
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.primary,
+                      )
+                    : null,
+                onTap: () async {
+                  await widget.controller?.useDeviceLanguage();
+                  if (context.mounted) Navigator.of(context).pop();
+                },
               ),
+              const SizedBox(height: 12),
+              for (final (index, option) in LanguageOption.all.indexed) ...[
+                if (index > 0) const SizedBox(height: 12),
+                LanguageCard(
+                  key: Key('language-sheet-${option.locale.languageCode}'),
+                  option: option,
+                  selected:
+                      option.locale == effective &&
+                      widget.controller?.followsDevice != true,
+                  onTap: () => unawaited(_pick(option.locale)),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

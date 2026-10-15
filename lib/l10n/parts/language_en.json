@@ -1,4 +1,7 @@
 {
+  "languageDeviceTitle": "Use device language",
+  "languageDeviceSubtitle": "Automatically use German or English",
+  "languageDeviceActive": "Device language",
   "languageTitle": "Choose your language",
   "languageSubtitle": "You can change it anytime later in your profile.",
   "languageContinue": "Continue in English",

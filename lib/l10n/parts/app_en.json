@@ -1,3 +1,7 @@
 {
-  "appOpeningSemantics": "Lookin is opening"
+  "appOpeningSemantics": "Lookin is opening",
+  "appConfirmedIfYouAlsoReceivedAnEmail": "Confirmed. If you also received an email at your other address, confirm the change there too.",
+  "appNoConnectionToTheServerYourLink": "No connection to the server. Your link is probably still valid: reload the page or tap the email link again.",
+  "appYourResetLinkHasExpiredOrHas": "Your reset link has expired or has already been used. Request a new one using \"Forgot password?\".",
+  "appYourConfirmationLinkHasExpiredOrHas": "Your confirmation link has expired or has already been used. Sign in. If your address is not confirmed yet, you can request another confirmation email there."
 }

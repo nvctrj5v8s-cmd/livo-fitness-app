@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -107,7 +108,7 @@ class CoachChatController extends ChangeNotifier {
   static const historyRetentionDays = 90;
 
   /// Placeholder question stored for a photo analysis.
-  static const photoQuestion = '📷 Lebensmittel-Foto zur Analyse';
+  static String get photoQuestion => L10n.current.coachFoodPhotoForAnalysis;
 
   final AiCoachService _service;
   final DateTime Function() _now;
@@ -188,11 +189,11 @@ class CoachChatController extends ChangeNotifier {
     final text = rawText.trim();
     if (text.isEmpty) return false;
     if (text.length > maxMessageLength) {
-      _issue = const CoachChatIssue(
+      _issue = CoachChatIssue(
         kind: CoachIssueKind.invalidMessage,
-        message:
-            'Deine Frage ist zu lang. Bitte kürze sie auf höchstens '
-            '$maxMessageLength Zeichen.',
+        message: L10n.current.coachYourQuestionIsTooLongPleaseShorten(
+          (maxMessageLength).toString(),
+        ),
       );
       _notify();
       return false;
@@ -253,7 +254,7 @@ class CoachChatController extends ChangeNotifier {
       _entries.clear();
       _latestAnswerId = null;
       _historyLoaded = true;
-      _notice = 'Dein Chatverlauf wurde gelöscht.';
+      _notice = L10n.current.coachYourChatHistoryHasBeenDeleted;
       return true;
     } on AiCoachException catch (error) {
       _issue = _issueFor(error, retry: CoachRetryAction.clearHistory);
@@ -424,8 +425,7 @@ class CoachChatController extends ChangeNotifier {
       _ => CoachIssueKind.unavailable,
     };
     final message = kind == CoachIssueKind.premiumRequired
-        ? 'Der Lookin Coach ist Teil von Lookin Premium. Deine Testphase oder '
-              'dein Abo ist nicht mehr aktiv.'
+        ? L10n.current.coachTheLookinCoachIsPartOfLookin
         : error.message;
     return CoachChatIssue(kind: kind, message: message, retry: retry);
   }

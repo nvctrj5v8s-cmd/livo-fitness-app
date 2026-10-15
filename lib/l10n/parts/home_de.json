@@ -1,0 +1,100 @@
+{
+  "homeMealEntries": "{count, plural, =1{1 Eintrag} other{{count} Einträge}} · {calories} kcal",
+  "@homeMealEntries": {"placeholders": {"count": {"type": "int"}, "calories": {"type": "String"}}},
+  "homeAddValue": "{name} hinzufügen",
+  "@homeAddValue": {"placeholders": {"name": {"type": "String"}}},
+  "homeMonday": "Montag",
+  "homeTuesday": "Dienstag",
+  "homeWednesday": "Mittwoch",
+  "homeThursday": "Donnerstag",
+  "homeFriday": "Freitag",
+  "homeSaturday": "Samstag",
+  "homeSunday": "Sonntag",
+  "homeHelloValue": "Hallo, {arg0}",
+  "@homeHelloValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeReminders": "Erinnerungen",
+  "homeLoadingStreak": "Serie wird geladen",
+  "homeValueDayTrackingStreak": "{arg0} Tage Tracking-Serie",
+  "@homeValueDayTrackingStreak": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalEaten": "{arg0} kcal gegessen",
+  "@homeValueKcalEaten": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalRemaining": "{arg0} kcal übrig",
+  "@homeValueKcalRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueKcalAboveYourTarget": "{arg0} kcal über deinem Ziel",
+  "@homeValueKcalAboveYourTarget": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeKcalEaten": "kcal gegessen",
+  "homeValueRemaining": "{arg0} übrig",
+  "@homeValueRemaining": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeValueAbove": "{arg0} darüber",
+  "@homeValueAbove": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeYourDay": "Dein Tag",
+  "homeValueKcalTarget": "{arg0} kcal Ziel",
+  "@homeValueKcalTarget": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCarbohydrates": "Kohlenhydrate",
+  "homeFat": "Fett",
+  "homeYourMeals": "Deine Mahlzeiten",
+  "homeTapAMealToLogFood": "Tippe auf eine Mahlzeit, um Essen einzutragen.",
+  "homeNothingLoggedYet": "Noch nichts eingetragen",
+  "homeValuePValueCValueF": "{arg0} P · {arg1} K · {arg2} F",
+  "@homeValuePValueCValueF": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  }
+}

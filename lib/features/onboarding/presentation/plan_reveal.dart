@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
@@ -125,58 +126,62 @@ class _BuildStep {
 List<_BuildStep> _buildStepsFor(PersonalizationProfile profile) {
   final targets = DailyTargets.fromProfile(profile);
   final energyInputs = [
-    'Alter',
-    'Größe',
-    'Gewicht',
+    L10n.current.onboardingAge,
+    L10n.current.onboardingHeight,
+    L10n.current.onboardingWeight,
     if (profile.sex == BodySex.female || profile.sex == BodySex.male)
-      'Geschlecht',
-    if (profile.activity != null) 'Alltag',
+      L10n.current.onboardingSex,
+    if (profile.activity != null) L10n.current.onboardingDailyRoutine,
   ];
   final sorting = recipeSortingReasons(profile);
   return [
     if (targets.isReady) ...[
       _BuildStep(
         Icons.calculate_outlined,
-        'Energiebedarf aus ${joinGerman(energyInputs)} berechnen',
+        L10n.current.onboardingCalculateEnergyNeedsFromValue(
+          (joinGerman(energyInputs)).toString(),
+        ),
       ),
       _BuildStep(
         Icons.pie_chart_outline_rounded,
         profile.goal == PersonalGoal.loseWeight ||
                 profile.goal == PersonalGoal.buildStrength
-            ? 'Eiweiß und Fett passend zu deinem Ziel festlegen'
-            : 'Eiweiß und Fett aus deinem Gewicht ableiten',
+            ? L10n.current.onboardingSetProteinAndFatToFitYour
+            : L10n.current.onboardingEstimateProteinAndFatFromYourWeight,
       ),
       if (profile.weeksToTarget() case final weeks? when weeks > 0)
-        const _BuildStep(
+        _BuildStep(
           Icons.show_chart_rounded,
-          'Zeit bis zu deinem Wunschgewicht abschätzen',
+          L10n.current.onboardingEstimateTimeToYourTargetWeight,
         ),
     ] else if (targets.isPaused)
-      const _BuildStep(
+      _BuildStep(
         Icons.favorite_outline_rounded,
-        'Kalorienziele für dich bewusst weglassen',
+        L10n.current.onboardingIntentionallyLeaveOutCalorieTargetsForYou,
       )
     else
-      const _BuildStep(
+      _BuildStep(
         Icons.fact_check_outlined,
-        'Deine Antworten zusammenfassen',
+        L10n.current.onboardingSummariseYourAnswers,
       ),
     if (profile.allergies.trim().isNotEmpty)
-      const _BuildStep(
+      _BuildStep(
         Icons.no_food_outlined,
-        'Rezepte mit deinen Allergenen aussortieren',
+        L10n.current.onboardingFilterOutRecipesContainingYourAllergens,
       ),
     if (sorting.isNotEmpty)
       _BuildStep(
         Icons.restaurant_menu_rounded,
-        'Rezepte nach ${joinGerman(sorting)} sortieren',
+        L10n.current.onboardingSortRecipesByValue(
+          (joinGerman(sorting)).toString(),
+        ),
       ),
     if (profile.obstacles.isNotEmpty ||
         profile.motivations.isNotEmpty ||
         profile.experience != null)
-      const _BuildStep(
+      _BuildStep(
         Icons.auto_awesome_outlined,
-        'Deinem Coach deine Antworten als Hintergrund mitgeben',
+        L10n.current.onboardingGiveYourCoachYourAnswersAsBackground,
       ),
   ];
 }
@@ -231,7 +236,9 @@ class _ProgressOrb extends StatelessWidget {
   Widget build(BuildContext context) {
     final percent = (Curves.easeOut.transform(progress) * 100).round();
     return Semantics(
-      label: 'Plan wird erstellt, $percent Prozent',
+      label: context.l10n.onboardingCreatingPlanValuePerCent(
+        (percent).toString(),
+      ),
       excludeSemantics: true,
       child: SizedBox(
         width: 136,
@@ -406,9 +413,19 @@ class _PlanView extends StatelessWidget {
   final PersonalizationProfile profile;
   final Animation<double> animation;
 
-  static const _monthNames = [
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', //
-    'August', 'September', 'Oktober', 'November', 'Dezember',
+  static List<String> get _monthNames => [
+    L10n.current.onboardingJanuary,
+    L10n.current.onboardingFebruary,
+    L10n.current.onboardingMarch,
+    'April',
+    L10n.current.onboardingMay,
+    L10n.current.onboardingJune,
+    L10n.current.onboardingJuly, //
+    'August',
+    'September',
+    L10n.current.onboardingOctober,
+    'November',
+    L10n.current.onboardingDecember,
   ];
 
   Animation<double> _part(double start, double end) => CurvedAnimation(
@@ -455,8 +472,8 @@ class _PlanView extends StatelessWidget {
         const SizedBox(height: 18),
         _Appear(
           animation: _part(.4, .55),
-          child: const Text(
-            'Das macht Lookin jetzt für dich',
+          child: Text(
+            context.l10n.onboardingWhatLookinDoesForYouNow,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
           ),
         ),
@@ -472,9 +489,10 @@ class _PlanView extends StatelessWidget {
         const SizedBox(height: 6),
         _Appear(
           animation: _part(.8, 1),
-          child: const Text(
-            'Richtwerte zur Orientierung, keine medizinische Beratung. Du kannst '
-            'alles jederzeit im Profil anpassen.',
+          child: Text(
+            context
+                .l10n
+                .onboardingGuidelineValuesForOrientationNotMedicalAdvice,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 12,
@@ -494,23 +512,23 @@ class _PlanView extends StatelessWidget {
       if (profile.allergies.trim().isNotEmpty)
         (
           Icons.no_food_outlined,
-          'Rezepte mit deinen Allergenen blendet Lookin aus.',
+          L10n.current.onboardingLookinHidesRecipesContainingYourAllergens,
         ),
       if (sorting.isNotEmpty)
         (
           Icons.restaurant_menu_rounded,
-          'Rezepte erscheinen sortiert nach ${joinGerman(sorting)}.',
+          L10n.current.onboardingRecipesAreSortedByValue(
+            (joinGerman(sorting)).toString(),
+          ),
         ),
       if (profile.obstacles.isNotEmpty || profile.motivations.isNotEmpty)
         (
           Icons.psychology_outlined,
-          'Dein Coach kennt deine Ziele und Hürden und richtet Tipps daran '
-              'aus.',
+          L10n.current.onboardingYourCoachKnowsYourGoalsAndObstacles,
         ),
       (
         Icons.edit_note_rounded,
-        'Mahlzeiten per Suche oder Barcode eintragen – mit Premium auch per '
-            'Foto.',
+        L10n.current.onboardingLogMealsThroughSearchOrBarcodeAnd,
       ),
     ];
   }
@@ -551,9 +569,19 @@ class _TargetsCard extends StatelessWidget {
     // The rest of the energy, as carbohydrates (4 kcal per gram).
     final carbs = math.max(0, (calories - protein * 4 - fat * 9) / 4).round();
     final macros = [
-      ('Eiweiß', protein, protein * 4 / calories, AppColors.mint),
-      ('Kohlenhydrate', carbs, carbs * 4 / calories, AppColors.blue),
-      ('Fett', fat, fat * 9 / calories, AppColors.orange),
+      (
+        context.l10n.onboardingProtein,
+        protein,
+        protein * 4 / calories,
+        AppColors.mint,
+      ),
+      (
+        context.l10n.onboardingCarbohydrates,
+        carbs,
+        carbs * 4 / calories,
+        AppColors.blue,
+      ),
+      (context.l10n.onboardingFat, fat, fat * 9 / calories, AppColors.orange),
     ];
     return Container(
       padding: const EdgeInsets.all(20),
@@ -577,7 +605,7 @@ class _TargetsCard extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.local_fire_department_rounded,
@@ -587,7 +615,7 @@ class _TargetsCard extends StatelessWidget {
                   SizedBox(width: 6),
                   Flexible(
                     child: Text(
-                      'Dein Tagesrichtwert',
+                      context.l10n.onboardingYourDailyGuideline,
                       style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 13,
@@ -620,7 +648,9 @@ class _TargetsCard extends StatelessWidget {
                   ],
                 ),
                 key: const ValueKey('personal-summary-calories'),
-                semanticsLabel: '$calories Kilokalorien pro Tag',
+                semanticsLabel: context.l10n.onboardingValueKilocaloriesPerDay(
+                  (calories).toString(),
+                ),
               ),
               const SizedBox(height: 16),
               for (final (label, grams, share, color) in macros) ...[
@@ -715,16 +745,14 @@ class _NeutralCard extends StatelessWidget {
       color: AppColors.surfaceHigh,
       border: Border.all(color: AppColors.border),
     ),
-    child: const Row(
+    child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(Icons.tune_rounded, color: AppColors.primary),
         SizedBox(width: 12),
         Expanded(
           child: Text(
-            'Du hast keine Angaben gemacht. Darum berechnet Lookin noch keine '
-            'Tagesziele und sortiert Rezepte nicht für dich. Sobald du im '
-            'Profil etwas ergänzt, passt sich Lookin an.',
+            context.l10n.onboardingYouHaveNotProvidedAnyInformationLookin,
             style: TextStyle(height: 1.45),
           ),
         ),
@@ -742,15 +770,10 @@ class _PausedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = switch (status) {
       DailyTargetsStatus.professionalGuidance =>
-        'Für dich berechnet Lookin keine Kalorienziele. Tagebuch, Rezepte und '
-            'Coach kannst du trotzdem nutzen – deine Ziele besprichst du am '
-            'besten mit einer Ärztin, einem Arzt oder einer Ernährungsfachkraft.',
+        context.l10n.onboardingLookinDoesNotCalculateCalorieTargetsFor,
       DailyTargetsStatus.underage =>
-        'Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. '
-            'Rezepte, Tagebuch und Tipps kannst du trotzdem nutzen.',
-      _ =>
-        'Ohne Alter, Größe und Gewicht berechnet Lookin keine Tagesziele. Du '
-            'kannst sie jederzeit im Profil ergänzen.',
+        context.l10n.onboardingLookinDoesNotCalculateCalorieTargetsFor2,
+      _ => context.l10n.onboardingLookinDoesNotCalculateDailyTargetsWithout,
     };
     return Container(
       key: const ValueKey('personal-summary-paused'),
@@ -791,7 +814,7 @@ class _GoalCard extends StatelessWidget {
 
   String _weight(double kg) => imperial
       ? '${(kg * 2.2046226218).round()} lb'
-      : '${kg.toStringAsFixed(1).replaceAll('.', ',').replaceAll(',0', '')} kg';
+      : '${AppFormat.decimal(kg, maxDecimals: 1)} kg';
 
   @override
   Widget build(BuildContext context) {
@@ -806,7 +829,10 @@ class _GoalCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${_weight(target)} etwa im $dateLabel',
+            context.l10n.onboardingValueAroundValue(
+              (_weight(target)).toString(),
+              (dateLabel).toString(),
+            ),
             key: const ValueKey('personal-summary-date'),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
           ),
@@ -830,7 +856,9 @@ class _GoalCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Heute · ${_weight(current)}',
+                  context.l10n.onboardingTodayValue(
+                    (_weight(current)).toString(),
+                  ),
                   style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,
@@ -853,9 +881,10 @@ class _GoalCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             paceLabel == null
-                ? 'Grobe Schätzung – dein Körper hält sich nicht an Kalender.'
-                : 'Grobe Schätzung bei $paceLabel Tempo – dein Körper hält sich '
-                      'nicht an Kalender.',
+                ? context.l10n.onboardingARoughEstimateYourBodyDoesNot
+                : context.l10n.onboardingARoughEstimateAtAValuePace(
+                    (paceLabel).toString(),
+                  ),
             style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
           ),
         ],

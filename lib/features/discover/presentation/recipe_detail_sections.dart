@@ -1,3 +1,6 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/catalog_text.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -106,10 +109,10 @@ class RecipeIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     final tags = [
       for (final tag in recipe.tags)
-        if (tag != recipeForYouTag) tag,
+        if (tag != recipeForYouTag) DisplayText.of(tag),
     ];
     final compact = MediaQuery.sizeOf(context).width < 600;
-    final description = recipe.subtitle.trim();
+    final description = recipe.displaySubtitle.trim();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -127,7 +130,7 @@ class RecipeIntro extends StatelessWidget {
         Semantics(
           header: true,
           child: Text(
-            recipe.title,
+            recipe.displayTitle,
             style: Theme.of(
               context,
             ).textTheme.headlineLarge?.copyWith(fontSize: compact ? 30 : 38),
@@ -162,16 +165,34 @@ class RecipeFactsCard extends StatelessWidget {
     final servings = math.max(1, recipe.servings);
     final facts = <(IconData, String, String)>[
       if (recipe.minutes > 0)
-        (Icons.schedule_rounded, formatMinutes(recipe.minutes), 'Gesamtzeit'),
+        (
+          Icons.schedule_rounded,
+          formatMinutes(recipe.minutes),
+          context.l10n.discoverTotalTime,
+        ),
       if (prep > 0)
-        (Icons.content_cut_rounded, formatMinutes(prep), 'Vorbereitung'),
+        (
+          Icons.content_cut_rounded,
+          formatMinutes(prep),
+          context.l10n.discoverPreparation,
+        ),
       if (cook > 0)
-        (Icons.soup_kitchen_outlined, formatMinutes(cook), 'Kochen'),
-      (difficultyIcon(recipe.difficulty), recipe.difficulty, 'Schwierigkeit'),
+        (
+          Icons.soup_kitchen_outlined,
+          formatMinutes(cook),
+          context.l10n.discoverCooking,
+        ),
+      (
+        difficultyIcon(recipe.difficulty),
+        recipe.displayDifficulty,
+        context.l10n.discoverDifficulty,
+      ),
       (
         Icons.people_outline_rounded,
         '$servings',
-        servings == 1 ? 'Portion' : 'Portionen',
+        servings == 1
+            ? context.l10n.discoverServing
+            : context.l10n.discoverServings,
       ),
     ];
     final textScale = _textScale(context);
@@ -282,14 +303,17 @@ class RecipeNutritionCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Nährwerte',
+                  context.l10n.discoverNutrition,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
-              const _Pill('Richtwerte', icon: Icons.info_outline_rounded),
+              _Pill(
+                context.l10n.discoverGuidelineValues,
+                icon: Icons.info_outline_rounded,
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -300,21 +324,23 @@ class RecipeNutritionCard extends StatelessWidget {
               children: [
                 RecipeChoiceChip(
                   key: const Key('nutrition-per-portion'),
-                  label: 'pro Portion',
+                  label: context.l10n.discoverPerServing,
                   selected: !total,
                   onSelected: () => onShowTotal(false),
                 ),
                 RecipeChoiceChip(
                   key: const Key('nutrition-total'),
-                  label: 'für ${portionsLabel(portions)}',
+                  label: context.l10n.discoverForValue(
+                    (portionsLabel(portions)).toString(),
+                  ),
                   selected: total,
                   onSelected: () => onShowTotal(true),
                 ),
               ],
             )
           else
-            const Text(
-              'pro Portion',
+            Text(
+              context.l10n.discoverPerServing,
               style: TextStyle(color: AppColors.textMuted, fontSize: 13),
             ),
           const SizedBox(height: 14),
@@ -327,24 +353,24 @@ class RecipeNutritionCard extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 6),
           _NutrientRow(
-            label: 'Ballaststoffe',
+            label: context.l10n.discoverFibre,
             value: hasDetails ? formatNutrientGrams(values.fiber) : '–',
           ),
           _NutrientRow(
-            label: 'Zucker',
+            label: context.l10n.discoverSugar,
             value: hasDetails ? formatNutrientGrams(values.sugar) : '–',
           ),
           _NutrientRow(
-            label: 'Salz',
+            label: context.l10n.discoverSalt,
             value: hasDetails ? formatSaltGrams(values.salt) : '–',
           ),
           const SizedBox(height: 10),
           Text(
             known
-                ? 'Berechnet aus den Zutaten. Je nach Produkt und Zubereitung '
-                      'können die Werte abweichen.'
-                : 'Grobe Richtwerte. Eine vollständige Berechnung aus den '
-                      'Zutaten liegt für dieses Rezept noch nicht vor.',
+                ? context.l10n.discoverCalculatedFromTheIngredientsValuesMayVary
+                : context
+                      .l10n
+                      .discoverRoughGuidelineValuesACompleteCalculationBased,
             style: const TextStyle(
               color: AppColors.textMuted,
               fontSize: 12.5,
@@ -369,7 +395,7 @@ class _MacroTiles extends StatelessWidget {
       (
         Icons.local_fire_department_rounded,
         AppColors.orange,
-        'Energie',
+        context.l10n.discoverEnergy,
         formatKcal(values.calories),
       ),
       (
@@ -381,13 +407,13 @@ class _MacroTiles extends StatelessWidget {
       (
         Icons.grain_rounded,
         AppColors.blue,
-        'Kohlenhydrate',
+        context.l10n.discoverCarbohydrates,
         known ? formatNutrientGrams(values.carbohydrates) : '–',
       ),
       (
         Icons.water_drop_outlined,
         AppColors.purple,
-        'Fett',
+        context.l10n.discoverFat,
         known ? formatNutrientGrams(values.fat) : '–',
       ),
     ];
@@ -460,8 +486,12 @@ class _MacroSplit extends StatelessWidget {
   Widget build(BuildContext context) {
     final parts = [
       ('Protein', AppColors.mint, nutrition.protein * 4),
-      ('Kohlenhydrate', AppColors.blue, nutrition.carbohydrates * 4),
-      ('Fett', AppColors.purple, nutrition.fat * 9),
+      (
+        context.l10n.discoverCarbohydrates,
+        AppColors.blue,
+        nutrition.carbohydrates * 4,
+      ),
+      (context.l10n.discoverFat, AppColors.purple, nutrition.fat * 9),
     ];
     final total = parts.fold<double>(0, (sum, part) => sum + part.$3);
     if (total <= 0) return const SizedBox.shrink();
@@ -469,9 +499,9 @@ class _MacroSplit extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Anteil an der Energie',
-          style: TextStyle(
+        Text(
+          context.l10n.discoverEnergyShare,
+          style: const TextStyle(
             color: AppColors.textMuted,
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -556,7 +586,9 @@ class _NutrientRow extends StatelessWidget {
           ),
           Text(
             value,
-            semanticsLabel: value == '–' ? 'keine Angabe' : null,
+            semanticsLabel: value == '–'
+                ? context.l10n.discoverNotSpecified
+                : null,
             style: const TextStyle(
               color: AppColors.text,
               fontSize: 14,
@@ -580,7 +612,7 @@ class RecipeEquipmentSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DetailSectionTitle('Utensilien'),
+        DetailSectionTitle(context.l10n.discoverEquipment),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -634,8 +666,8 @@ class PortionCalculator extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Portionen',
+                  Text(
+                    context.l10n.discoverServings,
                     style: TextStyle(
                       color: AppColors.text,
                       fontSize: 15,
@@ -646,7 +678,7 @@ class PortionCalculator extends StatelessWidget {
                   Text(
                     changed
                         ? 'Original: ${portionsLabel(basePortions)}'
-                        : 'wie im Originalrezept',
+                        : context.l10n.discoverAsInTheOriginalRecipe,
                     style: const TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12.5,
@@ -659,7 +691,7 @@ class PortionCalculator extends StatelessWidget {
                 children: [
                   _StepButton(
                     icon: Icons.remove_rounded,
-                    tooltip: 'Eine Portion weniger',
+                    tooltip: context.l10n.discoverOneServingLess,
                     onPressed: canLess ? () => onChanged(less) : null,
                   ),
                   SizedBox(
@@ -683,7 +715,7 @@ class PortionCalculator extends StatelessWidget {
                   ),
                   _StepButton(
                     icon: Icons.add_rounded,
-                    tooltip: 'Eine Portion mehr',
+                    tooltip: context.l10n.discoverOneServingMore,
                     onPressed: canMore ? () => onChanged(more) : null,
                   ),
                 ],
@@ -696,7 +728,7 @@ class PortionCalculator extends StatelessWidget {
               child: TextButton.icon(
                 onPressed: () => onChanged(basePortions),
                 icon: const Icon(Icons.replay_rounded, size: 18),
-                label: const Text('Originalmenge'),
+                label: Text(context.l10n.discoverOriginalAmount),
               ),
             ),
           if (goalAction != null) ...[
@@ -760,20 +792,22 @@ class RecipeIngredientsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DetailSectionTitle(
-          'Zutaten',
+          context.l10n.discoverIngredients,
           trailing: ingredients.isEmpty
               ? null
               : ingredients.length == 1
-              ? '1 Zutat'
-              : '${ingredients.length} Zutaten',
+              ? context.l10n.discover1Ingredient
+              : context.l10n.discoverValueIngredients(
+                  (ingredients.length).toString(),
+                ),
         ),
         const SizedBox(height: 12),
         calculator,
         const SizedBox(height: 12),
         if (ingredients.isEmpty)
-          const SurfaceCard(
+          SurfaceCard(
             child: Text(
-              'Für dieses Rezept sind noch keine Zutatenmengen hinterlegt.',
+              context.l10n.discoverIngredientAmountsHaveNotBeenAddedFor,
               style: TextStyle(color: AppColors.textMuted, height: 1.45),
             ),
           )
@@ -809,10 +843,9 @@ class RecipeIngredientsSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Hake ab, was du schon da hast. Die Haken gelten nur, '
-                  'solange dieses Rezept geöffnet ist.',
+                  context.l10n.discoverTickWhatYouAlreadyHaveTicksOnly,
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12.5,
@@ -823,7 +856,7 @@ class RecipeIngredientsSection extends StatelessWidget {
               if (checked.isNotEmpty)
                 TextButton(
                   onPressed: onClearChecks,
-                  child: const Text('Zurücksetzen'),
+                  child: Text(context.l10n.discoverReset),
                 ),
             ],
           ),
@@ -847,9 +880,9 @@ class _IngredientRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final measure = ingredient.measure;
+    final measure = ingredient.displayMeasure;
     final grams = ingredient.gramsLabel;
-    final note = ingredient.note;
+    final note = ingredient.displayNote;
     return MergeSemantics(
       child: Semantics(
         checked: checked,
@@ -874,7 +907,7 @@ class _IngredientRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          ingredient.name,
+                          ingredient.displayName,
                           style: TextStyle(
                             color: checked
                                 ? AppColors.textMuted
@@ -971,12 +1004,12 @@ class RecipeStepsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DetailSectionTitle(
-          'Zubereitung',
+          context.l10n.discoverMethod,
           trailing: steps.isEmpty
               ? null
               : steps.length == 1
-              ? '1 Schritt'
-              : '${steps.length} Schritte',
+              ? context.l10n.discover1Step
+              : context.l10n.discoverValueSteps((steps.length).toString()),
         ),
         if (cookMode != null && steps.isNotEmpty) ...[
           const SizedBox(height: 12),
@@ -986,20 +1019,20 @@ class RecipeStepsSection extends StatelessWidget {
               key: const Key('cook-mode-start'),
               onPressed: () => cookMode(0),
               icon: const Icon(Icons.play_arrow_rounded),
-              label: const Text('Kochmodus starten'),
+              label: Text(context.l10n.discoverStartCookingMode),
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Ein Schritt pro Seite, große Schrift und Timer.',
+          Text(
+            context.l10n.discoverOneStepPerPageLargeTextAnd,
             style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
           ),
         ],
         const SizedBox(height: 12),
         if (steps.isEmpty)
-          const SurfaceCard(
+          SurfaceCard(
             child: Text(
-              'Für dieses Rezept ist noch keine Anleitung hinterlegt.',
+              context.l10n.discoverNoInstructionsHaveBeenAddedForThis,
               style: TextStyle(color: AppColors.textMuted, height: 1.45),
             ),
           )
@@ -1035,7 +1068,7 @@ class RecipeStepCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = step.title?.trim() ?? '';
+    final title = step.displayTitle?.trim() ?? '';
     return SurfaceCard(
       padding: const EdgeInsets.fromLTRB(14, 16, 16, 16),
       child: Row(
@@ -1053,7 +1086,11 @@ class RecipeStepCard extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     Text(
-                      title.isEmpty ? 'Schritt ${index + 1}' : title,
+                      title.isEmpty
+                          ? context.l10n.discoverStepValue(
+                              (index + 1).toString(),
+                            )
+                          : title,
                       style: const TextStyle(
                         color: AppColors.text,
                         fontSize: 16,
@@ -1067,7 +1104,7 @@ class RecipeStepCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  step.text,
+                  step.displayText,
                   style: const TextStyle(
                     color: AppColors.text,
                     fontSize: 15.5,
@@ -1095,7 +1132,7 @@ class StepNumber extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: 'Schritt $number',
+    label: context.l10n.discoverStepValue((number).toString()),
     child: ExcludeSemantics(
       child: Container(
         width: size,
@@ -1152,10 +1189,15 @@ class _TimerChip extends StatelessWidget {
     );
     final tap = onTap;
     if (tap == null) {
-      return Semantics(label: 'Dauer ${formatMinutes(minutes)}', child: chip);
+      return Semantics(
+        label: context.l10n.discoverDurationValue(
+          (formatMinutes(minutes)).toString(),
+        ),
+        child: chip,
+      );
     }
     return Tooltip(
-      message: 'Timer im Kochmodus öffnen',
+      message: context.l10n.discoverOpenTimerInCookingMode,
       child: InkWell(
         onTap: tap,
         borderRadius: BorderRadius.circular(99),
@@ -1199,14 +1241,14 @@ class ProTipBox extends StatelessWidget {
             child: Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(
-                    text: 'Profi-Tipp: ',
+                  TextSpan(
+                    text: context.l10n.discoverProTip,
                     style: TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  TextSpan(text: tip),
+                  TextSpan(text: CatalogText.of(tip)),
                 ],
               ),
               style: TextStyle(
@@ -1237,53 +1279,53 @@ class RecipePlusArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = details;
     final blocks = <Widget>[
-      if (data != null && data.commonMistakes.isNotEmpty)
+      if (data != null && data.displayCommonMistakes.isNotEmpty)
         _PlusBlock(
           key: const Key('plus-block-mistakes'),
           icon: Icons.report_gmailerrorred_rounded,
           color: AppColors.orange,
-          title: 'Darauf achten',
+          title: context.l10n.discoverThingsToWatch,
           initiallyExpanded: true,
-          child: _BulletList(items: data.commonMistakes),
+          child: _BulletList(items: data.displayCommonMistakes),
         ),
-      if (data != null && data.substitutions.isNotEmpty)
+      if (data != null && data.displaySubstitutions.isNotEmpty)
         _PlusBlock(
           key: const Key('plus-block-substitutions'),
           icon: Icons.swap_horiz_rounded,
           color: AppColors.mint,
-          title: 'Austausch-Möglichkeiten',
-          child: _BulletList(items: data.substitutions),
+          title: context.l10n.discoverSubstitutions,
+          child: _BulletList(items: data.displaySubstitutions),
         ),
-      if (data != null && data.mealPrep.trim().isNotEmpty)
+      if (data != null && data.displayMealPrep.trim().isNotEmpty)
         _PlusBlock(
           key: const Key('plus-block-meal-prep'),
           icon: Icons.inventory_2_outlined,
           color: AppColors.blue,
-          title: 'Meal-Prep & Aufbewahrung',
-          child: _Paragraph(data.mealPrep.trim()),
+          title: context.l10n.discoverMealPrepStorage,
+          child: _Paragraph(data.displayMealPrep.trim()),
         ),
-      if (data != null && data.variations.isNotEmpty)
+      if (data != null && data.displayVariations.isNotEmpty)
         _PlusBlock(
           key: const Key('plus-block-variations'),
           icon: Icons.auto_awesome_outlined,
           color: AppColors.purple,
-          title: 'Variationen',
-          child: _BulletList(items: data.variations),
+          title: context.l10n.discoverVariations,
+          child: _BulletList(items: data.displayVariations),
         ),
-      if (data != null && data.servingTip.trim().isNotEmpty)
+      if (data != null && data.displayServingTip.trim().isNotEmpty)
         _PlusBlock(
           key: const Key('plus-block-serving'),
           icon: Icons.restaurant_menu_rounded,
           color: AppColors.primary,
-          title: 'Serviervorschlag',
-          child: _Paragraph(data.servingTip.trim()),
+          title: context.l10n.discoverServingSuggestion,
+          child: _Paragraph(data.displayServingTip.trim()),
         ),
       if (recipe.ingredients.any((ingredient) => ingredient.nutrition != null))
         _PlusBlock(
           key: const Key('plus-block-breakdown'),
           icon: Icons.donut_small_outlined,
           color: AppColors.cyan,
-          title: 'Woher kommen die Nährwerte?',
+          title: context.l10n.discoverWhereDoTheNutritionValuesComeFrom,
           child: _NutritionBreakdown(recipe: recipe),
         ),
     ];
@@ -1294,10 +1336,10 @@ class RecipePlusArea extends StatelessWidget {
       children: [
         const DetailSectionTitle('Lookin $recipePlusLabel'),
         const SizedBox(height: 4),
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 16),
           child: Text(
-            'Extra-Wissen zu diesem Rezept.',
+            context.l10n.discoverExtraKnowledgeAboutThisRecipe,
             style: TextStyle(color: AppColors.textMuted, fontSize: 13),
           ),
         ),
@@ -1470,7 +1512,7 @@ class _NutritionBreakdown extends StatelessWidget {
       for (final ingredient in recipe.ingredients)
         if (ingredient.nutrition case final nutrition?)
           (
-            ingredient.name,
+            ingredient.displayName,
             ingredient.amountGrams / servings,
             nutrition.scaled(1 / servings),
           ),
@@ -1482,10 +1524,10 @@ class _NutritionBreakdown extends StatelessWidget {
       children: [
         Text(
           missing > 0
-              ? 'Pro Portion, aus den Katalogwerten der Zutaten. '
-                    '$missing ${missing == 1 ? 'Zutat hat' : 'Zutaten haben'} '
-                    'keine Katalogwerte und fehlt hier.'
-              : 'Pro Portion, aus den Katalogwerten der Zutaten.',
+              ? context.l10n.discoverMissingNutrition(missing)
+              : context
+                    .l10n
+                    .discoverPerServingBasedOnIngredientCatalogueValues2,
           style: const TextStyle(
             color: AppColors.textMuted,
             fontSize: 12.5,
@@ -1527,8 +1569,10 @@ class _NutritionBreakdown extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          '${RecipeIngredient.formatGrams(grams)} · '
-                          '${formatNutrientGrams(nutrition.protein)} Protein',
+                          context.l10n.discoverValueValueProtein(
+                            (RecipeIngredient.formatGrams(grams)).toString(),
+                            (formatNutrientGrams(nutrition.protein)).toString(),
+                          ),
                           style: const TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12.5,
@@ -1581,13 +1625,13 @@ class RecipePlusTeaser extends StatelessWidget {
   final VoidCallback onOpen;
   final bool trialAvailable;
 
-  static const benefits = [
-    'Profi-Tipps zu jedem Schritt',
-    'Häufige Fehler',
-    'Austausch-Zutaten',
-    'Meal-Prep & Aufbewahrung',
-    'Kochmodus mit Timern',
-    'An mein Ziel anpassen',
+  static List<String> get benefits => [
+    L10n.current.discoverProTipsForEveryStep,
+    L10n.current.discoverCommonMistakes,
+    L10n.current.discoverIngredientSubstitutions,
+    L10n.current.discoverMealPrepStorage,
+    L10n.current.discoverCookingModeWithTimers,
+    L10n.current.discoverAdaptToMyTarget,
   ];
 
   @override
@@ -1635,7 +1679,7 @@ class RecipePlusTeaser extends StatelessWidget {
                     const RecipePlusBadge(),
                     const SizedBox(height: 6),
                     Text(
-                      'Mehr Wissen zu jedem Rezept',
+                      context.l10n.discoverMoreKnowledgeForEveryRecipe,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -1646,9 +1690,10 @@ class RecipePlusTeaser extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Dieses Rezept kannst du komplett kostenlos nachkochen. '
-            '$recipePlusLabel ergänzt:',
+          Text(
+            context.l10n.discoverYouCanCookThisEntireRecipeFor(
+              (recipePlusLabel).toString(),
+            ),
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 14,
@@ -1693,9 +1738,13 @@ class RecipePlusTeaser extends StatelessWidget {
               icon: const Icon(Icons.workspace_premium_rounded),
               label: Text(
                 trialAvailable
-                    ? '$recipePlusLabel ${SubscriptionPlans.trialDays} Tage '
-                          'kostenlos testen'
-                    : '$recipePlusLabel ansehen',
+                    ? context.l10n.discoverTryValueFreeForValueDays(
+                        (recipePlusLabel).toString(),
+                        (SubscriptionPlans.trialDays).toString(),
+                      )
+                    : context.l10n.discoverViewValue(
+                        (recipePlusLabel).toString(),
+                      ),
                 textAlign: TextAlign.center,
               ),
             ),

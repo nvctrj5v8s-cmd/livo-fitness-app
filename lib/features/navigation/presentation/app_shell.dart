@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -24,15 +25,27 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   late DateTime _observedDiaryDay;
   Timer? _midnightTimer;
 
-  static const _items = [
-    _NavItem(Icons.menu_book_outlined, Icons.menu_book_rounded, 'Tagebuch'),
-    _NavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, 'KI'),
+  static List<_NavItem> get _items => [
+    _NavItem(
+      Icons.menu_book_outlined,
+      Icons.menu_book_rounded,
+      L10n.current.navigationDiary,
+    ),
+    _NavItem(
+      Icons.auto_awesome_outlined,
+      Icons.auto_awesome_rounded,
+      L10n.current.navigationAi,
+    ),
     _NavItem(
       Icons.restaurant_menu_outlined,
       Icons.restaurant_menu_rounded,
-      'Rezepte',
+      L10n.current.navigationRecipes,
     ),
-    _NavItem(Icons.person_outline_rounded, Icons.person_rounded, 'Profil'),
+    _NavItem(
+      Icons.person_outline_rounded,
+      Icons.person_rounded,
+      L10n.current.navigationProfile,
+    ),
   ];
 
   static const _addNavIndex = 2;
@@ -206,11 +219,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       destinations: [
                         for (var i = 0; i < _items.length; i++) ...[
                           if (i == _addNavIndex)
-                            const NavigationDestination(
+                            NavigationDestination(
                               key: Key('nav-quick-add'),
                               icon: _AddNavIcon(),
-                              label: 'Hinzufügen',
-                              tooltip: 'Mahlzeit hinzufügen',
+                              label: context.l10n.navigationAdd,
+                              tooltip: context.l10n.navigationAddMeal,
                             ),
                           NavigationDestination(
                             icon: Icon(_items[i].icon),
@@ -280,8 +293,8 @@ class _DesktopNavigation extends StatelessWidget {
         children: [
           const _Brand(),
           const SizedBox(height: 12),
-          const Text(
-            'Dein Alltag. Dein Rhythmus.',
+          Text(
+            context.l10n.navigationYourDayYourRhythm,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 11,
@@ -296,7 +309,7 @@ class _DesktopNavigation extends StatelessWidget {
               minimumSize: const Size.fromHeight(46),
             ),
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Hinzufügen'),
+            label: Text(context.l10n.navigationAdd),
           ),
           const SizedBox(height: 18),
           for (var index = 0; index < _AppShellState._items.length; index++)

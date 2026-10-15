@@ -1,0 +1,36 @@
+{
+  "allergiesAllergiesIntolerances": "Allergien & Unverträglichkeiten",
+  "allergiesSelect": "Auswählen",
+  "allergiesChange": "Ändern",
+  "allergiesNoneSpecified": "Keine angegeben",
+  "allergiesPossibleAllergenConflict": "Möglicher Allergenkonflikt",
+  "allergiesAllergyInformationMissing": "Allergieangaben fehlen",
+  "allergiesPleaseCheckTheIngredientsList": "Bitte Zutatenliste prüfen",
+  "allergiesTheAvailableProductOrIngredientInformationMentions": "Die verfügbaren Produkt-/Zutatenangaben nennen: {arg0}.",
+  "@allergiesTheAvailableProductOrIngredientInformationMentions": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "allergiesNoReliableAllergenOrIngredientInformationIs": "Zu diesem Eintrag liegen keine verlässlichen Allergen- oder Zutatenangaben vor.",
+  "allergiesNoneOfYourSelectedTriggersWereRecognised": "In den vorhandenen Angaben wurde kein gewählter Auslöser erkannt. Das ist keine Sicherheitsgarantie.",
+  "allergiesValueIfYouHaveAllergiesAlwaysCheck": "{arg0} Prüfe bei Allergien immer die aktuelle Verpackung und mögliche Kreuzkontamination.",
+  "@allergiesValueIfYouHaveAllergiesAlwaysCheck": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "allergiesWhatShouldTheAppTakeIntoAccount": "Was soll die App beachten?",
+  "allergiesClose": "Schließen",
+  "allergiesSelectKnownAllergensLactoseIsListedSeparately": "Wähle bekannte Allergene aus. Laktose ist separat als Unverträglichkeit aufgeführt.",
+  "allergiesOtherAllergiesIntolerances": "Weitere Allergien / Unverträglichkeiten",
+  "allergiesEGCoconutHistamine": "z. B. Kokos, Histamin",
+  "allergiesSeparateMultipleEntriesWithCommas": "Mehrere Angaben mit Komma trennen.",
+  "allergiesProductInformationMayBeMissingOrOutdated": "Produktangaben können fehlen oder veraltet sein. Prüfe bei einer Allergie immer die aktuelle Verpackung und mögliche Kreuzkontamination.",
+  "allergiesOptionalHealthInformationItIsSavedIn": "Freiwillige Gesundheitsangabe: Sie wird in deinem Konto gespeichert und dem Lookin Coach als Kontext mitgegeben, damit er nichts Unpassendes vorschlägt. Du kannst sie hier jederzeit ändern oder leeren.",
+  "allergiesSaveSelection": "Auswahl speichern"
+}

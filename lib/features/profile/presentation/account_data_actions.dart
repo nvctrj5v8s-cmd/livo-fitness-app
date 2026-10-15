@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -51,12 +52,12 @@ class _AccountDataActionsState extends State<AccountDataActions> {
       );
       _showStatus(
         location == null
-            ? 'Speichern abgebrochen.'
-            : 'Deine Daten wurden als JSON-Datei gespeichert.',
+            ? L10n.current.profileSavingCancelled
+            : L10n.current.profileYourDataHasBeenSavedAsA,
       );
     } catch (_) {
       _showStatus(
-        'Der Export hat nicht geklappt. Bitte pr\u00FCfe deine Verbindung und versuche es erneut.',
+        L10n.current.profileExportFailedPleaseCheckYourConnectionAnd,
         error: true,
       );
     } finally {
@@ -92,15 +93,15 @@ class _AccountDataActionsState extends State<AccountDataActions> {
     } on FunctionException catch (error) {
       _showStatus(
         error.status == 403
-            ? 'Das Passwort stimmt nicht. Dein Konto wurde nicht gel\u00F6scht.'
-            : 'Das Konto konnte nicht gel\u00F6scht werden. Bitte versuche es erneut.',
+            ? L10n.current.profileYourPasswordIsIncorrectYourAccountWas
+            : L10n.current.profileYourAccountCouldNotBeDeletedPlease,
         error: true,
       );
     } on StateError catch (error) {
       _showStatus(error.message.toString(), error: true);
     } catch (_) {
       _showStatus(
-        'Das Konto konnte nicht vollst\u00E4ndig gel\u00F6scht werden. Bitte pr\u00FCfe, ob du noch angemeldet bist.',
+        L10n.current.profileYourAccountCouldNotBeCompletelyDeleted,
         error: true,
       );
     } finally {
@@ -117,11 +118,11 @@ class _AccountDataActionsState extends State<AccountDataActions> {
           key: const Key('export-account-data'),
           onPressed: _busy ? null : _export,
           icon: const Icon(Icons.download_rounded),
-          label: const Text('Meine Daten exportieren'),
+          label: Text(context.l10n.profileExportMyData),
         ),
         const SizedBox(height: 8),
-        const Text(
-          'Der Export enth\u00E4lt auch Gesundheits- und Chatdaten. Bewahre die Datei sicher auf.',
+        Text(
+          context.l10n.profileTheExportAlsoContainsHealthAndChat,
           style: TextStyle(color: AppColors.textMuted, fontSize: 12),
         ),
         const SizedBox(height: 12),
@@ -130,7 +131,7 @@ class _AccountDataActionsState extends State<AccountDataActions> {
           onPressed: _busy ? null : _delete,
           style: OutlinedButton.styleFrom(foregroundColor: AppColors.error),
           icon: const Icon(Icons.person_remove_outlined),
-          label: const Text('Konto und Kontodaten l\u00F6schen'),
+          label: Text(context.l10n.profileDeleteAccountAndAccountData),
         ),
         if (_busy)
           const Padding(
@@ -184,17 +185,16 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Konto endg\u00FCltig l\u00F6schen?'),
+      title: Text(context.l10n.profilePermanentlyDeleteAccount),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Dein Konto${widget.email == null ? '' : ' (${widget.email})'} '
-              'und die dazugeh\u00F6rigen Daten werden gel\u00F6scht. '
-              'Das kann nicht r\u00FCckg\u00E4ngig gemacht werden. '
-              'Ein sp\u00E4teres Store-Abo m\u00FCsstest du separat im Store k\u00FCndigen.',
+              context.l10n.profileYourAccountValueAndItsAssociatedData(
+                (widget.email == null ? '' : ' (${widget.email})').toString(),
+              ),
             ),
             if (widget.storeSubscription) ...[
               const SizedBox(height: 14),
@@ -211,15 +211,13 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Dein Premium-Abo läuft weiter!',
+                    Text(
+                      context.l10n.profileYourPremiumSubscriptionWillContinue,
                       style: TextStyle(fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Das Löschen des Kontos kündigt dein Abo nicht. '
-                      'Der Store bucht weiter ab, bis du es dort kündigst. '
-                      'Kündige zuerst, dann lösche das Konto.',
+                    Text(
+                      context.l10n.profileDeletingYourAccountDoesNotCancelYour,
                     ),
                     if (widget.managementUri != null)
                       TextButton.icon(
@@ -227,7 +225,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                         onPressed: () =>
                             openExternalLink(context, widget.managementUri!),
                         icon: const Icon(Icons.open_in_new_rounded, size: 16),
-                        label: const Text('Abos im Store öffnen'),
+                        label: Text(context.l10n.profileOpenStoreSubscriptions),
                       ),
                   ],
                 ),
@@ -239,11 +237,11 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               obscureText: _obscure,
               autofillHints: const [AutofillHints.password],
               decoration: InputDecoration(
-                labelText: 'Passwort zur Best\u00E4tigung',
+                labelText: context.l10n.profilePasswordToConfirm,
                 suffixIcon: IconButton(
                   tooltip: _obscure
-                      ? 'Passwort anzeigen'
-                      : 'Passwort verbergen',
+                      ? context.l10n.profileShowPassword
+                      : context.l10n.profileHidePassword,
                   onPressed: () => setState(() => _obscure = !_obscure),
                   icon: Icon(
                     _obscure
@@ -260,14 +258,14 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Abbrechen'),
+          child: Text(context.l10n.profileCancel),
         ),
         FilledButton(
           onPressed: _password.text.isEmpty
               ? null
               : () => Navigator.pop(context, _password.text),
           style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-          child: const Text('Konto l\u00F6schen'),
+          child: Text(context.l10n.profileDeleteAccount),
         ),
       ],
     );

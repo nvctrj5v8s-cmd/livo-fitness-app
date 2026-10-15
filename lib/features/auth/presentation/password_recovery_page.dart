@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -41,7 +42,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       final auth = Supabase.instance.client.auth;
       await auth.updateUser(UserAttributes(password: _password.text));
       passwordSavedNotice.value =
-          'Dein neues Passwort ist gespeichert. Melde dich jetzt damit an.';
+          L10n.current.authYourNewPasswordHasBeenSavedSign;
       // A recovery link grants a temporary session. Require a fresh login.
       await auth.signOut(scope: SignOutScope.local);
     } on AuthException catch (error) {
@@ -51,7 +52,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => _error = 'Verbindung fehlgeschlagen. Bitte versuche es erneut.',
+          () => _error = L10n.current.authConnectionFailedPleaseTryAgain,
         );
       }
     } finally {
@@ -63,13 +64,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
     final text = '${error.code ?? ''} ${error.message}'.toLowerCase();
     if (text.contains('same_password') ||
         text.contains('different from the old')) {
-      return 'Das neue Passwort muss sich von deinem bisherigen unterscheiden.';
+      return L10n.current.authYourNewPasswordMustBeDifferentFrom;
     }
     if (text.contains('weak_password') || text.contains('at least')) {
-      return 'Das Passwort ist zu schwach. Wähle mindestens acht Zeichen.';
+      return L10n.current.authYourPasswordIsTooWeakPleaseUse;
     }
-    return 'Das Passwort konnte nicht gesetzt werden. Fordere unter '
-        '„Passwort vergessen?“ einen neuen Link an.';
+    return L10n.current.authYourPasswordCouldNotBeSetRequest;
   }
 
   Future<void> _cancel() async {
@@ -79,9 +79,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
       await Supabase.instance.client.auth.signOut(scope: SignOutScope.local);
     } catch (_) {
       if (mounted) {
-        setState(
-          () => _error = 'Abmelden fehlgeschlagen. Bitte versuche es erneut.',
-        );
+        setState(() => _error = L10n.current.authSignOutFailedPleaseTryAgain);
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -112,13 +110,11 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          'Neues Passwort',
+                          context.l10n.authNewPassword,
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Wähle ein neues Passwort. Danach meldest du dich damit erneut an.',
-                        ),
+                        Text(context.l10n.authChooseANewPasswordYouWillThen),
                         const SizedBox(height: 22),
                         TextFormField(
                           key: const Key('recovery-password'),
@@ -126,11 +122,11 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                           obscureText: _obscure,
                           autofillHints: const [AutofillHints.newPassword],
                           decoration: InputDecoration(
-                            labelText: 'Neues Passwort',
+                            labelText: context.l10n.authNewPassword,
                             suffixIcon: IconButton(
                               tooltip: _obscure
-                                  ? 'Passwort anzeigen'
-                                  : 'Passwort verbergen',
+                                  ? context.l10n.authShowPassword
+                                  : context.l10n.authHidePassword,
                               onPressed: () =>
                                   setState(() => _obscure = !_obscure),
                               icon: Icon(
@@ -142,7 +138,7 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                           ),
                           validator: (value) =>
                               value == null || value.length < 8
-                              ? 'Mindestens acht Zeichen.'
+                              ? context.l10n.authAtLeastEightCharacters
                               : null,
                         ),
                         const SizedBox(height: 14),
@@ -151,11 +147,11 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                           controller: _confirmation,
                           obscureText: _obscure,
                           autofillHints: const [AutofillHints.newPassword],
-                          decoration: const InputDecoration(
-                            labelText: 'Passwort wiederholen',
+                          decoration: InputDecoration(
+                            labelText: context.l10n.authRepeatPassword,
                           ),
                           validator: (value) => value != _password.text
-                              ? 'Die Passwörter stimmen nicht überein.'
+                              ? context.l10n.authThePasswordsDoNotMatch
                               : null,
                         ),
                         if (_error != null) ...[
@@ -176,12 +172,12 @@ class _PasswordRecoveryPageState extends State<PasswordRecoveryPage> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text('Passwort speichern'),
+                              : Text(context.l10n.authSavePassword),
                         ),
                         const SizedBox(height: 8),
                         TextButton(
                           onPressed: _busy ? null : _cancel,
-                          child: const Text('Abbrechen und zum Login'),
+                          child: Text(context.l10n.authCancelAndReturnToSignIn),
                         ),
                       ],
                     ),

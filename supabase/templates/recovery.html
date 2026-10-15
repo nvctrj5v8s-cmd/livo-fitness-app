@@ -1,3 +1,146 @@
+{{ if eq .Data.locale "en" }}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="supported-color-schemes" content="dark" />
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no" />
+    <title>Set a new password for Lookin</title>
+    <style>
+      @media (prefers-reduced-motion: no-preference) {
+        @keyframes lookin-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+        .rise { animation: lookin-rise 0.7s ease-out both; }
+        .rise-2 { animation: lookin-rise 0.7s ease-out 0.15s both; }
+      }
+      @media (max-width: 560px) {
+        .pad { padding-left: 22px !important; padding-right: 22px !important; }
+        .h1 { font-size: 25px !important; }
+      }
+      u + .body .gs { background:#000; mix-blend-mode:screen; }
+      u + .body .gd { background:#000; mix-blend-mode:difference; }
+    </style>
+  </head>
+  <body class="body" style="margin:0;padding:0;background-color:#050708;background-image:linear-gradient(#050708,#050708);">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#050708;">
+      Set a new password for your Lookin account now.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#050708;background-image:linear-gradient(#050708,#050708);">
+      <tr>
+        <td align="center" style="padding:28px 12px 40px 12px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;">
+            <!-- Kopf: Logo und Marke -->
+            <tr>
+              <td style="padding:0 6px 18px 6px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="48" style="padding-right:12px;">
+                      <img src="https://app.lookin-foodtracker.de/email/logo.gif" width="44" height="44" alt="" style="display:block;border:0;border-radius:12px;" />
+                    </td>
+                    <td style="font-family:Arial,Helvetica,sans-serif;font-size:26px;font-weight:900;letter-spacing:-1px;color:#F5F8F7;"><div class="gs"><div class="gd">
+                      Lookin<span style="color:#F5F8F7;">.</span>
+                    </div></div></td>
+                    <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#98A6A1;"><div class="gs"><div class="gd">
+                      <span style="display:inline-block;padding:6px 12px;border:1px solid #283633;border-radius:999px;">Sicherheit</span>
+                    </div></div></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Hauptkarte -->
+            <tr>
+              <td class="rise" style="background-color:#0E1414;background-image:linear-gradient(#0E1414,#0E1414);border:1px solid #283633;border-radius:24px;overflow:hidden;">
+                <img src="https://app.lookin-foodtracker.de/email/hero-recovery.gif" width="560" alt="" style="display:block;width:100%;max-width:560px;height:auto;border:0;border-radius:24px 24px 0 0;" />
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="pad" style="padding:8px 36px 34px 36px;font-family:Arial,Helvetica,sans-serif;">
+                      <div class="gs"><div class="gd"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F5F8F7;">Reset password</p></div></div>
+                      <div class="gs"><div class="gd"><h1 class="h1" style="margin:0 0 14px 0;font-size:29px;line-height:1.2;font-weight:800;color:#F5F8F7;">Set a new password</h1></div></div>
+                      <div class="gs"><div class="gd"><p style="margin:0 0 26px 0;font-size:16px;line-height:1.65;color:#C9D3D0;">
+                        A password reset link was requested for your Lookin account. Tap the button, choose a new password and then sign in with it.
+                      </p></div></div>
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td align="center" style="border-radius:16px;background-color:#C8FF5A;">
+                            <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=recovery" style="display:block;padding:17px 24px;font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:800;color:#050706;text-decoration:none;border-radius:16px;">Set password &rarr;</a>
+                          </td>
+                        </tr>
+                      </table>
+                      <div class="gs"><div class="gd"><p style="margin:14px 0 0 0;font-size:13px;line-height:1.5;color:#98A6A1;text-align:center;">
+                        The link can only be used once and expires after a limited time.
+                      </p></div></div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Sicherheitshinweise -->
+            <tr>
+              <td class="rise-2" style="padding:24px 6px 0 6px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#0E1414;background-image:linear-gradient(#0E1414,#0E1414);border:1px solid #283633;border-radius:20px;">
+                  <tr>
+                    <td style="padding:22px 24px 8px 24px;font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:800;color:#F5F8F7;"><div class="gs"><div class="gd">Tips for a secure password</div></div></td>
+                  </tr>
+                  <tr>
+                    <td style="padding:6px 24px 18px 24px;">
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="font-family:Arial,Helvetica,sans-serif;">
+                        <tr>
+                          <td width="40" valign="top" style="padding:8px 0;"><div style="width:26px;height:26px;line-height:26px;border-radius:13px;background-color:#C8FF5A;color:#050706;font-size:14px;font-weight:800;text-align:center;">&#10003;</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><div class="gs"><div class="gd"><strong style="color:#F5F8F7;">At least 8 characters</strong><br />Longer is more secure, for example a short sentence.</div></div></td>
+                        </tr>
+                        <tr>
+                          <td width="40" valign="top" style="padding:8px 0;"><div style="width:26px;height:26px;line-height:26px;border-radius:13px;background-color:#C8FF5A;color:#050706;font-size:14px;font-weight:800;text-align:center;">&#10003;</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><div class="gs"><div class="gd"><strong style="color:#F5F8F7;">Only for Lookin</strong><br />Do not reuse a password you already use elsewhere.</div></div></td>
+                        </tr>
+                        <tr>
+                          <td width="40" valign="top" style="padding:8px 0;"><div style="width:26px;height:26px;line-height:26px;border-radius:13px;background-color:#C8FF5A;color:#050706;font-size:14px;font-weight:800;text-align:center;">&#10003;</div></td>
+                          <td valign="top" style="padding:8px 0;font-size:15px;line-height:1.5;color:#C9D3D0;"><div class="gs"><div class="gd"><strong style="color:#F5F8F7;">Keep it private</strong><br />Lookin never asks for your password by email. Do not forward this email: the link signs you in directly.</div></div></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Nicht angefordert -->
+            <tr>
+              <td style="padding:16px 6px 0 6px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#131B1A;background-image:linear-gradient(#131B1A,#131B1A);border:1px solid #3A4A2A;border-radius:20px;">
+                  <tr>
+                    <td style="padding:18px 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#C9D3D0;"><div class="gs"><div class="gd">
+                      <strong style="color:#F5F8F7;">Was not you?</strong><br />
+                      Then ignore this email. Your password stays unchanged unless a new one is set using this link.
+                    </div></div></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <!-- Fußzeile -->
+            <tr>
+              <td style="padding:26px 10px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:#7C8A86;">
+                <div class="gs"><div class="gd"><p style="margin:18px 0 10px 0;">
+                  Button not working? Copy this link into your browser:<br />
+                  <a href="{{ .SiteURL }}?token_hash={{ .TokenHash }}&type=recovery" style="color:#98A6A1;word-break:break-all;">{{ .SiteURL }}?token_hash={{ .TokenHash }}&amp;type=recovery</a>
+                </p></div></div>
+                <div class="gs"><div class="gd"><p style="margin:0 0 10px 0;">
+                  This email was sent automatically. Replies are not read. For questions, contact us at <a href="mailto:lookinsupport@gmail.com" style="color:#F5F8F7;text-decoration:none;">lookinsupport@gmail.com</a>.
+                </p></div></div>
+                <div class="gs"><div class="gd"><p style="margin:0;">
+                  <a href="https://app.lookin-foodtracker.de/legal/en/datenschutz.html" style="color:#98A6A1;">Privacy</a> &nbsp;·&nbsp;
+                  <a href="https://app.lookin-foodtracker.de/legal/en/agb.html" style="color:#98A6A1;">Terms</a> &nbsp;·&nbsp;
+                  <a href="https://app.lookin-foodtracker.de/legal/en/impressum.html" style="color:#98A6A1;">Imprint</a>
+                </p></div></div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
+
+{{ else }}
 <!doctype html>
 <html lang="de">
   <head>
@@ -138,3 +281,5 @@
     </table>
   </body>
 </html>
+
+{{ end }}

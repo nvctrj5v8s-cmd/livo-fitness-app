@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:convert';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,7 +26,7 @@ class SupabaseDiaryRepository {
     const pageSize = 500;
     for (var offset = 0; ; offset += pageSize) {
       if (_client.auth.currentUser?.id != userId) {
-        throw StateError('Konto geändert.');
+        throw StateError(L10n.current.coreAccountChanged);
       }
       final rows = await _client
           .from('meals')
@@ -180,13 +181,13 @@ class SupabaseDiaryRepository {
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
-      throw StateError('Bitte melde dich an, bevor du etwas speicherst.');
+      throw StateError(L10n.current.corePleaseSignInBeforeSavingAnything);
     }
     if (amountGrams <= 0) {
       throw ArgumentError.value(
         amountGrams,
         'amountGrams',
-        'Muss größer als 0 sein.',
+        L10n.current.coreMustBeGreaterThan0,
       );
     }
 
@@ -234,7 +235,7 @@ class SupabaseDiaryRepository {
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
-      throw StateError('Bitte melde dich an, bevor du etwas speicherst.');
+      throw StateError(L10n.current.corePleaseSignInBeforeSavingAnything);
     }
     final custom = _CustomMeal(
       name: name,
@@ -276,7 +277,7 @@ class SupabaseDiaryRepository {
   }) async {
     final mealId = entry.remoteMealId;
     if (mealId == null || entry.foodId == null || amountGrams <= 0) {
-      throw ArgumentError('Der Lebensmitteleintrag ist unvollständig.');
+      throw ArgumentError(L10n.current.coreTheFoodEntryIsIncomplete);
     }
     await _client
         .from('meals')
@@ -302,7 +303,7 @@ class SupabaseDiaryRepository {
   }) async {
     final mealId = entry.remoteMealId;
     if (mealId == null) {
-      throw ArgumentError('Der Mahlzeiteneintrag ist nicht gespeichert.');
+      throw ArgumentError(L10n.current.coreTheMealEntryHasNotBeenSaved);
     }
     await _client
         .from('meals')
@@ -324,7 +325,7 @@ class SupabaseDiaryRepository {
   }) async {
     final mealId = entry.remoteMealId;
     if (mealId == null) {
-      throw ArgumentError('Der eigene Eintrag ist nicht gespeichert.');
+      throw ArgumentError(L10n.current.coreTheCustomEntryHasNotBeenSaved);
     }
     final custom = _CustomMeal(
       name: name,
@@ -362,7 +363,7 @@ class SupabaseDiaryRepository {
   }) async {
     final user = _client.auth.currentUser;
     if (user == null) {
-      throw StateError('Bitte melde dich an, bevor du etwas speicherst.');
+      throw StateError(L10n.current.corePleaseSignInBeforeSavingAnything);
     }
 
     final ingredientRows = await _client
@@ -385,7 +386,7 @@ class SupabaseDiaryRepository {
         .where((row) => (row['amount_grams'] as double) > 0)
         .toList();
     if (ingredients.isEmpty) {
-      throw StateError('Dieses Rezept hat noch keine gespeicherten Zutaten.');
+      throw StateError(L10n.current.coreThisRecipeHasNoSavedIngredientsYet);
     }
 
     final foodIds = ingredients

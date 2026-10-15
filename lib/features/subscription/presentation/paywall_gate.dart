@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -94,10 +95,12 @@ class _PaywallGateState extends State<PaywallGate> {
           : const Duration(milliseconds: 360),
       switchInCurve: Curves.easeOutCubic,
       child: switch (_showPaywall) {
-        null => const Scaffold(
+        null => Scaffold(
           key: ValueKey('paywall-gate-loading'),
           backgroundColor: AppColors.background,
-          body: Center(child: Text('Dein Lookin wird vorbereitet …')),
+          body: Center(
+            child: Text(context.l10n.subscriptionPreparingYourLookin),
+          ),
         ),
         true => KeyedSubtree(
           key: const ValueKey('paywall-gate-offer'),

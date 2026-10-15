@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -198,7 +199,9 @@ class _CookModePageState extends State<CookModePage> {
   void _alertFinished(int index) {
     unawaited(HapticFeedback.heavyImpact());
     unawaited(SystemSound.play(SystemSoundType.alert));
-    final message = 'Die Zeit für Schritt ${index + 1} ist um.';
+    final message = L10n.current.discoverTimeIsUpForStepValue(
+      (index + 1).toString(),
+    );
     unawaited(
       SemanticsService.sendAnnouncement(
         View.of(context),
@@ -214,7 +217,10 @@ class _CookModePageState extends State<CookModePage> {
         content: Text(message),
         action: index == _index
             ? null
-            : SnackBarAction(label: 'Zeigen', onPressed: () => _goTo(index)),
+            : SnackBarAction(
+                label: L10n.current.discoverShow,
+                onPressed: () => _goTo(index),
+              ),
       ),
     );
   }
@@ -253,17 +259,17 @@ class _CookModePageState extends State<CookModePage> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.surfaceHigh,
-        title: const Text('Kochmodus beenden?'),
-        content: const Text('Laufende Timer werden dabei gestoppt.'),
+        title: Text(L10n.current.discoverExitCookingMode),
+        content: Text(L10n.current.discoverRunningTimersWillBeStopped),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Weiterkochen'),
+            child: Text(L10n.current.discoverKeepCooking),
           ),
           FilledButton(
             key: const Key('cook-leave-confirm'),
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Beenden'),
+            child: Text(L10n.current.discoverExit),
           ),
         ],
       ),
@@ -302,13 +308,15 @@ class _CookModePageState extends State<CookModePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Zutaten',
+                                L10n.current.discoverIngredients,
                                 style: Theme.of(
                                   sheetContext,
                                 ).textTheme.headlineMedium,
                               ),
                               Text(
-                                'für ${portionsLabel(portions)}',
+                                L10n.current.discoverForValue(
+                                  (portionsLabel(portions)).toString(),
+                                ),
                                 style: const TextStyle(
                                   color: AppColors.textMuted,
                                 ),
@@ -318,7 +326,7 @@ class _CookModePageState extends State<CookModePage> {
                         ),
                         IconButton(
                           onPressed: () => Navigator.pop(sheetContext),
-                          tooltip: 'Schließen',
+                          tooltip: L10n.current.discoverClose,
                           icon: const Icon(Icons.close_rounded),
                         ),
                       ],
@@ -381,7 +389,7 @@ class _CookModePageState extends State<CookModePage> {
                       children: [
                         IconButton(
                           key: const Key('cook-close'),
-                          tooltip: 'Kochmodus beenden',
+                          tooltip: context.l10n.discoverExitCookingMode2,
                           onPressed: () => Navigator.maybePop(context),
                           icon: const Icon(Icons.close_rounded),
                         ),
@@ -391,7 +399,9 @@ class _CookModePageState extends State<CookModePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Kochmodus · ${widget.recipe.title}',
+                                context.l10n.discoverCookingModeValue(
+                                  (widget.recipe.displayTitle).toString(),
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -401,8 +411,11 @@ class _CookModePageState extends State<CookModePage> {
                               ),
                               Text(
                                 total == 0
-                                    ? 'Keine Schritte'
-                                    : 'Schritt ${_index + 1} von $total',
+                                    ? context.l10n.discoverNoSteps
+                                    : context.l10n.discoverStepValueOfValue(
+                                        (_index + 1).toString(),
+                                        (total).toString(),
+                                      ),
                                 key: const Key('cook-progress-label'),
                                 style: Theme.of(context).textTheme.titleMedium
                                     ?.copyWith(fontWeight: FontWeight.w800),
@@ -413,7 +426,7 @@ class _CookModePageState extends State<CookModePage> {
                         if (widget.recipe.ingredients.isNotEmpty)
                           IconButton(
                             key: const Key('cook-ingredients'),
-                            tooltip: 'Zutaten anzeigen',
+                            tooltip: context.l10n.discoverShowIngredients,
                             onPressed: _showIngredients,
                             icon: const Icon(
                               Icons.format_list_bulleted_rounded,
@@ -458,11 +471,19 @@ class _CookModePageState extends State<CookModePage> {
                                 ),
                                 label: Text(
                                   entry.value.running
-                                      ? 'Schritt ${entry.key + 1} · '
-                                            '${formatCountdown(entry.value.remaining(now))}'
-                                      : 'Schritt ${entry.key + 1} · Zeit ist um',
+                                      ? context.l10n.discoverStepValueValue(
+                                          (entry.key + 1).toString(),
+                                          (formatCountdown(
+                                            entry.value.remaining(now),
+                                          )).toString(),
+                                        )
+                                      : context.l10n.discoverStepValueTimeIsUp(
+                                          (entry.key + 1).toString(),
+                                        ),
                                 ),
-                                tooltip: 'Zu Schritt ${entry.key + 1}',
+                                tooltip: context.l10n.discoverGoToStepValue(
+                                  (entry.key + 1).toString(),
+                                ),
                                 backgroundColor: AppColors.surfaceHigh,
                                 side: const BorderSide(
                                   color: AppColors.borderBright,
@@ -479,12 +500,13 @@ class _CookModePageState extends State<CookModePage> {
                     ),
                   Expanded(
                     child: total == 0
-                        ? const Center(
+                        ? Center(
                             child: Padding(
                               padding: EdgeInsets.all(24),
                               child: Text(
-                                'Für dieses Rezept ist noch keine Anleitung '
-                                'hinterlegt.',
+                                context
+                                    .l10n
+                                    .discoverNoInstructionsHaveBeenAddedForThis,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -531,7 +553,7 @@ class _CookModePageState extends State<CookModePage> {
                                   ),
                                 ),
                                 icon: const Icon(Icons.arrow_back_rounded),
-                                label: const Text('Zurück'),
+                                label: Text(context.l10n.discoverBack),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -552,7 +574,11 @@ class _CookModePageState extends State<CookModePage> {
                                       ? Icons.check_rounded
                                       : Icons.arrow_forward_rounded,
                                 ),
-                                label: Text(last ? 'Fertig' : 'Weiter'),
+                                label: Text(
+                                  last
+                                      ? context.l10n.discoverDone
+                                      : context.l10n.discoverContinue,
+                                ),
                               ),
                             ),
                           ],
@@ -592,7 +618,7 @@ class _CookStepView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = step.title?.trim() ?? '';
+    final title = step.displayTitle?.trim() ?? '';
     final stepTimer = timer;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
@@ -610,7 +636,11 @@ class _CookStepView extends StatelessWidget {
                     child: Semantics(
                       header: true,
                       child: Text(
-                        title.isEmpty ? 'Schritt ${index + 1}' : title,
+                        title.isEmpty
+                            ? context.l10n.discoverStepValue(
+                                (index + 1).toString(),
+                              )
+                            : title,
                         style: const TextStyle(
                           color: AppColors.text,
                           fontSize: 26,
@@ -624,7 +654,7 @@ class _CookStepView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                step.text,
+                step.displayText,
                 style: const TextStyle(
                   color: AppColors.text,
                   fontSize: 22,
@@ -680,23 +710,35 @@ class _TimerPanel extends StatelessWidget {
       String status,
       Color statusColor,
     ) = timer.finished
-        ? (Icons.check_circle_rounded, 'Zeit ist um!', AppColors.primary)
+        ? (
+            Icons.check_circle_rounded,
+            context.l10n.discoverTimeIsUp,
+            AppColors.primary,
+          )
         : timer.running
-        ? (Icons.timelapse_rounded, 'Läuft', AppColors.orange)
+        ? (
+            Icons.timelapse_rounded,
+            context.l10n.discoverRunning,
+            AppColors.orange,
+          )
         : timer.pristine
         ? (
             Icons.timer_outlined,
             'Timer · ${formatMinutes(timer.total.inMinutes)}',
             AppColors.textMuted,
           )
-        : (Icons.pause_circle_outline_rounded, 'Pausiert', AppColors.textMuted);
+        : (
+            Icons.pause_circle_outline_rounded,
+            context.l10n.discoverPaused,
+            AppColors.textMuted,
+          );
     final (IconData actionIcon, String actionLabel) = timer.running
-        ? (Icons.pause_rounded, 'Pausieren')
+        ? (Icons.pause_rounded, context.l10n.discoverPause)
         : timer.finished
-        ? (Icons.replay_rounded, 'Neu starten')
+        ? (Icons.replay_rounded, context.l10n.discoverRestart)
         : timer.pristine
-        ? (Icons.play_arrow_rounded, 'Timer starten')
-        : (Icons.play_arrow_rounded, 'Fortsetzen');
+        ? (Icons.play_arrow_rounded, context.l10n.discoverStartTimer)
+        : (Icons.play_arrow_rounded, context.l10n.discoverResume);
     return Container(
       key: const Key('cook-timer'),
       padding: const EdgeInsets.all(16),
@@ -728,7 +770,9 @@ class _TimerPanel extends StatelessWidget {
                   ),
                 ),
                 Semantics(
-                  label: 'Verbleibende Zeit: ${spokenDuration(remaining)}',
+                  label: context.l10n.discoverTimeRemainingValue(
+                    (spokenDuration(remaining)).toString(),
+                  ),
                   child: ExcludeSemantics(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -791,7 +835,7 @@ class _TimerPanel extends StatelessWidget {
                           minimumSize: const Size(44, 54),
                         ),
                         icon: const Icon(Icons.replay_rounded),
-                        label: const Text('Zurücksetzen'),
+                        label: Text(context.l10n.discoverReset),
                       ),
                   ],
                 ),
@@ -811,8 +855,8 @@ class _CookIngredientRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final measure = ingredient.measure;
-    final note = ingredient.note;
+    final measure = ingredient.displayMeasure;
+    final note = ingredient.displayNote;
     return MergeSemantics(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12),
@@ -824,7 +868,7 @@ class _CookIngredientRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ingredient.name,
+                    ingredient.displayName,
                     style: const TextStyle(
                       color: AppColors.text,
                       fontSize: 17,

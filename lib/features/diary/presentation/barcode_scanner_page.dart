@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -85,7 +86,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
     if (_loading) return;
     setState(() {
       _loading = true;
-      _message = 'Produkt wird gesucht ...';
+      _message = L10n.current.diarySearchingForProduct;
     });
     try {
       final food = await BarcodeLookupService().lookup(code);
@@ -98,11 +99,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
         _loading = false;
         _message = switch (error.kind) {
           BarcodeErrorKind.notFound =>
-            'Dieses Produkt ist noch nicht in der Datenquelle. Du kannst es selbst eintragen.',
+            L10n.current.diaryThisProductIsNotInTheData,
           BarcodeErrorKind.notAllowed =>
-            'Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.',
+            L10n.current.diaryThisProductDoesNotMeetLookinS,
           BarcodeErrorKind.rateLimited =>
-            'Bitte kurz warten, bevor du den nächsten Barcode suchst.',
+            L10n.current.diaryPleaseWaitAMomentBeforeSearchingFor,
           _ => error.message,
         };
       });
@@ -111,7 +112,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _message = 'Barcode konnte gerade nicht verarbeitet werden.';
+        _message = L10n.current.diaryTheBarcodeCouldNotBeProcessedJust;
       });
     }
   }
@@ -124,13 +125,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
     final code = await showDialog<String>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Barcode eingeben'),
+        title: Text(L10n.current.diaryEnterBarcode),
         content: TextField(
           controller: textController,
           autofocus: true,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            hintText: 'z. B. 3017620422003',
+          decoration: InputDecoration(
+            hintText: L10n.current.diaryEG3017620422003,
             labelText: 'EAN / Barcode',
           ),
           onSubmitted: (value) => Navigator.pop(dialogContext, value),
@@ -138,11 +139,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Abbrechen'),
+            child: Text(L10n.current.diaryCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, textController.text),
-            child: const Text('Suchen'),
+            child: Text(L10n.current.diarySearch),
           ),
         ],
       ),
@@ -158,7 +159,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Barcode scannen')),
+      appBar: AppBar(title: Text(context.l10n.diaryScanBarcode)),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -252,7 +253,9 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
                         Expanded(
                           child: Text(
                             _message ??
-                                'Kamera aktiv – Barcode in den Rahmen halten',
+                                context
+                                    .l10n
+                                    .diaryCameraActiveHoldTheBarcodeInsideThe,
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -265,7 +268,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage>
                         foregroundColor: AppColors.primary,
                       ),
                       icon: const Icon(Icons.keyboard_rounded, size: 18),
-                      label: const Text('Barcode manuell eingeben'),
+                      label: Text(context.l10n.diaryEnterBarcodeManually),
                     ),
                   ],
                 ),

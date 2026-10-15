@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/models/app_models.dart';
@@ -45,12 +46,12 @@ class _DiaryPageState extends State<DiaryPage> {
               children: [
                 AnimatedReveal(
                   child: PageHeader(
-                    title: 'Tagebuch',
+                    title: context.l10n.diaryDiary,
                     subtitle:
-                        'Deine Mahlzeiten klar und ohne unnötigen Aufwand.',
+                        context.l10n.diaryYourMealsClearlyOrganisedAndEasyTo,
                     trailing: IconButton.filledTonal(
                       onPressed: () => widget.onAddMeal(controller.diaryDate),
-                      tooltip: 'Mahlzeit hinzufügen',
+                      tooltip: context.l10n.diaryAddMeal,
                       icon: const Icon(Icons.add_rounded),
                     ),
                   ),
@@ -96,15 +97,15 @@ class _DiaryPageState extends State<DiaryPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Dein Mahlzeitenrhythmus',
+                        Text(
+                          context.l10n.diaryYourMealRhythm,
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 6),
                         Text(controller.personalization!.routineLabel),
                         const SizedBox(height: 6),
-                        const Text(
-                          'Dein Wunsch, kein Muss. Du kannst jederzeit weitere Mahlzeiten eintragen.',
+                        Text(
+                          context.l10n.diaryYourPreferenceNotARequirementYouCan,
                           style: TextStyle(
                             color: AppColors.textMuted,
                             fontSize: 12,
@@ -118,8 +119,8 @@ class _DiaryPageState extends State<DiaryPage> {
                 AnimatedReveal(
                   delay: const Duration(milliseconds: 200),
                   child: SectionHeader(
-                    title: 'Mahlzeiten',
-                    action: 'Hinzufügen',
+                    title: context.l10n.diaryMeals,
+                    action: context.l10n.diaryAdd,
                     onAction: () => widget.onAddMeal(controller.diaryDate),
                   ),
                 ),
@@ -181,14 +182,22 @@ class _WeekSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const weekdayLabels = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    final weekdayLabels = [
+      context.l10n.diaryMon,
+      context.l10n.diaryTue,
+      context.l10n.diaryWed,
+      context.l10n.diaryThu,
+      context.l10n.diaryFri,
+      context.l10n.diarySat,
+      context.l10n.diarySun,
+    ];
     return Column(
       children: [
         Row(
           children: [
             IconButton.filledTonal(
               onPressed: onPrevious,
-              tooltip: 'Vorherige Woche',
+              tooltip: context.l10n.diaryPreviousWeek,
               icon: const Icon(Icons.chevron_left_rounded),
             ),
             Expanded(
@@ -196,7 +205,9 @@ class _WeekSelector extends StatelessWidget {
                 child: TextButton(
                   onPressed: onToday,
                   child: Text(
-                    '${dates.first.day.toString().padLeft(2, '0')}.${dates.first.month.toString().padLeft(2, '0')} - ${dates.last.day.toString().padLeft(2, '0')}.${dates.last.month.toString().padLeft(2, '0')}.${dates.last.year}',
+                    L10n.isEnglish
+                        ? '${AppFormat.dayMonth(dates.first)} – ${AppFormat.date(dates.last)}'
+                        : '${dates.first.day.toString().padLeft(2, '0')}.${dates.first.month.toString().padLeft(2, '0')} - ${dates.last.day.toString().padLeft(2, '0')}.${dates.last.month.toString().padLeft(2, '0')}.${dates.last.year}',
                     style: const TextStyle(
                       color: AppColors.text,
                       fontWeight: FontWeight.w700,
@@ -207,7 +218,7 @@ class _WeekSelector extends StatelessWidget {
             ),
             IconButton.filledTonal(
               onPressed: onNext,
-              tooltip: 'Nächste Woche',
+              tooltip: context.l10n.diaryNextWeek,
               icon: const Icon(Icons.chevron_right_rounded),
             ),
           ],
@@ -225,7 +236,9 @@ class _WeekSelector extends StatelessWidget {
               return Semantics(
                 button: true,
                 selected: active,
-                label: '${weekdayLabels[index]}, ${date.day}.${date.month}.',
+                label: L10n.isEnglish
+                    ? '${weekdayLabels[index]}, ${AppFormat.dayMonth(date)}'
+                    : '${weekdayLabels[index]}, ${date.day}.${date.month}.',
                 child: InkWell(
                   onTap: () => onSelected(date),
                   borderRadius: BorderRadius.circular(18),
@@ -324,13 +337,13 @@ class _DiarySummary extends StatelessWidget {
           Row(
             children: [
               _SummaryNumber(
-                label: 'Gegessen',
+                label: context.l10n.diaryEaten,
                 value: '${controller.diaryConsumedCalories}',
                 suffix: 'kcal',
               ),
               const _SummaryDivider(),
               _SummaryNumber(
-                label: 'Übrig',
+                label: context.l10n.diaryRemaining,
                 value: '${controller.diaryRemainingCalories}',
                 suffix: 'kcal',
                 accent: true,
@@ -360,10 +373,9 @@ class _DiarySummary extends StatelessWidget {
           _MacroOverview(controller: controller),
           if (controller.diaryRemainingCalories < 0) ...[
             const SizedBox(height: 14),
-            const _DiaryHint(
+            _DiaryHint(
               icon: Icons.info_outline_rounded,
-              text:
-                  'Du liegst über deinem Tagesziel. Das ist eine Orientierung, keine Bewertung.',
+              text: context.l10n.diaryYouAreAboveYourDailyTargetThis,
             ),
           ],
         ],
@@ -445,14 +457,14 @@ class _MacroOverview extends StatelessWidget {
       ),
       const SizedBox(height: 11),
       _MacroBar(
-        label: 'Kohlenhydrate',
+        label: context.l10n.diaryCarbohydrates,
         value: controller.diaryConsumedCarbs,
         goal: controller.diaryCarbohydrateGoal,
         color: AppColors.orange,
       ),
       const SizedBox(height: 11),
       _MacroBar(
-        label: 'Fett',
+        label: context.l10n.diaryFat,
         value: controller.diaryConsumedFat,
         goal: controller.diaryFatGoal,
         color: AppColors.purple,
@@ -581,13 +593,13 @@ class _MealList extends StatelessWidget {
               borderRadius: BorderRadius.circular(19),
               border: Border.all(color: AppColors.border),
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.add_rounded, color: AppColors.primary),
                 SizedBox(width: 7),
                 Text(
-                  'Weitere Mahlzeit',
+                  context.l10n.diaryAnotherMeal,
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w700,
@@ -654,14 +666,19 @@ class _MealRow extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    meal.name,
+                    meal.displayName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '$amountPrefix${meal.protein} P · ${meal.carbs} K · ${meal.fat} F',
+                    context.l10n.diaryValueValuePValueCValueF(
+                      (amountPrefix).toString(),
+                      (meal.protein).toString(),
+                      (meal.carbs).toString(),
+                      (meal.fat).toString(),
+                    ),
                     style: const TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 11,
@@ -722,13 +739,15 @@ class _HydrationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Wasser',
+                Text(
+                  context.l10n.diaryWater,
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  '${controller.waterGlasses} von 8 Gläsern',
+                  context.l10n.diaryValueOf8Glasses(
+                    (controller.waterGlasses).toString(),
+                  ),
                   style: const TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12,

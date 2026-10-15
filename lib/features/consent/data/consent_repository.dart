@@ -91,7 +91,7 @@ final class SupabaseConsentRepository implements ConsentRepository {
         'user_id': userId,
         'kind': kind.wire,
         'granted': granted,
-        'text_version': ConsentTexts.version,
+        'text_version': ConsentTexts.localizedVersion,
         'context': ?context,
       });
       return true;

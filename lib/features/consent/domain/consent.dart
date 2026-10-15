@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+
 /// Kinds of explicit consent Lookin asks for. The wire value matches the
 /// `kind` column of `public.user_consents` (migration 0017).
 enum ConsentKind {
@@ -22,35 +24,19 @@ enum ConsentKind {
 /// [version], so stored decisions can be traced to the text that was shown.
 abstract final class ConsentTexts {
   static const version = '2026-10-14';
+  static String get localizedVersion => '$version:${L10n.code}';
 
-  static const healthTitle = 'Gesundheitsangaben speichern';
-  static const health =
-      'Ich willige ein, dass Lookin meine freiwilligen Gesundheitsangaben '
-      '(Gewicht, Taillenumfang, Zielgewicht, Allergien und '
-      'Unverträglichkeiten sowie meine Antworten aus der Einführung wie '
-      'Geburtstag, Größe, Geschlecht und einen optionalen Gesundheitshinweis) '
-      'in meinem Konto speichert und für Richtwerte, Rezeptfilter und '
-      'Warnhinweise nutzt. So muss ich sie auf einem neuen Gerät nicht noch '
-      'einmal eingeben.';
+  static String get healthTitle => L10n.current.consentSaveHealthInformation;
+  static String get health =>
+      L10n.current.consentIConsentToLookinStoringMyOptional;
 
-  static const aiTitle = 'KI-Coach und KI-Foto nutzen';
-  static const ai =
-      'Ich willige ausdrücklich ein, dass meine Fragen, Fotos, die letzten '
-      'Chat-Nachrichten und folgende Angaben zur Beantwortung an den KI-Dienst '
-      'OpenAI übermittelt werden (Verarbeitung auch in den USA): Ziel, '
-      'Tageswerte, Ernährungsstil, Aktivität, Angaben aus der Einführung '
-      '(Motivation, Hürden, Erfahrung) und meine Allergien und '
-      'Unverträglichkeiten, also Gesundheitsdaten. Name und E-Mail werden '
-      'nicht übermittelt.';
+  static String get aiTitle => L10n.current.consentUseAiCoachAndAiPhoto;
+  static String get ai =>
+      L10n.current.consentIExpresslyConsentToMyQuestionsPhotos;
 
-  static const immediateStart =
-      'Ich verlange ausdrücklich, dass Lookin Premium sofort, also vor Ablauf '
-      'der Widerrufsfrist, beginnt. Mir ist bekannt, dass ich bei einem '
-      'Widerruf einen anteiligen Betrag für die bis dahin erbrachte Leistung '
-      'zahle und mein Widerrufsrecht bei vollständiger Vertragserfüllung '
-      'erlischt.';
+  static String get immediateStart =>
+      L10n.current.consentIExpresslyRequestThatLookinPremiumBegins;
 
-  static const revocableNote =
-      'Freiwillig. Du kannst jede Einwilligung jederzeit unter Profil › '
-      'Datenschutz & Daten widerrufen.';
+  static String get revocableNote =>
+      L10n.current.consentOptionalYouCanWithdrawEachConsentAt;
 }

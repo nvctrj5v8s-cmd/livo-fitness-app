@@ -2,6 +2,9 @@
 /// the models and are only formatted here.
 library;
 
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
+
 /// `1,5` – trailing zeros removed.
 String formatDecimalDe(double value, {int decimals = 1}) {
   var text = value.toStringAsFixed(decimals);
@@ -10,7 +13,7 @@ String formatDecimalDe(double value, {int decimals = 1}) {
         .replaceFirst(RegExp(r'0+$'), '')
         .replaceFirst(RegExp(r'\.$'), '');
   }
-  return text.replaceAll('.', ',');
+  return L10n.isEnglish ? text : text.replaceAll('.', ',');
 }
 
 /// `1.240`
@@ -18,7 +21,9 @@ String formatThousandsDe(int value) {
   final digits = value.abs().toString();
   final buffer = StringBuffer(value < 0 ? '-' : '');
   for (var i = 0; i < digits.length; i++) {
-    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write('.');
+    if (i > 0 && (digits.length - i) % 3 == 0) {
+      buffer.write(L10n.isEnglish ? ',' : '.');
+    }
     buffer.write(digits[i]);
   }
   return buffer.toString();
@@ -37,10 +42,15 @@ String formatSaltGrams(double grams) =>
 
 /// `24 Min.`, `1 Std. 10 Min.`
 String formatMinutes(int minutes) {
-  if (minutes < 60) return '$minutes Min.';
+  if (minutes < 60) return L10n.current.discoverValueMin((minutes).toString());
   final hours = minutes ~/ 60;
   final rest = minutes % 60;
-  return rest == 0 ? '$hours Std.' : '$hours Std. $rest Min.';
+  return rest == 0
+      ? L10n.current.discoverValueHr((hours).toString())
+      : L10n.current.discoverValueHrValueMin(
+          (hours).toString(),
+          (rest).toString(),
+        );
 }
 
 /// `07:59` or `1:05:00`.
@@ -65,13 +75,14 @@ String spokenDuration(Duration duration) {
   final minutes = totalSeconds ~/ 60;
   final seconds = totalSeconds % 60;
   final parts = [
-    if (minutes > 0) '$minutes ${minutes == 1 ? 'Minute' : 'Minuten'}',
+    if (minutes > 0) L10n.current.discoverSpokenMinutes(minutes),
     if (seconds > 0 || minutes == 0)
-      '$seconds ${seconds == 1 ? 'Sekunde' : 'Sekunden'}',
+      L10n.current.discoverSpokenSeconds(seconds),
   ];
   return parts.join(' ');
 }
 
 /// "1 Zutat", "3 Zutaten".
-String countText(int count, String singular, String plural) =>
-    count == 1 ? '1 $singular' : '$count $plural';
+String countText(int count, String singular, String plural) => count == 1
+    ? '1 ${DisplayText.of(singular)}'
+    : '$count ${DisplayText.of(plural)}';

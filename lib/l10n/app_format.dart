@@ -37,7 +37,7 @@ abstract final class AppFormat {
     if (text.contains('.')) {
       final parts = text.split('.');
       final whole = integer(int.parse(parts[0]).abs(), code: code);
-      final sign = value < 0 && parts[0] != '-0' ? '-' : '';
+      final sign = value < 0 ? '-' : '';
       return '$sign$whole${_en(code) ? '.' : ','}${parts[1]}';
     }
     return integer(num.parse(text), code: code);

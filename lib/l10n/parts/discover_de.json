@@ -1,0 +1,591 @@
+{
+  "discoverHiddenForAllergies": "{count, plural, =1{1 Rezept} other{{count} Rezepte}} wegen deiner Allergieangaben ausgeblendet.",
+  "@discoverHiddenForAllergies": {"placeholders": {"count": {"type": "int"}}},
+  "discoverAllergyLogWarning": "Die Zutatenangaben nennen möglicherweise: {conflicts}. Prüfe die Packungen und mögliche Kreuzkontamination. Möchtest du das Rezept trotzdem protokollieren?",
+  "@discoverAllergyLogWarning": {"placeholders": {"conflicts": {"type": "String"}}},
+  "discoverLogAnyway": "Trotzdem protokollieren",
+  "discoverEnergyShare": "Anteil an der Energie",
+  "discoverSpokenMinutes": "{count, plural, =1{1 Minute} other{{count} Minuten}}",
+  "@discoverSpokenMinutes": {"placeholders": {"count": {"type": "int"}}},
+  "discoverSpokenSeconds": "{count, plural, =1{1 Sekunde} other{{count} Sekunden}}",
+  "@discoverSpokenSeconds": {"placeholders": {"count": {"type": "int"}}},
+  "discoverMissingNutrition": "Pro Portion, aus den Katalogwerten der Zutaten. {count, plural, =1{1 Zutat hat keine Katalogwerte und fehlt hier.} other{{count} Zutaten haben keine Katalogwerte und fehlen hier.}}",
+  "@discoverMissingNutrition": {"placeholders": {"count": {"type": "int"}}},
+  "discoverServingUnit": "Portion",
+  "discoverServingsUnit": "Portionen",
+  "discoverTbsp": "EL",
+  "discoverTsp": "TL",
+  "discoverPinch": "Msp.",
+  "discoverPack": "Pck.",
+  "discoverPack2": "Pkg.",
+  "discoverPiece": "Stk.",
+  "discoverPiece2": "Stück",
+  "discoverBunch": "Bund",
+  "discoverHandful": "Handvoll",
+  "discoverPot": "Becher",
+  "discoverDash": "Spritzer",
+  "discoverBag": "Beutel",
+  "discoverCube": "Würfel",
+  "discoverBreadRoll": "Brötchen",
+  "discoverPeppers": "Paprika",
+  "discoverPinches": "Prisen",
+  "discoverCloves": "Zehen",
+  "discoverFillets": "Filets",
+  "discoverTins": "Dosen",
+  "discoverSlices": "Scheiben",
+  "discoverCups": "Tassen",
+  "discoverPacks": "Packungen",
+  "discoverBulbs": "Knollen",
+  "discoverOnions": "Zwiebeln",
+  "discoverSticks": "Stangen",
+  "discoverSprigs": "Zweige",
+  "discoverLeaves": "Blätter",
+  "discoverEggs": "Eier",
+  "discoverTomatoes": "Tomaten",
+  "discoverBalls": "Kugeln",
+  "discoverPods": "Schoten",
+  "discoverTubes": "Tuben",
+  "discoverPinches2": "Messerspitzen",
+  "discoverGlasses": "Gläser",
+  "discoverBananas": "Bananen",
+  "discoverLemons": "Zitronen",
+  "discoverLimes": "Limetten",
+  "discoverCarrots": "Karotten",
+  "discoverCarrots2": "Möhren",
+  "discoverCucumbers": "Gurken",
+  "discoverApples": "Äpfel",
+  "discoverPotatoes": "Kartoffeln",
+  "discoverSweetPotatoes": "Süßkartoffeln",
+  "discoverSpringOnions": "Frühlingszwiebeln",
+  "discoverChillies": "Chilischoten",
+  "discoverFlatbreads": "Fladenbrote",
+  "discoverServings": "Portionen",
+  "discoverWhatCanICook": "Was kann ich kochen?",
+  "discoverRecipesUsingWhatYouHaveAtHome": "Rezepte mit dem, was du zu Hause hast",
+  "discoverBack": "Zurück",
+  "discoverSelectWhatYouHaveAtHomeLookin": "Wähle, was du zu Hause hast. Lookin zeigt Rezepte mit diesen Zutaten – die mit den wenigsten fehlenden zuerst.",
+  "discoverIHaveThese": "Das habe ich da",
+  "discoverEnterAnIngredientEGPotatoes": "Zutat eingeben, z. B. Kartoffeln",
+  "discoverAddIngredient": "Zutat hinzufügen",
+  "discoverRemoveValue": "{arg0} entfernen",
+  "@discoverRemoveValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverCommonIngredients": "Häufige Zutaten",
+  "discoverBasicIngredientsAreAvailable": "Grundzutaten sind vorhanden",
+  "discoverWhatDoYouHaveAtHome": "Was hast du zu Hause?",
+  "discoverTapACommonIngredientOrEnterOne": "Tippe auf eine häufige Zutat oder gib selbst etwas ein, zum Beispiel „Kartoffeln“.",
+  "discoverNoMatchingRecipes": "Keine passenden Rezepte",
+  "discoverNoRecipeFoundWithTheseIngredients": "Kein Rezept mit diesen Zutaten gefunden.",
+  "discoverTryAnotherIngredientOrADifferentName": "Probiere eine weitere Zutat oder einen anderen Namen, zum Beispiel „Nudeln“ statt „Spaghetti“.",
+  "discoverEverythingAvailable": "Alles da",
+  "discover1IngredientMissing": "1 Zutat fehlt",
+  "discoverValueIngredientsMissing": "{arg0} Zutaten fehlen",
+  "@discoverValueIngredientsMissing": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueOfValueIngredientsAvailable": "{arg0} von {arg1} Zutaten vorhanden",
+  "@discoverValueOfValueIngredientsAvailable": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueOfValueAvailable": "{arg0} von {arg1} da",
+  "@discoverValueOfValueAvailable": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverYouHave": "Hast du",
+  "discoverMissing": "Fehlt",
+  "discoverBasicIngredients": "Grundzutaten",
+  "discoverTimeIsUpForStepValue": "Die Zeit für Schritt {arg0} ist um.",
+  "@discoverTimeIsUpForStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverShow": "Zeigen",
+  "discoverExitCookingMode": "Kochmodus beenden?",
+  "discoverRunningTimersWillBeStopped": "Laufende Timer werden dabei gestoppt.",
+  "discoverKeepCooking": "Weiterkochen",
+  "discoverExit": "Beenden",
+  "discoverIngredients": "Zutaten",
+  "discoverForValue": "für {arg0}",
+  "@discoverForValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverClose": "Schließen",
+  "discoverExitCookingMode2": "Kochmodus beenden",
+  "discoverCookingModeValue": "Kochmodus · {arg0}",
+  "@discoverCookingModeValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverNoSteps": "Keine Schritte",
+  "discoverStepValueOfValue": "Schritt {arg0} von {arg1}",
+  "@discoverStepValueOfValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverShowIngredients": "Zutaten anzeigen",
+  "discoverStepValueValue": "Schritt {arg0} · {arg1}",
+  "@discoverStepValueValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverStepValueTimeIsUp": "Schritt {arg0} · Zeit ist um",
+  "@discoverStepValueTimeIsUp": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverGoToStepValue": "Zu Schritt {arg0}",
+  "@discoverGoToStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverNoInstructionsHaveBeenAddedForThis": "Für dieses Rezept ist noch keine Anleitung hinterlegt.",
+  "discoverDone": "Fertig",
+  "discoverContinue": "Weiter",
+  "discoverStepValue": "Schritt {arg0}",
+  "@discoverStepValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTimeIsUp": "Zeit ist um!",
+  "discoverRunning": "Läuft",
+  "discoverPaused": "Pausiert",
+  "discoverPause": "Pausieren",
+  "discoverRestart": "Neu starten",
+  "discoverStartTimer": "Timer starten",
+  "discoverResume": "Fortsetzen",
+  "discoverTimeRemainingValue": "Verbleibende Zeit: {arg0}",
+  "@discoverTimeRemainingValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverReset": "Zurücksetzen",
+  "discoverMatchingRecipes": "Passende Rezepte",
+  "discoverForYou": "Für dich",
+  "discoverAllRecipes": "Alle Rezepte",
+  "discoverRecipes": "Rezepte",
+  "discoverIdeasThatFitYourGoalAndYour": "Ideen, die zu deinem Ziel und deinem Alltag passen.",
+  "discoverValueHiddenBecauseOfYourAllergyInformation": "{arg0} wegen deiner Allergieangaben ausgeblendet.",
+  "@discoverValueHiddenBecauseOfYourAllergyInformation": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSortedForYouByValueSortingDoes": "Für dich sortiert nach {arg0}. Die Sortierung blendet keine Rezepte aus.",
+  "@discoverSortedForYouByValueSortingDoes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSearchRecipesOrIngredients": "Rezepte oder Zutaten suchen",
+  "discoverClearSearch": "Suche löschen",
+  "discover1Recipe": "1 Rezept",
+  "discoverValueRecipes": "{arg0} Rezepte",
+  "@discoverValueRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverResetAllFilters": "Alle Filter zurücksetzen",
+  "discoverQuickUnder15Min": "Schnell unter 15 Min.",
+  "discoverNoRecipeMatchesYourSelection": "Kein Rezept passt zu deiner Auswahl.",
+  "discoverYouHaveNoFavouritesYetTapA": "Du hast noch keine Favoriten. Tippe auf das Herz eines Rezepts, um es dir zu merken.",
+  "discoverTryAnotherSearchTermOrRemoveA": "Probiere einen anderen Suchbegriff oder entferne einen Filter.",
+  "discoverRemoveFromFavourites": "Aus Favoriten entfernen",
+  "discoverAddToFavourites": "Zu Favoriten hinzufügen",
+  "discoverValueGProtein": "{arg0} g Protein",
+  "@discoverValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discover1ServingIsNowListedUnderValue": "1 Portion steht jetzt unter „{arg0}“ im Tagebuch.",
+  "@discover1ServingIsNowListedUnderValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTheRecipeCouldNotBeLogged": "Das Rezept konnte nicht eingetragen werden.",
+  "discoverAllergyNotice": "Allergiehinweis",
+  "discoverTheIngredientInformationMayMentionValueCheck": "Die Zutatenangaben nennen möglicherweise: {arg0}. Prüfe die Packungen und mögliche Kreuzkontamination. Möchtest du das Rezept trotzdem {arg1}?",
+  "@discoverTheIngredientInformationMayMentionValueCheck": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverCancel": "Abbrechen",
+  "discoverValueAnyway": "Trotzdem {arg0}",
+  "@discoverValueAnyway": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverEnjoyYourMeal": "Guten Appetit!",
+  "discoverLog": "Eintragen",
+  "discoverAdaptToMyTarget": "An mein Ziel anpassen",
+  "discoverAdaptToMyTargetValue": "An mein Ziel anpassen · {arg0}",
+  "@discoverAdaptToMyTargetValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSaving": "Wird gespeichert …",
+  "discoverLog1ServingInDiary": "1 Portion zum Tagebuch",
+  "discoverValueKcalValueGProtein": "{arg0} kcal · {arg1} g Protein",
+  "@discoverValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTotalTime": "Gesamtzeit",
+  "discoverPreparation": "Vorbereitung",
+  "discoverCooking": "Kochen",
+  "discoverDifficulty": "Schwierigkeit",
+  "discoverServing": "Portion",
+  "discoverNutrition": "Nährwerte",
+  "discoverGuidelineValues": "Richtwerte",
+  "discoverPerServing": "pro Portion",
+  "discoverFibre": "Ballaststoffe",
+  "discoverSugar": "Zucker",
+  "discoverSalt": "Salz",
+  "discoverCalculatedFromTheIngredientsValuesMayVary": "Berechnet aus den Zutaten. Je nach Produkt und Zubereitung können die Werte abweichen.",
+  "discoverRoughGuidelineValuesACompleteCalculationBased": "Grobe Richtwerte. Eine vollständige Berechnung aus den Zutaten liegt für dieses Rezept noch nicht vor.",
+  "discoverEnergy": "Energie",
+  "discoverCarbohydrates": "Kohlenhydrate",
+  "discoverFat": "Fett",
+  "discoverNotSpecified": "keine Angabe",
+  "discoverEquipment": "Utensilien",
+  "discoverAsInTheOriginalRecipe": "wie im Originalrezept",
+  "discoverOneServingLess": "Eine Portion weniger",
+  "discoverOneServingMore": "Eine Portion mehr",
+  "discoverOriginalAmount": "Originalmenge",
+  "discover1Ingredient": "1 Zutat",
+  "discoverValueIngredients": "{arg0} Zutaten",
+  "@discoverValueIngredients": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverIngredientAmountsHaveNotBeenAddedFor": "Für dieses Rezept sind noch keine Zutatenmengen hinterlegt.",
+  "discoverTickWhatYouAlreadyHaveTicksOnly": "Hake ab, was du schon da hast. Die Haken gelten nur, solange dieses Rezept geöffnet ist.",
+  "discoverMethod": "Zubereitung",
+  "discover1Step": "1 Schritt",
+  "discoverValueSteps": "{arg0} Schritte",
+  "@discoverValueSteps": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverStartCookingMode": "Kochmodus starten",
+  "discoverOneStepPerPageLargeTextAnd": "Ein Schritt pro Seite, große Schrift und Timer.",
+  "discoverDurationValue": "Dauer {arg0}",
+  "@discoverDurationValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverOpenTimerInCookingMode": "Timer im Kochmodus öffnen",
+  "discoverProTip": "Profi-Tipp: ",
+  "discoverThingsToWatch": "Darauf achten",
+  "discoverSubstitutions": "Austausch-Möglichkeiten",
+  "discoverMealPrepStorage": "Meal-Prep & Aufbewahrung",
+  "discoverVariations": "Variationen",
+  "discoverServingSuggestion": "Serviervorschlag",
+  "discoverWhereDoTheNutritionValuesComeFrom": "Woher kommen die Nährwerte?",
+  "discoverExtraKnowledgeAboutThisRecipe": "Extra-Wissen zu diesem Rezept.",
+  "discoverPerServingBasedOnIngredientCatalogueValues": "Pro Portion, aus den Katalogwerten der Zutaten. {arg0} {arg1} keine Katalogwerte und fehlt hier.",
+  "@discoverPerServingBasedOnIngredientCatalogueValues": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverPerServingBasedOnIngredientCatalogueValues2": "Pro Portion, aus den Katalogwerten der Zutaten.",
+  "discoverValueValueProtein": "{arg0} · {arg1} Protein",
+  "@discoverValueValueProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverProTipsForEveryStep": "Profi-Tipps zu jedem Schritt",
+  "discoverCommonMistakes": "Häufige Fehler",
+  "discoverIngredientSubstitutions": "Austausch-Zutaten",
+  "discoverCookingModeWithTimers": "Kochmodus mit Timern",
+  "discoverMoreKnowledgeForEveryRecipe": "Mehr Wissen zu jedem Rezept",
+  "discoverYouCanCookThisEntireRecipeFor": "Dieses Rezept kannst du komplett kostenlos nachkochen. {arg0} ergänzt:",
+  "@discoverYouCanCookThisEntireRecipeFor": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTryValueFreeForValueDays": "{arg0} {arg1} Tage kostenlos testen",
+  "@discoverTryValueFreeForValueDays": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverViewValue": "{arg0} ansehen",
+  "@discoverViewValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverAll": "Alle",
+  "discoverFavourites": "Favoriten",
+  "discoverFiltersAndSortingValueActive": "Filter und Sortierung, {arg0} aktiv",
+  "@discoverFiltersAndSortingValueActive": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverFiltersAndSorting": "Filter und Sortierung",
+  "discoverSortedByValue": "Sortiert: {arg0}",
+  "@discoverSortedByValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverUpToValueMin": "bis {arg0} Min.",
+  "@discoverUpToValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverRemoveValue2": "„{arg0}“ entfernen",
+  "@discoverRemoveValue2": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverFiltersSorting": "Filter & Sortierung",
+  "discoverSortBy": "Sortieren nach",
+  "discoverMaximumPreparationTime": "Maximale Zubereitungszeit",
+  "discoverAny": "Egal",
+  "discoverShow1Recipe": "1 Rezept anzeigen",
+  "discoverShowValueRecipes": "{arg0} Rezepte anzeigen",
+  "@discoverShowValueRecipes": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueMin": "{arg0} Min.",
+  "@discoverValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueHr": "{arg0} Std.",
+  "@discoverValueHr": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverValueHrValueMin": "{arg0} Std. {arg1} Min.",
+  "@discoverValueHrValueMin": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverWhichMeal": "Zu welcher Mahlzeit?",
+  "discover1ServingValueKcalValueGProtein": "1 Portion · {arg0} kcal · {arg1} g Protein",
+  "@discover1ServingValueKcalValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverSuggestion": "Vorschlag",
+  "discoverYourDiaryShowsYouHaveAlreadyReached": "Laut deinem Tagebuch ist dein Tagesziel heute schon erreicht. Wenn du Hunger hast, ist eine kleinere Portion eine Möglichkeit.",
+  "discoverThisServingSizeIsASuggestionTo": "Damit dieses Rezept gut zu deinem heutigen Tagesziel passt, wäre diese Portionsgröße ein Vorschlag:",
+  "discoverSuggestionEstimate": "VORSCHLAG · SCHÄTZUNG",
+  "discoverApproxValueValueProtein": "ca. {arg0} · {arg1} Protein",
+  "@discoverApproxValueValueProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverHowThisSuggestionWasCalculated": "So ist der Vorschlag entstanden",
+  "discoverYourDailyTarget": "Dein Tagesziel",
+  "discoverLoggedToday": "Heute eingetragen",
+  "discoverRemaining": "Noch offen",
+  "discoverMealsStillToComeToday": "Mahlzeiten, die heute noch kommen",
+  "discoverApproxValue": "ca. {arg0}",
+  "@discoverApproxValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverForThisMeal": "Für diese Mahlzeit",
+  "discoverApproxValueKcal": "ca. {arg0} kcal",
+  "@discoverApproxValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverBasedOnValueMealsADayWith": "Grundlage: {arg0} Mahlzeiten am Tag, davon {arg1} schon im Tagebuch. Das ist eine Schätzung zur Orientierung und keine Ernährungsberatung – hör auch auf deinen Hunger. „Übernehmen“ rechnet nur die Zutatenmengen um; ins Tagebuch wird weiterhin 1 Portion eingetragen.",
+  "@discoverBasedOnValueMealsADayWith": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverApply": "Übernehmen",
+  "discoverWithValueLookinSuggestsAServingSize": "Mit {arg0} schlägt dir Lookin eine Portionsgröße vor, die zu deinem heutigen Tagesziel passt – geschätzt aus deinem Tagebuch. Die Zutatenmengen werden dafür automatisch umgerechnet.",
+  "@discoverWithValueLookinSuggestsAServingSize": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "discoverTheServingCalculatorAndAllNutritionValues": "Den Portionsrechner und alle Nährwerte kannst du weiterhin kostenlos nutzen.",
+  "discoverNotNow": "Jetzt nicht",
+  "discoverTryValue": "{arg0} testen",
+  "@discoverTryValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  }
+}

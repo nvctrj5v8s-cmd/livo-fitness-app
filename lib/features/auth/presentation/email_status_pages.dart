@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -34,14 +35,14 @@ class CheckInboxPage extends StatelessWidget {
     final theme = Theme.of(context);
     return _StatusScaffold(
       onBack: onBack,
-      backLabel: 'Andere E-Mail-Adresse verwenden',
+      backLabel: context.l10n.authUseADifferentEmailAddress,
       children: [
         const _StatusIcon(icon: Icons.mark_email_unread_rounded),
         const SizedBox(height: 22),
         Semantics(
           header: true,
           child: Text(
-            'Schau in dein Postfach',
+            context.l10n.authCheckYourInbox,
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w900,
@@ -51,7 +52,7 @@ class CheckInboxPage extends StatelessWidget {
         const SizedBox(height: 10),
         Text.rich(
           TextSpan(
-            text: 'Wir haben eine Bestätigungs-Mail an ',
+            text: context.l10n.authWeHaveSentAConfirmationEmailTo,
             children: [
               TextSpan(
                 text: email,
@@ -60,11 +61,7 @@ class CheckInboxPage extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              const TextSpan(
-                text:
-                    ' geschickt, falls es dort noch kein Lookin-Konto gibt. '
-                    'Tippe auf den Link darin, um dein Konto zu aktivieren.',
-              ),
+              TextSpan(text: context.l10n.authIfNoLookinAccountExistsForThis),
             ],
           ),
           textAlign: TextAlign.center,
@@ -75,20 +72,20 @@ class CheckInboxPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        const _Step(
+        _Step(
           number: 1,
-          title: 'Postfach öffnen',
-          text: 'Die Mail kommt von Lookin (noreply@lookin-foodtracker.de).',
+          title: context.l10n.authOpenYourInbox,
+          text: context.l10n.authTheEmailComesFromLookinNoreplyLookin,
         ),
-        const _Step(
+        _Step(
           number: 2,
-          title: 'Auf „E-Mail bestätigen“ tippen',
-          text: 'Der Link funktioniert nur einmal und ist begrenzt gültig.',
+          title: context.l10n.authTapConfirmEmail,
+          text: context.l10n.authTheLinkCanOnlyBeUsedOnce,
         ),
-        const _Step(
+        _Step(
           number: 3,
-          title: 'Anmelden',
-          text: 'Mit deiner E-Mail-Adresse und deinem Passwort.',
+          title: context.l10n.authSignIn2,
+          text: context.l10n.authUsingYourEmailAddressAndPassword,
         ),
         const SizedBox(height: 8),
         Container(
@@ -98,7 +95,7 @@ class CheckInboxPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.border),
           ),
-          child: const Row(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
@@ -109,10 +106,7 @@ class CheckInboxPage extends StatelessWidget {
               SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Nichts angekommen? Schau auch im Spam-Ordner nach. Es kann '
-                  'ein bis zwei Minuten dauern. Hast du dich mit dieser '
-                  'Adresse schon einmal registriert? Dann melde dich an oder '
-                  'nutze dort „Passwort vergessen?“.',
+                  context.l10n.authNothingArrivedCheckYourSpamFolderToo,
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 13,
@@ -143,7 +137,7 @@ class CheckInboxPage extends StatelessWidget {
           key: const Key('inbox-sign-in'),
           onPressed: loading ? null : onSignIn,
           icon: const Icon(Icons.login_rounded),
-          label: const Text('Ich habe bestätigt – weiter'),
+          label: Text(context.l10n.authIHaveConfirmedContinue),
         ),
         const SizedBox(height: 10),
         OutlinedButton.icon(
@@ -159,8 +153,8 @@ class CheckInboxPage extends StatelessWidget {
 
 /// Label of the resend button, with the remaining wait time.
 String resendLabel(int cooldown) => cooldown > 0
-    ? 'Erneut senden in $cooldown s'
-    : 'Bestätigungs-Mail erneut senden';
+    ? L10n.current.authSendAgainInValueS((cooldown).toString())
+    : L10n.current.authResendConfirmationEmail;
 
 /// Shown after the link from the confirmation e-mail was used.
 class EmailConfirmedPage extends StatelessWidget {
@@ -178,7 +172,7 @@ class EmailConfirmedPage extends StatelessWidget {
         Semantics(
           header: true,
           child: Text(
-            'E-Mail bestätigt',
+            context.l10n.authEmailConfirmed,
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w900,
@@ -186,9 +180,8 @@ class EmailConfirmedPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Dein Lookin-Konto ist jetzt aktiv. Du kannst dich mit deiner '
-          'E-Mail-Adresse und deinem Passwort anmelden.',
+        Text(
+          context.l10n.authYourLookinAccountIsNowActiveYou,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.textMuted,
@@ -197,9 +190,8 @@ class EmailConfirmedPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Tipp: Kehre einfach zu Lookin zurück, in dem Fenster oder der App, in '
-          'der du dich registriert hast. Dort wirst du automatisch angemeldet.',
+        Text(
+          context.l10n.authTipReturnToLookinInTheWindow,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: AppColors.textMuted,
@@ -212,7 +204,7 @@ class EmailConfirmedPage extends StatelessWidget {
           key: const Key('confirmed-sign-in'),
           onPressed: onSignIn,
           icon: const Icon(Icons.login_rounded),
-          label: const Text('Jetzt anmelden'),
+          label: Text(context.l10n.authSignInNow),
         ),
       ],
     );
@@ -243,7 +235,7 @@ class _StatusScaffold extends StatelessWidget {
                       key: const Key('status-back'),
                       onPressed: onBack,
                       icon: const Icon(Icons.arrow_back_rounded),
-                      label: Text(backLabel ?? 'Zurück'),
+                      label: Text(backLabel ?? context.l10n.authBack),
                     ),
                   ),
                 ),

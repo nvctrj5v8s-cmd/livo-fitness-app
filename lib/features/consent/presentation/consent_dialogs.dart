@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -78,7 +79,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
               title: Text(widget.text, style: const TextStyle(height: 1.4)),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               ConsentTexts.revocableNote,
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
@@ -92,12 +93,12 @@ class _ConsentDialogState extends State<ConsentDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Nicht jetzt'),
+          child: Text(context.l10n.consentNotNow),
         ),
         FilledButton(
           key: const Key('consent-dialog-confirm'),
           onPressed: _ticked ? () => Navigator.pop(context, true) : null,
-          child: const Text('Einwilligen'),
+          child: Text(context.l10n.consentGiveConsent),
         ),
       ],
     );

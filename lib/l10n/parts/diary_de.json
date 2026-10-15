@@ -1,0 +1,390 @@
+{
+  "diaryServingBasis": "BASIS: {grams} G",
+  "@diaryServingBasis": {"placeholders": {"grams": {"type": "int"}}},
+  "diarySavedItemsRemoved": "Bereits gespeicherte Einträge wurden aus der Liste entfernt.",
+  "diaryChickpeaRiceBowl": "Kichererbsen-Reis-Bowl",
+  "diaryWholemealBreadWithEgg": "Vollkornbrot mit Ei",
+  "diaryGreekYoghurt": "Griechischer Joghurt",
+  "diaryProteinPasta": "Protein-Pasta",
+  "diaryVegetableOmelette": "Gemüse-Omelett",
+  "diarySearchResults": "Suchergebnisse",
+  "diaryFood": "Lebensmittel",
+  "diaryRecentlyUsed": "Zuletzt verwendet",
+  "diarySavedFoods": "Gemerkte Lebensmittel",
+  "diaryHighInProtein": "Proteinreich",
+  "diaryLightFoods": "Leichte Lebensmittel",
+  "diarySearchFoods": "Lebensmittel suchen",
+  "diaryClearSearch": "Suche löschen",
+  "diaryScanBarcode": "Barcode scannen",
+  "diaryEnterManually": "Selbst eintragen",
+  "diaryAllergyNotice": "Allergiehinweis",
+  "diaryTheAvailableInformationMayMentionValueIf": "Die verfügbaren Angaben nennen möglicherweise: {arg0}. Bei einer Allergie nicht als Empfehlung verstehen. Nur fortfahren, wenn du das Essen dokumentieren möchtest.",
+  "@diaryTheAvailableInformationMayMentionValueIf": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryCancel": "Abbrechen",
+  "diaryLogAnyway": "Trotzdem protokollieren",
+  "diaryTheFoodCouldNotBeSaved": "Das Lebensmittel konnte nicht gespeichert werden.",
+  "diarySavingFailedPleaseTryAgain": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+  "diaryClose": "Schließen",
+  "diarySelectMeal": "Mahlzeit auswählen",
+  "diaryNoResultsCheckTheSpellingOrEnter": "Kein Treffer. Prüfe die Schreibweise oder trage das Lebensmittel selbst ein.",
+  "diaryNothingUsedYetFoodsYouAddWill": "Noch nichts verwendet. Hinzugefügte Lebensmittel erscheinen später hier.",
+  "diaryNothingSavedYetSaveFoodsFromTheir": "Noch nichts gemerkt. Speichere Lebensmittel über die Detailansicht.",
+  "diaryNoFoodsHaveBeenFoundInThis": "In diesem Bereich wurden noch keine Lebensmittel gefunden.",
+  "diaryAllergyNoticeValue": "Allergiehinweis: {arg0}",
+  "@diaryAllergyNoticeValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueKcalValueGValueGProtein": "{arg0} kcal · {arg1} g · {arg2} g Protein",
+  "@diaryValueKcalValueGValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAddToValue": "Zu {arg0} hinzufügen",
+  "@diaryAddToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAll": "Alle",
+  "diaryRecent": "Zuletzt",
+  "diarySaved": "Gemerkte",
+  "diaryLight": "Leicht",
+  "diarySearchingForProduct": "Produkt wird gesucht ...",
+  "diaryThisProductIsNotInTheData": "Dieses Produkt ist noch nicht in der Datenquelle. Du kannst es selbst eintragen.",
+  "diaryThisProductDoesNotMeetLookinS": "Dieses Produkt entspricht nicht den Halal-Inhaltsregeln von Lookin.",
+  "diaryPleaseWaitAMomentBeforeSearchingFor": "Bitte kurz warten, bevor du den nächsten Barcode suchst.",
+  "diaryTheBarcodeCouldNotBeProcessedJust": "Barcode konnte gerade nicht verarbeitet werden.",
+  "diaryEnterBarcode": "Barcode eingeben",
+  "diaryEG3017620422003": "z. B. 3017620422003",
+  "diarySearch": "Suchen",
+  "diaryCameraActiveHoldTheBarcodeInsideThe": "Kamera aktiv – Barcode in den Rahmen halten",
+  "diaryEnterBarcodeManually": "Barcode manuell eingeben",
+  "diaryNoCameraWasFound": "Es wurde keine Kamera gefunden.",
+  "diaryCameraAccessWasNotAllowedAllowThe": "Der Kamerazugriff wurde nicht erlaubt. Erlaube die Kamera in den Browser- bzw. Geräteeinstellungen und versuche es erneut.",
+  "diaryTheCameraCouldNotBeStarted": "Die Kamera konnte nicht gestartet werden.",
+  "diaryNoCameraIsAvailableOnThisDevice": "Auf diesem Gerät ist keine Kamera verfügbar.",
+  "diaryThePhotoCouldNotBeTaken": "Foto konnte nicht aufgenommen werden.",
+  "diaryTakeAMealPhoto": "Mahlzeit fotografieren",
+  "diaryPhotographTheWholeMealClearlyFromAbove": "Das ganze Essen gut sichtbar von oben aufnehmen.",
+  "diaryGallery": "Galerie",
+  "diarySwitch": "Wechseln",
+  "diaryTakePhoto": "Foto aufnehmen",
+  "diaryTryAgain": "Erneut versuchen",
+  "diaryAlternativelyChooseAPhotoUsingGalleryBelow": "Alternativ unten über „Galerie“ ein Foto auswählen.",
+  "diaryYourCustomFood": "Dein eigenes Lebensmittel",
+  "diaryEditYourEntry": "Deinen Eintrag bearbeiten",
+  "diaryYourPreviousValuesApplyToOneServing": "Deine bisherigen Werte gelten für eine Portion. Fehlende Etikettwerte kannst du ergänzen.",
+  "diaryCopyTheNutritionValuesFromTheLabel": "Übernimm die Nährwerte vom Etikett. Wir rechnen deine gegessene Menge automatisch aus.",
+  "diaryForExampleMyChocolateCereal": "Zum Beispiel: Mein Schoko-Müsli",
+  "diaryPleaseGiveYourFoodAName": "Bitte deinem Lebensmittel einen Namen geben.",
+  "diaryPleaseUseNoMoreThan100Characters": "Bitte höchstens 100 Zeichen verwenden.",
+  "diaryForWhichMeal": "Für welche Mahlzeit?",
+  "diaryWhatDoTheValuesReferTo": "Worauf beziehen sich die Werte?",
+  "diaryPer100G": "Pro 100 g",
+  "diaryPer100Ml": "Pro 100 ml",
+  "diaryPerServing": "Pro Portion",
+  "diaryTheLabelValuesBelowArePer100": "Unten stehen die Etikettwerte pro 100 g.",
+  "diaryTheLabelValuesBelowArePer1002": "Unten stehen die Etikettwerte pro 100 ml.",
+  "diaryTheValuesBelowAreForAWhole": "Unten stehen die Werte für eine ganze Portion. Eine halbe Portion ist 0,5.",
+  "diaryServingsEaten": "Gegessene Portionen",
+  "diaryAmountEaten": "Gegessene Menge",
+  "diaryServings": "Portionen",
+  "diaryPleaseEnterAnAmountGreaterThan0": "Bitte eine Menge größer als 0 eingeben.",
+  "diaryNutritionValuesValue": "Nährwerte {arg0}",
+  "@diaryNutritionValuesValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryLeaveUnknownAdditionalValuesBlank": "Unbekannte Zusatzwerte bleiben leer.",
+  "diaryAllLabelValuesAreRequiredFibreIs": "Alle Etikettwerte sind erforderlich. Ballaststoffe sind freiwillig.",
+  "diaryEnergy": "Energie",
+  "diaryFat": "Fett",
+  "diaryOfWhichSaturates": "davon gesättigte Fettsäuren",
+  "diaryCarbohydrates": "Kohlenhydrate",
+  "diaryOfWhichSugars": "davon Zucker",
+  "diaryProtein": "Eiweiß / Protein",
+  "diarySalt": "Salz",
+  "diaryFibreOptional": "Ballaststoffe (optional)",
+  "diaryForTheAmountYouAte": "Für deine gegessene Menge",
+  "diaryValueGProtein": "{arg0} g Protein",
+  "@diaryValueGProtein": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueGCarbs": "{arg0} g Kohlenhydrate",
+  "@diaryValueGCarbs": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueGFat": "{arg0} g Fett",
+  "@diaryValueGFat": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryOnceYouEnterTheAmountEnergyAnd": "Sobald Menge, Energie und Makros eingetragen sind, siehst du hier die Berechnung.",
+  "diarySaving": "Wird gespeichert …",
+  "diaryLogInDiary": "Ins Tagebuch eintragen",
+  "diarySaveChanges": "Änderungen speichern",
+  "diaryUnknown": "Nicht bekannt",
+  "diaryEG05": "z. B. 0,5",
+  "diaryPleaseEnterAValidValueOf0": "Bitte einen gültigen Wert ab 0 eingeben.",
+  "diarySugarCannotExceedCarbohydrates": "Zucker darf die Kohlenhydrate nicht überschreiten.",
+  "diarySaturatedFatCannotExceedTotalFat": "Gesättigte Fettsäuren dürfen Fett nicht überschreiten.",
+  "diaryPleaseCheckTheHighlightedFieldsAbove": "Bitte prüfe die markierten Felder weiter oben.",
+  "diaryTheNameYouEnteredSuggestsAPossible": "Der eingegebene Name deutet auf einen möglichen Konflikt: {arg0}. Die Nährwertangaben enthalten keine verlässliche Zutatenprüfung.",
+  "@diaryTheNameYouEnteredSuggestsAPossible": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diarySavingDidNotWorkYourInformationStays": "Das Speichern hat nicht geklappt. Deine Angaben bleiben hier erhalten.",
+  "diarySavingDidNotWorkPleaseTryAgain": "Das Speichern hat nicht geklappt. Bitte versuche es erneut.",
+  "diaryDeleteEntry": "Eintrag löschen?",
+  "diaryValueWillBeRemovedFromYourDiary": "„{arg0}“ wird aus deinem Tagebuch entfernt.",
+  "@diaryValueWillBeRemovedFromYourDiary": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryDelete": "Löschen",
+  "diaryDeleteEntry2": "Eintrag löschen",
+  "diaryDiary": "Tagebuch",
+  "diaryYourMealsClearlyOrganisedAndEasyTo": "Deine Mahlzeiten klar und ohne unnötigen Aufwand.",
+  "diaryAddMeal": "Mahlzeit hinzufügen",
+  "diaryYourMealRhythm": "Dein Mahlzeitenrhythmus",
+  "diaryYourPreferenceNotARequirementYouCan": "Dein Wunsch, kein Muss. Du kannst jederzeit weitere Mahlzeiten eintragen.",
+  "diaryMeals": "Mahlzeiten",
+  "diaryAdd": "Hinzufügen",
+  "diaryMon": "Mo",
+  "diaryTue": "Di",
+  "diaryWed": "Mi",
+  "diaryThu": "Do",
+  "diaryFri": "Fr",
+  "diarySat": "Sa",
+  "diarySun": "So",
+  "diaryPreviousWeek": "Vorherige Woche",
+  "diaryNextWeek": "Nächste Woche",
+  "diaryEaten": "Gegessen",
+  "diaryRemaining": "Übrig",
+  "diaryYouAreAboveYourDailyTargetThis": "Du liegst über deinem Tagesziel. Das ist eine Orientierung, keine Bewertung.",
+  "diaryAnotherMeal": "Weitere Mahlzeit",
+  "diaryValueValuePValueCValueF": "{arg0}{arg1} P · {arg2} K · {arg3} F",
+  "@diaryValueValuePValueCValueF": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryWater": "Wasser",
+  "diaryValueOf8Glasses": "{arg0} von 8 Gläsern",
+  "@diaryValueOf8Glasses": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryEditRecipe": "Rezept bearbeiten",
+  "diaryEditMeal": "Mahlzeit bearbeiten",
+  "diaryYouCanChangeTheMealTypeIngredients": "Die Mahlzeitenart kann angepasst werden. Zutaten und Werte bleiben mit dem Rezept verbunden.",
+  "diaryChangesAreSavedDirectlyToYourDiary": "Änderungen werden direkt in deinem Tagebuch gespeichert.",
+  "diaryMealName": "Name der Mahlzeit",
+  "diaryMeal": "Mahlzeit",
+  "diaryDay": "Tag",
+  "diaryAmount": "Menge",
+  "diaryNutrition": "Nährwerte",
+  "diaryCarbsG": "Kohlenhydrate g",
+  "diaryFatG": "Fett g",
+  "diaryDuplicate": "Duplizieren",
+  "diarySave": "Speichern",
+  "diaryEntryDeleted": "Eintrag wurde gelöscht.",
+  "diaryPleaseEnterANameAndValidPositive": "Bitte Name und gültige, positive Werte eintragen.",
+  "diaryTheMealCouldNotBeSaved": "Die Mahlzeit konnte nicht gespeichert werden.",
+  "diaryMealUpdated": "Mahlzeit wurde aktualisiert.",
+  "diaryTheMealCouldNotBeDuplicated": "Die Mahlzeit konnte nicht dupliziert werden.",
+  "diaryMealDuplicated": "Mahlzeit wurde dupliziert.",
+  "diaryMoveMeal": "Mahlzeit verschieben",
+  "diaryRemoveFromSavedFoods": "Von Merkliste entfernen",
+  "diarySaveFood": "Merken",
+  "diarySaving2": "Wird gespeichert ...",
+  "diaryAddToDiary": "Zum Tagebuch hinzufügen",
+  "diaryTheProductInformationMayMentionValueOnly": "Die Produktdaten nennen möglicherweise: {arg0}. Nur fortfahren, wenn du das Lebensmittel bereits gegessen hast und es lediglich dokumentieren möchtest. Prüfe die Verpackung.",
+  "@diaryTheProductInformationMayMentionValueOnly": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryValueWasAdded": "{arg0} wurde hinzugefügt.",
+  "@diaryValueWasAdded": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryCalories": "Kalorien",
+  "diarySaturatedFat": "gesättigte Fettsäuren",
+  "diarySugar": "Zucker",
+  "diaryFibre": "Ballaststoffe",
+  "diaryProductInformation": "Produktinfos",
+  "diaryAllergensAccordingToProductData": "Allergene laut Produktdaten",
+  "diaryIngredientsList": "Zutatenliste",
+  "diarySourceOpenFoodFactsInformationMayBe": "Quelle: Open Food Facts. Angaben können fehlen oder sich ändern – bei Allergien und Unverträglichkeiten immer das Verpackungsetikett prüfen.",
+  "diaryFoodPhoto": "Lebensmittel-Foto",
+  "diaryThisPhotoCouldNotBeRead": "Dieses Foto konnte nicht gelesen werden.",
+  "diaryThePhotoCouldNotBeAnalysedJust": "Das Foto konnte gerade nicht analysiert werden.",
+  "diaryAddAtLeastOneFood": "Füge mindestens ein Lebensmittel hinzu.",
+  "diaryTheRecognisedNamesMayMatchYourProfile": "Die erkannten Namen können zu deinem Profil passen: {arg0}. KI-Fotos können versteckte Zutaten und Spuren nicht erkennen. Nur fortfahren, wenn du die Mahlzeit dokumentieren möchtest.",
+  "@diaryTheRecognisedNamesMayMatchYourProfile": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAddedToValue": "Zu {arg0} hinzugefügt.",
+  "@diaryAddedToValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryRecogniseMeal": "Mahlzeit erkennen",
+  "diaryPhotoFromGallery": "Foto aus Galerie",
+  "diaryTakeANewPhoto": "Neues Foto aufnehmen",
+  "diaryYourMeal": "Deine Mahlzeit",
+  "diaryPhotoAiCannotReliablyRecogniseHiddenAllergens": "Die Foto-KI kann Allergene, die man nicht sieht, oder Spuren nicht zuverlässig erkennen. Zutatenliste und Verpackung selbst prüfen.",
+  "diaryAiIsRecognisingFoodsAndEstimatingAmounts": "KI erkennt Lebensmittel und schätzt die Mengen …",
+  "diaryRecognisedFoods": "Erkannte Lebensmittel",
+  "diaryTapAFoodToChangeItsName": "Tippe auf ein Lebensmittel, um Name und Nährwerte zu ändern. Wenn du die Menge änderst, passen sich Kalorien und Nährwerte automatisch an.",
+  "diaryAddManually": "Selbst hinzufügen",
+  "diaryAiValuesAreEstimatesAPhotoCannot": "KI-Werte sind Schätzungen. Ein Foto ersetzt keine Waage oder Verpackungsangabe – prüfe Mengen und Nährwerte vor dem Speichern.",
+  "diaryAddToValueValueKcal": "Zu {arg0} hinzufügen · {arg1} kcal",
+  "@diaryAddToValueValueKcal": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPleaseGiveEveryFoodAName": "Bitte gib jedem Lebensmittel einen Namen.",
+  "diaryPleaseEnterAnAmountGreaterThan02": "Bitte gib für „{arg0}“ eine Menge über 0 g an.",
+  "@diaryPleaseEnterAnAmountGreaterThan02": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPleaseCheckTheNutritionValuesForValue": "Bitte prüfe die Nährwerte von „{arg0}“.",
+  "@diaryPleaseCheckTheNutritionValuesForValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryAiEstimate": "KI-Schätzung",
+  "diaryWhichMeal": "Zu welcher Mahlzeit?",
+  "diaryTotalKcal": "kcal gesamt",
+  "diaryCarbs": "Kohlenh.",
+  "diaryNewFood": "Neues Lebensmittel",
+  "diaryValueKcalCValueGPValue": "{arg0} kcal · K {arg1} g · P {arg2} g · F {arg3} g",
+  "@diaryValueKcalCValueGPValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      },
+      "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryNutritionValuesApplyToTheAmountSelected": "Nährwerte gelten für die oben eingestellte Menge.",
+  "diaryRemove": "Entfernen",
+  "diaryRecognisedWell": "Gut erkannt",
+  "diaryPleaseCheckBriefly": "Bitte kurz prüfen",
+  "diaryFromSearch": "Aus der Suche",
+  "diaryCustomEntry": "Eigener Eintrag",
+  "diaryUncertainPleaseCheck": "Unsicher – bitte prüfen",
+  "diary10GLess": "10 g weniger",
+  "diary10GMore": "10 g mehr",
+  "diaryTakeAPhotoOfYourMealAi": "Fotografiere deine Mahlzeit – die KI schätzt Lebensmittel und Mengen.",
+  "diaryChooseFromGallery": "Aus Galerie wählen",
+  "diaryPremiumFeature": "Premium-Funktion",
+  "diaryAiPhotoRecognitionIsPartOfLookin": "Die KI-Foto-Erkennung ist Teil von Lookin Premium. Du kannst die Mahlzeit trotzdem über „Suchen“ oder „Selbst hinzufügen“ eintragen.",
+  "diaryViewPremium": "Premium ansehen",
+  "diaryNoFoodFoundYouCanAlsoLog": "Kein Lebensmittel gefunden. Du kannst es auch über „Selbst hinzufügen“ eintragen.",
+  "diaryAiPhoto": "KI-Foto",
+  "diaryTakeAPhotoAiEstimatesFoodsAnd": "Foto machen, KI schätzt Lebensmittel und Mengen",
+  "diaryPremiumFeatureValueDayFreeTrial": "Premium-Funktion · {arg0} Tage kostenlos testen",
+  "@diaryPremiumFeatureValueDayFreeTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryFindAPackagedProductUsingItsBarcode": "Verpacktes Produkt über den Barcode finden",
+  "diaryEnterManually2": "Manuell eintragen",
+  "diarySearchForFoodsOrEnterThemYourself": "Lebensmittel suchen oder selbst eintragen"
+}

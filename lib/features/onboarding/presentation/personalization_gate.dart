@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -102,21 +103,21 @@ class _PersonalizationGateState extends State<PersonalizationGate> {
                       size: 40,
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'Deine Einstellungen konnten nicht geladen werden.',
+                    Text(
+                      context.l10n.onboardingYourSettingsCouldNotBeLoaded,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
                     FilledButton(
                       onPressed: () => _load(controller),
-                      child: const Text('Erneut versuchen'),
+                      child: Text(context.l10n.onboardingTryAgain),
                     ),
                     TextButton(
                       onPressed: () => setState(() {
                         _readFailed = false;
                         _showQuestions = false;
                       }),
-                      child: const Text('Für jetzt fortfahren'),
+                      child: Text(context.l10n.onboardingContinueForNow),
                     ),
                   ],
                 ),
@@ -127,8 +128,8 @@ class _PersonalizationGateState extends State<PersonalizationGate> {
       );
     }
     if (_showQuestions == null) {
-      return const Scaffold(
-        body: Center(child: Text('Dein Lookin wird vorbereitet …')),
+      return Scaffold(
+        body: Center(child: Text(context.l10n.onboardingPreparingYourLookin)),
       );
     }
     if (!_showQuestions!) return widget.child;
@@ -148,9 +149,9 @@ class _PersonalizationGateState extends State<PersonalizationGate> {
         setState(() => _showQuestions = false);
         if (!saved) {
           ScaffoldMessenger.of(this.context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text(
-                'Du kannst weitermachen. Die Fragen erscheinen beim nächsten Start möglicherweise erneut.',
+                L10n.current.onboardingYouCanContinueTheQuestionsMayAppear,
               ),
             ),
           );

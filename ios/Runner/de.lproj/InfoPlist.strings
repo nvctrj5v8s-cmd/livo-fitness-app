@@ -1,0 +1,2 @@
+"NSCameraUsageDescription" = "Lookin benötigt die Kamera, um Lebensmittel-Barcodes und Mahlzeiten zu erfassen.";
+"NSPhotoLibraryUsageDescription" = "Lookin benötigt Zugriff auf ausgewählte Essensfotos für die KI-Analyse.";

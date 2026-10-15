@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
@@ -53,19 +55,19 @@ class PersonalizationPage extends StatefulWidget {
 }
 
 class _PersonalizationPageState extends State<PersonalizationPage> {
-  static const _months = [
+  static List<String> get _months => [
     'Jan',
     'Feb',
-    'Mär',
+    L10n.current.onboardingMar,
     'Apr',
-    'Mai',
+    L10n.current.onboardingMay,
     'Jun',
     'Jul',
     'Aug',
     'Sep',
-    'Okt',
+    L10n.current.onboardingOct,
     'Nov',
-    'Dez',
+    L10n.current.onboardingDec,
   ];
   static const _metricMin = 35.0;
   static const _metricMax = 200.0;
@@ -171,7 +173,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                 key: const ValueKey('personal-confirm-value'),
                 onPressed: () => _markSet(step),
                 icon: const Icon(Icons.check_rounded, size: 18),
-                label: const Text('Passt genau so – Wert übernehmen'),
+                label: Text(L10n.current.onboardingThatFitsUseThisValue),
               ),
             ),
           )
@@ -384,8 +386,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       if (mounted) {
         setState(() {
           _error = later
-              ? 'Das hat gerade nicht geklappt. Bitte versuche es noch einmal.'
-              : 'Deine Angaben konnten nicht gespeichert werden. Bitte versuche es erneut.';
+              ? L10n.current.onboardingThatDidNotWorkJustNowPlease
+              : L10n.current.onboardingYourInformationCouldNotBeSavedPlease;
         });
       }
     } finally {
@@ -538,64 +540,55 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
       const {_Step.birthday, _Step.height}.contains(_current);
 
   String get _title => switch (_current) {
-    _Step.name => 'Damit Lookin dich richtig anspricht.',
-    _Step.goal => 'Was ist dein Ziel?',
-    _Step.motivation => 'Warum ist dir das wichtig?',
-    _Step.sex => 'Dein Geschlecht',
-    _Step.birthday => 'Wann hast du Geburtstag?',
-    _Step.height => 'Wie groß bist du?',
-    _Step.weight => 'Wo stehst du gerade?',
+    _Step.name => L10n.current.onboardingSoLookinCanAddressYouProperly,
+    _Step.goal => L10n.current.onboardingWhatIsYourGoal,
+    _Step.motivation => L10n.current.onboardingWhyDoesItMatterToYou,
+    _Step.sex => L10n.current.onboardingYourSex,
+    _Step.birthday => L10n.current.onboardingWhenIsYourBirthday,
+    _Step.height => L10n.current.onboardingHowTallAreYou,
+    _Step.weight => L10n.current.onboardingWhereAreYouNow,
     _Step.target => switch (_draft.goal) {
-      PersonalGoal.buildStrength => 'Wohin möchtest du?',
-      _ => 'Was ist dein Wunschgewicht?',
+      PersonalGoal.buildStrength =>
+        L10n.current.onboardingWhereWouldYouLikeToBe,
+      _ => L10n.current.onboardingWhatIsYourTargetWeight,
     },
-    _Step.activity => 'Wie aktiv bist du meistens?',
-    _Step.food => 'Wie isst du?',
-    _Step.kitchen => 'Wie sieht es in deiner Küche aus?',
-    _Step.obstacles => 'Was hat dich bisher gebremst?',
-    _Step.health => 'Gibt es etwas, worauf Lookin achten soll?',
+    _Step.activity => L10n.current.onboardingHowActiveAreYouUsually,
+    _Step.food => L10n.current.onboardingHowDoYouEat,
+    _Step.kitchen => L10n.current.onboardingWhatIsYourKitchenRoutine,
+    _Step.obstacles => L10n.current.onboardingWhatHasHeldYouBackSoFar,
+    _Step.health => L10n.current.onboardingIsThereAnythingLookinShouldTakeInto,
     _Step.summary =>
       !_collected.hasAnswers
-          ? 'Du startest ganz neutral.'
+          ? L10n.current.onboardingYouAreStartingWithACleanSlate
           : _planReady
-          ? 'Dein Lookin-Plan ist bereit.'
-          : 'Dein Plan wird erstellt …',
+          ? L10n.current.onboardingYourLookinPlanIsReady
+          : L10n.current.onboardingCreatingYourPlan,
   };
 
   String get _subtitle => switch (_current) {
-    _Step.name =>
-      'Dein Name ist optional. Alle Angaben kannst du später im Profil ändern.',
+    _Step.name => L10n.current.onboardingYourNameIsOptionalYouCanChange,
     _Step.goal => '',
     _Step.motivation =>
-      'Wähle alles, was passt. Dein Coach greift das auf, wenn es mal '
-          'schwerfällt.',
-    _Step.sex =>
-      'Nur für die Schätzung deines Energiebedarfs – Körper verbrauchen je '
-          'nach Geschlecht unterschiedlich viel. Du kannst das auch offenlassen.',
-    _Step.birthday => 'Wische direkt in den Rädern nach oben oder unten.',
-    _Step.height =>
-      'Wähle die Einheit, die für dich natürlich ist, und wische zum passenden Wert.',
-    _Step.weight =>
-      'Ziehe das Lineal nach links oder rechts. Es ist dein aktuelles Gewicht, kein Ziel.',
-    _Step.target =>
-      'Ein Ziel, das zu dir passt – kein Muss. Du kannst es jederzeit ändern.',
-    _Step.activity => 'Dein ganz normaler Alltag, ohne gezieltes Training.',
-    _Step.food => 'Damit Rezepte, Vorschläge und der Coach zu dir passen.',
-    _Step.kitchen => 'So schlägt Lookin Rezepte vor, die in deinen Tag passen.',
+      L10n.current.onboardingSelectEverythingThatFitsYourCoachUses,
+    _Step.sex => L10n.current.onboardingOnlyUsedToEstimateYourEnergyNeeds,
+    _Step.birthday => L10n.current.onboardingSwipeTheWheelsUpOrDown,
+    _Step.height => L10n.current.onboardingChooseTheUnitThatFeelsNaturalTo,
+    _Step.weight => L10n.current.onboardingDragTheRulerLeftOrRightThis,
+    _Step.target => L10n.current.onboardingATargetThatFitsYouNotA,
+    _Step.activity =>
+      L10n.current.onboardingYourNormalEverydayRoutineWithoutDedicatedExercise,
+    _Step.food => L10n.current.onboardingSoRecipesSuggestionsAndTheCoachFit,
+    _Step.kitchen =>
+      L10n.current.onboardingThisHelpsLookinSuggestRecipesThatFit,
     _Step.obstacles =>
-      'Wähle alles, was passt – das ist völlig normal. Lookin gibt dir dazu '
-          'passende Tipps.',
-    _Step.health =>
-      'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf '
-          'diesem Gerät.',
+      L10n.current.onboardingSelectEverythingThatFitsItIsCompletely,
+    _Step.health => L10n.current.onboardingOptionalAndOnlyForYourSafetyThis,
     _Step.summary =>
       !_collected.hasAnswers
-          ? 'Beantworte die Fragen jederzeit im Profil, dann passt sich Lookin '
-                'an dich an.'
+          ? L10n.current.onboardingAnswerTheQuestionsInYourProfileAt
           : _planReady
-          ? 'Alles basiert auf deinen Antworten und lässt sich jederzeit im '
-                'Profil anpassen.'
-          : 'Lookin verarbeitet gerade deine Antworten.',
+          ? L10n.current.onboardingEverythingIsBasedOnYourAnswersAnd
+          : L10n.current.onboardingLookinIsProcessingYourAnswers,
   };
 
   Widget _answers() => switch (_current) {
@@ -609,19 +602,18 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           maxLength: 40,
           textCapitalization: TextCapitalization.words,
           autofillHints: const [AutofillHints.givenName],
-          decoration: const InputDecoration(
-            labelText: 'Wie dürfen wir dich nennen? (optional)',
-            hintText: 'Zum Beispiel Alex',
+          decoration: InputDecoration(
+            labelText: L10n.current.onboardingWhatShouldWeCallYouOptional,
+            hintText: L10n.current.onboardingForExampleAlex,
             prefixIcon: Icon(Icons.person_outline_rounded),
           ),
           onChanged: (value) => _update(_draft.copyWith(displayName: value)),
           onSubmitted: (_) => _next(),
         ),
         const SizedBox(height: 18),
-        const _SoftNote(
+        _SoftNote(
           icon: Icons.tune_rounded,
-          text:
-              'Du kannst oben überspringen. Lookin funktioniert auch ohne diese Antworten.',
+          text: L10n.current.onboardingYouCanSkipAboveLookinWorksWithout,
         ),
         if (widget.onSignIn != null) ...[
           const SizedBox(height: 10),
@@ -629,7 +621,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
             child: TextButton(
               key: const ValueKey('personal-sign-in'),
               onPressed: _saving ? null : widget.onSignIn,
-              child: const Text('Schon ein Konto? Anmelden'),
+              child: Text(L10n.current.onboardingAlreadyHaveAnAccountSignIn),
             ),
           ),
         ],
@@ -653,7 +645,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         _byHand(
           _Step.birthday,
           _PickerCard(
-            label: 'Geburtsdatum',
+            label: L10n.current.onboardingDateOfBirth,
             height: 205,
             child: Row(
               children: [
@@ -699,7 +691,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         _byHand(
           _Step.height,
           _PickerCard(
-            label: 'Deine Größe',
+            label: L10n.current.onboardingYourHeight,
             height: 205,
             child: _imperial
                 ? Row(
@@ -746,7 +738,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         Text(
           _imperial
               ? '${_shownWeight.round()} lb'
-              : '${_shownWeight.toStringAsFixed(1).replaceAll('.', ',')} kg',
+              : '${_shownWeight.toStringAsFixed(1).replaceAll('.', L10n.isEnglish ? '.' : ',')} kg',
           style: TextStyle(
             color: _weightSet ? AppColors.text : AppColors.textMuted,
             fontSize: 54,
@@ -770,10 +762,9 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         ),
         _confirmValue(_Step.weight),
         const SizedBox(height: 14),
-        const _SoftNote(
+        _SoftNote(
           icon: Icons.info_outline_rounded,
-          text:
-              'Ziehe das Lineal nach links oder rechts. Dein Gewicht wird nicht bewertet.',
+          text: L10n.current.onboardingDragTheRulerLeftOrRightYour,
         ),
       ],
     ),
@@ -823,25 +814,24 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
           onChanged: (item) => _update(_draft.copyWith(activity: item)),
         ),
         const SizedBox(height: 14),
-        const _SoftNote(
+        _SoftNote(
           icon: Icons.info_outline_rounded,
-          text:
-              'Meist sitzend: Büro, Studium, Auto. Viel in Bewegung: Pflege, '
-              'Handwerk, Verkauf oder viele Wege zu Fuß.',
+          text: L10n.current.onboardingMostlySeatedOfficeStudyCarOftenMoving,
         ),
       ],
     ),
     _Step.food => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Ernährungsweise', style: _groupLabelStyle),
+        Text(L10n.current.onboardingNutritionStyle, style: _groupLabelStyle),
         const SizedBox(height: 9),
         _ChoiceGrid<NutritionPreference>(
           values: NutritionPreference.values,
           selected: _draft.nutrition,
           keyPrefix: 'nutrition',
           label: (item) => switch (item) {
-            NutritionPreference.pescatarian => 'Pescetarisch',
+            NutritionPreference.pescatarian =>
+              L10n.current.onboardingPescatarian,
             _ => item.label,
           },
           icon: (item) => switch (item) {
@@ -865,8 +855,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
     _Step.kitchen => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Zeit zum Kochen an einem normalen Tag',
+        Text(
+          L10n.current.onboardingTimeToCookOnANormalDay,
           style: _groupLabelStyle,
         ),
         const SizedBox(height: 9),
@@ -881,8 +871,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               _update(_draft.copyWith(cookingMinutes: item.minutes)),
         ),
         const SizedBox(height: 18),
-        const Text(
-          'Hast du schon einmal Kalorien gezählt?',
+        Text(
+          L10n.current.onboardingHaveYouCountedCaloriesBefore,
           style: _groupLabelStyle,
         ),
         const SizedBox(height: 9),
@@ -933,12 +923,9 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 
   Widget _targetStep() {
     if (!_targetPossible) {
-      return const _SoftNote(
+      return _SoftNote(
         icon: Icons.favorite_outline_rounded,
-        text:
-            'Dein Gewicht liegt bereits im unteren gesunden Bereich. Lookin '
-            'schlägt dir deshalb kein Abnehmziel vor – wir helfen dir, gut '
-            'und ausgewogen zu essen.',
+        text: L10n.current.onboardingYourWeightIsAlreadyAtTheLower,
       );
     }
     final target = _targetKg ?? _targetMinKg;
@@ -949,7 +936,7 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         Text(
           _imperial
               ? '${shown.round()} lb'
-              : '${shown.toStringAsFixed(1).replaceAll('.', ',')} kg',
+              : '${shown.toStringAsFixed(1).replaceAll('.', L10n.isEnglish ? '.' : ',')} kg',
           key: const ValueKey('personal-target-value'),
           style: TextStyle(
             color: _targetSet ? AppColors.text : AppColors.textMuted,
@@ -982,8 +969,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                 ButtonSegment(
                   value: pace,
                   label: Text(
-                    '${pace.label}\n'
-                    '${pace.kgPerWeek.toString().replaceAll('.', ',')} kg/Woche',
+                    L10n.current.onboardingValueValueKgWeek(
+                      (pace.label).toString(),
+                      AppFormat.decimal(pace.kgPerWeek, maxDecimals: 2),
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -998,10 +987,10 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
         _SoftNote(
           icon: Icons.shield_outlined,
           text: lose
-              ? 'Lookin bietet nur Ziele im gesunden Bereich (BMI ab 18,5) und '
-                    'höchstens etwa ein halbes Kilo pro Woche an.'
-              : 'Muskeln wachsen langsam. Genug Eiweiß und Training sind '
-                    'wichtiger als schnelle Zahlen.',
+              ? L10n.current.onboardingLookinOnlyOffersTargetsWithinTheHealthy
+              : L10n
+                    .current
+                    .onboardingMuscleGrowsSlowlyEnoughProteinAndTraining,
         ),
       ],
     );
@@ -1030,12 +1019,8 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
               ? Icons.check_circle_outline_rounded
               : Icons.volunteer_activism_outlined,
           text: notes.isEmpty
-              ? 'Trifft nichts davon zu? Dann tippe einfach auf „Weiter“.'
-              : 'Danke, dass du das teilst. Lookin berechnet für dich keine '
-                    'Kalorienziele und schlägt keine Diät vor. Tagebuch, '
-                    'Rezepte und Coach kannst du trotzdem nutzen – deine Ziele '
-                    'besprichst du am besten mit deiner Ärztin, deinem Arzt '
-                    'oder einer Ernährungsfachkraft.',
+              ? L10n.current.onboardingNoneOfTheseApplySimplyTapContinue
+              : L10n.current.onboardingThankYouForSharingThisLookinDoes,
         ),
       ],
     );
@@ -1046,11 +1031,16 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
 enum _CookingTime {
   quick(15, 'Bis 15 Minuten', Icons.bolt_rounded),
   normal(30, 'Etwa 30 Minuten', Icons.timer_outlined),
-  relaxed(45, '45 Minuten und mehr', Icons.soup_kitchen_outlined);
+  relaxed(
+    45,
+    '45 Minuten und mehr', // l10n-ignore: canonical label
+    Icons.soup_kitchen_outlined,
+  ); // l10n-ignore: canonical label; getter localizes it
 
-  const _CookingTime(this.minutes, this.label, this.icon);
+  const _CookingTime(this.minutes, this._label, this.icon);
   final int minutes;
-  final String label;
+  final String _label;
+  String get label => DisplayText.of(_label);
   final IconData icon;
 
   static _CookingTime? fromMinutes(int? minutes) {
@@ -1125,7 +1115,11 @@ class _Header extends StatelessWidget {
                   ),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(editing ? 'Schließen' : 'Überspringen'),
+                    child: Text(
+                      editing
+                          ? context.l10n.onboardingClose
+                          : context.l10n.onboardingSkip,
+                    ),
                   ),
                 ),
               ),
@@ -1251,14 +1245,14 @@ class _Footer extends StatelessWidget {
             style: FilledButton.styleFrom(minimumSize: const Size(0, 52)),
             child: Text(
               saving
-                  ? 'Wird gespeichert …'
+                  ? context.l10n.onboardingSaving
                   : waiting
-                  ? 'Einen Moment …'
+                  ? context.l10n.onboardingOneMoment
                   : last
-                  ? 'Los geht’s'
+                  ? context.l10n.onboardingLetSGo
                   : skipping
-                  ? 'Überspringen'
-                  : 'Weiter',
+                  ? context.l10n.onboardingSkip
+                  : context.l10n.onboardingContinue,
             ),
           ),
         ),
@@ -1479,10 +1473,10 @@ class _UnitToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SegmentedButton<MeasurementSystem>(
-    segments: const [
+    segments: [
       ButtonSegment(
         value: MeasurementSystem.metric,
-        label: Text('Metrisch · cm / kg'),
+        label: Text(context.l10n.onboardingMetricCmKg),
       ),
       ButtonSegment(
         value: MeasurementSystem.imperial,

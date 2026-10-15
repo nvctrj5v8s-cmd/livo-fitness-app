@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/l10n.dart';
 
 double _phase(double progress, double start, double end, [Curve? curve]) =>
     (curve ?? Curves.easeOutCubic).transform(
@@ -17,11 +18,26 @@ class PremiumHeroArtwork extends StatelessWidget {
 
   final double progress;
 
-  static const _satellites = [
-    (Icons.photo_camera_rounded, 'KI-Foto', Offset(-118, -52), AppColors.primary),
+  static List<(IconData, String, Offset, Color)> get _satellites => [
+    (
+      Icons.photo_camera_rounded,
+      L10n.current.subscriptionAiPhoto,
+      Offset(-118, -52),
+      AppColors.primary,
+    ),
     (Icons.auto_awesome_rounded, 'Coach', Offset(120, -46), AppColors.mint),
-    (Icons.restaurant_menu_rounded, 'Rezepte', Offset(-104, 60), AppColors.orange),
-    (Icons.rocket_launch_rounded, 'Neues', Offset(110, 64), AppColors.purple),
+    (
+      Icons.restaurant_menu_rounded,
+      L10n.current.subscriptionRecipes,
+      Offset(-104, 60),
+      AppColors.orange,
+    ),
+    (
+      Icons.rocket_launch_rounded,
+      L10n.current.subscriptionNew,
+      Offset(110, 64),
+      AppColors.purple,
+    ),
   ];
 
   @override
@@ -243,7 +259,8 @@ class _HaloPainter extends CustomPainter {
 
     for (var i = 0; i < 10; i++) {
       final angle = i * math.pi / 5 + 0.3 + 0.18 * _phase(progress, 0, 1);
-      final point = center + Offset(math.cos(angle) * 165, math.sin(angle) * 88);
+      final point =
+          center + Offset(math.cos(angle) * 165, math.sin(angle) * 88);
       canvas.drawCircle(
         point,
         i.isEven ? 2.4 : 1.4,

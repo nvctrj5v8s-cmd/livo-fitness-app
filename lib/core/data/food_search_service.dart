@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import '../models/app_models.dart';
 
 /// German query expansion for the mostly English USDA catalog. The original
@@ -62,7 +63,13 @@ class FoodSearchService {
     final normalizedQuery = normalize(query);
     if (normalizedQuery.isEmpty) return true;
     final haystack = normalize(
-      [food.name, food.brand ?? '', food.source, ...food.dietTags].join(' '),
+      [
+        food.name,
+        food.displayName,
+        food.brand ?? '',
+        food.source,
+        ...food.dietTags,
+      ].join(' '),
     );
     if (haystack.contains(normalizedQuery)) return true;
     return normalizedQuery
@@ -76,6 +83,7 @@ class FoodSearchService {
   }
 
   static String? germanHint(FoodItem food) {
+    if (L10n.isEnglish) return null;
     final haystack = normalize(food.name);
     for (final entry in _aliases.entries) {
       if (entry.value.any(haystack.contains)) {
@@ -86,9 +94,9 @@ class FoodSearchService {
   }
 
   static String sourceLabel(FoodItem food) => switch (food.source) {
-    'usda_fndds' || 'usda_foundation' => 'USDA-Lebensmitteldaten',
-    'curated' => 'Lookin-Katalog',
-    _ => 'Katalogquelle: ${food.source}',
+    'usda_fndds' || 'usda_foundation' => L10n.current.coreUsdaFoodData,
+    'curated' => L10n.current.coreLookinCatalogue,
+    _ => L10n.current.coreCatalogueSourceValue((food.source).toString()),
   };
 
   static String normalize(String value) => value

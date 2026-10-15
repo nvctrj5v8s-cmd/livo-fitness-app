@@ -1,3 +1,4 @@
+import '../../../l10n/display_text.dart';
 import '../../../core/models/app_models.dart';
 
 /// Meal-type tags as they appear in the catalog.
@@ -30,8 +31,9 @@ enum RecipeSort {
   mostProtein('Meiste Protein'),
   fewestCalories('Wenigste kcal');
 
-  const RecipeSort(this.label);
-  final String label;
+  const RecipeSort(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 const _unset = Object();
@@ -120,9 +122,15 @@ bool recipeMatchesQuery(Recipe recipe, String query) {
   final haystack = normalizeRecipeSearch(
     [
       recipe.title,
+      recipe.displayTitle,
       recipe.subtitle,
+      recipe.displaySubtitle,
       ...recipe.tags.where((tag) => tag != recipeForYouTag),
-      for (final ingredient in recipe.ingredients) ingredient.name,
+      ...recipe.displayTags,
+      for (final ingredient in recipe.ingredients) ...[
+        ingredient.name,
+        ingredient.displayName,
+      ],
     ].join(' '),
   );
   return tokens.every(haystack.contains);

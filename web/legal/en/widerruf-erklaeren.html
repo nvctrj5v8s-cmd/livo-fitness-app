@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Withdraw from contract — Lookin</title>
+  <link rel="stylesheet" href="../legal.css">
+  <style>
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; }
+    button { margin-top: 18px; width: 100%; padding: 14px; border: 0; border-radius: 14px; background: var(--accent); color: #050708; font: inherit; font-weight: 800; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    #result { margin-top: 18px; }
+    .ok { border-color: var(--accent) !important; }
+    .error { color: #ff7e82; }
+  </style>
+</head>
+<body>
+<main>
+  <nav>
+    <a href="datenschutz.html">Privacy</a>
+    <a href="agb.html">Terms</a>
+    <a href="widerruf.html">Withdrawal</a>
+    <a href="impressum.html">Imprint</a>
+    <a href="konto-loeschen.html">Delete account</a>
+  </nav>
+
+  <h1>Withdraw from contract</h1>
+  <p>Here you can withdraw from your Lookin Premium contract with Mhd Khair Shikho (the provider of Lookin), including without signing in. You do not need to give a reason. The withdrawal period is 14 days from the conclusion of the contract; sending your declaration before it ends is sufficient. You receive an immediate acknowledgement with the date and time.</p>
+  <p class="muted">Cancellation in the store is not withdrawal. It only ends renewal.</p>
+
+  <form id="form" novalidate>
+    <label for="name">Your name</label>
+    <input id="name" name="name" autocomplete="name" maxlength="120" required>
+    <label for="email">Email for acknowledgement</label>
+    <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required>
+    <label for="note">Google Play order number (starts with GPA.) or note, optional</label>
+    <input id="note" name="note" maxlength="300">
+    <button id="confirm" type="submit" disabled>Confirm withdrawal</button>
+  </form>
+
+  <div id="result" class="box" hidden></div>
+
+  <p class="muted">Privacy: to process withdrawal, we store your name, email, note and timestamp, plus an IP-address hash for 24 hours to prevent abuse. Details are in the <a href="datenschutz.html">Privacy Policy</a>.</p>
+
+  <p class="muted">You may also withdraw by emailing <a href="mailto:lookinsupport@gmail.com">lookinsupport@gmail.com</a> or writing to Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen. Details are in the <a href="widerruf.html">Withdrawal information</a>.</p>
+</main>
+<script>
+  (function () {
+    var endpoint = 'https://kypxutvvpklkvekciuen.supabase.co/functions/v1/legal-actions';
+    var form = document.getElementById('form');
+    var name = document.getElementById('name');
+    var email = document.getElementById('email');
+    var note = document.getElementById('note');
+    var button = document.getElementById('confirm');
+    var result = document.getElementById('result');
+    function valid() {
+      return name.value.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    }
+    function update() { button.disabled = !valid(); }
+    [name, email].forEach(function (input) { input.addEventListener('input', update); });
+    function pad(value) { return String(value).padStart(2, '0'); }
+    function show(html, ok) {
+      result.hidden = false;
+      result.className = 'box' + (ok ? ' ok' : '');
+      result.innerHTML = html;
+    }
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (!valid()) return;
+      button.disabled = true;
+      button.textContent = 'Submitting …';
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'withdraw', locale: 'en', name: name.value.trim(), email: email.value.trim(), note: note.value.trim() })
+      }).then(function (response) {
+        return response.json().then(function (data) { return { ok: response.ok, data: data }; });
+      }).then(function (answer) {
+        if (!answer.ok || !answer.data.received_at) throw new Error(answer.data && answer.data.code);
+        var at = new Date(answer.data.received_at);
+        var when = at.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+        form.hidden = true;
+        show('<p><strong>Your withdrawal was received on ' + when + '.</strong></p>' +
+          (answer.data.confirmation_email === 'sent'
+            ? '<p>We have sent you an acknowledgement by email.</p>'
+            : '<p>Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up.</p>') +
+          '<p class="muted">Reference number: ' + String(answer.data.id || '').replace(/[^a-z0-9-]/gi, '') + '</p>', true);
+      }).catch(function (error) {
+        button.disabled = false;
+        button.textContent = 'Confirm withdrawal';
+        var limited = error && error.message === 'too_many_requests';
+        show('<p class="error">' + (limited ? 'Several withdrawals have already been submitted from this connection today. Please email your withdrawal to lookinsupport@gmail.com.' : 'Your withdrawal could not be submitted just now. Please try again or email it to lookinsupport@gmail.com. What matters is that you send your declaration within the withdrawal period.') + '</p>', false);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

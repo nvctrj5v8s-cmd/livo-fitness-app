@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { germanDateTime, ownerEmail, sendMail } from '../_shared/mail.ts'
+import { englishDateTime, germanDateTime, ownerEmail, sendMail } from '../_shared/mail.ts'
 
 // Withdrawal function for the premium contract (§ 356a BGB). It works with
 // and without sign-in: from the app (account linked) and from the public page
@@ -129,6 +129,14 @@ Deno.serve(async (request) => {
   // form sends it to the address typed in. Names and notes go into the mail
   // without links or addresses.
   const mailTo = user?.email ?? email
+  const english = body.locale === 'en'
+  const detailsEn = [
+    `Name: ${plain(name)}`,
+    `Account: ${user ? 'signed in' : 'not signed in (website)'}`,
+    note ? `Note: ${plain(note)}` : null,
+    `Received: ${englishDateTime(receivedAt)}`,
+    `Reference number: ${row.id}`,
+  ].filter(Boolean).join('\n')
   const details = [
     `Name: ${plain(name)}`,
     `Konto: ${user ? 'angemeldet' : 'ohne Anmeldung (Webseite)'}`,
@@ -149,8 +157,14 @@ Deno.serve(async (request) => {
   // address within a day, and all mails above the daily ceiling, are not sent.
   const userMail = !mailsAllowed || (sameAddress ?? 0) >= 3 ? 'failed' : await sendMail({
     to: mailTo,
-    subject: 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
-    text: `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
+    subject: english ? 'Acknowledgement of your withdrawal — Lookin Premium' : 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
+    text: english
+      ? `Hello ${plain(name)},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
+        'We will refund your payments under the withdrawal policy within fourteen days at the latest. ' +
+        'If you requested that Premium begins immediately, we deduct a proportionate amount for the service already provided. ' +
+        'Google Play purchases are refunded through Google Play.\n\n' +
+        `For questions, contact ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`
+      : `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
       'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
       'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
       'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +

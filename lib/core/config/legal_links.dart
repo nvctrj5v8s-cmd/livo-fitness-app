@@ -1,3 +1,5 @@
+import '../../l10n/l10n.dart';
+
 /// Public addresses of the legal pages (`web/legal/*.html`, published with the
 /// web build). Google Play needs the privacy policy as a public URL; the app
 /// links to the same pages.
@@ -11,15 +13,18 @@ abstract final class LegalLinks {
     defaultValue: 'https://app.lookin-foodtracker.de/legal/',
   );
 
-  static Uri get privacy => Uri.parse('${baseUrl}datenschutz.html');
-  static Uri get terms => Uri.parse('${baseUrl}agb.html');
-  static Uri get withdrawal => Uri.parse('${baseUrl}widerruf.html');
-  static Uri get imprint => Uri.parse('${baseUrl}impressum.html');
+  static String get _localizedBase => '$baseUrl${L10n.isEnglish ? 'en/' : ''}';
+
+  static Uri get privacy => Uri.parse('${_localizedBase}datenschutz.html');
+  static Uri get terms => Uri.parse('${_localizedBase}agb.html');
+  static Uri get withdrawal => Uri.parse('${_localizedBase}widerruf.html');
+  static Uri get imprint => Uri.parse('${_localizedBase}impressum.html');
 
   /// Public withdrawal form (§ 356a BGB), usable without signing in.
   static Uri get withdrawalForm =>
-      Uri.parse('${baseUrl}widerruf-erklaeren.html');
+      Uri.parse('${_localizedBase}widerruf-erklaeren.html');
 
   /// Account deletion without the app, required by Google Play.
-  static Uri get accountDeletion => Uri.parse('${baseUrl}konto-loeschen.html');
+  static Uri get accountDeletion =>
+      Uri.parse('${_localizedBase}konto-loeschen.html');
 }

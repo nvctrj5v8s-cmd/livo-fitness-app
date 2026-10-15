@@ -67,6 +67,22 @@
     <small>Wird geladen …</small>
   </div>
   <script>
+    // Match Flutter's device-language default and its explicit override.
+    (function () {
+      var language = (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+      try {
+        var saved = localStorage.getItem('flutter.lookin.locale.v1');
+        if (saved === '"en"' || saved === 'en') language = 'en';
+        if (saved === '"de"' || saved === 'de') language = 'de';
+      } catch (_) { /* Restricted storage: follow the device. */ }
+      document.documentElement.lang = language;
+      if (language === 'en') {
+        var boot = document.getElementById('boot');
+        boot.setAttribute('aria-label', 'Loading Lookin');
+        boot.querySelector('small').textContent = 'Loading …';
+        document.querySelector('meta[name="description"]').content = 'Lookin – AI Food Tracker: meals, recipes and progress at a glance.';
+      }
+    })();
     window.addEventListener('flutter-first-frame', function () {
       var boot = document.getElementById('boot');
       if (boot) boot.remove();

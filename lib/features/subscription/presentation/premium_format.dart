@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 
 import '../application/subscription_controller.dart';
@@ -8,6 +9,7 @@ const _nbsp = ' ';
 /// German price format: `49,99 €`. The non-breaking space keeps the amount
 /// and currency on one line.
 String formatEuro(int cents) {
+  if (L10n.isEnglish) return AppFormat.euro(cents);
   final euros = (cents ~/ 100).toString();
   final rest = (cents % 100).toString().padLeft(2, '0');
   final grouped = StringBuffer();
@@ -22,6 +24,7 @@ String _two(int value) => value.toString().padLeft(2, '0');
 
 /// `29.09.2026, 14:30 Uhr` in local time.
 String formatPremiumDateTime(DateTime value) {
+  if (L10n.isEnglish) return AppFormat.dateTime(value);
   final local = value.toLocal();
   return '${_two(local.day)}.${_two(local.month)}.${local.year}, '
       '${_two(local.hour)}:${_two(local.minute)}${_nbsp}Uhr';
@@ -29,6 +32,7 @@ String formatPremiumDateTime(DateTime value) {
 
 /// `29.09.` in local time.
 String formatPremiumShortDate(DateTime value) {
+  if (L10n.isEnglish) return AppFormat.dayMonth(value);
   final local = value.toLocal();
   return '${_two(local.day)}.${_two(local.month)}.';
 }
@@ -36,39 +40,50 @@ String formatPremiumShortDate(DateTime value) {
 /// Shared, honest copy so every surface names the same facts.
 abstract final class PremiumCopy {
   static String get freeRecipes =>
-      'Ohne Abo: ${SubscriptionPlans.freeRecipeSharePercent}$_nbsp% der Rezepte';
-  static const premiumRecipes = 'Mit Premium: alle Rezepte';
+      L10n.current.subscriptionWithoutASubscriptionValueValueOfRecipes(
+        (SubscriptionPlans.freeRecipeSharePercent).toString(),
+        (_nbsp).toString(),
+      );
+  static String get premiumRecipes =>
+      L10n.current.subscriptionWithPremiumAllRecipes;
 
-  static String get trialCta =>
-      '${SubscriptionPlans.trialDays} Tage kostenlos testen';
-  static const trialPromise =
-      'Endet automatisch · keine Zahlungsdaten nötig · keine Kosten';
-  static const billingPending = 'Bezahlung wird gerade eingerichtet';
+  static String get trialCta => L10n.current.subscriptionValueDayFreeTrial(
+    (SubscriptionPlans.trialDays).toString(),
+  );
+  static String get trialPromise =>
+      L10n.current.subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo;
+  static String get billingPending =>
+      L10n.current.subscriptionPaymentsAreBeingSetUp;
 
-  static String planTitle(PremiumPlan plan) =>
-      plan.isYearly ? 'Jährlich' : 'Monatlich';
+  static String planTitle(PremiumPlan plan) => plan.isYearly
+      ? L10n.current.subscriptionYearly
+      : L10n.current.subscriptionMonthly;
 
-  static String purchaseLabel(PremiumPlan plan) =>
-      plan.isYearly ? 'Jährlich abonnieren' : 'Monatlich abonnieren';
+  static String purchaseLabel(PremiumPlan plan) => plan.isYearly
+      ? L10n.current.subscriptionSubscribeYearly
+      : L10n.current.subscriptionSubscribeMonthly;
 
   /// Big amount that is charged per billing period.
   static String headlinePrice(PremiumPlan plan) => formatEuro(plan.chargeCents);
 
   /// Unit next to the charged amount.
-  static String headlineUnit(PremiumPlan plan) =>
-      plan.isYearly ? 'pro Jahr' : 'pro Monat';
+  static String headlineUnit(PremiumPlan plan) => plan.isYearly
+      ? L10n.current.subscriptionPerYear
+      : L10n.current.subscriptionPerMonth;
 
   /// Small line directly below the charged amount.
   static String priceDetail(PremiumPlan plan) => plan.isYearly
-      ? 'entspricht ${formatEuro(plan.monthlyEquivalentCents)} pro Monat'
-      : 'monatlich kündbar';
+      ? L10n.current.subscriptionEquivalentToValuePerMonth(
+          (formatEuro(plan.monthlyEquivalentCents)).toString(),
+        )
+      : L10n.current.subscriptionCancelMonthly;
 
   /// How often the plan is charged, always visible below the price.
   static String billingNote(PremiumPlan plan) => plan.isYearly
-      ? 'einmal im Jahr berechnet – du sparst '
-            '${formatEuro(SubscriptionPlans.yearlySavingsCents)} gegenüber '
-            'monatlich'
-      : 'jeden Monat berechnet';
+      ? L10n.current.subscriptionBilledOnceAYearSaveValueCompared(
+          (formatEuro(SubscriptionPlans.yearlySavingsCents)).toString(),
+        )
+      : L10n.current.subscriptionBilledEveryMonth;
 
   /// Short price summary shown in purchase buttons.
   static String purchaseSummary(PremiumPlan plan) =>
@@ -82,90 +97,78 @@ abstract final class PremiumCopy {
   static String priceTermsFor({required bool billingAvailable}) {
     const yearly = SubscriptionPlans.yearly;
     const monthly = SubscriptionPlans.monthly;
-    final prices =
-        'Jährlich ${headlinePrice(yearly)} ${headlineUnit(yearly)}, einmal im '
-        'Jahr berechnet (${priceDetail(yearly)}). Monatlich '
-        '${headlinePrice(monthly)} ${headlineUnit(monthly)}. Alle Preise '
-        'inkl. MwSt.';
+    final prices = L10n.current.subscriptionYearlyValueValueBilledOnceAYear(
+      (headlinePrice(yearly)).toString(),
+      (headlineUnit(yearly)).toString(),
+      (priceDetail(yearly)).toString(),
+      (headlinePrice(monthly)).toString(),
+      (headlineUnit(monthly)).toString(),
+    );
     if (!billingAvailable) {
-      return 'Abo-Preise ($billingPending): $prices Ein Abo verlängert sich '
-          'automatisch zum selben Preis und ist jederzeit zum Ende des '
-          'Abrechnungszeitraums kündbar.';
+      return L10n.current
+          .subscriptionSubscriptionPricesValueValueASubscriptionRenews(
+            (billingPending).toString(),
+            (prices).toString(),
+          );
     }
-    return 'Abo-Preise: $prices Bezahlung und Abrechnung laufen über '
-        '$_storeName. Ein Abo verlängert sich automatisch zum selben Preis, '
-        'bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen '
-        'von $_storeName, wirksam zum Ende des Abrechnungszeitraums. Das '
-        'Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf '
-        'unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist '
-        'kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den '
-        'nicht genutzten Teil anteilig zurück. Innerhalb von '
-        '14 Tagen kannst du unter Profil › Vertrag widerrufen widerrufen. '
-        'KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an '
-        'OpenAI.';
+    return L10n.current.subscriptionSubscriptionPricesValuePaymentAndBillingAre(
+      (prices).toString(),
+      (_storeName).toString(),
+      (_storeName).toString(),
+    );
   }
 
   static String get _storeName =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS
-      ? 'dem App Store'
+      ? L10n.current.subscriptionTheAppStore
       : 'Google Play';
 
   /// Shown under the purchase button when billing works.
-  static const storeNote =
-      'Die Zahlung läuft sicher über den Store. Lookin sieht und speichert '
-      'keine Zahlungsdaten.';
+  static String get storeNote =>
+      L10n.current.subscriptionPaymentIsHandledSecurelyByTheStore;
 
   /// Shown under the purchase button when nothing can be bought here.
   static String get unavailableNote => kIsWeb
-      ? 'Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird '
-            'nichts gekauft oder berechnet.'
-      : '$billingPending – bis dahin wird nichts gekauft oder berechnet.';
+      ? L10n.current.subscriptionSubscribeInTheLookinAppForAndroid
+      : L10n.current.subscriptionValueUntilThenNothingIsPurchasedOr(
+          (billingPending).toString(),
+        );
 
   static String get unavailableMessage => kIsWeb
-      ? 'Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts '
-            'gekauft und nichts berechnet – teste Premium hier '
-            '${SubscriptionPlans.trialDays} Tage kostenlos.'
-      : '$billingPending. Es wurde nichts gekauft und nichts berechnet – teste '
-            'Premium bis dahin ${SubscriptionPlans.trialDays} Tage kostenlos.';
+      ? L10n.current.subscriptionSubscriptionsAreAvailableInTheLookinApp(
+          (SubscriptionPlans.trialDays).toString(),
+        )
+      : L10n.current.subscriptionValueNothingWasPurchasedOrChargedTry(
+          (billingPending).toString(),
+          (SubscriptionPlans.trialDays).toString(),
+        );
 
-  static const restoreUnavailableMessage =
-      'Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die '
-      'Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die '
-      'wiederhergestellt werden müssten.';
+  static String get restoreUnavailableMessage =>
+      L10n.current.subscriptionRestoringPurchasesIsOnlyAvailableInThe;
 
-  static const immediateStartNotStored =
-      'Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe '
-      'deine Verbindung und versuche es erneut. Es wurde nichts gekauft.';
+  static String get immediateStartNotStored =>
+      L10n.current.subscriptionYourConsentCouldNotBeSavedJust;
 
-  static const immediateStartRequired =
-      'Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.';
+  static String get immediateStartRequired =>
+      L10n.current.subscriptionPleaseConfirmFirstThatLookinPremiumShould;
 
-  static const manageFailedMessage =
-      'Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-'
-      'Einstellungen direkt im Store.';
+  static String get manageFailedMessage =>
+      L10n.current.subscriptionSubscriptionManagementCouldNotBeOpenedOpen;
 
   /// What the user reads after a purchase or restore attempt.
   static String purchaseOutcomeMessage(PurchaseOutcome outcome) =>
       switch (outcome) {
         PurchaseOutcome.active =>
-          'Premium ist aktiv. Danke für deine '
-              'Unterstützung!',
+          L10n.current.subscriptionPremiumIsActiveThankYouForYour,
         PurchaseOutcome.activating =>
-          'Dein Kauf ist angekommen. Die '
-              'Freischaltung dauert noch einen Moment – öffne Lookin gleich '
-              'noch einmal. Es wird nichts doppelt berechnet.',
+          L10n.current.subscriptionYourPurchaseHasBeenReceivedActivationIs,
         PurchaseOutcome.cancelled =>
-          'Kauf abgebrochen. Es wurde nichts '
-              'berechnet.',
+          L10n.current.subscriptionPurchaseCancelledNothingWasCharged,
         PurchaseOutcome.pending =>
-          'Deine Zahlung ist noch in Prüfung. '
-              'Premium wird freigeschaltet, sobald der Store sie bestätigt.',
+          L10n.current.subscriptionYourPaymentIsStillBeingReviewedPremium,
         PurchaseOutcome.nothingToRestore =>
-          'Für dieses Store-Konto wurde '
-              'kein aktives Abo gefunden.',
+          L10n.current.subscriptionNoActiveSubscriptionWasFoundForThis,
         PurchaseOutcome.unavailable =>
-          'Der Store ist gerade nicht '
-              'erreichbar. Es wurde nichts berechnet – versuche es später '
-              'noch einmal.',
+          L10n.current.subscriptionTheStoreIsCurrentlyUnavailableNothingWas,
       };
 }

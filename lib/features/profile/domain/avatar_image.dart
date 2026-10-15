@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -37,7 +38,7 @@ class AvatarCropRequest {
 /// a JPEG or PNG is accepted, then orientation is baked and metadata discarded.
 PreparedAvatarImage prepareAvatarImage(Uint8List bytes) {
   if (bytes.isEmpty || bytes.length > maxAvatarSourceBytes) {
-    throw const AvatarImageException('Wähle ein Bild mit höchstens 8 MB.');
+    throw AvatarImageException(L10n.current.profileChooseAnImageNoLargerThan8);
   }
   try {
     final img.Decoder decoder;
@@ -46,26 +47,24 @@ PreparedAvatarImage prepareAvatarImage(Uint8List bytes) {
     } else if (img.PngDecoder().isValidFile(bytes)) {
       decoder = img.PngDecoder();
     } else {
-      throw const AvatarImageException('Wähle bitte ein JPG- oder PNG-Bild.');
+      throw AvatarImageException(
+        L10n.current.profilePleaseChooseAJpgOrPngImage,
+      );
     }
     final info = decoder.startDecode(bytes);
     if (info == null || info.width < 1 || info.height < 1) {
-      throw const AvatarImageException(
-        'Dieses Bild konnte nicht geöffnet werden.',
-      );
+      throw AvatarImageException(L10n.current.profileThisImageCouldNotBeOpened);
     }
     if (info.width > 10000 ||
         info.height > 10000 ||
         info.width * info.height > 24000000) {
-      throw const AvatarImageException(
-        'Das Bild ist sehr groß. Wähle ein Foto mit höchstens 24 Megapixeln.',
+      throw AvatarImageException(
+        L10n.current.profileTheImageIsVeryLargeChooseA,
       );
     }
     final decoded = decoder.decodeFrame(0);
     if (decoded == null) {
-      throw const AvatarImageException(
-        'Dieses Bild konnte nicht geöffnet werden.',
-      );
+      throw AvatarImageException(L10n.current.profileThisImageCouldNotBeOpened);
     }
     var image = img.bakeOrientation(decoded);
     if (math.max(image.width, image.height) > 2048) {
@@ -89,9 +88,7 @@ PreparedAvatarImage prepareAvatarImage(Uint8List bytes) {
   } on AvatarImageException {
     rethrow;
   } catch (_) {
-    throw const AvatarImageException(
-      'Dieses Bild konnte nicht geöffnet werden.',
-    );
+    throw AvatarImageException(L10n.current.profileThisImageCouldNotBeOpened);
   }
 }
 
@@ -99,11 +96,11 @@ Uint8List cropAvatarImage(AvatarCropRequest request) {
   if (!request.zoom.isFinite ||
       !request.horizontal.isFinite ||
       !request.vertical.isFinite) {
-    throw const AvatarImageException('Wähle den Bildausschnitt erneut.');
+    throw AvatarImageException(L10n.current.profileSelectTheCropAgain);
   }
   final image = img.decodeJpg(request.image.bytes);
   if (image == null) {
-    throw const AvatarImageException('Wähle das Bild bitte erneut aus.');
+    throw AvatarImageException(L10n.current.profilePleaseChooseTheImageAgain);
   }
   final zoom = request.zoom.clamp(1.0, 3.0);
   final side = math.max(
@@ -123,9 +120,7 @@ Uint8List cropAvatarImage(AvatarCropRequest request) {
   img.compositeImage(clean, resized);
   final jpeg = Uint8List.fromList(img.encodeJpg(clean, quality: 85));
   if (jpeg.length > maxAvatarUploadBytes) {
-    throw const AvatarImageException(
-      'Das Bild konnte nicht verkleinert werden.',
-    );
+    throw AvatarImageException(L10n.current.profileTheImageCouldNotBeResized);
   }
   return jpeg;
 }

@@ -1,3 +1,6 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
+import 'package:fitness_ai_app/l10n/display_text.dart';
+
 /// Stable enum names support a later English UI without changing saved data.
 enum PersonalGoal {
   balanced('Gesünder essen'),
@@ -5,8 +8,9 @@ enum PersonalGoal {
   maintain('Gewicht halten'),
   buildStrength('Muskeln aufbauen');
 
-  const PersonalGoal(this.label);
-  final String label;
+  const PersonalGoal(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 enum ActivityPattern {
@@ -15,8 +19,9 @@ enum ActivityPattern {
   oftenMoving('Viel in Bewegung'),
   veryActive('Sehr aktiv');
 
-  const ActivityPattern(this.label);
-  final String label;
+  const ActivityPattern(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 enum NutritionPreference {
@@ -25,8 +30,9 @@ enum NutritionPreference {
   vegan('Vegan'),
   pescatarian('Mit Fisch, ohne Fleisch');
 
-  const NutritionPreference(this.label);
-  final String label;
+  const NutritionPreference(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 enum MeasurementSystem { metric, imperial }
@@ -38,8 +44,9 @@ enum RoutineFocus {
   consistency('Mehr Regelmäßigkeit'),
   budget('Aufs Budget achten');
 
-  const RoutineFocus(this.label);
-  final String label;
+  const RoutineFocus(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 /// Only used for the energy estimate (Mifflin-St Jeor). Without an answer
@@ -49,8 +56,9 @@ enum BodySex {
   male('Männlich'),
   unspecified('Möchte ich nicht angeben');
 
-  const BodySex(this.label);
-  final String label;
+  const BodySex(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 /// How fast a weight goal may be approached. Deliberately no faster option
@@ -59,8 +67,11 @@ enum WeightPace {
   gentle('Sanft', 0.25),
   steady('Ausgewogen', 0.5);
 
-  const WeightPace(this.label, this.kgPerWeek);
-  final String label;
+  const WeightPace(this._label, this.kgPerWeek);
+  final String _label;
+  String get label => this == steady && L10n.isEnglish
+      ? L10n.current.onboardingSteadyPace
+      : DisplayText.of(_label);
   final double kgPerWeek;
 }
 
@@ -72,8 +83,9 @@ enum Motivation {
   habits('Bessere Gewohnheiten'),
   rolemodel('Vorbild für Familie & Kinder');
 
-  const Motivation(this.label);
-  final String label;
+  const Motivation(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 enum Obstacle {
@@ -85,8 +97,9 @@ enum Obstacle {
   knowledge('Unsicher, was gut für mich ist'),
   stress('Essen bei Stress');
 
-  const Obstacle(this.label);
-  final String label;
+  const Obstacle(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 enum TrackingExperience {
@@ -94,8 +107,9 @@ enum TrackingExperience {
   some('Schon mal ausprobiert'),
   regular('Ja, regelmäßig');
 
-  const TrackingExperience(this.label);
-  final String label;
+  const TrackingExperience(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 /// Situations in which Lookin must not calculate calorie targets on its own
@@ -106,8 +120,9 @@ enum HealthNote {
   eatingDisorder('Essstörung – aktuell oder früher'),
   medicalDiet('Erkrankung, bei der die Ernährung ärztlich begleitet wird');
 
-  const HealthNote(this.label);
-  final String label;
+  const HealthNote(this._label);
+  final String _label;
+  String get label => DisplayText.of(_label);
 }
 
 const _unchanged = Object();
@@ -359,27 +374,41 @@ class PersonalizationProfile {
   }
 
   String get routineLabel => desiredMeals == null
-      ? 'Dein Rhythmus bleibt flexibel'
-      : '$desiredMeals Mahlzeiten passen in deinen Tag';
+      ? L10n.current.onboardingYourMealRhythmStaysFlexible
+      : L10n.current.onboardingValueMealsFitIntoYourDay(
+          (desiredMeals).toString(),
+        );
 
   List<String> get summaryLines => [
-    if (goal != null) 'Dein Fokus: ${goal!.label.toLowerCase()}.',
-    if (activity != null) 'Dein Alltag: ${activity!.label.toLowerCase()}.',
+    if (goal != null)
+      L10n.current.onboardingYourFocusValue(
+        (goal!.label.toLowerCase()).toString(),
+      ),
+    if (activity != null)
+      L10n.current.onboardingYourRoutineValue(
+        (activity!.label.toLowerCase()).toString(),
+      ),
     if (nutrition != null && nutrition != NutritionPreference.mixed)
-      'Passend gekennzeichnete ${nutrition!.label.toLowerCase()} Rezeptideen erscheinen zuerst.',
+      L10n.current.onboardingRecipeIdeasLabelledAsValueAppearFirst(
+        (nutrition!.label.toLowerCase()).toString(),
+      ),
     if (allergies.trim().isNotEmpty)
-      'Dein Coach berücksichtigt: ${allergies.trim()}.',
+      L10n.current.onboardingYourCoachTakesIntoAccountValue(
+        (allergies.trim()).toString(),
+      ),
     if (cookingMinutes != null)
-      'Rezepte bis $cookingMinutes Minuten bekommen Vorrang, wenn passende vorhanden sind.',
+      L10n.current.onboardingRecipesTakingUpToValueMinutesGet(
+        (cookingMinutes).toString(),
+      ),
     if (focus == RoutineFocus.budget)
-      'Als Budget-Rezept markierte Ideen rücken nach vorne.',
+      L10n.current.onboardingIdeasMarkedAsBudgetRecipesMoveUp,
   ];
 
   /// Context is prepared locally. It is only included with an AI request when
   /// the user actively uses the in-app coach.
   Map<String, Object?> toPreferenceContext() => {
     'schema_version': 1,
-    'locale': 'de',
+    'locale': L10n.code,
     'goal': goal?.name,
     'activity_pattern': activity?.name,
     'usual_meals': usualMeals,

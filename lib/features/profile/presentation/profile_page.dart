@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import '../../subscription/domain/entitlement.dart';
 import '../../subscription/presentation/withdrawal_page.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/l10n.dart';
+import '../../../l10n/locale_controller.dart';
 import '../../language/presentation/language_page.dart';
 import '../../../shared/widgets/animated_reveal.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -51,9 +53,11 @@ class ProfilePage extends StatelessWidget {
                   child: _TodayStats(controller: controller),
                 ),
                 const SizedBox(height: 26),
-                const AnimatedReveal(
+                AnimatedReveal(
                   delay: Duration(milliseconds: 140),
-                  child: SectionHeader(title: 'Meine täglichen Ziele'),
+                  child: SectionHeader(
+                    title: context.l10n.profileMyDailyTargets,
+                  ),
                 ),
                 const SizedBox(height: 11),
                 AnimatedReveal(
@@ -63,9 +67,11 @@ class ProfilePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 const PersonalizationCard(profileMode: true),
                 const SizedBox(height: 25),
-                const AnimatedReveal(
+                AnimatedReveal(
                   delay: Duration(milliseconds: 250),
-                  child: SectionHeader(title: 'Ernährungsprofil'),
+                  child: SectionHeader(
+                    title: context.l10n.profileNutritionProfile,
+                  ),
                 ),
                 const SizedBox(height: 11),
                 AnimatedReveal(
@@ -73,9 +79,9 @@ class ProfilePage extends StatelessWidget {
                   child: _NutritionProfile(controller: controller),
                 ),
                 const SizedBox(height: 25),
-                const AnimatedReveal(
+                AnimatedReveal(
                   delay: Duration(milliseconds: 360),
-                  child: SectionHeader(title: 'App & Datenschutz'),
+                  child: SectionHeader(title: context.l10n.profileAppPrivacy),
                 ),
                 const SizedBox(height: 11),
                 AnimatedReveal(
@@ -110,7 +116,7 @@ class _ProfileTopBar extends StatelessWidget {
       const SizedBox(width: 48),
       Expanded(
         child: Text(
-          'Profil',
+          context.l10n.profileProfile,
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -119,7 +125,7 @@ class _ProfileTopBar extends StatelessWidget {
       ),
       IconButton.filledTonal(
         onPressed: onEdit,
-        tooltip: 'Profil bearbeiten',
+        tooltip: context.l10n.profileEditProfile,
         icon: const Icon(Icons.tune_rounded, size: 20),
       ),
     ],
@@ -134,7 +140,9 @@ class _ProfileIdentity extends StatelessWidget {
   Widget build(BuildContext context) {
     final goal =
         controller.personalization?.goal?.label ??
-        (controller.personalization == null ? controller.goal : null);
+        (controller.personalization == null
+            ? DisplayText.of(controller.goal)
+            : null);
     return Column(
       children: [
         const _EditableAvatar(),
@@ -174,8 +182,8 @@ class _ProfileIdentity extends StatelessWidget {
             ],
           )
         else
-          const Text(
-            'Noch kein Ziel gewählt',
+          Text(
+            context.l10n.profileNoGoalSelectedYet,
             style: TextStyle(color: AppColors.textMuted, fontSize: 14),
           ),
       ],
@@ -216,7 +224,7 @@ class _EditableAvatar extends StatelessWidget {
             child: AppAvatar(
               radius: 54,
               onTap: () => showAvatarEditor(context),
-              semanticLabel: 'Profilbild ändern',
+              semanticLabel: context.l10n.profileChangeProfilePicture,
             ),
           ),
         ),
@@ -266,7 +274,9 @@ class _TodayStats extends StatelessWidget {
                 icon: Icons.checklist_rounded,
                 color: AppColors.mint,
                 value: '$entries',
-                label: entries == 1 ? 'Eintrag heute' : 'Einträge heute',
+                label: entries == 1
+                    ? context.l10n.profileEntryToday
+                    : context.l10n.profileEntriesToday,
               ),
             ),
             const VerticalDivider(width: 1, color: AppColors.border),
@@ -275,7 +285,9 @@ class _TodayStats extends StatelessWidget {
                 icon: Icons.local_fire_department_rounded,
                 color: AppColors.orange,
                 value: controller.streakLoading ? '–' : '$streak',
-                label: streak == 1 ? 'Tag Serie' : 'Tage Serie',
+                label: streak == 1
+                    ? context.l10n.profileDayStreak
+                    : context.l10n.profileDayStreak2,
               ),
             ),
             const VerticalDivider(width: 1, color: AppColors.border),
@@ -284,7 +296,7 @@ class _TodayStats extends StatelessWidget {
                 icon: Icons.restaurant_rounded,
                 color: AppColors.primary,
                 value: _formatThousands(controller.diaryConsumedCalories),
-                label: 'kcal heute',
+                label: context.l10n.profileKcalToday,
               ),
             ),
           ],
@@ -357,24 +369,13 @@ class _DailyGoals extends StatelessWidget {
     final ready = targets.isReady;
     final note = switch (targets.status) {
       DailyTargetsStatus.ready =>
-        'Diese Richtwerte berechnen wir aus deinem Alter, deiner Größe, '
-            'deinem Gewicht und deinem Alltag. Sie dienen zur Orientierung '
-            'und ersetzen keine ärztliche Beratung.',
+        context.l10n.profileWeCalculateTheseGuidelineValuesFromYour,
       DailyTargetsStatus.missingData =>
-        'Deine Tagesziele berechnen wir aus deinem Alter, deiner Größe, '
-            'deinem Gewicht und deinem Alltag. Wenn du möchtest, beantworte '
-            'dazu ein paar kurze Fragen. Du kannst Lookin aber auch ganz ohne '
-            'Ziele nutzen.',
+        context.l10n.profileWeCalculateYourDailyTargetsFromYour,
       DailyTargetsStatus.underage =>
-        'Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. '
-            'Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen '
-            'Arzt oder eine Ernährungsfachkraft.',
+        context.l10n.profileLookinDoesNotCalculateCalorieTargetsFor,
       DailyTargetsStatus.professionalGuidance =>
-        'Weil du angegeben hast, dass deine Ernährung gerade besondere '
-            'Aufmerksamkeit braucht, berechnet Lookin keine Kalorienziele. '
-            'Besprich deine Ziele bitte mit deiner Ärztin, deinem Arzt oder '
-            'einer Ernährungsfachkraft. Tagebuch und Rezepte kannst du '
-            'trotzdem nutzen.',
+        context.l10n.profileBecauseYouIndicatedThatYourNutritionNeeds,
     };
     return SurfaceCard(
       child: Column(
@@ -389,7 +390,7 @@ class _DailyGoals extends StatelessWidget {
                   color: AppColors.orange,
                   value: ready ? _formatThousands(targets.calories!) : '–',
                   unit: 'kcal',
-                  label: 'Kalorien',
+                  label: context.l10n.profileCalories,
                 ),
               ),
               const SizedBox(width: 8),
@@ -411,7 +412,7 @@ class _DailyGoals extends StatelessWidget {
                   color: AppColors.blue,
                   value: ready ? '${targets.fat}' : '–',
                   unit: 'g',
-                  label: 'Fett',
+                  label: context.l10n.profileFat,
                 ),
               ),
             ],
@@ -449,13 +450,13 @@ class _DailyGoals extends StatelessWidget {
                   ? TextButton.icon(
                       onPressed: () => openPersonalizationEditor(context),
                       icon: const Icon(Icons.edit_outlined, size: 18),
-                      label: const Text('Angaben ändern'),
+                      label: Text(context.l10n.profileChangeInformation),
                     )
                   : FilledButton.tonalIcon(
                       key: const Key('daily-goals-answer'),
                       onPressed: () => openPersonalizationEditor(context),
                       icon: const Icon(Icons.quiz_outlined, size: 18),
-                      label: const Text('Fragen beantworten'),
+                      label: Text(context.l10n.profileAnswerQuestions),
                     ),
             ),
           ],
@@ -543,10 +544,11 @@ class _NutritionProfile extends StatelessWidget {
         children: [
           _ProfileRow(
             icon: Icons.restaurant_outlined,
-            title: 'Ernährungsstil',
+            title: context.l10n.profileNutritionStyle,
             value: controller.personalization == null
-                ? controller.nutritionStyle
-                : controller.personalization!.nutrition?.label ?? 'Noch offen',
+                ? DisplayText.of(controller.nutritionStyle)
+                : controller.personalization!.nutrition?.label ??
+                      context.l10n.profileRemaining,
             onTap: () => controller.personalization == null
                 ? showNutritionProfileSheet(context, controller)
                 : openPersonalizationEditor(context),
@@ -554,17 +556,18 @@ class _NutritionProfile extends StatelessWidget {
           const Divider(height: 1),
           _ProfileRow(
             icon: Icons.no_food_outlined,
-            title: 'Allergien',
-            value: controller.allergies,
+            title: context.l10n.profileAllergies,
+            value: DisplayText.allergies(controller.allergies),
             onTap: () => showNutritionProfileSheet(context, controller),
           ),
           const Divider(height: 1),
           _ProfileRow(
             icon: Icons.directions_run_rounded,
-            title: 'Aktivität',
+            title: context.l10n.profileActivity,
             value: controller.personalization == null
-                ? controller.activityLevel
-                : controller.personalization!.activity?.label ?? 'Noch offen',
+                ? DisplayText.of(controller.activityLevel)
+                : controller.personalization!.activity?.label ??
+                      context.l10n.profileRemaining,
             onTap: () => controller.personalization == null
                 ? showNutritionProfileSheet(context, controller)
                 : openPersonalizationEditor(context),
@@ -572,10 +575,12 @@ class _NutritionProfile extends StatelessWidget {
           const Divider(height: 1),
           _ProfileRow(
             icon: Icons.schedule_rounded,
-            title: 'Mahlzeiten',
+            title: context.l10n.profileMeals,
             value: controller.personalization?.desiredMeals == null
-                ? 'Flexibel'
-                : '${controller.personalization!.desiredMeals} pro Tag',
+                ? context.l10n.profileFlexible
+                : context.l10n.profileValuePerDay(
+                    (controller.personalization!.desiredMeals).toString(),
+                  ),
             onTap: () => openPersonalizationEditor(context),
           ),
         ],
@@ -661,8 +666,10 @@ class _SettingsList extends StatelessWidget {
                 Icons.developer_mode_rounded,
                 color: AppColors.primary,
               ),
-              title: const Text('Entwickler: Premium'),
-              subtitle: const Text('Nur für dein Entwickler-Konto sichtbar'),
+              title: Text(context.l10n.profileDeveloperPremium),
+              subtitle: Text(
+                context.l10n.profileOnlyVisibleToYourDeveloperAccount,
+              ),
               value: controller.subscription.hasPremium,
               onChanged: (value) async {
                 final messenger = ScaffoldMessenger.of(context);
@@ -670,9 +677,9 @@ class _SettingsList extends StatelessWidget {
                   await controller.setDeveloperPremium(value);
                 } catch (_) {
                   messenger.showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text(
-                        'Premium konnte gerade nicht umgeschaltet werden.',
+                        L10n.current.profilePremiumCouldNotBeSwitchedJustNow,
                       ),
                     ),
                   );
@@ -687,8 +694,8 @@ class _SettingsList extends StatelessWidget {
             _SettingsTile(
               key: const Key('profile-withdraw'),
               icon: Icons.undo_rounded,
-              title: 'Vertrag widerrufen',
-              subtitle: 'Innerhalb von 14 Tagen nach dem Kauf, ohne Grund',
+              title: context.l10n.profileWithdrawFromContract,
+              subtitle: context.l10n.profileWithin14DaysOfPurchaseWithoutGiving,
               color: AppColors.error,
               onTap: () =>
                   unawaited(openWithdrawal(context, name: controller.name)),
@@ -697,22 +704,22 @@ class _SettingsList extends StatelessWidget {
           const Divider(height: 1),
           _SettingsTile(
             icon: Icons.notifications_none_rounded,
-            title: 'Erinnerungen',
-            subtitle: 'Bald verfügbar',
+            title: context.l10n.profileReminders,
+            subtitle: context.l10n.profileComingSoon,
             onTap: () => showReminderSheet(context, controller),
           ),
           const Divider(height: 1),
           _SettingsTile(
             icon: Icons.shield_outlined,
-            title: 'Datenschutz & Daten',
-            subtitle: 'Exportieren, löschen, Einwilligungen',
+            title: context.l10n.profilePrivacyData,
+            subtitle: context.l10n.profileExportDeleteConsents,
             onTap: () => showPrivacySheet(context, controller),
           ),
           const Divider(height: 1),
           _SettingsTile(
             icon: Icons.help_outline_rounded,
-            title: 'Hilfe & Sicherheit',
-            subtitle: 'Hinweise und Kontakt',
+            title: context.l10n.profileHelpSafety,
+            subtitle: context.l10n.profileInformationAndContact,
             onTap: () => showHelpSheet(context),
           ),
           const Divider(height: 1),
@@ -720,15 +727,17 @@ class _SettingsList extends StatelessWidget {
             key: const Key('profile-language'),
             icon: Icons.translate_rounded,
             title: context.l10n.languageSettingsTitle,
-            subtitle: LanguageOption.of(Locale(context.l10n.localeName)).name,
+            subtitle: LocaleScope.of(context)?.followsDevice == true
+                ? '${context.l10n.languageDeviceActive} · ${LanguageOption.of(Locale(context.l10n.localeName)).name}'
+                : LanguageOption.of(Locale(context.l10n.localeName)).name,
             onTap: () => unawaited(showLanguageSheet(context)),
           ),
           const Divider(height: 1),
           _SettingsTile(
             key: const Key('profile-legal'),
             icon: Icons.gavel_rounded,
-            title: 'Impressum & Rechtliches',
-            subtitle: 'Impressum, AGB, Datenschutz, Widerruf',
+            title: context.l10n.profileImprintLegal,
+            subtitle: context.l10n.profileImprintTermsPrivacyWithdrawal,
             onTap: () => showLegalSheet(context),
           ),
           if (controller.isDeveloper) ...[
@@ -736,8 +745,9 @@ class _SettingsList extends StatelessWidget {
             _SettingsTile(
               key: const Key('profile-demo-replay'),
               icon: Icons.replay_rounded,
-              title: 'Von vorne zeigen',
-              subtitle: 'Einführung, Fragen und Premium wie beim ersten Start',
+              title: context.l10n.profileStartFromTheBeginning,
+              subtitle:
+                  context.l10n.profileIntroductionQuestionsAndPremiumAsOnThe,
               color: AppColors.primary,
               onTap: () => unawaited(showDemoReplay(context)),
             ),
@@ -746,8 +756,8 @@ class _SettingsList extends StatelessWidget {
           _SettingsTile(
             key: const Key('profile-sign-out'),
             icon: Icons.logout_rounded,
-            title: 'Abmelden',
-            subtitle: 'Dieses Konto auf dem Gerät verlassen',
+            title: context.l10n.profileSignOut,
+            subtitle: context.l10n.profileLeaveThisAccountOnThisDevice,
             onTap: () => unawaited(_confirmSignOut(context)),
           ),
         ],
@@ -760,18 +770,16 @@ Future<void> _confirmSignOut(BuildContext context) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: const Text('Abmelden?'),
-      content: const Text(
-        'Deine gespeicherten Kontodaten bleiben erhalten. Du kannst dich später wieder anmelden.',
-      ),
+      title: Text(context.l10n.profileSignOut2),
+      content: Text(context.l10n.profileYourSavedAccountDataWillBeKept),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(dialogContext, false),
-          child: const Text('Abbrechen'),
+          child: Text(context.l10n.profileCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(dialogContext, true),
-          child: const Text('Abmelden'),
+          child: Text(context.l10n.profileSignOut),
         ),
       ],
     ),
@@ -782,8 +790,8 @@ Future<void> _confirmSignOut(BuildContext context) async {
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Abmelden fehlgeschlagen. Bitte versuche es erneut.'),
+        SnackBar(
+          content: Text(context.l10n.profileSignOutFailedPleaseTryAgain),
         ),
       );
     }
@@ -794,14 +802,18 @@ String _premiumSubtitle(SubscriptionController subscription) {
   final expiresAt = subscription.entitlement.expiresAt;
   if (subscription.isTrialing) {
     return expiresAt == null
-        ? 'Testphase aktiv'
-        : 'Testphase aktiv bis ${formatPremiumShortDate(expiresAt)}';
+        ? L10n.current.profileTrialActive
+        : L10n.current.profileTrialActiveUntilValue(
+            (formatPremiumShortDate(expiresAt)).toString(),
+          );
   }
-  if (subscription.hasPremium) return 'Premium aktiv';
+  if (subscription.hasPremium) return L10n.current.profilePremiumActive;
   if (subscription.canStartTrial) {
-    return '${SubscriptionPlans.trialDays} Tage kostenlos testen';
+    return L10n.current.profileValueDayFreeTrial(
+      (SubscriptionPlans.trialDays).toString(),
+    );
   }
-  return 'Pläne und Vorteile ansehen';
+  return L10n.current.profileViewPlansAndBenefits;
 }
 
 class _SettingsTile extends StatelessWidget {
@@ -887,13 +899,15 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Profil bearbeiten',
+              context.l10n.profileEditProfile,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 18),
             if (widget.controller.personalization != null)
-              const Text(
-                'Rufname und persönliche Wünsche änderst du im Profil unter „Antworten ändern“. Die folgenden Zahlen sind deine separat eingestellten Ziele.',
+              Text(
+                context
+                    .l10n
+                    .profileChangeYourPreferredNameAndPersonalPreferences,
                 style: TextStyle(color: AppColors.textMuted, height: 1.5),
               ),
             if (widget.controller.personalization == null) ...[
@@ -905,8 +919,8 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                 ),
               ),
               const SizedBox(height: 18),
-              const Text(
-                'Mein Ziel',
+              Text(
+                context.l10n.profileMyGoal,
                 style: TextStyle(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 9),
@@ -914,10 +928,14 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                 spacing: 8,
                 runSpacing: 8,
                 children:
-                    ['Fett verlieren', 'Gewicht halten', 'Muskeln aufbauen']
+                    [
+                          "Fett verlieren", // l10n-ignore: saved value
+                          "Gewicht halten", // l10n-ignore: saved value
+                          "Muskeln aufbauen", // l10n-ignore: saved value
+                        ] // l10n-ignore: canonical saved values; DisplayText below
                         .map(
                           (goal) => ChoiceChip(
-                            label: Text(goal),
+                            label: Text(DisplayText.of(goal)),
                             selected: _goal == goal,
                             onSelected: (_) => setState(() => _goal = goal),
                             showCheckmark: false,
@@ -934,16 +952,18 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
             ],
             const SizedBox(height: 19),
             if (widget.controller.dailyTargets.isReady)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 14),
                 child: Text(
-                  'Dein Kalorienziel wird aus deinen Angaben berechnet.',
+                  context.l10n.profileYourCalorieTargetIsCalculatedFromYour,
                   style: TextStyle(color: AppColors.textMuted, height: 1.4),
                 ),
               )
             else ...[
               Text(
-                'Kalorienziel: ${_calories.round()} kcal',
+                context.l10n.profileCalorieTargetValueKcal(
+                  (_calories.round()).toString(),
+                ),
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
               Slider(
@@ -956,7 +976,9 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
               ),
             ],
             Text(
-              'Zielgewicht: ${_targetWeight.toStringAsFixed(1)} kg',
+              context.l10n.profileTargetWeightValueKg(
+                (_targetWeight.toStringAsFixed(1)).toString(),
+              ),
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             Slider(
@@ -986,13 +1008,13 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                   );
                   Navigator.pop(context);
                 },
-                child: const Text('Änderungen übernehmen'),
+                child: Text(context.l10n.profileApplyChanges),
               ),
             ),
             const SizedBox(height: 8),
-            const Center(
+            Center(
               child: Text(
-                'Demo: Änderungen bleiben bis zum Neustart erhalten.',
+                context.l10n.profileDemoChangesLastUntilTheAppRestarts,
                 style: TextStyle(color: AppColors.textMuted, fontSize: 11),
               ),
             ),

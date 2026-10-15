@@ -1,74 +1,65 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
 import 'introduction_artwork.dart';
 
-const _slides = [
+List<_IntroSlide> get _slides => [
   _IntroSlide(
-    label: 'DEIN TAGEBUCH',
-    title: 'Dein Tag.',
-    emphasis: 'Auf einen Blick.',
-    description:
-        'Frühstück, Mittagessen, Abendessen und Snacks an einem Ort – mit '
-        'Kalorien, Kohlenhydraten, Protein und Fett.',
+    label: L10n.current.onboardingYourDiary,
+    title: L10n.current.onboardingYourDay2,
+    emphasis: L10n.current.onboardingAtAGlance,
+    description: L10n.current.onboardingBreakfastLunchDinnerAndSnacksInOne,
     accent: AppColors.primary,
-    detail: 'Sehen, was du heute schon gegessen hast.',
+    detail: L10n.current.onboardingSeeWhatYouHaveAlreadyEatenToday,
     icon: Icons.menu_book_rounded,
   ),
   _IntroSlide(
-    label: 'SCHNELL EINGETRAGEN',
-    title: 'Ein Tipp aufs Plus.',
-    emphasis: 'Drei Wege.',
-    description:
-        'Foto machen, Barcode scannen oder selbst eintragen. Das Plus in der '
-        'Mitte ist immer nur einen Tipp entfernt.',
+    label: L10n.current.onboardingQuickToLog,
+    title: L10n.current.onboardingTapThePlus,
+    emphasis: L10n.current.onboardingThreeWays,
+    description: L10n.current.onboardingTakeAPhotoScanABarcodeOr,
     accent: AppColors.primary,
-    detail: 'Suchen und eigene Lebensmittel inklusive.',
+    detail: L10n.current.onboardingSearchAndCustomFoodsIncluded,
     icon: Icons.add_circle_outline_rounded,
   ),
   _IntroSlide(
-    label: 'KI-FOTO · PREMIUM',
-    title: 'Foto machen.',
-    emphasis: 'KI schätzt.',
-    description:
-        'Die KI erkennt Lebensmittel und schätzt die Mengen. Du prüfst Gramm '
-        'und Nährwerte, ergänzt, was fehlt – und speicherst erst dann.',
+    label: L10n.current.onboardingAiPhotoPremium,
+    title: L10n.current.onboardingTakeAPhoto,
+    emphasis: L10n.current.onboardingAiEstimates,
+    description: L10n.current.onboardingAiRecognisesFoodsAndEstimatesAmountsYou,
     accent: AppColors.primary,
-    detail: 'Schätzungen sind immer als Schätzung markiert.',
+    detail: L10n.current.onboardingEstimatesAreAlwaysLabelledAsEstimates,
     icon: Icons.photo_camera_outlined,
   ),
   _IntroSlide(
     label: 'LOOKIN COACH · PREMIUM',
-    title: 'Frag einfach.',
-    emphasis: 'Dein KI-Coach.',
+    title: L10n.current.onboardingJustAsk,
+    emphasis: L10n.current.onboardingYourAiCoach,
     description:
-        'Antworten zu Ernährung und Fitness, passend zu deinem Ziel und deinen '
-        'Tageswerten.',
+        L10n.current.onboardingAnswersAboutNutritionAndFitnessTailoredTo,
     accent: AppColors.primary,
-    detail: 'Konzentriert auf Ernährung und Fitness.',
+    detail: L10n.current.onboardingFocusedOnNutritionAndFitness,
     icon: Icons.auto_awesome_outlined,
   ),
   _IntroSlide(
-    label: 'REZEPTE',
-    title: 'Rezepte finden.',
-    emphasis: 'Einfach kochen.',
-    description:
-        'Filtere nach Schnell, High Protein oder Vegetarisch und finde '
-        'Rezepte mit dem, was du zu Hause hast.',
+    label: L10n.current.onboardingRecipes,
+    title: L10n.current.onboardingFindRecipes,
+    emphasis: L10n.current.onboardingCookSimply,
+    description: L10n.current.onboardingFilterByQuickHighProteinOrVegetarian,
     accent: AppColors.primary,
-    detail: 'Mit einem Tipp ins Tagebuch.',
+    detail: L10n.current.onboardingLogInYourDiaryWithOneTap,
     icon: Icons.restaurant_menu_rounded,
   ),
   _IntroSlide(
-    label: 'DEIN PROFIL',
-    title: 'Deine Ziele.',
-    emphasis: 'Deine Serie.',
+    label: L10n.current.onboardingYourProfile2,
+    title: L10n.current.onboardingYourGoals,
+    emphasis: L10n.current.onboardingYourStreak,
     description:
-        'Wenn du möchtest, berechnet Lookin Richtwerte aus Alter, Größe und '
-        'Gewicht. Deine Serie zeigt, wie regelmäßig du dabei bist.',
+        L10n.current.onboardingIfYouWishLookinCalculatesGuidelineValues,
     accent: AppColors.primary,
-    detail: 'Ohne Angaben funktioniert Lookin genauso.',
+    detail: L10n.current.onboardingLookinWorksWithoutThisInformationToo,
     icon: Icons.person_outline_rounded,
   ),
 ];
@@ -244,8 +235,8 @@ class _IntroductionPageState extends State<IntroductionPage>
                                       foregroundColor: AppColors.textMuted,
                                       minimumSize: const Size(48, 48),
                                     ),
-                                    child: const Text(
-                                      'Überspringen',
+                                    child: Text(
+                                      context.l10n.onboardingSkip,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(fontSize: 13),
                                     ),
@@ -315,8 +306,11 @@ class _IntroductionPageState extends State<IntroductionPage>
                                       onTap: widget.busy || _moving
                                           ? null
                                           : () => _goTo(index),
-                                      label:
-                                          'Seite ${index + 1} von ${_slides.length}',
+                                      label: context.l10n
+                                          .onboardingPageValueOfValue(
+                                            (index + 1).toString(),
+                                            (_slides.length).toString(),
+                                          ),
                                       button: true,
                                       child: InkWell(
                                         excludeFromSemantics: true,
@@ -351,7 +345,7 @@ class _IntroductionPageState extends State<IntroductionPage>
                                   children: [
                                     if (_index > 0) ...[
                                       IconButton.outlined(
-                                        tooltip: 'Zurück',
+                                        tooltip: context.l10n.onboardingBack,
                                         onPressed: widget.busy || _moving
                                             ? null
                                             : () => _goTo(_index - 1),
@@ -397,10 +391,16 @@ class _IntroductionPageState extends State<IntroductionPage>
                                             Flexible(
                                               child: Text(
                                                 widget.busy
-                                                    ? 'Einen Moment …'
+                                                    ? context
+                                                          .l10n
+                                                          .onboardingOneMoment
                                                     : last
-                                                    ? 'Los geht’s'
-                                                    : 'Weiter',
+                                                    ? context
+                                                          .l10n
+                                                          .onboardingLetSGo
+                                                    : context
+                                                          .l10n
+                                                          .onboardingContinue,
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
@@ -423,12 +423,13 @@ class _IntroductionPageState extends State<IntroductionPage>
                                     foregroundColor: AppColors.textMuted,
                                     minimumSize: const Size(48, 48),
                                   ),
-                                  child: const Text.rich(
+                                  child: Text.rich(
                                     TextSpan(
-                                      text: 'Schon dabei? ',
+                                      text:
+                                          context.l10n.onboardingAlreadyAMember,
                                       children: [
                                         TextSpan(
-                                          text: 'Anmelden',
+                                          text: context.l10n.onboardingSignIn,
                                           style: TextStyle(
                                             color: AppColors.text,
                                             fontWeight: FontWeight.w700,
@@ -685,9 +686,9 @@ class _PreviewCaption extends StatelessWidget {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Flexible(
+        Flexible(
           child: Text(
-            'Beispielansicht',
+            context.l10n.onboardingExampleView,
             style: TextStyle(
               color: AppColors.textMuted,
               fontSize: 10,
@@ -698,7 +699,7 @@ class _PreviewCaption extends StatelessWidget {
         if (onReplay != null)
           IconButton(
             key: ValueKey('intro-replay-$index'),
-            tooltip: 'Animation wiederholen',
+            tooltip: context.l10n.onboardingReplayAnimation,
             onPressed: onReplay,
             style: IconButton.styleFrom(
               minimumSize: const Size(48, 48),

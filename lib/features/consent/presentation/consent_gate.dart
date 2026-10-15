@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -81,14 +82,14 @@ class _ConsentPageState extends State<ConsentPage> {
               padding: const EdgeInsets.fromLTRB(22, 28, 22, 24),
               children: [
                 Text(
-                  'Deine Einwilligungen',
+                  context.l10n.consentYourConsents,
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Lookin funktioniert auch ohne diese Einwilligungen. Ohne sie '
-                  'bleiben Gesundheitsangaben nur auf diesem Gerät, und KI-Coach '
-                  'und KI-Foto fragen dich vor der ersten Nutzung noch einmal.',
+                Text(
+                  context
+                      .l10n
+                      .consentLookinAlsoWorksWithoutTheseConsentsWithout,
                   style: TextStyle(color: AppColors.textMuted, height: 1.45),
                 ),
                 const SizedBox(height: 20),
@@ -108,7 +109,7 @@ class _ConsentPageState extends State<ConsentPage> {
                   onChanged: (value) => setState(() => _ai = value),
                 ),
                 const SizedBox(height: 14),
-                const Text(
+                Text(
                   ConsentTexts.revocableNote,
                   style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
                 ),
@@ -125,8 +126,8 @@ class _ConsentPageState extends State<ConsentPage> {
                   ),
                   child: Text(
                     _health || _ai
-                        ? 'Speichern und weiter'
-                        : 'Ohne Einwilligung weiter',
+                        ? context.l10n.consentSaveAndContinue
+                        : context.l10n.consentContinueWithoutConsent,
                   ),
                 ),
               ],

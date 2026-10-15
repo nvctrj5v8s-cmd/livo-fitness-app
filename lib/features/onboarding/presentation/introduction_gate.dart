@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -53,9 +54,9 @@ class _IntroductionGateState extends State<IntroductionGate> {
     setState(() => _complete = true);
     if (!saved) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Die Einführung erscheint beim nächsten Start eventuell erneut.',
+            L10n.current.onboardingTheIntroductionMayAppearAgainAtThe,
           ),
         ),
       );
@@ -77,7 +78,7 @@ class _IntroductionGateState extends State<IntroductionGate> {
           key: const ValueKey('introduction-loading'),
           backgroundColor: AppColors.background,
           body: Semantics(
-            label: 'Lookin wird geöffnet',
+            label: context.l10n.onboardingOpeningLookin,
             child: const SizedBox.expand(),
           ),
         ),

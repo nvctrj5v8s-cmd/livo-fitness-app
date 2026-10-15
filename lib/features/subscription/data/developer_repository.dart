@@ -1,3 +1,4 @@
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Developer accounts can switch premium on and off for testing. The server
@@ -16,7 +17,7 @@ final class NoDeveloperRepository implements DeveloperRepository {
 
   @override
   Future<void> setPremium(bool enabled) async =>
-      throw StateError('Kein Entwickler-Konto.');
+      throw StateError(L10n.current.subscriptionNotADeveloperAccount);
 }
 
 final class SupabaseDeveloperRepository implements DeveloperRepository {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 
 import '../../core/state/app_controller.dart';
 import '../../core/theme/app_colors.dart';
@@ -325,13 +326,13 @@ class AppAvatar extends StatelessWidget {
   const AppAvatar({
     this.radius = 24,
     this.onTap,
-    this.semanticLabel = 'Profil öffnen',
+    this.semanticLabel,
     super.key,
   });
 
   final double radius;
   final VoidCallback? onTap;
-  final String semanticLabel;
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +350,7 @@ class AppAvatar extends StatelessWidget {
     if (onTap == null) return avatar;
     return Semantics(
       button: true,
-      label: semanticLabel,
+      label: semanticLabel ?? context.l10n.displayOpenProfile,
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),

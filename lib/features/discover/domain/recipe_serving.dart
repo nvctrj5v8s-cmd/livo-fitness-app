@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import '../../../core/models/app_models.dart';
+import '../../../l10n/l10n.dart';
+import '../../../l10n/catalog_text.dart';
 
 /// Range of the free portion calculator (whole portions).
 const minRecipePortions = 1;
@@ -35,6 +37,10 @@ class ScaledIngredient {
   final RecipeNutrition? nutrition;
 
   String get name => source.name;
+  String get displayName => source.displayName;
+  String? get displayMeasure =>
+      measure == null ? null : CatalogText.measure(measure!);
+  String? get displayNote => source.displayNote;
   String? get note {
     final value = source.note?.trim() ?? '';
     return value.isEmpty ? null : value;
@@ -214,14 +220,14 @@ String formatFractionDe(double value) {
     if ((entry.value - fraction).abs() < 0.01) glyph = entry.key;
   }
   if (glyph == null) {
-    return value.toStringAsFixed(1).replaceAll('.', ',');
+    return AppFormat.decimal(value, maxDecimals: 1);
   }
   return whole == 0 ? glyph : '$whole$glyph';
 }
 
 /// "1 Portion", "½ Portion", "4 Portionen".
 String portionsLabel(double portions) =>
-    '${formatFractionDe(portions)} ${portions <= 1 ? 'Portion' : 'Portionen'}';
+    '${formatFractionDe(portions)} ${portions <= 1 ? L10n.current.discoverServingUnit : L10n.current.discoverServingsUnit}';
 
 /// Result of the goal-based portion suggestion. It is an estimate for
 /// orientation only and never a diet prescription.
@@ -291,7 +297,7 @@ MealSlot suggestedMealSlot(Recipe recipe, DateTime now) {
       : MealSlot.dinner;
   final tagged = [
     for (final slot in MealSlot.values)
-      if (recipe.tags.contains(slot.label)) slot,
+      if (recipe.tags.contains(slot.labelOf(L10n.of(L10n.german)))) slot,
   ];
   if (tagged.isEmpty || tagged.contains(byTime)) return byTime;
   return tagged.first;

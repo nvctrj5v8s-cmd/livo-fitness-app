@@ -1,5 +1,15 @@
 # Datenquellen für den Lookin-Katalog
 
+## Englische Anzeige, 15. Oktober 2026
+
+`assets/l10n/catalog_en.json` enthält lokale Übersetzungen der eigenen
+Rezept- und Katalogtexte aus `supabase/imports/i18n/source/recipes_de.json`
+und `curated_foods_de.json`. `assets/l10n/usda_names_en.json` übernimmt die
+ursprünglichen englischen Namen aus `usda_en_part1.json` bis `part5.json`
+derselben Importquelle; ausgeschlossene Inhalte werden nicht übernommen.
+Die Dateien ergänzen ausschließlich die Anzeige, keinen neuen Katalog und
+keine Nährwerte. Deutsches Original und Quellennachweise bleiben erhalten.
+
 Das Supabase-Schema speichert bei jedem Lebensmittel Herkunft, Lizenz und
 Prüfstatus: `source`, `source_url`, `source_license`, `source_attribution`,
 `data_quality` und `verified_at`.

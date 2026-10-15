@@ -1,3 +1,5 @@
+import 'package:fitness_ai_app/l10n/display_text.dart';
+import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -23,7 +25,7 @@ class MealTypeTabs extends StatelessWidget {
       child: Row(
         children: [
           _MealTab(
-            label: 'Alle',
+            label: context.l10n.discoverAll,
             active: selected == null,
             onTap: () => onSelected(null),
           ),
@@ -124,7 +126,7 @@ class RecipeChoiceChip extends StatelessWidget {
       avatar: icon == null || selected
           ? null
           : Icon(icon, size: 17, color: AppColors.textMuted),
-      label: Text(label),
+      label: Text(DisplayText.of(label)),
       backgroundColor: AppColors.surface,
       selectedColor: AppColors.primary,
       side: BorderSide(color: selected ? AppColors.primary : AppColors.border),
@@ -162,7 +164,7 @@ class RecipeTagChips extends StatelessWidget {
         children: [
           RecipeChoiceChip(
             key: const ValueKey('recipe-chip-favorites'),
-            label: 'Favoriten',
+            label: context.l10n.discoverFavourites,
             icon: Icons.favorite_border_rounded,
             selected: favoritesOnly,
             onSelected: onToggleFavorites,
@@ -171,7 +173,7 @@ class RecipeTagChips extends StatelessWidget {
             const SizedBox(width: 8),
             RecipeChoiceChip(
               key: ValueKey('recipe-chip-$tag'),
-              label: tag,
+              label: DisplayText.of(tag),
               selected: selected.contains(tag),
               onSelected: () => onToggleTag(tag),
             ),
@@ -203,8 +205,10 @@ class RecipeFilterButton extends StatelessWidget {
       child: IconButton.filledTonal(
         key: const Key('recipe-filter-button'),
         tooltip: activeCount > 0
-            ? 'Filter und Sortierung, $activeCount aktiv'
-            : 'Filter und Sortierung',
+            ? context.l10n.discoverFiltersAndSortingValueActive(
+                (activeCount).toString(),
+              )
+            : context.l10n.discoverFiltersAndSorting,
         onPressed: onPressed,
         style: IconButton.styleFrom(
           minimumSize: const Size(54, 54),
@@ -239,11 +243,14 @@ class ActiveSheetFilters extends StatelessWidget {
     final chips = <(String, RecipeFilter)>[
       if (filter.sort != RecipeSort.forYou)
         (
-          'Sortiert: ${filter.sort.label}',
+          context.l10n.discoverSortedByValue((filter.sort.label).toString()),
           filter.copyWith(sort: RecipeSort.forYou),
         ),
       if (filter.maxMinutes != null)
-        ('bis ${filter.maxMinutes} Min.', filter.copyWith(maxMinutes: null)),
+        (
+          context.l10n.discoverUpToValueMin((filter.maxMinutes).toString()),
+          filter.copyWith(maxMinutes: null),
+        ),
       if (filter.difficulty != null)
         (filter.difficulty!, filter.copyWith(difficulty: null)),
     ];
@@ -254,10 +261,12 @@ class ActiveSheetFilters extends StatelessWidget {
       children: [
         for (final (label, next) in chips)
           InputChip(
-            label: Text(label),
+            label: Text(DisplayText.of(label)),
             onPressed: () => onChanged(next),
             onDeleted: () => onChanged(next),
-            deleteButtonTooltipMessage: '„$label“ entfernen',
+            deleteButtonTooltipMessage: context.l10n.discoverRemoveValue2(
+              (label).toString(),
+            ),
             deleteIcon: const Icon(Icons.close_rounded, size: 17),
             backgroundColor: AppColors.surfaceHigh,
             side: const BorderSide(color: AppColors.borderBright),
@@ -326,13 +335,13 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Filter & Sortierung',
+                      context.l10n.discoverFiltersSorting,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    tooltip: 'Schließen',
+                    tooltip: context.l10n.discoverClose,
                     icon: const Icon(Icons.close_rounded),
                   ),
                 ],
@@ -343,7 +352,7 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const _SheetLabel('Sortieren nach'),
+                      _SheetLabel(context.l10n.discoverSortBy),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -359,13 +368,13 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                         ],
                       ),
                       const SizedBox(height: 22),
-                      const _SheetLabel('Maximale Zubereitungszeit'),
+                      _SheetLabel(context.l10n.discoverMaximumPreparationTime),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
                         children: [
                           RecipeChoiceChip(
-                            label: 'Egal',
+                            label: context.l10n.discoverAny,
                             selected: _draft.maxMinutes == null,
                             onSelected: () =>
                                 _set(_draft.copyWith(maxMinutes: null)),
@@ -373,7 +382,9 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                           for (final minutes in recipeTimeLimits)
                             RecipeChoiceChip(
                               key: ValueKey('recipe-time-$minutes'),
-                              label: 'bis $minutes Min.',
+                              label: context.l10n.discoverUpToValueMin(
+                                (minutes).toString(),
+                              ),
                               selected: _draft.maxMinutes == minutes,
                               onSelected: () =>
                                   _set(_draft.copyWith(maxMinutes: minutes)),
@@ -382,13 +393,13 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                       ),
                       if (widget.difficulties.length > 1) ...[
                         const SizedBox(height: 22),
-                        const _SheetLabel('Schwierigkeit'),
+                        _SheetLabel(context.l10n.discoverDifficulty),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
                             RecipeChoiceChip(
-                              label: 'Egal',
+                              label: context.l10n.discoverAny,
                               selected: _draft.difficulty == null,
                               onSelected: () =>
                                   _set(_draft.copyWith(difficulty: null)),
@@ -419,15 +430,17 @@ class _RecipeFilterSheetState extends State<_RecipeFilterSheet> {
                     onPressed: _draft.sheetCount == 0
                         ? null
                         : () => _set(_draft.withoutSheetOptions()),
-                    child: const Text('Zurücksetzen'),
+                    child: Text(context.l10n.discoverReset),
                   ),
                   FilledButton(
                     key: const Key('recipe-filter-apply'),
                     onPressed: () => Navigator.pop(context, _draft),
                     child: Text(
                       count == 1
-                          ? '1 Rezept anzeigen'
-                          : '$count Rezepte anzeigen',
+                          ? context.l10n.discoverShow1Recipe
+                          : context.l10n.discoverShowValueRecipes(
+                              (count).toString(),
+                            ),
                     ),
                   ),
                 ],
