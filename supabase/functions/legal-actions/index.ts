@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
 import { englishDateTime, germanDateTime, ownerEmail, sendMail } from '../_shared/mail.ts'
 
 // Withdrawal function for the premium contract (§ 356a BGB). It works with

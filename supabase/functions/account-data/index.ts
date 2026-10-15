@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
 
 // Only an authenticated user may export or delete their own account.
 // The service-role key stays in the Edge Function and is never sent to Flutter.

@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
 import { englishDateTime, germanDateTime, ownerEmail, sendMail, withdrawalPolicyText, withdrawalPolicyTextEn } from '../_shared/mail.ts'
 
 // Receives RevenueCat webhooks and records the resulting premium state in
