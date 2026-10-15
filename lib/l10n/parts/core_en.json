@@ -65,5 +65,6 @@
   "coreUnknownNutritionBasis": "Unknown nutrition basis.",
   "coreMissingNutritionValueValue": "Missing nutrition value: {arg0}",
   "corePleaseSignInFirst2": "Please sign in first.",
-  "coreThisFoodCouldNoLongerBeFound": "This food could no longer be found."
+  "coreThisFoodCouldNoLongerBeFound": "This food could no longer be found.",
+  "coreAiFeaturesNeedYourConsent": "AI features need your consent. You can give it under Profile › Export, delete, consents."
 }

@@ -48,9 +48,16 @@
   englischen Eintrag, die aktuelle Datensicherheits-Tabelle (inklusive
   Antworten der Einrichtung mit Einwilligung), KI-Meldung, Werbe-ID, Länder
   und Testkonto-Hinweise.
+- **KI nur mit Einwilligung, auch auf dem Server:** Die Edge Function `ai-coach`
+  prüft vor jedem KI-Aufruf (Chat, Foto) die neueste Entscheidung „KI-Verarbeitung“
+  in `user_consents`. Ohne Einwilligung antwortet sie mit 403 und
+  `consent_required`; die App zeigt dann, wo man zustimmen kann (Profil ›
+  Exportieren, löschen, Einwilligungen). Am 15.10.2026 veröffentlicht. Konten, die
+  die KI-Einwilligung abgelehnt haben (alle Testkonten außer dem
+  Entwicklerkonto), bekommen bis zur Zustimmung keine KI-Antworten.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 368 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 374 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)
@@ -61,8 +68,8 @@
   RevenueCat-Webhook für `TRANSFER` und `BILLING_ISSUE` ergänzen.
 - Supabase-Tarif „Pro“ (tägliche Sicherungen) und Ausgabenlimit bei OpenAI
   setzen, bevor zahlende Nutzer kommen.
-- Serverseitige Prüfung der Gesundheits-Einwilligung in `ai-coach`; Halal-Filter
-  auch für Produkte ohne Zutatenliste; Löschjobs (IP-Hash 24 h, Test-Hash
+- Serverseitige Prüfung der Gesundheits-Einwilligung (die KI-Einwilligung wird
+  bereits serverseitig geprüft); Halal-Filter auch für Produkte ohne Zutatenliste; Löschjobs (IP-Hash 24 h, Test-Hash
   3 Jahre, Widerrufe).
 - Play Console: Datensicherheit (Gesundheit und Fitness, Konto-Daten, Fotos),
   englischer Store-Text, Länder auf Euro-Länder beschränken, Testkonto mit

@@ -86,5 +86,6 @@
     }
   },
   "corePleaseSignInFirst2": "Bitte zuerst anmelden.",
-  "coreThisFoodCouldNoLongerBeFound": "Das Lebensmittel konnte nicht mehr gefunden werden."
+  "coreThisFoodCouldNoLongerBeFound": "Das Lebensmittel konnte nicht mehr gefunden werden.",
+  "coreAiFeaturesNeedYourConsent": "Die KI-Funktionen brauchen deine Einwilligung. Du kannst sie unter Profil › Exportieren, löschen, Einwilligungen erteilen."
 }

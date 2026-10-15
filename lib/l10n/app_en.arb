@@ -216,6 +216,7 @@
   "consentWithdrawConsent": "Withdraw consent?",
   "consentYourConsents": "Your consents",
   "coreAccountChanged": "Account changed.",
+  "coreAiFeaturesNeedYourConsent": "AI features need your consent. You can give it under Profile › Export, delete, consents.",
   "coreBarcodeSearchDidNotReceiveAValid": "Barcode search did not receive a valid server response. Please try again later.",
   "coreBarcodeSearchIsCurrentlyUnavailablePleaseTry": "Barcode search is currently unavailable. Please try again later.",
   "coreCatalogueSourceValue": "Catalogue source: {arg0}",

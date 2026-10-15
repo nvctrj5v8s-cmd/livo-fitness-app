@@ -1396,6 +1396,12 @@ abstract class AppLocalizations {
   /// **'Konto geändert.'**
   String get coreAccountChanged;
 
+  /// No description provided for @coreAiFeaturesNeedYourConsent.
+  ///
+  /// In de, this message translates to:
+  /// **'Die KI-Funktionen brauchen deine Einwilligung. Du kannst sie unter Profil › Exportieren, löschen, Einwilligungen erteilen.'**
+  String get coreAiFeaturesNeedYourConsent;
+
   /// No description provided for @coreBarcodeSearchDidNotReceiveAValid.
   ///
   /// In de, this message translates to:

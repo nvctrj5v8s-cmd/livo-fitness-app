@@ -305,6 +305,7 @@
   "consentWithdrawConsent": "Einwilligung widerrufen?",
   "consentYourConsents": "Deine Einwilligungen",
   "coreAccountChanged": "Konto geändert.",
+  "coreAiFeaturesNeedYourConsent": "Die KI-Funktionen brauchen deine Einwilligung. Du kannst sie unter Profil › Exportieren, löschen, Einwilligungen erteilen.",
   "coreBarcodeSearchDidNotReceiveAValid": "Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.",
   "coreBarcodeSearchIsCurrentlyUnavailablePleaseTry": "Die Barcode-Suche ist gerade nicht erreichbar. Bitte versuche es später erneut.",
   "coreCatalogueSourceValue": "Katalogquelle: {arg0}",

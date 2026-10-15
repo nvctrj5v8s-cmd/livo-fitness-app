@@ -111,9 +111,10 @@ Passwort) und trage die Zugangsdaten in der Play Console unter „App-Inhalte >
 App-Zugriff“ ein. Die Zugangsdaten gehören **nicht** in Git oder in diese Datei.
 Aktiviere für das Testkonto Premium zum Prüfen der KI-Funktionen (Eintrag in
 `entitlements` mit Ablaufdatum). Das Testkonto muss eine **bestätigte**
-E-Mail-Adresse haben (sonst startet der Test nicht), und die beiden
-Einwilligungen sollten schon beantwortet sein, damit die Prüfer direkt in der
-App landen. Prüfer sollen auch die englische Oberfläche sehen können (Profil >
+E-Mail-Adresse haben (sonst startet der Test nicht), und beide
+Einwilligungen müssen **erteilt** sein (nicht abgelehnt): Ohne die
+KI-Einwilligung verweigert der Server die KI-Antworten. So landen die Prüfer
+auch direkt in der App. Prüfer sollen auch die englische Oberfläche sehen können (Profil >
 Sprache oder Schalter „DE | EN“ vor der Anmeldung).
 
 ## Zielgruppe und Inhalte

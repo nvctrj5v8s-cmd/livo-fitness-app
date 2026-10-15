@@ -32,6 +32,14 @@ Auftragsverarbeitungsvertrag mit dem Anbieter.
 
 Der Hinweis dazu steht im Coach selbst („Mit jeder Frage gehen …“).
 
+**Einwilligung wird auf dem Server geprüft (seit 15.10.2026):** Chat,
+Foto-Erkennung und Foto-Analyse gehen nur an OpenAI, wenn die neueste
+Entscheidung für „KI-Verarbeitung“ in `public.user_consents` „erteilt“ lautet.
+Ohne Einwilligung (oder nach Widerruf) antwortet `ai-coach` mit HTTP 403 und
+`consent_required`, ohne den KI-Dienst aufzurufen. Kann die Entscheidung nicht
+gelesen werden, wird ebenfalls nichts gesendet (HTTP 503). Verlauf lesen und
+löschen bleibt ohne Einwilligung möglich.
+
 ## Chatverlauf: Entscheidung
 
 Der Verlauf wird **pro Konto gespeichert** und beim Öffnen des Coaches
@@ -94,7 +102,7 @@ medizinische Beratung“.
 
 ## Vor echtem Betrieb offen
 
-- Rechtsgrundlage/Einwilligung für Gesundheitsdaten (Allergien, Tageswerte)
-  und AV-Vertrag mit OpenAI prüfen.
+- Rechtliche Prüfung der Einwilligungstexte (Gesundheitsdaten: Allergien,
+  Tageswerte) und AV-Vertrag mit OpenAI prüfen.
 - Datenexport des Chatverlaufs anbinden.
 - Automatischen Aufräumjob für inaktive Konten einrichten.

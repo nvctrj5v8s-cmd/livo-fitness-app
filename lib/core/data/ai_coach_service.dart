@@ -122,6 +122,9 @@ class AiCoachException implements Exception {
   /// Today's AI requests are used up (HTTP 429 with `daily_limit`).
   static const dailyLimitCode = 'daily_limit';
 
+  /// The AI consent is missing or was withdrawn (HTTP 403 with this code).
+  static const consentRequiredCode = 'consent_required';
+
   /// The login expired or is missing (HTTP 401/403).
   static const unauthorizedCode = 'unauthorized';
 
@@ -170,6 +173,16 @@ AiCoachException? _premiumRequired(FunctionException error) {
   return AiCoachException(
     L10n.current.coreThisAiFeatureIsPartOfLookin,
     code: AiCoachException.premiumRequiredCode,
+  );
+}
+
+AiCoachException? _consentRequired(FunctionException error) {
+  final details = error.details;
+  final code = details is Map ? details['code'] : null;
+  if (code != AiCoachException.consentRequiredCode) return null;
+  return AiCoachException(
+    L10n.current.coreAiFeaturesNeedYourConsent,
+    code: AiCoachException.consentRequiredCode,
   );
 }
 
@@ -429,6 +442,7 @@ class AiCoachService {
       );
     } on FunctionException catch (error) {
       if (_premiumRequired(error) case final premium?) throw premium;
+      if (_consentRequired(error) case final consent?) throw consent;
       if (error.status == 401 || error.status == 403) {
         throw AiCoachException(
           L10n.current.corePleaseSignInAgainToUsePhoto,
@@ -501,6 +515,7 @@ class AiCoachService {
     }
     if (error is FunctionException) {
       if (_premiumRequired(error) case final premium?) return premium;
+      if (_consentRequired(error) case final consent?) return consent;
       final details = error.details;
       final code = details is Map ? details['code'] : null;
       final serverMessage = details is Map ? details['error'] : null;

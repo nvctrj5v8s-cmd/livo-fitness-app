@@ -771,6 +771,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coreAccountChanged => 'Konto geändert.';
 
   @override
+  String get coreAiFeaturesNeedYourConsent =>
+      'Die KI-Funktionen brauchen deine Einwilligung. Du kannst sie unter Profil › Exportieren, löschen, Einwilligungen erteilen.';
+
+  @override
   String get coreBarcodeSearchDidNotReceiveAValid =>
       'Die Barcode-Suche hat gerade keine gültige Serverantwort erhalten. Bitte versuche es später erneut.';
 

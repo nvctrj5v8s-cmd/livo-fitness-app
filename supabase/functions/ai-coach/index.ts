@@ -198,6 +198,18 @@ Deno.serve(async (request) => {
         code: 'not_configured',
       }, 503)
     }
+    // The app asks for this consent before any AI call. The server checks the
+    // stored decision as well, so the rule does not depend on the app alone.
+    const consent = await hasAiConsent(admin, user.id)
+    if (consent === null) {
+      return json({
+        error: isEnglish(body)
+          ? 'The coach is currently unavailable. Please try again shortly.'
+          : 'Der Coach ist gerade nicht erreichbar. Bitte versuche es gleich noch einmal.',
+        code: 'unavailable',
+      }, 503)
+    }
+    if (!consent) return consentRequired(body)
     if (body.action === 'meal_photo') {
       return await analyzeMealPhoto(admin, user.id, body, openAiKey)
     }
@@ -1000,6 +1012,34 @@ function buildContext(
 }
 
 // 402 keeps older app versions from misreading it as an expired login.
+// Latest decision in the append-only consent log: `true` only when the most
+// recent "ai_processing" row says granted. `null` when it could not be read
+// (then nothing is sent to the AI).
+async function hasAiConsent(admin: AdminClient, userId: string): Promise<boolean | null> {
+  const { data, error } = await admin
+    .from('user_consents')
+    .select('granted')
+    .eq('user_id', userId)
+    .eq('kind', 'ai_processing')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) {
+    console.error('consent lookup failed', error.code)
+    return null
+  }
+  return data?.granted === true
+}
+
+function consentRequired(body: Record<string, unknown>): Response {
+  return json({
+    error: isEnglish(body)
+      ? 'AI features need your consent. You can give it under Profile › Export, delete, consents.'
+      : 'Die KI-Funktionen brauchen deine Einwilligung. Du kannst sie unter Profil › Exportieren, löschen, Einwilligungen erteilen.',
+    code: 'consent_required',
+  }, 403)
+}
+
 function premiumRequired(): Response {
   return json({
     error: 'Der Lookin Coach und die KI-Foto-Erkennung sind Teil von Lookin Premium.',

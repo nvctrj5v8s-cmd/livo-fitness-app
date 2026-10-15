@@ -765,6 +765,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coreAccountChanged => 'Account changed.';
 
   @override
+  String get coreAiFeaturesNeedYourConsent =>
+      'AI features need your consent. You can give it under Profile › Export, delete, consents.';
+
+  @override
   String get coreBarcodeSearchDidNotReceiveAValid =>
       'Barcode search did not receive a valid server response. Please try again later.';
 
