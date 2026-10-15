@@ -193,8 +193,23 @@
   "profileProfilePictureReminders": "Profilbild & Erinnerungen",
   "profileDeviceOnly": "NUR GERÄT",
   "profileLocalDataOverview": "Lokale Datenübersicht",
-  "profileNameValueGoalValueMealsValueWeight": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nGewicht: {arg3} kg\nFavoriten: {arg4}",
-  "@profileNameValueGoalValueMealsValueWeight": {
+  "profileViewLocalData": "Lokale Daten ansehen",
+  "profileDeleteLocalDemoData": "Lokale Daten löschen",
+  "profileLegal": "Rechtliches",
+  "profileYourProfileTargetsAndDiaryAreSaved": "Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.",
+  "profileDeleteDemoData": "Lokale Daten löschen?",
+  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden auf diesem Gerät geleert. Ohne Konto erscheinen nach einem App-Neustart die Beispiel-Mahlzeiten wieder.",
+  "profileSavedListsAndYourWaterTotalAre": "Gespeicherte Listen und dein Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.",
+  "profileDelete": "Löschen",
+  "profileHealthAlwaysComesBeforeTracking": "Gesundheit geht immer vor Tracking",
+  "profileNotMedicalAdvice": "Keine medizinische Beratung",
+  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
+  "profileEatingDisorderOrAcuteSymptoms": "Essstörung oder akute Beschwerden",
+  "profileDoNotFollowDietOrCalorieTargets": "Nutze keine Diät- oder Kalorienziele auf eigene Faust. Hole dir persönliche Hilfe bei medizinischem oder psychotherapeutischem Fachpersonal. Bei einem akuten Notfall wende dich an den örtlichen Notruf.",
+  "profileNumbersAreAGuide": "Zahlen sind Orientierung",
+  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nährwerte und Ziele sind Schätzungen. Achte zusätzlich auf Energie, Wohlbefinden, Schlaf und ein entspanntes Verhältnis zum Essen.",
+  "profileLocalOverviewSummary": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nFavoriten: {arg3}",
+  "@profileLocalOverviewSummary": {
     "placeholders": {
       "arg0": {
         "type": "String"
@@ -207,25 +222,18 @@
       },
       "arg3": {
         "type": "String"
-      },
-      "arg4": {
-        "type": "String"
       }
     }
   },
-  "profileViewLocalData": "Lokale Daten ansehen",
-  "profileDeleteLocalDemoData": "Lokale Demodaten löschen",
-  "profileLegal": "Rechtliches",
-  "profileYourProfileTargetsAndDiaryAreSaved": "Profil, Ziele und Tagebuch werden in deinem Lookin-Konto (Supabase) gespeichert, damit sie auf jedem Gerät verfügbar sind. Fotos für die KI-Foto-Analyse und Nachrichten an den KI-Coach werden über unseren Server an OpenAI übertragen; Fotos werden dabei nicht gespeichert. Profilbild, Erinnerungen und gemerkte Lebensmittel bleiben nur auf diesem Gerät. Unter den Optionen oben kannst du deine Kontodaten exportieren oder dein Konto endgültig löschen.",
-  "profileDeleteDemoData": "Demodaten löschen?",
-  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.",
-  "profileSavedListsAndYourWaterTotalAre": "Gespeicherte Listen und dein Wasserstand werden auf diesem Gerät geleert. Deine gespeicherten Mahlzeiten und Favoriten im Konto bleiben erhalten.",
-  "profileDelete": "Löschen",
-  "profileHealthAlwaysComesBeforeTracking": "Gesundheit geht immer vor Tracking",
-  "profileNotMedicalAdvice": "Keine medizinische Beratung",
-  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
-  "profileEatingDisorderOrAcuteSymptoms": "Essstörung oder akute Beschwerden",
-  "profileDoNotFollowDietOrCalorieTargets": "Nutze keine Diät- oder Kalorienziele auf eigene Faust. Hole dir persönliche Hilfe bei medizinischem oder psychotherapeutischem Fachpersonal. Bei einem akuten Notfall wende dich an den örtlichen Notruf.",
-  "profileNumbersAreAGuide": "Zahlen sind Orientierung",
-  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nährwerte und Ziele sind Schätzungen. Achte zusätzlich auf Energie, Wohlbefinden, Schlaf und ein entspanntes Verhältnis zum Essen."
+  "profileContactSupport": "Support schreiben",
+  "profileContactSupportText": "Fragen, Probleme oder eine Meldung zu einer Antwort? Wir antworten per E-Mail.",
+  "profileSupportMailSubject": "Lookin Support",
+  "profileSupportMailNotOpened": "Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.",
+  "@profileSupportMailNotOpened": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  }
 }

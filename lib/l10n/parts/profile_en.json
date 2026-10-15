@@ -134,13 +134,12 @@
   "profileProfilePictureReminders": "Profile picture & reminders",
   "profileDeviceOnly": "DEVICE ONLY",
   "profileLocalDataOverview": "Local data overview",
-  "profileNameValueGoalValueMealsValueWeight": "Name: {arg0}\nGoal: {arg1}\nMeals: {arg2}\nWeight: {arg3} kg\nFavourites: {arg4}",
   "profileViewLocalData": "View local data",
-  "profileDeleteLocalDemoData": "Delete local demo data",
+  "profileDeleteLocalDemoData": "Delete local data",
   "profileLegal": "Legal",
   "profileYourProfileTargetsAndDiaryAreSaved": "Your profile, targets and diary are saved in your Lookin account (Supabase) so they are available on every device. Photos for AI photo analysis and messages to the AI coach are sent through our server to OpenAI; these photos are not stored. Your profile picture, reminders and saved foods stay on this device only. Use the options above to export your account data or permanently delete your account.",
-  "profileDeleteDemoData": "Delete demo data?",
-  "profileMealsFavouritesListsAndWaterTotalsAre": "Meals, favourites, lists and water totals are cleared locally. The example meals appear again after the app restarts.",
+  "profileDeleteDemoData": "Delete local data?",
+  "profileMealsFavouritesListsAndWaterTotalsAre": "Meals, favourites, lists and water totals are cleared on this device. Without an account, the example meals appear again after the app restarts.",
   "profileSavedListsAndYourWaterTotalAre": "Saved lists and your water total are cleared on this device. Your saved meals and favourites in your account are kept.",
   "profileDelete": "Delete",
   "profileHealthAlwaysComesBeforeTracking": "Health always comes before tracking",
@@ -149,5 +148,10 @@
   "profileEatingDisorderOrAcuteSymptoms": "Eating disorder or acute symptoms",
   "profileDoNotFollowDietOrCalorieTargets": "Do not follow diet or calorie targets on your own. Seek personal help from medical or psychotherapy professionals. In an acute emergency, contact your local emergency services.",
   "profileNumbersAreAGuide": "Numbers are a guide",
-  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nutrition values and targets are estimates. Also pay attention to your energy, wellbeing, sleep and a relaxed relationship with food."
+  "profileNutritionValuesAndTargetsAreEstimatesAlso": "Nutrition values and targets are estimates. Also pay attention to your energy, wellbeing, sleep and a relaxed relationship with food.",
+  "profileLocalOverviewSummary": "Name: {arg0}\nGoal: {arg1}\nMeals: {arg2}\nFavourites: {arg3}",
+  "profileContactSupport": "Contact support",
+  "profileContactSupportText": "Questions, problems or a report about an answer? We reply by email.",
+  "profileSupportMailSubject": "Lookin support",
+  "profileSupportMailNotOpened": "The email app could not be opened. Please write to us at {address}."
 }

@@ -22,6 +22,7 @@ import '../../features/subscription/data/store_billing.dart';
 import '../../features/subscription/data/subscription_repository.dart';
 import '../data/avatar_repository.dart';
 import '../data/food_preferences_store.dart';
+import '../data/water_store.dart';
 import '../data/progress_repository.dart';
 import '../data/halal_content_policy.dart';
 import '../data/supabase_catalog_repository.dart';
@@ -565,7 +566,7 @@ class AppController extends ChangeNotifier {
   String goal = 'Fett verlieren';
   int calorieGoal = 2100;
   int proteinGoal = 140;
-  int waterGlasses = 5;
+  int waterGlasses = 0;
   double currentWeight = 78.4;
   double targetWeight = 74;
   String nutritionStyle = 'Ausgewogen';
@@ -922,15 +923,39 @@ class AppController extends ChangeNotifier {
       (diaryConsumedCalories / calorieGoal).clamp(0, 1);
   int get diaryCarbohydrateGoal => (calorieGoal * 0.5 / 4).round();
   int get diaryFatGoal => (calorieGoal * 0.3 / 9).round();
+
+  /// Reads today's glasses of water from this device (starts at 0 each day).
+  Future<void> loadWater() async {
+    try {
+      final day = DateTime.now();
+      final glasses = await WaterStore(userId: personalizationUserId).load(day);
+      if (_disposed) return;
+      waterGlasses = glasses;
+      notifyListeners();
+    } catch (_) {
+      // The counter simply stays where it is.
+    }
+  }
+
+  void _saveWater() {
+    unawaited(
+      WaterStore(
+        userId: personalizationUserId,
+      ).save(DateTime.now(), waterGlasses).catchError((Object _) {}),
+    );
+  }
+
   void addWater() {
     if (waterGlasses >= 8) return;
     waterGlasses++;
+    _saveWater();
     notifyListeners();
   }
 
   void removeWater() {
     if (waterGlasses <= 0) return;
     waterGlasses--;
+    _saveWater();
     notifyListeners();
   }
 
@@ -1512,6 +1537,11 @@ class AppController extends ChangeNotifier {
       favoriteRecipeIds.clear();
     }
     waterGlasses = 0;
+    unawaited(
+      WaterStore(
+        userId: personalizationUserId,
+      ).clear().catchError((Object _) {}),
+    );
     unawaited(deleteRemovedKitchenLists());
     notifyListeners();
   }

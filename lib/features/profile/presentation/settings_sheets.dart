@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/config/legal_links.dart';
+import '../../../core/config/support_contact.dart';
 import '../../../core/state/app_controller.dart';
 import '../../consent/presentation/consent_dialogs.dart';
 import '../../subscription/presentation/withdrawal_page.dart';
@@ -323,11 +324,10 @@ class _PrivacySheet extends StatelessWidget {
               builder: (dialogContext) => AlertDialog(
                 title: Text(context.l10n.profileLocalDataOverview),
                 content: Text(
-                  context.l10n.profileNameValueGoalValueMealsValueWeight(
+                  context.l10n.profileLocalOverviewSummary(
                     (controller.name).toString(),
                     (DisplayText.of(controller.goal)).toString(),
                     (controller.meals.length).toString(),
-                    (controller.currentWeight).toString(),
                     (controller.favoriteRecipeIds.length).toString(),
                   ),
                 ),
@@ -436,6 +436,21 @@ class _DataRow extends StatelessWidget {
 class _HelpSheet extends StatelessWidget {
   const _HelpSheet();
 
+  Future<void> _writeToSupport(BuildContext context) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final opened = await SupportContact.open(
+      subject: l10n.profileSupportMailSubject,
+    );
+    if (!opened) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.profileSupportMailNotOpened(SupportContact.email)),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _SettingsSheetFrame(
@@ -464,6 +479,20 @@ class _HelpSheet extends StatelessWidget {
               title: context.l10n.profileNumbersAreAGuide,
               text:
                   context.l10n.profileNutritionValuesAndTargetsAreEstimatesAlso,
+            ),
+            const SizedBox(height: 10),
+            _HelpCard(
+              icon: Icons.mail_outline_rounded,
+              color: AppColors.mint,
+              title: context.l10n.profileContactSupport,
+              text: context.l10n.profileContactSupportText,
+            ),
+            const SizedBox(height: 10),
+            OutlinedButton.icon(
+              key: const Key('help-contact-support'),
+              onPressed: () => _writeToSupport(context),
+              icon: const Icon(Icons.send_rounded),
+              label: const Text(SupportContact.email),
             ),
           ],
         ),

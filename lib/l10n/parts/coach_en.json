@@ -61,5 +61,18 @@
   "coachAnalyseAFoodPhoto": "Analyse a food photo",
   "coachSendMessage": "Send message",
   "coachAiCanMakeMistakesValuesAreEstimates": "AI can make mistakes · Values are estimates · Not medical advice",
-  "coachValueOfValueCharactersRemaining": "{arg0} of {arg1} characters remaining"
+  "coachValueOfValueCharactersRemaining": "{arg0} of {arg1} characters remaining",
+  "coachReportAnswer": "Report answer",
+  "coachReportSheetTitle": "Report this answer",
+  "coachReportSheetText": "Wrong, inappropriate or unsafe? We read every report. Your email app opens with the answer, and you can change anything before sending.",
+  "coachReportReasonWrong": "Wrong or misleading",
+  "coachReportReasonUnsafe": "Unsafe or a health concern",
+  "coachReportReasonInappropriate": "Inappropriate or offensive",
+  "coachReportReasonOther": "Something else",
+  "coachReportPrepareEmail": "Prepare email",
+  "coachReportMailSubject": "Lookin Coach: report an answer",
+  "coachReportMailReason": "Reason: {reason}",
+  "coachReportMailAnswerLabel": "Reported answer:",
+  "coachReportMailNotice": "Please add what was wrong. Do not include health details you do not want to share.",
+  "coachReportMailNotOpened": "The email app could not be opened. Please write to us at {address}."
 }

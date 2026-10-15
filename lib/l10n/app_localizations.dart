@@ -910,6 +910,84 @@ abstract class AppLocalizations {
   /// **'Protein- und Trainingstipps für deinen Alltag'**
   String get coachProteinAndTrainingTipsForYourDay;
 
+  /// No description provided for @coachReportAnswer.
+  ///
+  /// In de, this message translates to:
+  /// **'Antwort melden'**
+  String get coachReportAnswer;
+
+  /// No description provided for @coachReportMailAnswerLabel.
+  ///
+  /// In de, this message translates to:
+  /// **'Gemeldete Antwort:'**
+  String get coachReportMailAnswerLabel;
+
+  /// No description provided for @coachReportMailNotOpened.
+  ///
+  /// In de, this message translates to:
+  /// **'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.'**
+  String coachReportMailNotOpened(String address);
+
+  /// No description provided for @coachReportMailNotice.
+  ///
+  /// In de, this message translates to:
+  /// **'Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.'**
+  String get coachReportMailNotice;
+
+  /// No description provided for @coachReportMailReason.
+  ///
+  /// In de, this message translates to:
+  /// **'Grund: {reason}'**
+  String coachReportMailReason(String reason);
+
+  /// No description provided for @coachReportMailSubject.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin Coach: Antwort melden'**
+  String get coachReportMailSubject;
+
+  /// No description provided for @coachReportPrepareEmail.
+  ///
+  /// In de, this message translates to:
+  /// **'E-Mail vorbereiten'**
+  String get coachReportPrepareEmail;
+
+  /// No description provided for @coachReportReasonInappropriate.
+  ///
+  /// In de, this message translates to:
+  /// **'Unpassend oder beleidigend'**
+  String get coachReportReasonInappropriate;
+
+  /// No description provided for @coachReportReasonOther.
+  ///
+  /// In de, this message translates to:
+  /// **'Etwas anderes'**
+  String get coachReportReasonOther;
+
+  /// No description provided for @coachReportReasonUnsafe.
+  ///
+  /// In de, this message translates to:
+  /// **'Unsicher oder gesundheitlich bedenklich'**
+  String get coachReportReasonUnsafe;
+
+  /// No description provided for @coachReportReasonWrong.
+  ///
+  /// In de, this message translates to:
+  /// **'Falsch oder irreführend'**
+  String get coachReportReasonWrong;
+
+  /// No description provided for @coachReportSheetText.
+  ///
+  /// In de, this message translates to:
+  /// **'Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.'**
+  String get coachReportSheetText;
+
+  /// No description provided for @coachReportSheetTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Antwort melden'**
+  String get coachReportSheetTitle;
+
   /// No description provided for @coachSendMessage.
   ///
   /// In de, this message translates to:
@@ -7083,7 +7161,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingOptionalAndOnlyForYourSafetyThis.
   ///
   /// In de, this message translates to:
-  /// **'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät.'**
+  /// **'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät, solange du der Speicherung im Konto nicht zustimmst.'**
   String get onboardingOptionalAndOnlyForYourSafetyThis;
 
   /// No description provided for @onboardingPageValueOfValue.
@@ -7924,6 +8002,18 @@ abstract class AppLocalizations {
   /// **'Bald verfügbar'**
   String get profileComingSoon;
 
+  /// No description provided for @profileContactSupport.
+  ///
+  /// In de, this message translates to:
+  /// **'Support schreiben'**
+  String get profileContactSupport;
+
+  /// No description provided for @profileContactSupportText.
+  ///
+  /// In de, this message translates to:
+  /// **'Fragen, Probleme oder eine Meldung zu einer Antwort? Wir antworten per E-Mail.'**
+  String get profileContactSupportText;
+
   /// No description provided for @profileCropYourImageDragItOrUse.
   ///
   /// In de, this message translates to:
@@ -7963,13 +8053,13 @@ abstract class AppLocalizations {
   /// No description provided for @profileDeleteDemoData.
   ///
   /// In de, this message translates to:
-  /// **'Demodaten löschen?'**
+  /// **'Lokale Daten löschen?'**
   String get profileDeleteDemoData;
 
   /// No description provided for @profileDeleteLocalDemoData.
   ///
   /// In de, this message translates to:
-  /// **'Lokale Demodaten löschen'**
+  /// **'Lokale Daten löschen'**
   String get profileDeleteLocalDemoData;
 
   /// No description provided for @profileDeletingYourAccountDoesNotCancelYour.
@@ -8164,6 +8254,17 @@ abstract class AppLocalizations {
   /// **'Lokale Datenübersicht'**
   String get profileLocalDataOverview;
 
+  /// No description provided for @profileLocalOverviewSummary.
+  ///
+  /// In de, this message translates to:
+  /// **'Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nFavoriten: {arg3}'**
+  String profileLocalOverviewSummary(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  );
+
   /// No description provided for @profileLookinDoesNotCalculateCalorieTargetsFor.
   ///
   /// In de, this message translates to:
@@ -8209,7 +8310,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileMealsFavouritesListsAndWaterTotalsAre.
   ///
   /// In de, this message translates to:
-  /// **'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.'**
+  /// **'Mahlzeiten, Favoriten, Listen und Wasserstand werden auf diesem Gerät geleert. Ohne Konto erscheinen nach einem App-Neustart die Beispiel-Mahlzeiten wieder.'**
   String get profileMealsFavouritesListsAndWaterTotalsAre;
 
   /// No description provided for @profileMealsNutrition.
@@ -8241,18 +8342,6 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Mein Ziel'**
   String get profileMyGoal;
-
-  /// No description provided for @profileNameValueGoalValueMealsValueWeight.
-  ///
-  /// In de, this message translates to:
-  /// **'Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nGewicht: {arg3} kg\nFavoriten: {arg4}'**
-  String profileNameValueGoalValueMealsValueWeight(
-    String arg0,
-    String arg1,
-    String arg2,
-    String arg3,
-    String arg4,
-  );
 
   /// No description provided for @profileNoGoalSelectedYet.
   ///
@@ -8457,6 +8546,18 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Von vorne zeigen'**
   String get profileStartFromTheBeginning;
+
+  /// No description provided for @profileSupportMailNotOpened.
+  ///
+  /// In de, this message translates to:
+  /// **'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.'**
+  String profileSupportMailNotOpened(String address);
+
+  /// No description provided for @profileSupportMailSubject.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin Support'**
+  String get profileSupportMailSubject;
 
   /// No description provided for @profileTargetWeightValueKg.
   ///

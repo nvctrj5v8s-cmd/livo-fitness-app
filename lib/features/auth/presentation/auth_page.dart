@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../language/presentation/language_switch.dart';
 import '../../../l10n/l10n.dart';
 import '../../../shared/widgets/legal_links_row.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -398,6 +399,11 @@ class _AuthPageState extends State<AuthPage>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const Align(
+                            alignment: Alignment.centerRight,
+                            child: LanguageSwitch(),
+                          ),
+                          const SizedBox(height: 6),
                           _Entrance(
                             animation: _entranceController,
                             begin: 0,
@@ -421,47 +427,53 @@ class _AuthPageState extends State<AuthPage>
                   ),
                 );
               }
-              return Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 44,
-                    vertical: 34,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1180),
-                    child: SizedBox(
-                      height: constraints.maxHeight - 68,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 11,
-                            child: _Entrance(
-                              animation: _entranceController,
-                              begin: 0,
-                              end: 0.72,
-                              child: widget.answersReady
-                                  ? _AnswersReadyIntro(
-                                      onEdit: widget.onEditAnswers,
-                                    )
-                                  : const _AuthStory(),
-                            ),
+              return Stack(
+                children: [
+                  Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 44,
+                        vertical: 34,
+                      ),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1180),
+                        child: SizedBox(
+                          height: constraints.maxHeight - 68,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 11,
+                                child: _Entrance(
+                                  animation: _entranceController,
+                                  begin: 0,
+                                  end: 0.72,
+                                  child: widget.answersReady
+                                      ? _AnswersReadyIntro(
+                                          onEdit: widget.onEditAnswers,
+                                        )
+                                      : const _AuthStory(),
+                                ),
+                              ),
+                              const SizedBox(width: 54),
+                              Expanded(
+                                flex: 9,
+                                child: _Entrance(
+                                  animation: _entranceController,
+                                  begin: 0.22,
+                                  end: 1,
+                                  fromRight: true,
+                                  child: panel,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 54),
-                          Expanded(
-                            flex: 9,
-                            child: _Entrance(
-                              animation: _entranceController,
-                              begin: 0.22,
-                              end: 1,
-                              fromRight: true,
-                              child: panel,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  // Last child: it must lie above the scrolling page to be tappable.
+                  const Positioned(top: 10, right: 30, child: LanguageSwitch()),
+                ],
               );
             },
           ),

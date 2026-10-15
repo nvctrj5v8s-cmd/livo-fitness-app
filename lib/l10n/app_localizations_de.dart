@@ -487,6 +487,52 @@ class AppLocalizationsDe extends AppLocalizations {
       'Protein- und Trainingstipps für deinen Alltag';
 
   @override
+  String get coachReportAnswer => 'Antwort melden';
+
+  @override
+  String get coachReportMailAnswerLabel => 'Gemeldete Antwort:';
+
+  @override
+  String coachReportMailNotOpened(String address) {
+    return 'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an $address.';
+  }
+
+  @override
+  String get coachReportMailNotice =>
+      'Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.';
+
+  @override
+  String coachReportMailReason(String reason) {
+    return 'Grund: $reason';
+  }
+
+  @override
+  String get coachReportMailSubject => 'Lookin Coach: Antwort melden';
+
+  @override
+  String get coachReportPrepareEmail => 'E-Mail vorbereiten';
+
+  @override
+  String get coachReportReasonInappropriate => 'Unpassend oder beleidigend';
+
+  @override
+  String get coachReportReasonOther => 'Etwas anderes';
+
+  @override
+  String get coachReportReasonUnsafe =>
+      'Unsicher oder gesundheitlich bedenklich';
+
+  @override
+  String get coachReportReasonWrong => 'Falsch oder irreführend';
+
+  @override
+  String get coachReportSheetText =>
+      'Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.';
+
+  @override
+  String get coachReportSheetTitle => 'Antwort melden';
+
+  @override
   String get coachSendMessage => 'Nachricht senden';
 
   @override
@@ -4043,7 +4089,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get onboardingOptionalAndOnlyForYourSafetyThis =>
-      'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät.';
+      'Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät, solange du der Speicherung im Konto nicht zustimmst.';
 
   @override
   String onboardingPageValueOfValue(String arg0, String arg1) {
@@ -4548,6 +4594,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get profileComingSoon => 'Bald verfügbar';
 
   @override
+  String get profileContactSupport => 'Support schreiben';
+
+  @override
+  String get profileContactSupportText =>
+      'Fragen, Probleme oder eine Meldung zu einer Antwort? Wir antworten per E-Mail.';
+
+  @override
   String get profileCropYourImageDragItOrUse =>
       'Bildausschnitt. Ziehe das Bild oder nutze die Regler.';
 
@@ -4568,10 +4621,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Konto und Kontodaten löschen';
 
   @override
-  String get profileDeleteDemoData => 'Demodaten löschen?';
+  String get profileDeleteDemoData => 'Lokale Daten löschen?';
 
   @override
-  String get profileDeleteLocalDemoData => 'Lokale Demodaten löschen';
+  String get profileDeleteLocalDemoData => 'Lokale Daten löschen';
 
   @override
   String get profileDeletingYourAccountDoesNotCancelYour =>
@@ -4682,6 +4735,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get profileLocalDataOverview => 'Lokale Datenübersicht';
 
   @override
+  String profileLocalOverviewSummary(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  ) {
+    return 'Name: $arg0\nZiel: $arg1\nMahlzeiten: $arg2\nFavoriten: $arg3';
+  }
+
+  @override
   String get profileLookinDoesNotCalculateCalorieTargetsFor =>
       'Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen Arzt oder eine Ernährungsfachkraft.';
 
@@ -4707,7 +4770,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileMealsFavouritesListsAndWaterTotalsAre =>
-      'Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.';
+      'Mahlzeiten, Favoriten, Listen und Wasserstand werden auf diesem Gerät geleert. Ohne Konto erscheinen nach einem App-Neustart die Beispiel-Mahlzeiten wieder.';
 
   @override
   String get profileMealsNutrition => 'Mahlzeiten & Nährwerte';
@@ -4724,17 +4787,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileMyGoal => 'Mein Ziel';
-
-  @override
-  String profileNameValueGoalValueMealsValueWeight(
-    String arg0,
-    String arg1,
-    String arg2,
-    String arg3,
-    String arg4,
-  ) {
-    return 'Name: $arg0\nZiel: $arg1\nMahlzeiten: $arg2\nGewicht: $arg3 kg\nFavoriten: $arg4';
-  }
 
   @override
   String get profileNoGoalSelectedYet => 'Noch kein Ziel gewählt';
@@ -4844,6 +4896,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileStartFromTheBeginning => 'Von vorne zeigen';
+
+  @override
+  String profileSupportMailNotOpened(String address) {
+    return 'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an $address.';
+  }
+
+  @override
+  String get profileSupportMailSubject => 'Lookin Support';
 
   @override
   String profileTargetWeightValueKg(String arg0) {

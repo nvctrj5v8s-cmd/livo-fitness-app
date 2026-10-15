@@ -67,6 +67,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       unawaited(controller.loadRemoteDiary());
       unawaited(controller.loadRemoteFavorites());
       unawaited(controller.loadFoodPreferences());
+      unawaited(controller.loadWater());
       unawaited(controller.loadTrackingStreak());
       unawaited(controller.loadReminderPreferences());
       unawaited(controller.deleteRemovedKitchenLists());
@@ -107,6 +108,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     await Future.wait([
       controller.loadRemoteDiary(today),
       controller.loadTrackingStreak(),
+      controller.loadWater(),
     ]);
   }
 

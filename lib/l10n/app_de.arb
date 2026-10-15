@@ -156,6 +156,33 @@
   "coachNotSent": "Nicht gesendet",
   "coachPremiumFeature": "Premium-Funktion",
   "coachProteinAndTrainingTipsForYourDay": "Protein- und Trainingstipps für deinen Alltag",
+  "coachReportAnswer": "Antwort melden",
+  "coachReportMailAnswerLabel": "Gemeldete Antwort:",
+  "coachReportMailNotOpened": "Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.",
+  "@coachReportMailNotOpened": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "coachReportMailNotice": "Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.",
+  "coachReportMailReason": "Grund: {reason}",
+  "@coachReportMailReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "coachReportMailSubject": "Lookin Coach: Antwort melden",
+  "coachReportPrepareEmail": "E-Mail vorbereiten",
+  "coachReportReasonInappropriate": "Unpassend oder beleidigend",
+  "coachReportReasonOther": "Etwas anderes",
+  "coachReportReasonUnsafe": "Unsicher oder gesundheitlich bedenklich",
+  "coachReportReasonWrong": "Falsch oder irreführend",
+  "coachReportSheetText": "Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.",
+  "coachReportSheetTitle": "Antwort melden",
   "coachSendMessage": "Nachricht senden",
   "coachStartANewChat": "Neuen Chat beginnen?",
   "coachTheCoachCannotBeOpenedJustNow": "Der Coach kann gerade nicht geöffnet werden.",
@@ -1957,7 +1984,7 @@
   "onboardingOneMoment": "Einen Moment …",
   "onboardingOnlyUsedToEstimateYourEnergyNeeds": "Nur für die Schätzung deines Energiebedarfs – Körper verbrauchen je nach Geschlecht unterschiedlich viel. Du kannst das auch offenlassen.",
   "onboardingOpeningLookin": "Lookin wird geöffnet",
-  "onboardingOptionalAndOnlyForYourSafetyThis": "Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät.",
+  "onboardingOptionalAndOnlyForYourSafetyThis": "Freiwillig und nur für deine Sicherheit. Diese Angabe bleibt auf diesem Gerät, solange du der Speicherung im Konto nicht zustimmst.",
   "onboardingPageValueOfValue": "Seite {arg0} von {arg1}",
   "@onboardingPageValueOfValue": {
     "placeholders": {
@@ -2244,14 +2271,16 @@
   "profileChooseImage": "Bild auswählen",
   "profileClose": "Schließen",
   "profileComingSoon": "Bald verfügbar",
+  "profileContactSupport": "Support schreiben",
+  "profileContactSupportText": "Fragen, Probleme oder eine Meldung zu einer Antwort? Wir antworten per E-Mail.",
   "profileCropYourImageDragItOrUse": "Bildausschnitt. Ziehe das Bild oder nutze die Regler.",
   "profileDayStreak": "Tag Serie",
   "profileDayStreak2": "Tage Serie",
   "profileDelete": "Löschen",
   "profileDeleteAccount": "Konto löschen",
   "profileDeleteAccountAndAccountData": "Konto und Kontodaten löschen",
-  "profileDeleteDemoData": "Demodaten löschen?",
-  "profileDeleteLocalDemoData": "Lokale Demodaten löschen",
+  "profileDeleteDemoData": "Lokale Daten löschen?",
+  "profileDeleteLocalDemoData": "Lokale Daten löschen",
   "profileDeletingYourAccountDoesNotCancelYour": "Das Löschen des Kontos kündigt dein Abo nicht. Der Store bucht weiter ab, bis du es dort kündigst. Kündige zuerst, dann lösche das Konto.",
   "profileDemoChangesLastUntilTheAppRestarts": "Demo: Änderungen bleiben bis zum Neustart erhalten.",
   "profileDeveloperPremium": "Entwickler: Premium",
@@ -2284,21 +2313,8 @@
   "profileLeftRight": "Links – rechts",
   "profileLegal": "Rechtliches",
   "profileLocalDataOverview": "Lokale Datenübersicht",
-  "profileLookinDoesNotCalculateCalorieTargetsFor": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen Arzt oder eine Ernährungsfachkraft.",
-  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
-  "profileLoseFat": "Fett verlieren",
-  "profileLowActivity": "Wenig aktiv",
-  "profileMaintainWeight": "Gewicht halten",
-  "profileMealWaterAndWeeklyReviewRemindersWill": "Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.",
-  "profileMeals": "Mahlzeiten",
-  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden lokal geleert. Nach einem App-Neustart erscheinen die Beispiel-Mahlzeiten wieder.",
-  "profileMealsNutrition": "Mahlzeiten & Nährwerte",
-  "profileModeratelyActive": "Moderat aktiv",
-  "profileMoveTheImageToChooseYourCrop": "Verschiebe das Bild für deinen Ausschnitt.",
-  "profileMyDailyTargets": "Meine täglichen Ziele",
-  "profileMyGoal": "Mein Ziel",
-  "profileNameValueGoalValueMealsValueWeight": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nGewicht: {arg3} kg\nFavoriten: {arg4}",
-  "@profileNameValueGoalValueMealsValueWeight": {
+  "profileLocalOverviewSummary": "Name: {arg0}\nZiel: {arg1}\nMahlzeiten: {arg2}\nFavoriten: {arg3}",
+  "@profileLocalOverviewSummary": {
     "placeholders": {
       "arg0": {
         "type": "String"
@@ -2311,12 +2327,22 @@
       },
       "arg3": {
         "type": "String"
-      },
-      "arg4": {
-        "type": "String"
       }
     }
   },
+  "profileLookinDoesNotCalculateCalorieTargetsFor": "Für Personen unter 18 Jahren berechnet Lookin keine Kalorienziele. Bei Fragen zur Ernährung wende dich bitte an eine Ärztin, einen Arzt oder eine Ernährungsfachkraft.",
+  "profileLookinSupportsHabitsButDoesNotDiagnose": "Lookin unterstützt Gewohnheiten, stellt aber keine Diagnose und ersetzt keine Ärztin, keinen Arzt oder qualifizierte Ernährungsberatung.",
+  "profileLoseFat": "Fett verlieren",
+  "profileLowActivity": "Wenig aktiv",
+  "profileMaintainWeight": "Gewicht halten",
+  "profileMealWaterAndWeeklyReviewRemindersWill": "Erinnerungen an Mahlzeiten, Wasser und einen Wochenrückblick kommen mit einem der nächsten Updates. Bis dahin verschickt Lookin keine Benachrichtigungen.",
+  "profileMeals": "Mahlzeiten",
+  "profileMealsFavouritesListsAndWaterTotalsAre": "Mahlzeiten, Favoriten, Listen und Wasserstand werden auf diesem Gerät geleert. Ohne Konto erscheinen nach einem App-Neustart die Beispiel-Mahlzeiten wieder.",
+  "profileMealsNutrition": "Mahlzeiten & Nährwerte",
+  "profileModeratelyActive": "Moderat aktiv",
+  "profileMoveTheImageToChooseYourCrop": "Verschiebe das Bild für deinen Ausschnitt.",
+  "profileMyDailyTargets": "Meine täglichen Ziele",
+  "profileMyGoal": "Mein Ziel",
   "profileNoGoalSelectedYet": "Noch kein Ziel gewählt",
   "profileNotMedicalAdvice": "Keine medizinische Beratung",
   "profileNumbersAreAGuide": "Zahlen sind Orientierung",
@@ -2351,6 +2377,15 @@
   "profileSignOut2": "Abmelden?",
   "profileSignOutFailedPleaseTryAgain": "Abmelden fehlgeschlagen. Bitte versuche es erneut.",
   "profileStartFromTheBeginning": "Von vorne zeigen",
+  "profileSupportMailNotOpened": "Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.",
+  "@profileSupportMailNotOpened": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSupportMailSubject": "Lookin Support",
   "profileTargetWeightValueKg": "Zielgewicht: {arg0} kg",
   "@profileTargetWeightValueKg": {
     "placeholders": {

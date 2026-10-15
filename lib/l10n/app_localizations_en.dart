@@ -485,6 +485,51 @@ class AppLocalizationsEn extends AppLocalizations {
       'Protein and training tips for your day';
 
   @override
+  String get coachReportAnswer => 'Report answer';
+
+  @override
+  String get coachReportMailAnswerLabel => 'Reported answer:';
+
+  @override
+  String coachReportMailNotOpened(String address) {
+    return 'The email app could not be opened. Please write to us at $address.';
+  }
+
+  @override
+  String get coachReportMailNotice =>
+      'Please add what was wrong. Do not include health details you do not want to share.';
+
+  @override
+  String coachReportMailReason(String reason) {
+    return 'Reason: $reason';
+  }
+
+  @override
+  String get coachReportMailSubject => 'Lookin Coach: report an answer';
+
+  @override
+  String get coachReportPrepareEmail => 'Prepare email';
+
+  @override
+  String get coachReportReasonInappropriate => 'Inappropriate or offensive';
+
+  @override
+  String get coachReportReasonOther => 'Something else';
+
+  @override
+  String get coachReportReasonUnsafe => 'Unsafe or a health concern';
+
+  @override
+  String get coachReportReasonWrong => 'Wrong or misleading';
+
+  @override
+  String get coachReportSheetText =>
+      'Wrong, inappropriate or unsafe? We read every report. Your email app opens with the answer, and you can change anything before sending.';
+
+  @override
+  String get coachReportSheetTitle => 'Report this answer';
+
+  @override
   String get coachSendMessage => 'Send message';
 
   @override
@@ -4025,7 +4070,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingOptionalAndOnlyForYourSafetyThis =>
-      'Optional and only for your safety. This information stays on this device.';
+      'Optional and only for your safety. This information stays on this device unless you agree to saving it in your account.';
 
   @override
   String onboardingPageValueOfValue(String arg0, String arg1) {
@@ -4528,6 +4573,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileComingSoon => 'Coming soon';
 
   @override
+  String get profileContactSupport => 'Contact support';
+
+  @override
+  String get profileContactSupportText =>
+      'Questions, problems or a report about an answer? We reply by email.';
+
+  @override
   String get profileCropYourImageDragItOrUse =>
       'Crop your image. Drag it or use the sliders.';
 
@@ -4548,10 +4600,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Delete account and account data';
 
   @override
-  String get profileDeleteDemoData => 'Delete demo data?';
+  String get profileDeleteDemoData => 'Delete local data?';
 
   @override
-  String get profileDeleteLocalDemoData => 'Delete local demo data';
+  String get profileDeleteLocalDemoData => 'Delete local data';
 
   @override
   String get profileDeletingYourAccountDoesNotCancelYour =>
@@ -4661,6 +4713,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLocalDataOverview => 'Local data overview';
 
   @override
+  String profileLocalOverviewSummary(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  ) {
+    return 'Name: $arg0\nGoal: $arg1\nMeals: $arg2\nFavourites: $arg3';
+  }
+
+  @override
   String get profileLookinDoesNotCalculateCalorieTargetsFor =>
       'Lookin does not calculate calorie targets for people under 18. If you have questions about nutrition, contact a doctor or qualified nutrition professional.';
 
@@ -4686,7 +4748,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileMealsFavouritesListsAndWaterTotalsAre =>
-      'Meals, favourites, lists and water totals are cleared locally. The example meals appear again after the app restarts.';
+      'Meals, favourites, lists and water totals are cleared on this device. Without an account, the example meals appear again after the app restarts.';
 
   @override
   String get profileMealsNutrition => 'Meals & nutrition';
@@ -4703,17 +4765,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileMyGoal => 'My goal';
-
-  @override
-  String profileNameValueGoalValueMealsValueWeight(
-    String arg0,
-    String arg1,
-    String arg2,
-    String arg3,
-    String arg4,
-  ) {
-    return 'Name: $arg0\nGoal: $arg1\nMeals: $arg2\nWeight: $arg3 kg\nFavourites: $arg4';
-  }
 
   @override
   String get profileNoGoalSelectedYet => 'No goal selected yet';
@@ -4823,6 +4874,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileStartFromTheBeginning => 'Start from the beginning';
+
+  @override
+  String profileSupportMailNotOpened(String address) {
+    return 'The email app could not be opened. Please write to us at $address.';
+  }
+
+  @override
+  String get profileSupportMailSubject => 'Lookin support';
 
   @override
   String profileTargetWeightValueKg(String arg0) {

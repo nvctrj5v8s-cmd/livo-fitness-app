@@ -8,6 +8,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:image/image.dart' as img;
 
 import '../../consent/presentation/consent_dialogs.dart';
+import 'report_answer_sheet.dart';
 import '../../../core/data/ai_coach_service.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
@@ -1379,6 +1380,26 @@ class _MessageBubble extends StatelessWidget {
                   )
                 : CoachFormattedText(entry.text, style: assistantStyle),
           ),
+          if (!fromUser && !entry.failed && entry.text.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12, left: 2),
+              child: TextButton.icon(
+                key: const Key('coach-report-answer'),
+                onPressed: () =>
+                    showReportAnswerSheet(context, answer: entry.text),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.textMuted,
+                  minimumSize: const Size(48, 44),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  visualDensity: VisualDensity.compact,
+                ),
+                icon: const Icon(Icons.outlined_flag_rounded, size: 16),
+                label: Text(
+                  context.l10n.coachReportAnswer,
+                  style: const TextStyle(fontSize: 12.5),
+                ),
+              ),
+            ),
           if (entry.failed)
             Padding(
               padding: EdgeInsets.only(bottom: 12, right: 4),

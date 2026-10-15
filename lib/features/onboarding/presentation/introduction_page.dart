@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../language/presentation/language_switch.dart';
 import 'introduction_artwork.dart';
 
 List<_IntroSlide> get _slides => [
@@ -226,20 +227,38 @@ class _IntroductionPageState extends State<IntroductionPage>
                               Expanded(
                                 child: Align(
                                   alignment: Alignment.centerRight,
-                                  child: TextButton(
-                                    key: const ValueKey('intro-skip'),
-                                    onPressed: widget.busy
-                                        ? null
-                                        : widget.onComplete,
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: AppColors.textMuted,
-                                      minimumSize: const Size(48, 48),
-                                    ),
-                                    child: Text(
-                                      context.l10n.onboardingSkip,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 13),
-                                    ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const LanguageSwitch(),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: TextButton(
+                                          key: const ValueKey('intro-skip'),
+                                          onPressed: widget.busy
+                                              ? null
+                                              : widget.onComplete,
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                AppColors.textMuted,
+                                            minimumSize: const Size(48, 48),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                            ),
+                                          ),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              context.l10n.onboardingSkip,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

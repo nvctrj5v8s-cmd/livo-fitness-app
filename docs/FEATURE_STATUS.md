@@ -1,5 +1,56 @@
 # Funktionsstatus
 
+## Sprachschalter, Antwort melden, Wasserzähler, 15. Oktober 2026
+
+- **Sprachschalter vor der Anmeldung:** Einführung und Anmeldeseite haben oben
+  rechts einen kleinen Schalter „DE | EN“ (mit Gleit-Animation, bei
+  „Bewegung reduzieren“ ohne Animation). Die Wahl wird sofort für die ganze App
+  übernommen und wie die Profil-Auswahl auf diesem Gerät gespeichert. Auf den
+  Fragen-Seiten gibt es ihn nicht (zu wenig Platz in der Kopfzeile); dort gilt
+  die bereits gewählte Sprache.
+- **„Antwort melden“ beim KI-Coach:** Unter jeder Coach-Antwort kann man einen
+  Grund wählen (falsch, unsicher, unpassend, anderes). Danach öffnet sich die
+  Mail-App mit einer vorbereiteten Nachricht an `lookinsupport@gmail.com`, die
+  die Antwort enthält. Lookin sendet nichts selbst; die Person prüft und sendet
+  die Mail. Ohne Mail-App erscheint ein Hinweis mit der Adresse. Im Profil › Hilfe
+  gibt es zusätzlich „Support schreiben“. Es werden keine neuen Daten an
+  Dritte übertragen; die Mail geht über das Mail-Programm der Person.
+- **Wasserzähler:** Die Gläser pro Tag werden nur lokal auf dem Gerät
+  gespeichert (`lookin.water.v1.<Nutzer>.<Datum>`, sieben Tage Verlauf, danach
+  entfernt). Kein Konto-Sync, kein Export. „Lokale Daten löschen“ entfernt sie.
+- **Profil › Meine Daten:** Zeigt nur echte lokale Werte (Name, Ziel, Mahlzeiten,
+  Favoriten); keine erfundenen Gewichtsangaben mehr. Dazu die Texte
+  „Lokale Daten löschen“ / „Delete local data?“.
+- **Rechtliches:** Datenschutzerklärung (DE/EN): Postfach-Aufbewahrung
+  „höchstens drei Jahre nach Abschluss des Vorgangs“. `tool/check_legal_pages.dart`
+  prüft jetzt auch die englischen Seiten. `docs/SUPABASE_STORAGE_MAP.md` listet
+  `personalization_answers`, `user_consents`, `withdrawal_requests` und
+  `trial_claims`.
+- **Onboarding-Text:** Der Hinweis bei den optionalen Gesundheitsangaben sagt
+  jetzt, dass die Angabe auf dem Gerät bleibt, solange man der Speicherung im
+  Konto nicht zustimmt.
+- **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
+  390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 365 Tests,
+  `flutter analyze` ohne Hinweise.
+
+### Vor dem Start (Checkliste)
+
+- Rechtstexte durch Anwalt/Anwältin prüfen lassen, danach die „ENTWURF“-Banner
+  entfernen (`tool/check_legal_pages.dart` meldet sie bis dahin).
+- Kauf-Test auf einem Android-Gerät mit Play-Testkonto; danach
+  RevenueCat-Webhook für `TRANSFER` und `BILLING_ISSUE` ergänzen.
+- Supabase-Tarif „Pro“ (tägliche Sicherungen) und Ausgabenlimit bei OpenAI
+  setzen, bevor zahlende Nutzer kommen.
+- Serverseitige Prüfung der Gesundheits-Einwilligung in `ai-coach`; Halal-Filter
+  auch für Produkte ohne Zutatenliste; Löschjobs (IP-Hash 24 h, Test-Hash
+  3 Jahre, Widerrufe).
+- Play Console: Datensicherheit (Gesundheit und Fitness, Konto-Daten, Fotos),
+  englischer Store-Text, Länder auf Euro-Länder beschränken, Testkonto mit
+  bestätigter E-Mail und Premium.
+- Schlüsseldatei (Upload-Keystore) zusätzlich sichern; Entwicklername in Play
+  und Impressum angleichen; Markenprüfung für „Lookin“.
+
 ## Deutsch und Englisch vollständig angebunden, 15. Oktober 2026
 
 - Die App folgt beim ersten Start der Gerätesprache: Deutsch bei `de`, sonst
@@ -23,11 +74,12 @@
 - Web-Ladeanzeige und Dokumentensprache folgen der Auswahl. iOS enthält
   deutsche und englische Berechtigungsbeschreibungen. Keine neuen
   Berechtigungen, Analyse-, Tracking- oder Gesundheitsdienste ergänzt.
-- **Veröffentlichungsstand:** Diese Änderungen sind lokal. App/Web-Build,
-  die Edge Functions `ai-coach`, `legal-actions`, `revenuecat-webhook` und
-  die beiden Auth-Mailvorlagen müssen gemeinsam aktualisiert werden. Es
-  wurde für diesen Auftrag nichts live veröffentlicht; bestehende offene
-  Migrationen und rechtliche Freigaben bleiben offen.
+- **Veröffentlichungsstand (15. Oktober 2026):** Web-App (GitHub Pages), die
+  Edge Functions (`ai-coach`, `legal-actions`, `revenuecat-webhook` und die
+  übrigen, jeweils mit `supabase-js` 2.117.0) und die Migrationen `0019` bis
+  `0022` sind live; die zweisprachigen Auth-Mailvorlagen wurden im
+  Supabase-Dashboard eingefügt. Offen bleiben die rechtliche Freigabe der
+  Texte, der Android-Kauftest und die Punkte unter „Vor dem Start“.
 - Prüfung: `test/english_app_test.dart` deckt den Sprachwechsel, Gerätesprache,
   alle 40 vorhandenen Rezepte, Pro-Tipps und englische Ansichten bis 320 px mit
   großer Schrift ab. `tool/check_ai_locale.js` prüft die tatsächlichen reinen
