@@ -163,3 +163,22 @@ abgebucht), dann prüfen:
   für Tests gewollt.
 - iOS ist noch nicht eingerichtet: Es braucht Apple-Entwicklerkonto,
   App-Store-Connect-Abos und einen eigenen `REVENUECAT_IOS_KEY`.
+
+## Erfahrungen aus der Einrichtung (18. Oktober 2026)
+
+- Produkte in RevenueCat heißen bei Google `<Produkt-ID>:<Basis-Abo-ID>`, also
+  `lookin_premium_monthly:monthly` und `lookin_premium_yearly:yearly`. Der
+  Webhook erkennt das Jahresabo am Teil `yearly`.
+- Das Entitlement muss **`premium`** heißen (`BillingConfig.entitlementId`).
+- Das Dienstkonto braucht die Rechte „App-Informationen ansehen“,
+  „Finanzdaten ansehen“ und „Bestellungen und Abos verwalten“ **auf
+  Konto-Ebene und zusätzlich als App-Berechtigung** für Lookin. Nur
+  Konto-Ebene ließ „Can validate Google Play subscription purchases“ rot.
+  Google braucht danach teils Stunden.
+- Nach dem ersten Release im internen Test lieferte Google die App im
+  Emulator zunächst mit HTTP 503; ein Test über eine direkt installierte,
+  mit dem Upload-Schlüssel signierte Release-Datei (`flutter build apk
+  --release --build-number=<n> --dart-define=REVENUECAT_ANDROID_KEY=…`)
+  funktionierte mit Lizenztester und Testkarte.
+- Testabos erneuern sich alle 5 Minuten (Monat) bzw. schneller und enden nach
+  wenigen Erneuerungen von selbst.

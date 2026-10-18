@@ -5413,6 +5413,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionNew => 'New';
 
   @override
+  String subscriptionNextRenewalValue(String arg0) {
+    return 'Next renewal: $arg0';
+  }
+
+  @override
   String get subscriptionNoActiveSubscriptionWasFoundForThis =>
       'No active subscription was found for this store account.';
 
@@ -5561,6 +5566,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd =>
       'Take a photo — Lookin estimates foods and amounts. You check everything before saving.';
+
+  @override
+  String get subscriptionThankYouYourSubscriptionRenewsAutomatically =>
+      'Thank you for your support! Your subscription renews automatically and can be cancelled at any time in the store.';
 
   @override
   String get subscriptionTheAppStore => 'the App Store';

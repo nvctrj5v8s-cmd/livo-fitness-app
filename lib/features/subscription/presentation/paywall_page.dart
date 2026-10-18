@@ -1,7 +1,9 @@
 import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/state/app_controller.dart';
@@ -104,7 +106,7 @@ class _PaywallPageState extends State<PaywallPage>
   /// pre-ticked; the purchase stays disabled until the box is ticked.
   bool _immediateStart = false;
   _Notice? _notice;
-  bool _trialStarted = false;
+  _Celebration? _celebration;
 
   SubscriptionController get _subscription => widget.subscription;
   PremiumPlan get _plan => SubscriptionPlans.byId(_selected);
@@ -153,7 +155,7 @@ class _PaywallPageState extends State<PaywallPage>
     setState(() {
       switch (result.status) {
         case TrialStartStatus.started:
-          _trialStarted = true;
+          _celebration = _Celebration.trial;
         case TrialStartStatus.alreadyPremium:
           _notice = _Notice(
             L10n.current.subscriptionPremiumIsAlreadyActiveForYourAccount,
@@ -243,8 +245,12 @@ class _PaywallPageState extends State<PaywallPage>
 
   void _afterStoreFlow(PurchaseOutcome outcome) {
     if (!mounted) return;
+    if (outcome == PurchaseOutcome.active) {
+      // A real celebration instead of a small message and a closing page.
+      setState(() => _celebration = _Celebration.purchase);
+      return;
+    }
     _showMessage(PremiumCopy.purchaseOutcomeMessage(outcome));
-    if (outcome == PurchaseOutcome.active) widget.onClose();
   }
 
   Future<void> _manage() async {
@@ -261,7 +267,7 @@ class _PaywallPageState extends State<PaywallPage>
     final wide = media.size.width >= 900;
     final pinActions =
         !wide &&
-        !_trialStarted &&
+        _celebration == null &&
         media.size.height >= 620 &&
         media.textScaler.scale(1) <= 1.3;
     return Scaffold(
@@ -282,9 +288,10 @@ class _PaywallPageState extends State<PaywallPage>
                         ? Duration.zero
                         : const Duration(milliseconds: 420),
                     switchInCurve: Curves.easeOutCubic,
-                    child: _trialStarted
-                        ? _TrialSuccessView(
+                    child: _celebration != null
+                        ? _SuccessView(
                             key: const ValueKey('paywall-success'),
+                            kind: _celebration!,
                             expiresAt: _subscription.entitlement.expiresAt,
                             onContinue: widget.onActivated ?? widget.onClose,
                           )
@@ -1934,156 +1941,306 @@ class _LegalFooter extends StatelessWidget {
 
 // ─── Success ───────────────────────────────────────────────────────────────
 
-class _TrialSuccessView extends StatelessWidget {
-  const _TrialSuccessView({
+/// What the full-screen "Premium is active" view celebrates.
+enum _Celebration { trial, purchase }
+
+/// Full-screen "Premium is active", after the free trial and after a
+/// purchase. One finite animation: the check pops up, rings and confetti
+/// dots fly outwards once, the benefits slide in one after another. With
+/// "reduce motion" everything is shown at once.
+class _SuccessView extends StatefulWidget {
+  const _SuccessView({
+    required this.kind,
     required this.expiresAt,
     required this.onContinue,
     super.key,
   });
 
+  final _Celebration kind;
   final DateTime? expiresAt;
   final VoidCallback onContinue;
 
   @override
-  Widget build(BuildContext context) {
-    final reducedMotion = MediaQuery.disableAnimationsOf(context);
+  State<_SuccessView> createState() => _SuccessViewState();
+}
+
+class _SuccessViewState extends State<_SuccessView>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2800),
+  );
+  bool _started = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_started) return;
+    _started = true;
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+    } else {
+      unawaited(HapticFeedback.mediumImpact());
+      unawaited(_controller.forward());
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String _subtitle(BuildContext context) {
+    final l10n = context.l10n;
+    final expiresAt = widget.expiresAt;
+    if (widget.kind == _Celebration.purchase) {
+      final renewal = expiresAt == null
+          ? ''
+          : '\n${l10n.subscriptionNextRenewalValue(formatPremiumDateTime(expiresAt))}';
+      return '${l10n.subscriptionThankYouYourSubscriptionRenewsAutomatically}$renewal';
+    }
     final until = expiresAt == null
-        ? context.l10n.subscriptionYourFreeTrialLastsValueDays(
+        ? l10n.subscriptionYourFreeTrialLastsValueDays(
             (SubscriptionPlans.trialDays).toString(),
           )
-        : context.l10n.subscriptionYourFreeTrialRunsUntilValue(
-            (formatPremiumDateTime(expiresAt!)).toString(),
+        : l10n.subscriptionYourFreeTrialRunsUntilValue(
+            (formatPremiumDateTime(expiresAt)).toString(),
           );
+    return l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
+      (until).toString(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final benefits = [
+      l10n.subscriptionAiPhotoRecognition,
+      'Lookin Coach',
+      l10n.subscriptionAllRecipes,
+    ];
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(
         24,
-        12,
+        4,
         24,
         28 + MediaQuery.paddingOf(context).bottom,
       ),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 480),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 12),
-              Center(
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0, end: 1),
-                  duration: reducedMotion
-                      ? Duration.zero
-                      : const Duration(milliseconds: 900),
-                  curve: Curves.easeOutBack,
-                  builder: (context, value, child) => Transform.scale(
-                    scale: 0.6 + 0.4 * value,
-                    child: Opacity(
-                      opacity: value.clamp(0.0, 1.0),
-                      child: child,
-                    ),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, _) {
+              double phase(
+                double begin,
+                double end, [
+                Curve curve = Curves.easeOutCubic,
+              ]) => Interval(
+                begin,
+                end,
+                curve: curve,
+              ).transform(_controller.value);
+
+              Widget reveal(double begin, Widget child) {
+                final t = phase(begin, begin + 0.22);
+                return Opacity(
+                  opacity: t.clamp(0.0, 1.0),
+                  child: Transform.translate(
+                    offset: Offset(0, 18 * (1 - t)),
+                    child: child,
                   ),
-                  child: Container(
-                    width: 112,
-                    height: 112,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColors.primary, AppColors.mint],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.4),
-                          blurRadius: 48,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.check_rounded,
-                      size: 60,
-                      color: AppColors.black,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 28),
-              Semantics(
-                liveRegion: true,
-                header: true,
-                child: Text(
-                  context.l10n.subscriptionPremiumIsActive,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                context.l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
-                  (until).toString(),
-                ),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 15,
-                  height: 1.45,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Column(
-                  children: [
-                    for (final (i, label) in [
-                      context.l10n.subscriptionAiPhotoRecognition,
-                      'Lookin Coach',
-                      context.l10n.subscriptionAllRecipes,
-                    ].indexed) ...[
-                      if (i > 0) const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.check_circle_rounded,
-                            color: AppColors.primary,
-                            size: 22,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              context.l10n.subscriptionValueUnlocked(
-                                (label).toString(),
-                              ),
-                              style: const TextStyle(
-                                color: AppColors.text,
-                                fontWeight: FontWeight.w700,
+                );
+              }
+
+              final pop = phase(0, 0.32, Curves.easeOutBack);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: 240,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned.fill(
+                          child: ExcludeSemantics(
+                            child: CustomPaint(
+                              painter: _BurstPainter(
+                                progress: phase(0.06, 1, Curves.easeOutCubic),
                               ),
                             ),
                           ),
-                        ],
+                        ),
+                        Transform.scale(
+                          scale: 0.55 + 0.45 * pop,
+                          child: Opacity(
+                            opacity: (pop * 1.6).clamp(0.0, 1.0),
+                            child: Container(
+                              width: 112,
+                              height: 112,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [AppColors.primary, AppColors.mint],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    blurRadius: 48,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.check_rounded,
+                                size: 60,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  reveal(
+                    0.28,
+                    Semantics(
+                      liveRegion: true,
+                      header: true,
+                      child: Text(
+                        l10n.subscriptionPremiumIsActive,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
-                    ],
-                  ],
-                ),
-              ),
-              const SizedBox(height: 26),
-              FilledButton(
-                key: const Key('paywall-success-continue'),
-                onPressed: onContinue,
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(56),
-                ),
-                child: Text(context.l10n.subscriptionLetSGo),
-              ),
-            ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  reveal(
+                    0.36,
+                    Text(
+                      _subtitle(context),
+                      key: const Key('paywall-success-subtitle'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: AppColors.textMuted,
+                        fontSize: 15,
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Column(
+                      children: [
+                        for (final (i, label) in benefits.indexed) ...[
+                          if (i > 0) const SizedBox(height: 12),
+                          reveal(
+                            0.46 + i * 0.1,
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: AppColors.primary,
+                                  size: 22,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    l10n.subscriptionValueUnlocked(
+                                      (label).toString(),
+                                    ),
+                                    style: const TextStyle(
+                                      color: AppColors.text,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 26),
+                  reveal(
+                    0.76,
+                    FilledButton(
+                      key: const Key('paywall-success-continue'),
+                      onPressed: widget.onContinue,
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(56),
+                      ),
+                      child: Text(l10n.subscriptionLetSGo),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
+}
+
+/// Two soft rings and a ring of confetti dots that fly outwards once
+/// ([progress] 0 to 1) and fade out. Drawn only; no timers of its own.
+class _BurstPainter extends CustomPainter {
+  const _BurstPainter({required this.progress});
+
+  final double progress;
+
+  static const _colors = [
+    AppColors.primary,
+    AppColors.mint,
+    AppColors.orange,
+    AppColors.text,
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress <= 0 || progress >= 1) return;
+    final center = size.center(Offset.zero);
+    final reach = math.min(size.width, size.height) / 2;
+    for (var ring = 0; ring < 2; ring++) {
+      final p = ((progress - ring * 0.18) / (1 - ring * 0.18)).clamp(0.0, 1.0);
+      if (p <= 0) continue;
+      canvas.drawCircle(
+        center,
+        56 + (reach - 56) * Curves.easeOutCubic.transform(p),
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3 * (1 - p)
+          ..color = AppColors.primary.withValues(alpha: 0.55 * (1 - p)),
+      );
+    }
+    const dots = 18;
+    for (var i = 0; i < dots; i++) {
+      final angle = i * 2 * math.pi / dots + (i.isEven ? 0.12 : -0.12);
+      final spread = 0.62 + 0.38 * ((i * 7) % 5) / 4;
+      final distance =
+          62 + (reach - 70) * spread * Curves.easeOutCubic.transform(progress);
+      final fade = progress < 0.55 ? 1.0 : (1 - (progress - 0.55) / 0.45);
+      canvas.drawCircle(
+        center + Offset(math.cos(angle), math.sin(angle)) * distance,
+        (i % 3 == 0 ? 4.5 : 3.0) * (1 - 0.4 * progress),
+        Paint()..color = _colors[i % _colors.length].withValues(alpha: fade),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BurstPainter old) => old.progress != progress;
 }

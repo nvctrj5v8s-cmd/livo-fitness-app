@@ -2683,6 +2683,14 @@
   "subscriptionMonthly": "Monatlich",
   "subscriptionMoreRecipesWithPremium": "Mehr Rezepte mit Premium",
   "subscriptionNew": "Neues",
+  "subscriptionNextRenewalValue": "Nächste Verlängerung: {arg0}",
+  "@subscriptionNextRenewalValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionNoActiveSubscriptionWasFoundForThis": "Für dieses Store-Konto wurde kein aktives Abo gefunden.",
   "subscriptionNoTrialStartsInThePreviewWithout": "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.",
   "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
@@ -2772,6 +2780,7 @@
     }
   },
   "subscriptionTakeAPhotoLookinEstimatesFoodsAnd": "Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.",
+  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.",
   "subscriptionTheAppStore": "dem App Store",
   "subscriptionTheLookinCoachIsPartOfPremium": "Der Lookin Coach ist Teil von Premium",
   "subscriptionTheStoreIsCurrentlyUnavailableNothingWas": "Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.",

@@ -9425,6 +9425,12 @@ abstract class AppLocalizations {
   /// **'Neues'**
   String get subscriptionNew;
 
+  /// No description provided for @subscriptionNextRenewalValue.
+  ///
+  /// In de, this message translates to:
+  /// **'Nächste Verlängerung: {arg0}'**
+  String subscriptionNextRenewalValue(String arg0);
+
   /// No description provided for @subscriptionNoActiveSubscriptionWasFoundForThis.
   ///
   /// In de, this message translates to:
@@ -9659,6 +9665,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.'**
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd;
+
+  /// No description provided for @subscriptionThankYouYourSubscriptionRenewsAutomatically.
+  ///
+  /// In de, this message translates to:
+  /// **'Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.'**
+  String get subscriptionThankYouYourSubscriptionRenewsAutomatically;
 
   /// No description provided for @subscriptionTheAppStore.
   ///

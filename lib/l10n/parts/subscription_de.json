@@ -1,7 +1,13 @@
 {
   "subscriptionIncluded": "enthalten",
   "subscriptionPopularSavings": ", beliebt, {savings} Prozent günstiger als monatlich",
-  "@subscriptionPopularSavings": {"placeholders": {"savings": {"type": "String"}}},
+  "@subscriptionPopularSavings": {
+    "placeholders": {
+      "savings": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
   "subscriptionUnexpectedResponse": "Unerwartete Antwort.",
   "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
@@ -309,6 +315,15 @@
   "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.",
   "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
   "@subscriptionReferenceNumberValue": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.",
+  "subscriptionNextRenewalValue": "Nächste Verlängerung: {arg0}",
+  "@subscriptionNextRenewalValue": {
     "placeholders": {
       "arg0": {
         "type": "String"

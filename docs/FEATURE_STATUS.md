@@ -1,5 +1,41 @@
 # Funktionsstatus
 
+## Kauf-Test und Erfolgs-Ansicht, 18. Oktober 2026
+
+- **Kauf-Test bestanden (Android-Emulator, Lizenztester, Testkarte):** Monatsabo
+  gekauft → Google → RevenueCat → Webhook → `public.entitlements`
+  (`plan = premium`, `status = active`, `provider = revenuecat`, Ablauf nach
+  5 Minuten wie bei Testabos) → die App zeigt „Premium ist aktiv“. Nicht
+  geprüft: Jahresabo, Verlängerung/Ablauf (`EXPIRATION`), Kündigung,
+  „Käufe wiederherstellen“, Wiederinstallation. Es wurde kein echtes Geld
+  bewegt.
+- **Eingerichtet in Google Play Console:** App „Lookin – AI Food Tracker“
+  (`com.lookin.foodtracker`), interner Test (Version 2 mit Kauf-Schlüssel),
+  Zahlungsprofil (natürliche Person) mit Bankkonto (Bestätigung per
+  Testüberweisung steht aus), Abos `lookin_premium_monthly` (Basis-Abo
+  `monthly`, 6,99 €) und `lookin_premium_yearly` (Basis-Abo `yearly`,
+  49,99 €), Lizenztester, Dienstkonto `revenuecat@lookin-billing…` mit Rechten
+  auf Konto- **und** App-Ebene.
+- **Eingerichtet in RevenueCat (Projekt „Lookin“, Android-App):** Zugangsdaten
+  gültig; Produkte `lookin_premium_monthly:monthly` und
+  `lookin_premium_yearly:yearly`; Entitlement `premium`; Offering `default` mit
+  den Paketen Monthly und Yearly; Webhook zu `revenuecat-webhook`. Das alte
+  Entitlement `lookin_pro` und die Test-Store-Produkte sind Überbleibsel ohne
+  Wirkung.
+- **Noch offen bei Google/RevenueCat:** „Google developer notifications“
+  (Pub/Sub-Thema; vermutlich Abrechnungskonto im Cloud-Projekt nötig), damit
+  Verlängerungen/Kündigungen sofort ankommen. Das Herunterladen aus dem
+  Play Store scheiterte im Emulator (HTTP 503/QUIC-Fehler); der Test lief mit
+  einer direkt installierten Release-Datei.
+- **Neue Erfolgs-Ansicht nach dem Kauf:** Statt einer kleinen Meldung und
+  schließender Seite zeigt die Paywall wie nach dem Test-Start eine
+  Vollbild-Ansicht „Premium ist aktiv“: Haken springt auf, Ringe und
+  Konfetti-Punkte fliegen einmal nach außen (endlich, kein Dauerlauf), die
+  Vorteile gleiten nacheinander herein, dazu Dank, Hinweis zu
+  automatischer Verlängerung und nächstes Verlängerungsdatum. „Bewegung
+  reduzieren“ zeigt alles sofort. Gilt auch für „Käufe wiederherstellen“.
+  Tests: `test/purchase_celebration_test.dart`.
+
 ## Sprachschalter, Antwort melden, Wasserzähler, 15. Oktober 2026
 
 - **Sprachschalter vor der Anmeldung:** Einführung und Anmeldeseite haben oben
@@ -57,7 +93,7 @@
   Entwicklerkonto), bekommen bis zur Zustimmung keine KI-Antworten.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 374 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 378 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)

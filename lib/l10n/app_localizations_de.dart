@@ -5435,6 +5435,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionNew => 'Neues';
 
   @override
+  String subscriptionNextRenewalValue(String arg0) {
+    return 'Nächste Verlängerung: $arg0';
+  }
+
+  @override
   String get subscriptionNoActiveSubscriptionWasFoundForThis =>
       'Für dieses Store-Konto wurde kein aktives Abo gefunden.';
 
@@ -5585,6 +5590,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd =>
       'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.';
+
+  @override
+  String get subscriptionThankYouYourSubscriptionRenewsAutomatically =>
+      'Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.';
 
   @override
   String get subscriptionTheAppStore => 'dem App Store';

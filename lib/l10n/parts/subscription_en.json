@@ -109,5 +109,7 @@
   "subscriptionYourWithdrawalWasReceivedOnValue": "Your withdrawal was received on {arg0}.",
   "subscriptionWeHaveSentAnAcknowledgementToValue": "We have sent an acknowledgement to {arg0}. Your refund is handled through Google Play.",
   "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up. Your refund is handled through Google Play.",
-  "subscriptionReferenceNumberValue": "Reference number: {arg0}"
+  "subscriptionReferenceNumberValue": "Reference number: {arg0}",
+  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Thank you for your support! Your subscription renews automatically and can be cancelled at any time in the store.",
+  "subscriptionNextRenewalValue": "Next renewal: {arg0}"
 }
