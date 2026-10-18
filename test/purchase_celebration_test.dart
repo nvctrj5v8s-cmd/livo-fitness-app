@@ -90,7 +90,7 @@ Future<void> _pump(
   await tester.pumpAndSettle();
 }
 
-Future<void> _buyMonthly(WidgetTester tester) async {
+Future<void> _buySelected(WidgetTester tester) async {
   final immediateStart = find.byKey(const Key('paywall-immediate-start'));
   await tester.ensureVisible(immediateStart);
   await tester.pumpAndSettle();
@@ -112,11 +112,17 @@ void main() {
     addTearDown(controller.dispose);
     await _pump(tester, controller, onClose: () => closed++);
 
-    await _buyMonthly(tester);
+    await _buySelected(tester);
 
     expect(controller.hasPremium, isTrue);
     expect(find.byKey(const ValueKey('paywall-success')), findsOneWidget);
-    expect(find.text('Premium ist aktiv'), findsOneWidget);
+    expect(find.text('Willkommen bei Lookin Premium'), findsOneWidget);
+    final plan = tester.widget<Text>(
+      find.byKey(const Key('premium-welcome-plan')),
+    );
+    // The yearly plan is preselected.
+    expect(plan.data, contains('Jährlich'));
+    expect(plan.data, contains('49,99'));
     final subtitle = tester.widget<Text>(
       find.byKey(const Key('paywall-success-subtitle')),
     );
@@ -126,7 +132,15 @@ void main() {
     expect(closed, 0);
     expect(find.byType(SnackBar), findsNothing);
 
-    await tester.tap(find.byKey(const Key('paywall-success-continue')));
+    // Tapping the mark throws confetti again; nothing else changes.
+    await tester.tap(find.byKey(const Key('premium-welcome-mark')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    final continueButton = find.byKey(const Key('paywall-success-continue'));
+    await tester.ensureVisible(continueButton);
+    await tester.pumpAndSettle();
+    await tester.tap(continueButton);
     await tester.pumpAndSettle();
     expect(closed, 1);
   });
@@ -145,9 +159,9 @@ void main() {
       textScale: 1.6,
     );
 
-    await _buyMonthly(tester);
+    await _buySelected(tester);
 
-    expect(find.text('Premium is active'), findsOneWidget);
+    expect(find.text('Welcome to Lookin Premium'), findsOneWidget);
     final subtitle = tester.widget<Text>(
       find.byKey(const Key('paywall-success-subtitle')),
     );
@@ -167,13 +181,15 @@ void main() {
     addTearDown(controller.dispose);
     await _pump(tester, controller, onClose: () {}, reducedMotion: true);
 
-    await _buyMonthly(tester);
+    await _buySelected(tester);
 
     final title = tester.widget<Opacity>(
-      find.ancestor(
-        of: find.text('Premium ist aktiv'),
-        matching: find.byType(Opacity),
-      ),
+      find
+          .ancestor(
+            of: find.text('Willkommen bei Lookin Premium'),
+            matching: find.byType(Opacity),
+          )
+          .first,
     );
     expect(title.opacity, 1);
     expect(find.byKey(const Key('paywall-success-continue')), findsOneWidget);
@@ -187,8 +203,8 @@ void main() {
     addTearDown(controller.dispose);
     await _pump(tester, controller, onClose: () {});
 
-    await _buyMonthly(tester);
-    await tester.pump(const Duration(seconds: 4));
+    await _buySelected(tester);
+    await tester.pump(const Duration(seconds: 6));
 
     expect(tester.hasRunningAnimations, isFalse);
   });

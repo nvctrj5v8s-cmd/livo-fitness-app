@@ -9551,6 +9551,12 @@ abstract class AppLocalizations {
   /// **'Profil & Tagesziele'**
   String get subscriptionProfileDailyTargets;
 
+  /// No description provided for @subscriptionPurchaseBusy.
+  ///
+  /// In de, this message translates to:
+  /// **'Kauf wird vorbereitet …'**
+  String get subscriptionPurchaseBusy;
+
   /// No description provided for @subscriptionPurchaseCancelledNothingWasCharged.
   ///
   /// In de, this message translates to:
@@ -9617,6 +9623,12 @@ abstract class AppLocalizations {
   /// **'Monatlich abonnieren'**
   String get subscriptionSubscribeMonthly;
 
+  /// No description provided for @subscriptionSubscribePaid.
+  ///
+  /// In de, this message translates to:
+  /// **'Kostenpflichtig abonnieren'**
+  String get subscriptionSubscribePaid;
+
   /// No description provided for @subscriptionSubscribeYearly.
   ///
   /// In de, this message translates to:
@@ -9666,11 +9678,11 @@ abstract class AppLocalizations {
   /// **'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.'**
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd;
 
-  /// No description provided for @subscriptionThankYouYourSubscriptionRenewsAutomatically.
+  /// No description provided for @subscriptionTermsShort.
   ///
   /// In de, this message translates to:
-  /// **'Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.'**
-  String get subscriptionThankYouYourSubscriptionRenewsAutomatically;
+  /// **'Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums'**
+  String subscriptionTermsShort(String arg0);
 
   /// No description provided for @subscriptionTheAppStore.
   ///
@@ -9701,6 +9713,18 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Testphase bereits genutzt'**
   String get subscriptionTrialAlreadyUsed;
+
+  /// No description provided for @subscriptionTrialNoStrings.
+  ///
+  /// In de, this message translates to:
+  /// **'Kein Abo · keine Zahlungsdaten · endet automatisch'**
+  String get subscriptionTrialNoStrings;
+
+  /// No description provided for @subscriptionTryFreeFirst.
+  ///
+  /// In de, this message translates to:
+  /// **'Erst {arg0} Tage gratis testen'**
+  String subscriptionTryFreeFirst(String arg0);
 
   /// No description provided for @subscriptionUnexpectedResponse.
   ///
@@ -9774,6 +9798,42 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Wir haben dir eine Eingangsbestätigung an {arg0} geschickt. Die Rückzahlung erfolgt über Google Play.'**
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0);
+
+  /// No description provided for @subscriptionWelcomeCoachText.
+  ///
+  /// In de, this message translates to:
+  /// **'Frag alles rund um dein Essen'**
+  String get subscriptionWelcomeCoachText;
+
+  /// No description provided for @subscriptionWelcomePhotoText.
+  ///
+  /// In de, this message translates to:
+  /// **'Foto machen, Werte schätzen lassen'**
+  String get subscriptionWelcomePhotoText;
+
+  /// No description provided for @subscriptionWelcomeRecipesText.
+  ///
+  /// In de, this message translates to:
+  /// **'Jedes Rezept ist jetzt freigeschaltet'**
+  String get subscriptionWelcomeRecipesText;
+
+  /// No description provided for @subscriptionWelcomeRenewsNote.
+  ///
+  /// In de, this message translates to:
+  /// **'Verlängert sich automatisch · jederzeit im Store kündbar'**
+  String get subscriptionWelcomeRenewsNote;
+
+  /// No description provided for @subscriptionWelcomeThanks.
+  ///
+  /// In de, this message translates to:
+  /// **'Danke für deine Unterstützung! Dein Abo ist aktiv.'**
+  String get subscriptionWelcomeThanks;
+
+  /// No description provided for @subscriptionWelcomeTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Willkommen bei Lookin Premium'**
+  String get subscriptionWelcomeTitle;
 
   /// No description provided for @subscriptionWithPremiumAllRecipes.
   ///

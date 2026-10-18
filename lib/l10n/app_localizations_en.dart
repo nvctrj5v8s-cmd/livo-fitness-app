@@ -5492,6 +5492,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionProfileDailyTargets => 'Profile & daily targets';
 
   @override
+  String get subscriptionPurchaseBusy => 'Preparing purchase…';
+
+  @override
   String get subscriptionPurchaseCancelledNothingWasCharged =>
       'Purchase cancelled. Nothing was charged.';
 
@@ -5532,6 +5535,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionSubscribeMonthly => 'Subscribe monthly';
 
   @override
+  String get subscriptionSubscribePaid => 'Subscribe';
+
+  @override
   String get subscriptionSubscribeYearly => 'Subscribe yearly';
 
   @override
@@ -5568,8 +5574,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Take a photo — Lookin estimates foods and amounts. You check everything before saving.';
 
   @override
-  String get subscriptionThankYouYourSubscriptionRenewsAutomatically =>
-      'Thank you for your support! Your subscription renews automatically and can be cancelled at any time in the store.';
+  String subscriptionTermsShort(String arg0) {
+    return 'Billed by the store · renews automatically · cancel anytime in the subscription settings of $arg0, effective at the end of the billing period';
+  }
 
   @override
   String get subscriptionTheAppStore => 'the App Store';
@@ -5588,6 +5595,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionTrialAlreadyUsed => 'Trial already used';
+
+  @override
+  String get subscriptionTrialNoStrings =>
+      'No subscription · no payment details · ends automatically';
+
+  @override
+  String subscriptionTryFreeFirst(String arg0) {
+    return 'Try $arg0 days free first';
+  }
 
   @override
   String get subscriptionUnexpectedResponse => 'Unexpected response.';
@@ -5645,6 +5661,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0) {
     return 'We have sent an acknowledgement to $arg0. Your refund is handled through Google Play.';
   }
+
+  @override
+  String get subscriptionWelcomeCoachText => 'Ask anything about your food';
+
+  @override
+  String get subscriptionWelcomePhotoText =>
+      'Snap a photo, get estimated values';
+
+  @override
+  String get subscriptionWelcomeRecipesText => 'Every recipe is now unlocked';
+
+  @override
+  String get subscriptionWelcomeRenewsNote =>
+      'Renews automatically · cancel any time in the store';
+
+  @override
+  String get subscriptionWelcomeThanks =>
+      'Thank you for your support! Your subscription is active.';
+
+  @override
+  String get subscriptionWelcomeTitle => 'Welcome to Lookin Premium';
 
   @override
   String get subscriptionWithPremiumAllRecipes => 'With Premium: all recipes';

@@ -1,6 +1,5 @@
 import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +14,7 @@ import '../domain/entitlement.dart';
 import '../domain/subscription_plans.dart';
 import 'premium_artwork.dart';
 import 'premium_format.dart';
+import 'premium_welcome.dart';
 
 /// Where the paywall was opened; only changes the small context line.
 enum PaywallSource { onboarding, profile, coach, mealPhoto, recipes }
@@ -105,8 +105,15 @@ class _PaywallPageState extends State<PaywallPage>
   /// Express request to start before the withdrawal period ends. Never
   /// pre-ticked; the purchase stays disabled until the box is ticked.
   bool _immediateStart = false;
+
+  /// Set when "subscribe" was tapped without the box; the box is marked.
+  bool _consentMissing = false;
+  final _consentKey = GlobalKey();
   _Notice? _notice;
-  _Celebration? _celebration;
+  PremiumWelcomeKind? _celebration;
+
+  /// The plan that was bought; `null` after a restore or the trial.
+  PremiumPlan? _celebratedPlan;
 
   SubscriptionController get _subscription => widget.subscription;
   PremiumPlan get _plan => SubscriptionPlans.byId(_selected);
@@ -155,7 +162,7 @@ class _PaywallPageState extends State<PaywallPage>
     setState(() {
       switch (result.status) {
         case TrialStartStatus.started:
-          _celebration = _Celebration.trial;
+          _celebration = PremiumWelcomeKind.trial;
         case TrialStartStatus.alreadyPremium:
           _notice = _Notice(
             L10n.current.subscriptionPremiumIsAlreadyActiveForYourAccount,
@@ -208,7 +215,22 @@ class _PaywallPageState extends State<PaywallPage>
     }
     if (_subscription.isPurchasing) return;
     if (!_immediateStart) {
-      _showMessage(PremiumCopy.immediateStartRequired);
+      // Point at the box instead of greying the button out.
+      setState(() => _consentMissing = true);
+      unawaited(HapticFeedback.heavyImpact());
+      final box = _consentKey.currentContext;
+      if (box != null) {
+        unawaited(
+          Scrollable.ensureVisible(
+            box,
+            alignment: 0.35,
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 380),
+            curve: Curves.easeOutCubic,
+          ),
+        );
+      }
       return;
     }
     // Recorded with the plan before the store dialog opens, so the
@@ -231,7 +253,8 @@ class _PaywallPageState extends State<PaywallPage>
       _showMessage(PremiumCopy.immediateStartNotStored);
       return;
     }
-    _afterStoreFlow(await _subscription.purchase(_selected));
+    final plan = _plan;
+    _afterStoreFlow(await _subscription.purchase(_selected), plan: plan);
   }
 
   Future<void> _restore() async {
@@ -243,11 +266,14 @@ class _PaywallPageState extends State<PaywallPage>
     _afterStoreFlow(await _subscription.restore());
   }
 
-  void _afterStoreFlow(PurchaseOutcome outcome) {
+  void _afterStoreFlow(PurchaseOutcome outcome, {PremiumPlan? plan}) {
     if (!mounted) return;
     if (outcome == PurchaseOutcome.active) {
       // A real celebration instead of a small message and a closing page.
-      setState(() => _celebration = _Celebration.purchase);
+      setState(() {
+        _celebration = PremiumWelcomeKind.purchase;
+        _celebratedPlan = plan;
+      });
       return;
     }
     _showMessage(PremiumCopy.purchaseOutcomeMessage(outcome));
@@ -260,6 +286,45 @@ class _PaywallPageState extends State<PaywallPage>
     if (!opened && mounted) _showMessage(PremiumCopy.manageFailedMessage);
   }
 
+  Widget _welcome(BuildContext context, PremiumWelcomeKind kind) {
+    final l10n = context.l10n;
+    final expiresAt = _subscription.entitlement.expiresAt;
+    final plan = _celebratedPlan;
+    if (kind == PremiumWelcomeKind.purchase) {
+      return PremiumWelcomeView(
+        key: const ValueKey('paywall-success'),
+        kind: kind,
+        statusLine: l10n.subscriptionWelcomeThanks,
+        detailLine: expiresAt == null
+            ? null
+            : l10n.subscriptionNextRenewalValue(
+                formatPremiumDateTime(expiresAt),
+              ),
+        planChip: plan == null
+            ? null
+            : '${PremiumCopy.planTitle(plan)} · '
+                  '${PremiumCopy.headlinePrice(plan)} '
+                  '${PremiumCopy.headlineUnit(plan)}',
+        onContinue: widget.onActivated ?? widget.onClose,
+      );
+    }
+    final until = expiresAt == null
+        ? l10n.subscriptionYourFreeTrialLastsValueDays(
+            (SubscriptionPlans.trialDays).toString(),
+          )
+        : l10n.subscriptionYourFreeTrialRunsUntilValue(
+            (formatPremiumDateTime(expiresAt)).toString(),
+          );
+    return PremiumWelcomeView(
+      key: const ValueKey('paywall-success'),
+      kind: kind,
+      statusLine: l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
+        (until).toString(),
+      ),
+      onContinue: widget.onActivated ?? widget.onClose,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
@@ -270,6 +335,12 @@ class _PaywallPageState extends State<PaywallPage>
         _celebration == null &&
         media.size.height >= 620 &&
         media.textScaler.scale(1) <= 1.3;
+    // On short phones only the purchase button and its terms stay pinned;
+    // the trial and the free version move into the scrolling part.
+    final splitActions =
+        pinActions &&
+        _subscription.storeBillingAvailable &&
+        media.size.height < 760;
     return Scaffold(
       key: const Key('paywall-page'),
       backgroundColor: AppColors.background,
@@ -289,19 +360,18 @@ class _PaywallPageState extends State<PaywallPage>
                         : const Duration(milliseconds: 420),
                     switchInCurve: Curves.easeOutCubic,
                     child: _celebration != null
-                        ? _SuccessView(
-                            key: const ValueKey('paywall-success'),
-                            kind: _celebration!,
-                            expiresAt: _subscription.entitlement.expiresAt,
-                            onContinue: widget.onActivated ?? widget.onClose,
-                          )
+                        ? _welcome(context, _celebration!)
                         : Builder(
                             key: const ValueKey('paywall-offer'),
                             // Reads the padding that already includes the
                             // pinned action bar (extendBody).
                             builder: (context) => wide
                                 ? _wideOffer(context)
-                                : _narrowOffer(context, pinActions),
+                                : _narrowOffer(
+                                    context,
+                                    pinActions,
+                                    splitActions,
+                                  ),
                           ),
                   ),
                 ),
@@ -311,7 +381,9 @@ class _PaywallPageState extends State<PaywallPage>
         ],
       ),
       bottomNavigationBar: pinActions
-          ? _PinnedActions(child: _actions(compact: true))
+          ? _PinnedActions(
+              child: _actions(compact: true, secondary: !splitActions),
+            )
           : null,
     );
   }
@@ -330,7 +402,11 @@ class _PaywallPageState extends State<PaywallPage>
     ),
   );
 
-  Widget _narrowOffer(BuildContext context, bool pinActions) {
+  Widget _narrowOffer(
+    BuildContext context,
+    bool pinActions,
+    bool splitActions,
+  ) {
     final heroHeight = (MediaQuery.sizeOf(context).height * 0.26).clamp(
       150.0,
       226.0,
@@ -351,11 +427,14 @@ class _PaywallPageState extends State<PaywallPage>
               const SizedBox(height: 24),
               _Benefits(animation: _intro),
               const SizedBox(height: 24),
+              _reveal(0.4, _planSection()),
               if (!pinActions) ...[
-                _reveal(0.4, _actions(compact: false)),
-                const SizedBox(height: 30),
+                const SizedBox(height: 22),
+                _reveal(0.46, _actions(compact: false)),
+              ] else if (splitActions) ...[
+                const SizedBox(height: 14),
+                _actions(compact: false, primary: false),
               ],
-              _reveal(0.46, _planSection()),
               const SizedBox(height: 28),
               _reveal(0.56, const _ComparisonCard()),
               const SizedBox(height: 22),
@@ -404,30 +483,38 @@ class _PaywallPageState extends State<PaywallPage>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            context.l10n.subscriptionStartForFree,
-                            style: Theme.of(context).textTheme.headlineMedium
-                                ?.copyWith(fontWeight: FontWeight.w900),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            context.l10n
-                                .subscriptionAllPremiumFeaturesForValueDaysThen(
-                                  (SubscriptionPlans.trialDays).toString(),
-                                ),
-                            style: const TextStyle(
-                              color: AppColors.textMuted,
-                              height: 1.45,
+                          if (_subscription.storeBillingAvailable) ...[
+                            _planSection(),
+                            const SizedBox(height: 20),
+                            _actions(compact: false),
+                            const SizedBox(height: 22),
+                            _legalFooter(),
+                          ] else ...[
+                            Text(
+                              context.l10n.subscriptionStartForFree,
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.w900),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          _actions(compact: false),
-                          const SizedBox(height: 22),
-                          const Divider(color: AppColors.border, height: 1),
-                          const SizedBox(height: 22),
-                          _planSection(),
-                          const SizedBox(height: 22),
-                          _legalFooter(),
+                            const SizedBox(height: 6),
+                            Text(
+                              context.l10n
+                                  .subscriptionAllPremiumFeaturesForValueDaysThen(
+                                    (SubscriptionPlans.trialDays).toString(),
+                                  ),
+                              style: const TextStyle(
+                                color: AppColors.textMuted,
+                                height: 1.45,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            _actions(compact: false),
+                            const SizedBox(height: 22),
+                            const Divider(color: AppColors.border, height: 1),
+                            const SizedBox(height: 22),
+                            _planSection(),
+                            const SizedBox(height: 22),
+                            _legalFooter(),
+                          ],
                         ],
                       ),
                     ),
@@ -441,9 +528,19 @@ class _PaywallPageState extends State<PaywallPage>
     );
   }
 
-  Widget _actions({required bool compact}) {
+  /// Buttons of the offer. With store billing the one big button buys the
+  /// selected plan; the free trial (no payment details, ends by itself) is a
+  /// smaller second option. Without billing (web) the trial is the main way.
+  /// [primary] and [secondary] split the parts when the pinned bar would get
+  /// too tall on short phones.
+  Widget _actions({
+    required bool compact,
+    bool primary = true,
+    bool secondary = true,
+  }) {
     final subscription = _subscription;
     if (subscription.hasPremium) {
+      if (!primary) return const SizedBox.shrink();
       return _ActiveCard(
         entitlement: subscription.entitlement,
         trialing: subscription.isTrialing,
@@ -451,48 +548,103 @@ class _PaywallPageState extends State<PaywallPage>
       );
     }
     final canTrial = subscription.canStartTrial;
+    final freeLink = TextButton.icon(
+      key: const Key('paywall-continue-free'),
+      onPressed: widget.onClose,
+      iconAlignment: IconAlignment.end,
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.text,
+        minimumSize: const Size.fromHeight(48),
+        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+      ),
+      icon: const Icon(Icons.arrow_forward_rounded, size: 19),
+      label: Text(
+        L10n.current.subscriptionContinueWithTheFreeVersion,
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    if (!subscription.storeBillingAvailable) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_notice case final notice?) ...[
+            _NoticeCard(notice: notice),
+            const SizedBox(height: 10),
+          ],
+          _TrialButton(
+            inkKey: const Key('paywall-start-trial'),
+            label: canTrial
+                ? PremiumCopy.trialCta
+                : L10n.current.subscriptionTrialAlreadyUsed,
+            busy: subscription.isStartingTrial,
+            enabled: canTrial,
+            shimmer: _intro,
+            onPressed: _startTrial,
+          ),
+          SizedBox(height: compact ? 7 : 10),
+          _PromiseLine(
+            text: canTrial
+                ? PremiumCopy.trialPromise
+                : L10n.current.subscriptionYouCanSubscribeToPremiumOncePayments,
+          ),
+          SizedBox(height: compact ? 2 : 6),
+          freeLink,
+        ],
+      );
+    }
+
+    final plan = _plan;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (_notice case final notice?) ...[
-          _NoticeCard(notice: notice),
-          const SizedBox(height: 10),
-        ],
-        _TrialButton(
-          label: canTrial
-              ? PremiumCopy.trialCta
-              : L10n.current.subscriptionTrialAlreadyUsed,
-          busy: subscription.isStartingTrial,
-          enabled: canTrial,
-          shimmer: _intro,
-          onPressed: _startTrial,
-        ),
-        SizedBox(height: compact ? 7 : 10),
-        _PromiseLine(
-          text: canTrial
-              ? PremiumCopy.trialPromise
-              : L10n.current.subscriptionYouCanSubscribeToPremiumOncePayments,
-        ),
-        SizedBox(height: compact ? 2 : 6),
-        TextButton.icon(
-          key: const Key('paywall-continue-free'),
-          onPressed: widget.onClose,
-          iconAlignment: IconAlignment.end,
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.text,
-            minimumSize: const Size.fromHeight(48),
-            textStyle: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
+        if (primary) ...[
+          _TrialButton(
+            inkKey: const Key('paywall-purchase'),
+            label: L10n.current.subscriptionSubscribePaid,
+            sublabel:
+                '${PremiumCopy.headlinePrice(plan)} '
+                '${PremiumCopy.headlineUnit(plan)}',
+            icon: Icons.workspace_premium_rounded,
+            busy: subscription.isPurchasing,
+            busyLabel: L10n.current.subscriptionPurchaseBusy,
+            enabled: true,
+            shimmer: _intro,
+            onPressed: _purchase,
+          ),
+          SizedBox(height: compact ? 6 : 8),
+          Text(
+            PremiumCopy.termsShort,
+            key: const Key('paywall-terms-short'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 11.5,
+              height: 1.35,
             ),
           ),
-          icon: const Icon(Icons.arrow_forward_rounded, size: 19),
-          label: Text(
-            L10n.current.subscriptionContinueWithTheFreeVersion,
-            textAlign: TextAlign.center,
-          ),
-        ),
+        ],
+        if (secondary) ...[
+          if (_notice case final notice?) ...[
+            SizedBox(height: compact ? 8 : 12),
+            _NoticeCard(notice: notice),
+          ],
+          if (canTrial) ...[
+            SizedBox(height: compact ? 8 : 12),
+            _TrialOutlineButton(
+              label: L10n.current.subscriptionTryFreeFirst(
+                (SubscriptionPlans.trialDays).toString(),
+              ),
+              caption: L10n.current.subscriptionTrialNoStrings,
+              busy: subscription.isStartingTrial,
+              onPressed: _startTrial,
+            ),
+          ],
+          SizedBox(height: compact ? 0 : 4),
+          freeLink,
+        ],
       ],
     );
   }
@@ -505,7 +657,12 @@ class _PaywallPageState extends State<PaywallPage>
     billingAvailable: _subscription.storeBillingAvailable,
     busy: _subscription.isPurchasing,
     immediateStart: _immediateStart,
-    onImmediateStartChanged: (value) => setState(() => _immediateStart = value),
+    consentKey: _consentKey,
+    consentMissing: _consentMissing,
+    onImmediateStartChanged: (value) => setState(() {
+      _immediateStart = value;
+      if (value) _consentMissing = false;
+    }),
   );
 
   Widget _legalFooter() => _LegalFooter(
@@ -621,7 +778,8 @@ class _TopBar extends StatelessWidget {
     padding: const EdgeInsets.fromLTRB(18, 8, 12, 4),
     child: Row(
       children: [
-        Flexible(
+        // Expanded, so the close button sits at the right edge.
+        Expanded(
           child: FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -996,12 +1154,14 @@ class _PinnedActions extends StatelessWidget {
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
+        // Short fade at the top, then fully opaque: nothing of the page may
+        // show through the terms line or the trial button.
         colors: [
           AppColors.background.withValues(alpha: 0),
-          AppColors.background.withValues(alpha: 0.94),
+          AppColors.background,
           AppColors.background,
         ],
-        stops: const [0, 0.2, 1],
+        stops: const [0, 0.1, 1],
       ),
     ),
     child: SafeArea(
@@ -1023,6 +1183,8 @@ class _PinnedActions extends StatelessWidget {
 
 // ─── Actions ───────────────────────────────────────────────────────────────
 
+/// The big gradient button: the purchase with store billing, the free trial
+/// without it.
 class _TrialButton extends StatelessWidget {
   const _TrialButton({
     required this.label,
@@ -1030,9 +1192,17 @@ class _TrialButton extends StatelessWidget {
     required this.enabled,
     required this.shimmer,
     required this.onPressed,
+    this.inkKey = const Key('paywall-start-trial'),
+    this.sublabel,
+    this.icon = Icons.bolt_rounded,
+    this.busyLabel,
   });
 
+  final Key inkKey;
   final String label;
+  final String? sublabel;
+  final IconData icon;
+  final String? busyLabel;
   final bool busy;
   final bool enabled;
   final Animation<double> shimmer;
@@ -1042,11 +1212,14 @@ class _TrialButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = enabled && !busy;
     final foreground = enabled ? AppColors.black : AppColors.textMuted;
-    final text = busy ? context.l10n.subscriptionStartingTrial : label;
+    final text = busy
+        ? busyLabel ?? context.l10n.subscriptionStartingTrial
+        : label;
+    final detail = busy ? null : sublabel;
     return Semantics(
       button: true,
       enabled: active,
-      label: text,
+      label: detail == null ? text : '$text, $detail',
       onTap: active ? onPressed : null,
       excludeSemantics: true,
       child: DecoratedBox(
@@ -1079,7 +1252,7 @@ class _TrialButton extends StatelessWidget {
           child: Material(
             type: MaterialType.transparency,
             child: InkWell(
-              key: const Key('paywall-start-trial'),
+              key: inkKey,
               onTap: active ? onPressed : null,
               child: AnimatedBuilder(
                 animation: shimmer,
@@ -1112,23 +1285,36 @@ class _TrialButton extends StatelessWidget {
                           )
                         else
                           Icon(
-                            enabled
-                                ? Icons.bolt_rounded
-                                : Icons.check_circle_outline_rounded,
+                            enabled ? icon : Icons.check_circle_outline_rounded,
                             color: foreground,
                             size: 22,
                           ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Text(
-                            text,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: foreground,
-                              fontSize: 16.5,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: -0.1,
-                            ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                text,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: foreground,
+                                  fontSize: 16.5,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.1,
+                                ),
+                              ),
+                              if (detail != null)
+                                Text(
+                                  detail,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: foreground.withValues(alpha: 0.78),
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ],
@@ -1139,6 +1325,78 @@ class _TrialButton extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The second, smaller way in: the free trial (no subscription, no payment
+/// details, ends by itself).
+class _TrialOutlineButton extends StatelessWidget {
+  const _TrialOutlineButton({
+    required this.label,
+    required this.caption,
+    required this.busy,
+    required this.onPressed,
+  });
+
+  final String label;
+  final String caption;
+  final bool busy;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      key: const Key('paywall-start-trial'),
+      onPressed: busy ? null : onPressed,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.text,
+        minimumSize: const Size.fromHeight(54),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        side: BorderSide(color: AppColors.primary.withValues(alpha: 0.45)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (busy)
+            const SizedBox.square(
+              dimension: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.2,
+                color: AppColors.primary,
+              ),
+            )
+          else
+            const Icon(Icons.bolt_rounded, size: 20, color: AppColors.primary),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  busy ? context.l10n.subscriptionStartingTrial : label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  caption,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1335,6 +1593,8 @@ class _PlanSection extends StatelessWidget {
     required this.billingAvailable,
     required this.busy,
     required this.immediateStart,
+    required this.consentKey,
+    required this.consentMissing,
     required this.onImmediateStartChanged,
   });
 
@@ -1345,6 +1605,10 @@ class _PlanSection extends StatelessWidget {
   final bool billingAvailable;
   final bool busy;
   final bool immediateStart;
+  final GlobalKey consentKey;
+
+  /// "Subscribe" was tapped without the box: mark it and say why.
+  final bool consentMissing;
   final ValueChanged<bool> onImmediateStartChanged;
 
   @override
@@ -1388,65 +1652,117 @@ class _PlanSection extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         if (billingAvailable) ...[
-          CheckboxListTile(
-            key: const Key('paywall-immediate-start'),
-            value: immediateStart,
-            onChanged: (value) => onImmediateStartChanged(value ?? false),
-            controlAffinity: ListTileControlAffinity.leading,
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            title: Text(
-              ConsentTexts.immediateStart,
-              style: TextStyle(fontSize: 12.5, height: 1.4),
+          AnimatedContainer(
+            key: consentKey,
+            duration: reducedMotion
+                ? Duration.zero
+                : const Duration(milliseconds: 260),
+            padding: EdgeInsets.fromLTRB(4, 2, 10, consentMissing ? 10 : 2),
+            decoration: BoxDecoration(
+              color: consentMissing
+                  ? AppColors.error.withValues(alpha: 0.08)
+                  : AppColors.background.withValues(alpha: 0),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: consentMissing
+                    ? AppColors.error.withValues(alpha: 0.7)
+                    : AppColors.background.withValues(alpha: 0),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Own Material, so the tap ripple shows above the marking.
+                Material(
+                  type: MaterialType.transparency,
+                  child: CheckboxListTile(
+                    key: const Key('paywall-immediate-start'),
+                    value: immediateStart,
+                    onChanged: (value) =>
+                        onImmediateStartChanged(value ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: Text(
+                      ConsentTexts.immediateStart,
+                      style: const TextStyle(fontSize: 12.5, height: 1.4),
+                    ),
+                  ),
+                ),
+                if (consentMissing)
+                  Row(
+                    children: [
+                      const SizedBox(width: 12),
+                      const Icon(
+                        Icons.error_outline_rounded,
+                        size: 17,
+                        color: AppColors.error,
+                      ),
+                      const SizedBox(width: 7),
+                      Expanded(
+                        child: Text(
+                          PremiumCopy.immediateStartRequired,
+                          key: const Key('paywall-consent-required'),
+                          style: const TextStyle(
+                            color: AppColors.error,
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ),
           const SizedBox(height: 8),
         ],
-        OutlinedButton(
-          key: const Key('paywall-purchase'),
-          onPressed: busy || (billingAvailable && !immediateStart)
-              ? null
-              : onPurchase,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.text,
-            minimumSize: const Size.fromHeight(58),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            side: BorderSide(color: AppColors.primary.withValues(alpha: 0.5)),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+        // With billing the purchase button sits in the action area.
+        if (!billingAvailable) ...[
+          OutlinedButton(
+            key: const Key('paywall-purchase'),
+            onPressed: busy ? null : onPurchase,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.text,
+              minimumSize: const Size.fromHeight(58),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              side: BorderSide(color: AppColors.primary.withValues(alpha: 0.5)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: AnimatedSwitcher(
+              duration: reducedMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 220),
+              child: Column(
+                key: ValueKey(plan.id),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    PremiumCopy.purchaseLabel(plan),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    PremiumCopy.purchaseSummary(plan),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          child: AnimatedSwitcher(
-            duration: reducedMotion
-                ? Duration.zero
-                : const Duration(milliseconds: 220),
-            child: Column(
-              key: ValueKey(plan.id),
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  PremiumCopy.purchaseLabel(plan),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  PremiumCopy.purchaseSummary(plan),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
+          const SizedBox(height: 10),
+        ],
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1940,307 +2256,3 @@ class _LegalFooter extends StatelessWidget {
 }
 
 // ─── Success ───────────────────────────────────────────────────────────────
-
-/// What the full-screen "Premium is active" view celebrates.
-enum _Celebration { trial, purchase }
-
-/// Full-screen "Premium is active", after the free trial and after a
-/// purchase. One finite animation: the check pops up, rings and confetti
-/// dots fly outwards once, the benefits slide in one after another. With
-/// "reduce motion" everything is shown at once.
-class _SuccessView extends StatefulWidget {
-  const _SuccessView({
-    required this.kind,
-    required this.expiresAt,
-    required this.onContinue,
-    super.key,
-  });
-
-  final _Celebration kind;
-  final DateTime? expiresAt;
-  final VoidCallback onContinue;
-
-  @override
-  State<_SuccessView> createState() => _SuccessViewState();
-}
-
-class _SuccessViewState extends State<_SuccessView>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2800),
-  );
-  bool _started = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_started) return;
-    _started = true;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _controller.value = 1;
-    } else {
-      unawaited(HapticFeedback.mediumImpact());
-      unawaited(_controller.forward());
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  String _subtitle(BuildContext context) {
-    final l10n = context.l10n;
-    final expiresAt = widget.expiresAt;
-    if (widget.kind == _Celebration.purchase) {
-      final renewal = expiresAt == null
-          ? ''
-          : '\n${l10n.subscriptionNextRenewalValue(formatPremiumDateTime(expiresAt))}';
-      return '${l10n.subscriptionThankYouYourSubscriptionRenewsAutomatically}$renewal';
-    }
-    final until = expiresAt == null
-        ? l10n.subscriptionYourFreeTrialLastsValueDays(
-            (SubscriptionPlans.trialDays).toString(),
-          )
-        : l10n.subscriptionYourFreeTrialRunsUntilValue(
-            (formatPremiumDateTime(expiresAt)).toString(),
-          );
-    return l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
-      (until).toString(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final benefits = [
-      l10n.subscriptionAiPhotoRecognition,
-      'Lookin Coach',
-      l10n.subscriptionAllRecipes,
-    ];
-    return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(
-        24,
-        4,
-        24,
-        28 + MediaQuery.paddingOf(context).bottom,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: AnimatedBuilder(
-            animation: _controller,
-            builder: (context, _) {
-              double phase(
-                double begin,
-                double end, [
-                Curve curve = Curves.easeOutCubic,
-              ]) => Interval(
-                begin,
-                end,
-                curve: curve,
-              ).transform(_controller.value);
-
-              Widget reveal(double begin, Widget child) {
-                final t = phase(begin, begin + 0.22);
-                return Opacity(
-                  opacity: t.clamp(0.0, 1.0),
-                  child: Transform.translate(
-                    offset: Offset(0, 18 * (1 - t)),
-                    child: child,
-                  ),
-                );
-              }
-
-              final pop = phase(0, 0.32, Curves.easeOutBack);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 240,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned.fill(
-                          child: ExcludeSemantics(
-                            child: CustomPaint(
-                              painter: _BurstPainter(
-                                progress: phase(0.06, 1, Curves.easeOutCubic),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Transform.scale(
-                          scale: 0.55 + 0.45 * pop,
-                          child: Opacity(
-                            opacity: (pop * 1.6).clamp(0.0, 1.0),
-                            child: Container(
-                              width: 112,
-                              height: 112,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [AppColors.primary, AppColors.mint],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.primary.withValues(
-                                      alpha: 0.4,
-                                    ),
-                                    blurRadius: 48,
-                                    spreadRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.check_rounded,
-                                size: 60,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  reveal(
-                    0.28,
-                    Semantics(
-                      liveRegion: true,
-                      header: true,
-                      child: Text(
-                        l10n.subscriptionPremiumIsActive,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  reveal(
-                    0.36,
-                    Text(
-                      _subtitle(context),
-                      key: const Key('paywall-success-subtitle'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 15,
-                        height: 1.45,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Column(
-                      children: [
-                        for (final (i, label) in benefits.indexed) ...[
-                          if (i > 0) const SizedBox(height: 12),
-                          reveal(
-                            0.46 + i * 0.1,
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.check_circle_rounded,
-                                  color: AppColors.primary,
-                                  size: 22,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    l10n.subscriptionValueUnlocked(
-                                      (label).toString(),
-                                    ),
-                                    style: const TextStyle(
-                                      color: AppColors.text,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 26),
-                  reveal(
-                    0.76,
-                    FilledButton(
-                      key: const Key('paywall-success-continue'),
-                      onPressed: widget.onContinue,
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size.fromHeight(56),
-                      ),
-                      child: Text(l10n.subscriptionLetSGo),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Two soft rings and a ring of confetti dots that fly outwards once
-/// ([progress] 0 to 1) and fade out. Drawn only; no timers of its own.
-class _BurstPainter extends CustomPainter {
-  const _BurstPainter({required this.progress});
-
-  final double progress;
-
-  static const _colors = [
-    AppColors.primary,
-    AppColors.mint,
-    AppColors.orange,
-    AppColors.text,
-  ];
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (progress <= 0 || progress >= 1) return;
-    final center = size.center(Offset.zero);
-    final reach = math.min(size.width, size.height) / 2;
-    for (var ring = 0; ring < 2; ring++) {
-      final p = ((progress - ring * 0.18) / (1 - ring * 0.18)).clamp(0.0, 1.0);
-      if (p <= 0) continue;
-      canvas.drawCircle(
-        center,
-        56 + (reach - 56) * Curves.easeOutCubic.transform(p),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3 * (1 - p)
-          ..color = AppColors.primary.withValues(alpha: 0.55 * (1 - p)),
-      );
-    }
-    const dots = 18;
-    for (var i = 0; i < dots; i++) {
-      final angle = i * 2 * math.pi / dots + (i.isEven ? 0.12 : -0.12);
-      final spread = 0.62 + 0.38 * ((i * 7) % 5) / 4;
-      final distance =
-          62 + (reach - 70) * spread * Curves.easeOutCubic.transform(progress);
-      final fade = progress < 0.55 ? 1.0 : (1 - (progress - 0.55) / 0.45);
-      canvas.drawCircle(
-        center + Offset(math.cos(angle), math.sin(angle)) * distance,
-        (i % 3 == 0 ? 4.5 : 3.0) * (1 - 0.4 * progress),
-        Paint()..color = _colors[i % _colors.length].withValues(alpha: fade),
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_BurstPainter old) => old.progress != progress;
-}

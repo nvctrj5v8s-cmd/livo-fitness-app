@@ -222,16 +222,20 @@ void main() {
       final button = find.byKey(const Key('paywall-purchase'));
       await tester.ensureVisible(button);
       await tester.pumpAndSettle();
-      // Disabled until the immediate-start request is ticked.
-      expect(tester.widget<OutlinedButton>(button).onPressed, isNull);
+      // Without the immediate-start request nothing is bought; instead the
+      // box is marked and explained (no silently greyed-out button).
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(billing.purchased, isEmpty);
+      expect(find.byKey(const Key('paywall-consent-required')), findsOneWidget);
       final immediateStart = find.byKey(const Key('paywall-immediate-start'));
       await tester.ensureVisible(immediateStart);
       await tester.pumpAndSettle();
       await tester.tap(immediateStart);
       await tester.pumpAndSettle();
+      expect(find.byKey(const Key('paywall-consent-required')), findsNothing);
       await tester.ensureVisible(button);
       await tester.pumpAndSettle();
-      expect(tester.widget<OutlinedButton>(button).onPressed, isNotNull);
       await tester.tap(button);
       await tester.pumpAndSettle();
 
@@ -243,6 +247,32 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(PremiumCopy.billingPending), findsNothing);
+    });
+
+    testWidgets('the purchase is the main button; the trial is the smaller '
+        'second option with its terms', (tester) async {
+      await pump(tester, _FakeBilling(StorePurchaseStatus.cancelled));
+
+      expect(find.text('Kostenpflichtig abonnieren'), findsOneWidget);
+      expect(find.textContaining(RegExp(r'49,99.€ pro Jahr')), findsWidgets);
+      expect(find.byKey(const Key('paywall-terms-short')), findsOneWidget);
+      expect(find.textContaining('verlängert sich automatisch'), findsWidgets);
+      final trial = find.byKey(const Key('paywall-start-trial'));
+      expect(trial, findsOneWidget);
+      expect(tester.widget(trial), isA<OutlinedButton>());
+      expect(find.text('Erst 7 Tage gratis testen'), findsOneWidget);
+      expect(
+        find.text('Kein Abo · keine Zahlungsdaten · endet automatisch'),
+        findsOneWidget,
+      );
+
+      // The button follows the selected plan.
+      await tester.ensureVisible(find.text('Monatlich').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Monatlich').first);
+      await tester.pumpAndSettle();
+      expect(find.textContaining(RegExp(r'6,99.€ pro Monat')), findsWidgets);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('restore and manage are offered; the soon tag is gone', (

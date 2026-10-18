@@ -2725,6 +2725,7 @@
   "subscriptionPremiumIsAlreadyActiveForYourAccount": "Premium ist für dein Konto bereits aktiv.",
   "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
   "subscriptionProfileDailyTargets": "Profil & Tagesziele",
+  "subscriptionPurchaseBusy": "Kauf wird vorbereitet …",
   "subscriptionPurchaseCancelledNothingWasCharged": "Kauf abgebrochen. Es wurde nichts berechnet.",
   "subscriptionRecipes": "Rezepte",
   "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
@@ -2743,6 +2744,7 @@
   "subscriptionStartingTrial": "Testphase wird gestartet …",
   "subscriptionSubscribeInTheLookinAppForAndroid": "Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird nichts gekauft oder berechnet.",
   "subscriptionSubscribeMonthly": "Monatlich abonnieren",
+  "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",
   "subscriptionSubscribeYearly": "Jährlich abonnieren",
   "subscriptionSubscriptionManagementCouldNotBeOpenedOpen": "Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-Einstellungen direkt im Store.",
   "subscriptionSubscriptionPlans": "Abo-Pläne",
@@ -2780,12 +2782,28 @@
     }
   },
   "subscriptionTakeAPhotoLookinEstimatesFoodsAnd": "Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.",
-  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.",
+  "subscriptionTermsShort": "Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums",
+  "@subscriptionTermsShort": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionTheAppStore": "dem App Store",
   "subscriptionTheLookinCoachIsPartOfPremium": "Der Lookin Coach ist Teil von Premium",
   "subscriptionTheStoreIsCurrentlyUnavailableNothingWas": "Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.",
   "subscriptionTheTrialIsBeingSetUpPlease": "Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.",
   "subscriptionTrialAlreadyUsed": "Testphase bereits genutzt",
+  "subscriptionTrialNoStrings": "Kein Abo · keine Zahlungsdaten · endet automatisch",
+  "subscriptionTryFreeFirst": "Erst {arg0} Tage gratis testen",
+  "@subscriptionTryFreeFirst": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionUnexpectedResponse": "Unerwartete Antwort.",
   "subscriptionUnlockAllRecipes": "Alle Rezepte freischalten",
   "subscriptionUpTo100AiRequestsADay": "Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), in der Testphase bis zu 50.",
@@ -2862,6 +2880,12 @@
       }
     }
   },
+  "subscriptionWelcomeCoachText": "Frag alles rund um dein Essen",
+  "subscriptionWelcomePhotoText": "Foto machen, Werte schätzen lassen",
+  "subscriptionWelcomeRecipesText": "Jedes Rezept ist jetzt freigeschaltet",
+  "subscriptionWelcomeRenewsNote": "Verlängert sich automatisch · jederzeit im Store kündbar",
+  "subscriptionWelcomeThanks": "Danke für deine Unterstützung! Dein Abo ist aktiv.",
+  "subscriptionWelcomeTitle": "Willkommen bei Lookin Premium",
   "subscriptionWithPremiumAllRecipes": "Mit Premium: alle Rezepte",
   "subscriptionWithdrawFromContract": "Vertrag widerrufen",
   "subscriptionWithoutASubscriptionValueValueOfRecipes": "Ohne Abo: {arg0}{arg1}% der Rezepte",

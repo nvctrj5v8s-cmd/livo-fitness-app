@@ -321,7 +321,6 @@
       }
     }
   },
-  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.",
   "subscriptionNextRenewalValue": "Nächste Verlängerung: {arg0}",
   "@subscriptionNextRenewalValue": {
     "placeholders": {
@@ -329,5 +328,30 @@
         "type": "String"
       }
     }
-  }
+  },
+  "subscriptionWelcomeTitle": "Willkommen bei Lookin Premium",
+  "subscriptionWelcomeThanks": "Danke für deine Unterstützung! Dein Abo ist aktiv.",
+  "subscriptionWelcomeRenewsNote": "Verlängert sich automatisch · jederzeit im Store kündbar",
+  "subscriptionWelcomePhotoText": "Foto machen, Werte schätzen lassen",
+  "subscriptionWelcomeCoachText": "Frag alles rund um dein Essen",
+  "subscriptionWelcomeRecipesText": "Jedes Rezept ist jetzt freigeschaltet",
+  "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",
+  "subscriptionPurchaseBusy": "Kauf wird vorbereitet …",
+  "subscriptionTermsShort": "Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums",
+  "@subscriptionTermsShort": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionTryFreeFirst": "Erst {arg0} Tage gratis testen",
+  "@subscriptionTryFreeFirst": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionTrialNoStrings": "Kein Abo · keine Zahlungsdaten · endet automatisch"
 }

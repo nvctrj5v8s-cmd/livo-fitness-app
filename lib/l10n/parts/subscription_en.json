@@ -110,6 +110,16 @@
   "subscriptionWeHaveSentAnAcknowledgementToValue": "We have sent an acknowledgement to {arg0}. Your refund is handled through Google Play.",
   "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up. Your refund is handled through Google Play.",
   "subscriptionReferenceNumberValue": "Reference number: {arg0}",
-  "subscriptionThankYouYourSubscriptionRenewsAutomatically": "Thank you for your support! Your subscription renews automatically and can be cancelled at any time in the store.",
-  "subscriptionNextRenewalValue": "Next renewal: {arg0}"
+  "subscriptionNextRenewalValue": "Next renewal: {arg0}",
+  "subscriptionWelcomeTitle": "Welcome to Lookin Premium",
+  "subscriptionWelcomeThanks": "Thank you for your support! Your subscription is active.",
+  "subscriptionWelcomeRenewsNote": "Renews automatically · cancel any time in the store",
+  "subscriptionWelcomePhotoText": "Snap a photo, get estimated values",
+  "subscriptionWelcomeCoachText": "Ask anything about your food",
+  "subscriptionWelcomeRecipesText": "Every recipe is now unlocked",
+  "subscriptionSubscribePaid": "Subscribe",
+  "subscriptionPurchaseBusy": "Preparing purchase…",
+  "subscriptionTermsShort": "Billed by the store · renews automatically · cancel anytime in the subscription settings of {arg0}, effective at the end of the billing period",
+  "subscriptionTryFreeFirst": "Try {arg0} days free first",
+  "subscriptionTrialNoStrings": "No subscription · no payment details · ends automatically"
 }

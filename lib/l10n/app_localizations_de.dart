@@ -5516,6 +5516,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionProfileDailyTargets => 'Profil & Tagesziele';
 
   @override
+  String get subscriptionPurchaseBusy => 'Kauf wird vorbereitet …';
+
+  @override
   String get subscriptionPurchaseCancelledNothingWasCharged =>
       'Kauf abgebrochen. Es wurde nichts berechnet.';
 
@@ -5556,6 +5559,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionSubscribeMonthly => 'Monatlich abonnieren';
 
   @override
+  String get subscriptionSubscribePaid => 'Kostenpflichtig abonnieren';
+
+  @override
   String get subscriptionSubscribeYearly => 'Jährlich abonnieren';
 
   @override
@@ -5592,8 +5598,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.';
 
   @override
-  String get subscriptionThankYouYourSubscriptionRenewsAutomatically =>
-      'Danke für deine Unterstützung! Dein Abo verlängert sich automatisch und lässt sich jederzeit im Store kündigen.';
+  String subscriptionTermsShort(String arg0) {
+    return 'Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von $arg0 kündbar, wirksam zum Ende des Abrechnungszeitraums';
+  }
 
   @override
   String get subscriptionTheAppStore => 'dem App Store';
@@ -5612,6 +5619,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionTrialAlreadyUsed => 'Testphase bereits genutzt';
+
+  @override
+  String get subscriptionTrialNoStrings =>
+      'Kein Abo · keine Zahlungsdaten · endet automatisch';
+
+  @override
+  String subscriptionTryFreeFirst(String arg0) {
+    return 'Erst $arg0 Tage gratis testen';
+  }
 
   @override
   String get subscriptionUnexpectedResponse => 'Unerwartete Antwort.';
@@ -5669,6 +5685,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0) {
     return 'Wir haben dir eine Eingangsbestätigung an $arg0 geschickt. Die Rückzahlung erfolgt über Google Play.';
   }
+
+  @override
+  String get subscriptionWelcomeCoachText => 'Frag alles rund um dein Essen';
+
+  @override
+  String get subscriptionWelcomePhotoText =>
+      'Foto machen, Werte schätzen lassen';
+
+  @override
+  String get subscriptionWelcomeRecipesText =>
+      'Jedes Rezept ist jetzt freigeschaltet';
+
+  @override
+  String get subscriptionWelcomeRenewsNote =>
+      'Verlängert sich automatisch · jederzeit im Store kündbar';
+
+  @override
+  String get subscriptionWelcomeThanks =>
+      'Danke für deine Unterstützung! Dein Abo ist aktiv.';
+
+  @override
+  String get subscriptionWelcomeTitle => 'Willkommen bei Lookin Premium';
 
   @override
   String get subscriptionWithPremiumAllRecipes => 'Mit Premium: alle Rezepte';

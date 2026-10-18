@@ -1,5 +1,36 @@
 # Funktionsstatus
 
+## Paywall wie bei üblichen Abo-Apps, neue Willkommens-Ansicht, 18. Oktober 2026
+
+- **Ein Haupt-Knopf kauft den gewählten Tarif** (Recherche: Cal AI, Duolingo,
+  Flo, Headspace, Calm u. a. haben genau einen großen Knopf für den gewählten
+  Plan). Beschriftung „Kostenpflichtig abonnieren“ mit Preis darunter
+  („49,99 € pro Jahr“ / „6,99 € pro Monat“), darunter eine Zeile zu Abrechnung,
+  automatischer Verlängerung und Kündigung in Google Play.
+- **Der 7-Tage-Test ist die kleinere zweite Möglichkeit** („Erst 7 Tage gratis
+  testen · Kein Abo · keine Zahlungsdaten · endet automatisch“), nur solange er
+  noch nicht genutzt wurde. Ohne Store-Kauf (Web) bleibt der Test der
+  Haupt-Knopf.
+- **Checkbox „sofortiger Beginn“:** Tippt man ohne Haken auf „Kostenpflichtig
+  abonnieren“, öffnet sich Google Play nicht; die Seite scrollt zur Checkbox,
+  markiert sie rot mit Hinweis und vibriert kurz. Kein ausgegrauter Knopf mehr.
+- Reihenfolge: Tarife und Checkbox stehen vor den Knöpfen. Auf hohen Handys
+  sind Kauf-Knopf, Bedingungen, Test und „Weiter mit der Gratis-Version“ unten
+  angeheftet (undurchsichtiger Hintergrund), auf kürzeren nur Kauf-Knopf und
+  Bedingungen. Das Schließen-X sitzt jetzt rechts am Rand.
+- **Neue Willkommens-Ansicht** nach Kauf, Wiederherstellen und Test-Start
+  (`premium_welcome.dart`): Das Lookin-Zeichen (offener Ring mit Punkt)
+  zeichnet sich, Lichtstrahlen drehen sich, Konfetti schießt aus beiden unteren
+  Ecken (Tippen auf das Zeichen wiederholt es), Abzeichen „LOOKIN PREMIUM“
+  glänzt, Titel „Willkommen bei Lookin Premium“, Dank, nächste Verlängerung,
+  gekaufter Tarif, drei farbige Vorteil-Karten, angehefteter Knopf „Los
+  geht’s“, kurze Vibration. Einmaliger Ablauf (ca. 4 s), danach Stillstand;
+  „Bewegung reduzieren“ zeigt alles sofort ohne Konfetti.
+- Offen (Empfehlung der Recherche, rechtlich prüfen): ob die Wortwahl der
+  Checkbox zu „digitalen Inhalten“ (§ 356 Abs. 5/6 BGB) passt, und ein
+  direkter nächster Schritt nach dem Kauf (z. B. „Erste Mahlzeit per Foto
+  erfassen“).
+
 ## Kauf-Test und Erfolgs-Ansicht, 18. Oktober 2026
 
 - **Kauf-Test bestanden (Android-Emulator, Lizenztester, Testkarte):** Monatsabo
@@ -93,7 +124,7 @@
   Entwicklerkonto), bekommen bis zur Zustimmung keine KI-Antworten.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 378 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 379 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)

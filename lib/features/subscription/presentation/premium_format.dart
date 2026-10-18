@@ -124,6 +124,10 @@ abstract final class PremiumCopy {
       : 'Google Play';
 
   /// Shown under the purchase button when billing works.
+  /// One line under the purchase button: who bills, renewal, how to cancel.
+  static String get termsShort =>
+      L10n.current.subscriptionTermsShort(_storeName);
+
   static String get storeNote =>
       L10n.current.subscriptionPaymentIsHandledSecurelyByTheStore;
 
