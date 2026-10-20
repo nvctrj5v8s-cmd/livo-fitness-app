@@ -19,8 +19,15 @@
   Entwickler-Premium-Schalter (`provider = developer`) nicht mehr überschreiben.
   Geprüft mit einer zurückgerollten Probe; nur `service_role` darf die Funktion
   ausführen.
+- **Test „fremdes Konto“ bestanden (20.10.2026, Emulator):** Auf dem Handy war
+  `kauftest2` angemeldet, das Google-Konto gehörte aber zum Abo von `kauftest1`.
+  „Käufe wiederherstellen“ brachte `kauftest2` kein Premium (RevenueCat:
+  `ReceiptAlreadyInUseError`), `kauftest1` behielt seins (Datenbank geprüft).
+  Die App sagt dazu jetzt: „Dieses Abo gehört zu einem anderen Lookin-Konto …“
+  statt „Store nicht erreichbar“. Dasselbe gilt beim Kaufversuch (Google:
+  „bereits abonniert“).
 - **Käufe wiederherstellen:** Die App schaltet lokal nichts frei, der Server
-  entscheidet. In RevenueCat muss „Restore behavior“ auf „Keep with original App
+    entscheidet. In RevenueCat muss „Restore behavior“ auf „Keep with original App
   User ID“ stehen, damit niemand ein Abo auf ein anderes Konto umzieht (siehe
   `docs/BILLING_SETUP.md`).
 
@@ -148,7 +155,7 @@
   Entwicklerkonto), bekommen bis zur Zustimmung keine KI-Antworten.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 379 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 381 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)

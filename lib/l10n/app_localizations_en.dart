@@ -5536,6 +5536,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionSubscribeYearly => 'Subscribe yearly';
 
   @override
+  String get subscriptionSubscriptionBelongsToAnotherAccount =>
+      'This subscription belongs to another Lookin account. Sign in with that account to use Premium. Nothing was charged.';
+
+  @override
   String get subscriptionSubscriptionManagementCouldNotBeOpenedOpen =>
       'Subscription management could not be opened. Open the subscription settings directly in the store.';
 

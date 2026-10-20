@@ -2738,6 +2738,7 @@
   "subscriptionSubscribeMonthly": "Monatlich abonnieren",
   "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",
   "subscriptionSubscribeYearly": "Jährlich abonnieren",
+  "subscriptionSubscriptionBelongsToAnotherAccount": "Dieses Abo gehört zu einem anderen Lookin-Konto. Melde dich mit diesem Konto an, um Premium zu nutzen. Es wurde nichts berechnet.",
   "subscriptionSubscriptionManagementCouldNotBeOpenedOpen": "Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-Einstellungen direkt im Store.",
   "subscriptionSubscriptionPlans": "Abo-Pläne",
   "subscriptionSubscriptionPricesValuePaymentAndBillingAre": "Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.",

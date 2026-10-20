@@ -20,6 +20,10 @@ enum StorePurchaseStatus {
   /// Restore found no active subscription for this store account.
   nothingToRestore,
 
+  /// The store account already has this subscription, bought for another
+  /// Lookin account. It stays with that account and is not moved.
+  ownedByAnotherAccount,
+
   /// Store billing is not usable here (web, missing key, offering missing,
   /// store or network error). Nothing was charged.
   unavailable,
@@ -137,6 +141,9 @@ final class RevenueCatStoreBilling implements StoreBilling {
         PurchasesErrorCode.purchaseCancelledError =>
           StorePurchaseStatus.cancelled,
         PurchasesErrorCode.paymentPendingError => StorePurchaseStatus.pending,
+        PurchasesErrorCode.productAlreadyPurchasedError ||
+        PurchasesErrorCode.receiptAlreadyInUseError =>
+          StorePurchaseStatus.ownedByAnotherAccount,
         _ => StorePurchaseStatus.unavailable,
       };
     } catch (_) {
@@ -154,6 +161,13 @@ final class RevenueCatStoreBilling implements StoreBilling {
       return _hasPremium(info)
           ? StorePurchaseStatus.purchased
           : StorePurchaseStatus.nothingToRestore;
+    } on PlatformException catch (error) {
+      // The receipt belongs to another Lookin account: RevenueCat keeps it
+      // there (project setting "Keep with original App User ID").
+      return PurchasesErrorHelper.getErrorCode(error) ==
+              PurchasesErrorCode.receiptAlreadyInUseError
+          ? StorePurchaseStatus.ownedByAnotherAccount
+          : StorePurchaseStatus.unavailable;
     } catch (_) {
       return StorePurchaseStatus.unavailable;
     }

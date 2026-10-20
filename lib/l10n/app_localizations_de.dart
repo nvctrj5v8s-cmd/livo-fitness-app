@@ -5560,6 +5560,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionSubscribeYearly => 'Jährlich abonnieren';
 
   @override
+  String get subscriptionSubscriptionBelongsToAnotherAccount =>
+      'Dieses Abo gehört zu einem anderen Lookin-Konto. Melde dich mit diesem Konto an, um Premium zu nutzen. Es wurde nichts berechnet.';
+
+  @override
   String get subscriptionSubscriptionManagementCouldNotBeOpenedOpen =>
       'Die Abo-Verwaltung konnte nicht geöffnet werden. Öffne die Abo-Einstellungen direkt im Store.';
 

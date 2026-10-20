@@ -125,6 +125,25 @@ void main() {
       }
     });
 
+    test('a subscription of another Lookin account is never moved or '
+        'unlocked', () async {
+      // The server would say "premium" if it were asked: it must not be.
+      final server = _LaggingServer(premiumAfterLoads: 0);
+      final controller = _controller(
+        server,
+        _FakeBilling(StorePurchaseStatus.ownedByAnotherAccount),
+      );
+      addTearDown(controller.dispose);
+
+      expect(await controller.restore(), PurchaseOutcome.ownedByAnotherAccount);
+      expect(
+        await controller.purchase(PremiumPlanId.yearly),
+        PurchaseOutcome.ownedByAnotherAccount,
+      );
+      expect(server.loads, 0, reason: 'no server read, nothing is granted');
+      expect(controller.hasPremium, isFalse);
+    });
+
     test('restore uses the same server confirmation', () async {
       final billing = _FakeBilling(StorePurchaseStatus.purchased);
       final controller = _controller(_LaggingServer(), billing);
@@ -297,6 +316,31 @@ void main() {
         ),
         findsOneWidget,
       );
+    });
+
+    testWidgets('restore for a subscription of another account says so', (
+      tester,
+    ) async {
+      final billing = _FakeBilling(StorePurchaseStatus.ownedByAnotherAccount);
+      final controller = await pump(tester, billing);
+
+      final restore = find.byKey(const Key('paywall-restore'));
+      await tester.ensureVisible(restore);
+      await tester.pumpAndSettle();
+      await tester.tap(restore);
+      await tester.pumpAndSettle();
+
+      expect(billing.restores, 1);
+      expect(
+        find.text(
+          PremiumCopy.purchaseOutcomeMessage(
+            PurchaseOutcome.ownedByAnotherAccount,
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(controller.hasPremium, isFalse);
+      expect(find.byKey(const ValueKey('paywall-success')), findsNothing);
     });
 
     testWidgets('without billing nothing is bought and the paywall says so', (

@@ -365,5 +365,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "subscriptionSubscriptionBelongsToAnotherAccount": "Dieses Abo gehört zu einem anderen Lookin-Konto. Melde dich mit diesem Konto an, um Premium zu nutzen. Es wurde nichts berechnet."
 }

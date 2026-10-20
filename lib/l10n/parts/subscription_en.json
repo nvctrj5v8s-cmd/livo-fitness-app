@@ -126,5 +126,6 @@
   "subscriptionWelcomeNextRenewal": "Next renewal",
   "subscriptionWelcomeTrialEnds": "Ends automatically",
   "subscriptionWelcomeTrialPlan": "Premium trial · {arg0} days",
-  "subscriptionWelcomeUnlockedHeading": "Unlocked for you"
+  "subscriptionWelcomeUnlockedHeading": "Unlocked for you",
+  "subscriptionSubscriptionBelongsToAnotherAccount": "This subscription belongs to another Lookin account. Sign in with that account to use Premium. Nothing was charged."
 }

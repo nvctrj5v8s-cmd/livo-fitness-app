@@ -183,6 +183,8 @@ class SubscriptionController extends ChangeNotifier {
         return PurchaseOutcome.pending;
       case StorePurchaseStatus.nothingToRestore:
         return PurchaseOutcome.nothingToRestore;
+      case StorePurchaseStatus.ownedByAnotherAccount:
+        return PurchaseOutcome.ownedByAnotherAccount;
       case StorePurchaseStatus.unavailable:
         return PurchaseOutcome.unavailable;
     }
@@ -237,6 +239,9 @@ enum PurchaseOutcome {
 
   /// Restore found no subscription for this store account.
   nothingToRestore,
+
+  /// The store account's subscription belongs to another Lookin account.
+  ownedByAnotherAccount,
 
   /// Store billing could not be used; nothing was charged.
   unavailable,

@@ -172,6 +172,8 @@ abstract final class PremiumCopy {
           L10n.current.subscriptionYourPaymentIsStillBeingReviewedPremium,
         PurchaseOutcome.nothingToRestore =>
           L10n.current.subscriptionNoActiveSubscriptionWasFoundForThis,
+        PurchaseOutcome.ownedByAnotherAccount =>
+          L10n.current.subscriptionSubscriptionBelongsToAnotherAccount,
         PurchaseOutcome.unavailable =>
           L10n.current.subscriptionTheStoreIsCurrentlyUnavailableNothingWas,
       };

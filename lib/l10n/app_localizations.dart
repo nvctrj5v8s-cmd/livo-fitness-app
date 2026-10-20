@@ -9629,6 +9629,12 @@ abstract class AppLocalizations {
   /// **'Jährlich abonnieren'**
   String get subscriptionSubscribeYearly;
 
+  /// No description provided for @subscriptionSubscriptionBelongsToAnotherAccount.
+  ///
+  /// In de, this message translates to:
+  /// **'Dieses Abo gehört zu einem anderen Lookin-Konto. Melde dich mit diesem Konto an, um Premium zu nutzen. Es wurde nichts berechnet.'**
+  String get subscriptionSubscriptionBelongsToAnotherAccount;
+
   /// No description provided for @subscriptionSubscriptionManagementCouldNotBeOpenedOpen.
   ///
   /// In de, this message translates to:
