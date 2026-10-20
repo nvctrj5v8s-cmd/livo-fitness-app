@@ -85,7 +85,7 @@
         show('<p><strong>Dein Widerruf ist am ' + when + ' eingegangen.</strong></p>' +
           (answer.data.confirmation_email === 'sent'
             ? '<p>Wir haben dir eine Eingangsbestätigung per E-Mail geschickt.</p>'
-            : '<p>Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist.</p>') +
+            : '<p>Die Bestätigungs-E-Mail konnte gerade nicht gesendet werden. Bitte mach einen Screenshot dieser Bestätigung. Dein Widerruf ist trotzdem gespeichert.</p>') +
           '<p class="muted">Vorgangsnummer: ' + String(answer.data.id || '').replace(/[^a-z0-9-]/gi, '') + '</p>', true);
       }).catch(function (error) {
         button.disabled = false;

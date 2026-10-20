@@ -10,6 +10,7 @@ import '../../features/consent/domain/consent.dart';
 import '../../features/subscription/data/paywall_store.dart';
 import 'avatar_repository.dart';
 import 'food_preferences_store.dart';
+import 'water_store.dart';
 
 /// Account export and deletion. Privileged database access stays in the
 /// account-data Edge Function, which derives the account ID from a verified JWT.
@@ -149,6 +150,7 @@ class AccountDataRepository {
     await const LocalAvatarRepository().remove(userId);
     await FoodPreferencesStore(userId: userId).clear();
     await FoodPreferencesStore.clearUnscopedLegacyValues();
+    await WaterStore(userId: userId).clear();
     final preferences = SharedPreferencesAsync();
     await preferences.remove('livo.reminders.$userId');
     await preferences.remove('livo.kitchen.v1.${Uri.encodeComponent(userId)}');

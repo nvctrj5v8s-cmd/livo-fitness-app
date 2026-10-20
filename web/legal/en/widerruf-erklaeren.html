@@ -85,7 +85,7 @@
         show('<p><strong>Your withdrawal was received on ' + when + '.</strong></p>' +
           (answer.data.confirmation_email === 'sent'
             ? '<p>We have sent you an acknowledgement by email.</p>'
-            : '<p>Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up.</p>') +
+            : '<p>The confirmation email could not be sent just now. Please take a screenshot of this acknowledgement. Your withdrawal has been saved anyway.</p>') +
           '<p class="muted">Reference number: ' + String(answer.data.id || '').replace(/[^a-z0-9-]/gi, '') + '</p>', true);
       }).catch(function (error) {
         button.disabled = false;
