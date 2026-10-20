@@ -108,6 +108,10 @@ class _PaywallPageState extends State<PaywallPage>
 
   /// Set when "subscribe" was tapped without the box; the box is marked.
   bool _consentMissing = false;
+
+  /// Set from the first tap on "subscribe" until the flow is over, so a
+  /// second tap cannot start a second flow.
+  bool _purchaseStarted = false;
   final _consentKey = GlobalKey();
   _Notice? _notice;
   PremiumWelcomeKind? _celebration;
@@ -209,6 +213,16 @@ class _PaywallPageState extends State<PaywallPage>
   }
 
   Future<void> _purchase() async {
+    if (_purchaseStarted) return;
+    _purchaseStarted = true;
+    try {
+      await _purchaseOnce();
+    } finally {
+      _purchaseStarted = false;
+    }
+  }
+
+  Future<void> _purchaseOnce() async {
     if (!_subscription.storeBillingAvailable) {
       _showMessage(PremiumCopy.unavailableMessage);
       return;

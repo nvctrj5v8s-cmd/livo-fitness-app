@@ -1,5 +1,36 @@
 # Funktionsstatus
 
+## Prüfung vor dem geschlossenen Test, 20. Oktober 2026
+
+Zwei Prüf-Agenten (Rechtstexte gegen App; Sicherheit und Logik) fanden **keinen
+Launch-Blocker**. Behoben und veröffentlicht:
+
+- **Einwilligung nur mit Nachweis:** Eine Einwilligung zählt in der App erst,
+  wenn der Server den Nachweis hat. Schlägt das Speichern fehl (kein Netz),
+  wird sie zurückgenommen und die App sagt es; sonst hätte der Server (KI) für
+  immer „Einwilligung fehlt“ gemeldet. Ein **Widerruf** gilt dagegen sofort auf
+  dem Gerät und wird beim nächsten Laden nachgesendet (`lookin.consent.pending…`).
+- **Kauf nur für das richtige Konto:** Kauf und Wiederherstellen laufen erst,
+  wenn RevenueCat wirklich für das angemeldete Konto arbeitet; ein
+  fehlgeschlagener Kontowechsel lässt kein altes Konto gebunden.
+- **Kauf während des 7-Tage-Tests:** Die Willkommens-Ansicht erscheint erst,
+  wenn der Server das echte Abo hat (nicht schon beim Test-Premium).
+- **KI-Coach:** Foto-Analyse mit Zeitlimit, die Anfrage kommt bei jedem Fehler
+  zurück ins Kontingent; **Krisen-Hilfe (Notruf, Telefonseelsorge) für jeden**,
+  auch ohne Premium oder Einwilligung; **Halal-Filter auf Antworten**
+  (Schweinefleisch, Alkohol, Gelatine werden nicht empfohlen; Verneinungen wie
+  „kein Alkohol“ sind erlaubt).
+- **Webhook:** Nur Produkte `lookin_premium_*` schalten Premium frei.
+- **Widerruf über die Webseite:** Die Bestätigungs-Mail wiederholt keinen
+  frei eingegebenen Namen oder Hinweis mehr (kein Missbrauch für fremde Texte).
+- Rechtstexte an die App angeglichen (Wasserzähler, Favoriten, „Antwort melden“,
+  Konto löschen entfernt auch den Wasserstand); Entwurf-Hinweise entfernt.
+- **Noch offen (Entscheidung nötig):** automatischer Löschjob für IP-Prüfwert
+  (24 h), Test-Prüfwert (3 Jahre) und Widerrufe (Verjährung) – die Texte
+  versprechen ihn; Gewerbe/Impressum (Name, Umsatzsteuer-ID); Support-Adresse
+  auf eigener Domain; Vertragspartner im AGB; Datensicherungs-Satz mit Supabase
+  Pro; Abmeldung kleiner Dinge siehe Prüfberichte.
+
 ## Sicherheit der Freischaltung, Willkommens-Ansicht neu, 20. Oktober 2026
 
 - **Willkommens-Ansicht nach dem Kauf deutlich lebendiger:** Das Lookin-Zeichen
@@ -155,7 +186,7 @@
   Entwicklerkonto), bekommen bis zur Zustimmung keine KI-Antworten.
 - **Prüfung:** Neue Tests `test/language_switch_test.dart` (Schalter bei 320,
   390 und 1280 px) und `test/support_report_test.dart` (mailto-Kodierung, Mail-
-  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 381 Tests,
+  Inhalt, kein Mail-Programm, Englisch bei 320 px). Stand: 386 Tests,
   `flutter analyze` ohne Hinweise.
 
 ### Vor dem Start (Checkliste)

@@ -285,6 +285,7 @@
   "commonYes": "Ja",
   "consentAiCoachAndAiPhotoWillThen": "KI-Coach und KI-Foto senden dann nichts mehr an OpenAI und fragen dich vor der nächsten Nutzung erneut.",
   "consentCancel": "Abbrechen",
+  "consentConsentCouldNotBeSaved": "Deine Einwilligung konnte nicht gespeichert werden. Bitte prüfe die Verbindung und versuche es noch einmal.",
   "consentConsents": "Einwilligungen",
   "consentContinueWithoutConsent": "Ohne Einwilligung weiter",
   "consentGiveConsent": "Einwilligen",

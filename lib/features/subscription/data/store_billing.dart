@@ -109,15 +109,29 @@ final class RevenueCatStoreBilling implements StoreBilling {
       _boundUserId = userId;
     } catch (error) {
       // Billing stays unusable until the next bind; the app keeps working.
+      // Never keep the previous account as the bound one: a purchase would
+      // be booked on it.
+      _boundUserId = null;
       debugPrint('Store billing could not be bound: ${error.runtimeType}');
     }
   });
 
+  /// Waits for a running account change and checks that RevenueCat really
+  /// works for the signed-in account. Otherwise a purchase (or restore) could
+  /// be booked on the previous account.
+  Future<bool> _accountReady() async {
+    await _queue;
+    if (!_configured || _boundUserId == null) return false;
+    try {
+      return await Purchases.appUserID == _boundUserId;
+    } catch (_) {
+      return false;
+    }
+  }
+
   @override
   Future<StorePurchaseStatus> purchase(PremiumPlanId plan) async {
-    if (!_configured || _boundUserId == null) {
-      return StorePurchaseStatus.unavailable;
-    }
+    if (!await _accountReady()) return StorePurchaseStatus.unavailable;
     try {
       final offerings = await Purchases.getOfferings();
       final wanted = plan == PremiumPlanId.yearly
@@ -153,9 +167,7 @@ final class RevenueCatStoreBilling implements StoreBilling {
 
   @override
   Future<StorePurchaseStatus> restore() async {
-    if (!_configured || _boundUserId == null) {
-      return StorePurchaseStatus.unavailable;
-    }
+    if (!await _accountReady()) return StorePurchaseStatus.unavailable;
     try {
       final info = await Purchases.restorePurchases();
       return _hasPremium(info)

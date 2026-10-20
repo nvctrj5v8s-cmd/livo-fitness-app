@@ -49,15 +49,40 @@ final class SupabaseConsentRepository implements ConsentRepository {
   String _key(ConsentKind kind) =>
       'lookin.consent.v1.${kind.wire}.${Uri.encodeComponent(userId)}';
 
+  /// A withdrawal that could not be written to the server yet. It holds on
+  /// the device at once and is sent with the next load.
+  String _pendingKey(ConsentKind kind) =>
+      'lookin.consent.pending.${kind.wire}.${Uri.encodeComponent(userId)}';
+
+  Future<void> _insert(ConsentKind kind, bool granted, {String? context}) =>
+      _client.from('user_consents').insert({
+        'user_id': userId,
+        'kind': kind.wire,
+        'granted': granted,
+        'text_version': ConsentTexts.localizedVersion,
+        'context': ?context,
+      });
+
   @override
   Future<Map<ConsentKind, bool>> load() async {
     final result = <ConsentKind, bool>{};
     final preferences = SharedPreferencesAsync();
+    final pending = <ConsentKind>{};
     for (final kind in ConsentKind.values) {
       final local = await preferences.getBool(_key(kind));
       if (local != null) result[kind] = local;
+      if (await preferences.getBool(_pendingKey(kind)) == true) {
+        pending.add(kind);
+        result[kind] = false;
+      }
     }
     try {
+      // First hand over withdrawals that could not be sent before.
+      for (final kind in pending.toList()) {
+        await _insert(kind, false).timeout(const Duration(seconds: 8));
+        await preferences.remove(_pendingKey(kind));
+        pending.remove(kind);
+      }
       final rows = await _client
           .from('user_consents')
           .select('kind,granted,created_at')
@@ -71,7 +96,7 @@ final class SupabaseConsentRepository implements ConsentRepository {
         final granted = row['granted'];
         if (wire is! String || granted is! bool || !seen.add(wire)) continue;
         for (final kind in ConsentKind.values) {
-          if (kind.wire == wire) {
+          if (kind.wire == wire && !pending.contains(kind)) {
             result[kind] = granted;
             await preferences.setBool(_key(kind), granted);
           }
@@ -86,18 +111,20 @@ final class SupabaseConsentRepository implements ConsentRepository {
 
   @override
   Future<bool> record(ConsentKind kind, bool granted, {String? context}) async {
-    await SharedPreferencesAsync().setBool(_key(kind), granted);
+    final preferences = SharedPreferencesAsync();
+    // A withdrawal holds on this device at once, whatever the network does.
+    // A consent only counts once the server has it as proof: the server
+    // (AI coach) reads that proof, so a copy that exists only here would
+    // look granted in the app and be refused by the server.
+    if (!granted) await preferences.setBool(_key(kind), false);
     try {
-      await _client.from('user_consents').insert({
-        'user_id': userId,
-        'kind': kind.wire,
-        'granted': granted,
-        'text_version': ConsentTexts.localizedVersion,
-        'context': ?context,
-      });
+      await _insert(kind, granted, context: context);
+      await preferences.setBool(_key(kind), granted);
+      await preferences.remove(_pendingKey(kind));
       return true;
     } catch (error) {
       debugPrint('Consent record on server failed: ${error.runtimeType}');
+      if (!granted) await preferences.setBool(_pendingKey(kind), true);
       return false;
     }
   }

@@ -33,6 +33,8 @@ function checkAiLocale(source) {
     declaration('instructions'), declaration('doseUnit'),
     declaration('doseContext'), declaration('creatineDose'),
     'const doseFallback = "German safety response";',
+    declaration('halalFallback'), declaration('halalFallbackEn'),
+    fn('recommendsForbiddenFood', 'function recommendsForbiddenFood(answer)'),
     fn('isEnglish', 'function isEnglish(body)'),
     fn('localizedInstructions', 'function localizedInstructions(base, body)'),
     fn('guardAnswer', 'function guardAnswer(answer, english = false)'),
@@ -64,6 +66,19 @@ function checkAiLocale(source) {
       'English dosage guard failed');
   }
   expect(helpers.guardAnswer(null, true) === null, 'Empty answer handling changed');
+  // Halal guard on answers: recommendations are replaced, refusals pass.
+  for (const answer of ['Try a pork sausage with your eggs.', 'Iss zum Frühstück Speck und Eier.',
+    'Ein Glas Wein passt gut dazu.', 'Gummibärchen mit Gelatine sind ein Snack.', 'Have a beer after training.']) {
+    expect(helpers.guardAnswer(answer, answer.startsWith('Try') || answer.startsWith('Have')) !== answer,
+      'Forbidden recommendation not replaced: ' + answer);
+  }
+  for (const answer of ['Lookin enthält kein Schweinefleisch und keinen Alkohol.', 'Avoid alcohol before bed.',
+    'Eat it without bacon.', 'Try oats with yoghurt, berries and a few nuts.', 'Weintrauben sind ein guter Snack.',
+    'Ein Salat mit Hähnchen, Reis und Joghurt.']) {
+    expect(helpers.guardAnswer(answer, false) === answer, 'Harmless answer was replaced: ' + answer);
+  }
+  expect(helpers.guardAnswer('Try pork chops.', true).startsWith('I do not make recommendations'),
+    'English halal fallback missing');
   return checks;
 }
 

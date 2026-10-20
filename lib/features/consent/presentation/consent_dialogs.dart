@@ -42,8 +42,13 @@ Future<bool> _ensure(
     builder: (_) => ConsentDialog(title: title, text: text),
   );
   if (granted != true) return false;
-  await consent.set(kind, true);
-  return true;
+  final stored = await consent.set(kind, true);
+  if (!stored && context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.consentConsentCouldNotBeSaved)),
+    );
+  }
+  return stored;
 }
 
 /// One consent with a checkbox that is never pre-ticked. The button stays

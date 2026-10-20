@@ -27,8 +27,10 @@ class AiCoachReply {
   });
 
   final String text;
-  final int remaining;
-  final int dailyLimit;
+
+  /// `null` for replies that cost no request (for example the crisis help).
+  final int? remaining;
+  final int? dailyLimit;
 }
 
 class AiCoachHistory {
@@ -493,8 +495,8 @@ class AiCoachService {
     }
     return AiCoachReply(
       text: text,
-      remaining: _integer(data['remaining']),
-      dailyLimit: _integer(data['daily_limit']),
+      remaining: _nullableInteger(data['remaining']),
+      dailyLimit: _nullableInteger(data['daily_limit']),
     );
   }
 

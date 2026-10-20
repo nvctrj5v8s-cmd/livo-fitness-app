@@ -196,6 +196,7 @@
   "commonYes": "Yes",
   "consentAiCoachAndAiPhotoWillThen": "AI Coach and AI Photo will then stop sending data to OpenAI and will ask again before their next use.",
   "consentCancel": "Cancel",
+  "consentConsentCouldNotBeSaved": "Your consent could not be saved. Please check your connection and try again.",
   "consentConsents": "Consents",
   "consentContinueWithoutConsent": "Continue without consent",
   "consentGiveConsent": "Give consent",

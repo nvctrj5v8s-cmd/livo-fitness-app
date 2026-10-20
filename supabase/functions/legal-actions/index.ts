@@ -130,17 +130,20 @@ Deno.serve(async (request) => {
   // without links or addresses.
   const mailTo = user?.email ?? email
   const english = body.locale === 'en'
+  // The public form is open to everybody: its confirmation never repeats
+  // what was typed in (name, note), so it cannot be abused for foreign texts.
+  const echo = user !== null
   const detailsEn = [
-    `Name: ${plain(name)}`,
+    echo ? `Name: ${plain(name)}` : null,
     `Account: ${user ? 'signed in' : 'not signed in (website)'}`,
-    note ? `Note: ${plain(note)}` : null,
+    echo && note ? `Note: ${plain(note)}` : null,
     `Received: ${englishDateTime(receivedAt)}`,
     `Reference number: ${row.id}`,
   ].filter(Boolean).join('\n')
   const details = [
-    `Name: ${plain(name)}`,
+    echo ? `Name: ${plain(name)}` : null,
     `Konto: ${user ? 'angemeldet' : 'ohne Anmeldung (Webseite)'}`,
-    note ? `Hinweis: ${plain(note)}` : null,
+    echo && note ? `Hinweis: ${plain(note)}` : null,
     `Eingang: ${when}`,
     `Vorgangsnummer: ${row.id}`,
   ].filter(Boolean).join('\n')
@@ -159,12 +162,12 @@ Deno.serve(async (request) => {
     to: mailTo,
     subject: english ? 'Acknowledgement of your withdrawal — Lookin Premium' : 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
     text: english
-      ? `Hello ${plain(name)},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
+      ? `Hello${echo ? ' ' + plain(name) : ''},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
         'We will refund your payments under the withdrawal policy within fourteen days at the latest. ' +
         'If you requested that Premium begins immediately, we deduct a proportionate amount for the service already provided. ' +
         'Google Play purchases are refunded through Google Play.\n\n' +
         `For questions, contact ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`
-      : `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
+      : `Hallo${echo ? ' ' + plain(name) : ''},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
       'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
       'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
       'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +

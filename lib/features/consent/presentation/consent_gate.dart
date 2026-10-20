@@ -65,9 +65,16 @@ class _ConsentPageState extends State<ConsentPage> {
   Future<void> _continue() async {
     if (_saving) return;
     setState(() => _saving = true);
-    await widget.consent.set(ConsentKind.healthData, _health);
-    await widget.consent.set(ConsentKind.aiProcessing, _ai);
-    if (mounted) setState(() => _saving = false);
+    final health = await widget.consent.set(ConsentKind.healthData, _health);
+    final ai = await widget.consent.set(ConsentKind.aiProcessing, _ai);
+    if (!mounted) return;
+    setState(() => _saving = false);
+    // A consent that could not be stored is not kept: the page stays and says so.
+    if (!health || !ai) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.consentConsentCouldNotBeSaved)),
+      );
+    }
   }
 
   @override

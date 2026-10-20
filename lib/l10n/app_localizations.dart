@@ -1276,6 +1276,12 @@ abstract class AppLocalizations {
   /// **'Abbrechen'**
   String get consentCancel;
 
+  /// No description provided for @consentConsentCouldNotBeSaved.
+  ///
+  /// In de, this message translates to:
+  /// **'Deine Einwilligung konnte nicht gespeichert werden. Bitte prüfe die Verbindung und versuche es noch einmal.'**
+  String get consentConsentCouldNotBeSaved;
+
   /// No description provided for @consentConsents.
   ///
   /// In de, this message translates to:

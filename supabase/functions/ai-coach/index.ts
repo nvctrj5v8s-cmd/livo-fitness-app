@@ -191,6 +191,14 @@ Deno.serve(async (request) => {
     if (body.action === 'clear_history') {
       return await clearHistory(admin, user.id)
     }
+    // Crisis messages never go to the model, cost nothing and need neither
+    // Premium nor consent: whoever writes one gets the help text.
+    if (!body.action && typeof body.message === 'string') {
+      const text = body.message.replace(/\0/g, '').trim().slice(0, maxQuestionLength)
+      if (isCrisisMessage(text)) {
+        return json({ answer: isEnglish(body) ? crisisAnswerEn : crisisAnswer, model, saved: false })
+      }
+    }
     if (!openAiKey) {
       console.error('OPENAI_API_KEY secret is missing')
       return json({
@@ -506,10 +514,7 @@ AUFGABE: STRUKTURIERTE MAHLZEITENERKENNUNG
 - Nimm niemals Schweinefleisch, Alkohol, Gelatine oder nicht eindeutig halal erkennbares Fleisch von Landtieren in items auf.
 - Gib ausschließlich das verlangte JSON-Schema zurück.`
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${openAiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
+  const result = await requestOpenAi(openAiKey, 'meal photo', {
       model,
       instructions: localizedInstructions(mealPhotoInstructions, body),
       input: [{ role: 'user', content: [
@@ -552,15 +557,14 @@ AUFGABE: STRUKTURIERTE MAHLZEITENERKENNUNG
       reasoning: { effort: 'low' },
       max_output_tokens: 1000,
       store: false,
-    }),
   })
-  const payload = await response.json()
-  if (!response.ok) {
-    console.error('OpenAI meal photo failed', response.status, payload?.error?.code ?? 'unknown')
-    return json({ error: openAiErrorMessage(response.status, payload), code: 'openai_unavailable' }, response.status === 429 ? 429 : 503)
+  if (!result.ok) {
+    await releaseQuota(admin, userId)
+    return result.response
   }
-  const output = extractOutputText(payload)
+  const output = extractOutputText(result.payload)
   if (!output) {
+    await releaseQuota(admin, userId)
     return json({ error: 'Auf dem Foto konnte gerade nichts sicher erkannt werden.', code: 'empty_response' }, 503)
   }
   try {
@@ -579,6 +583,7 @@ AUFGABE: STRUKTURIERTE MAHLZEITENERKENNUNG
     })
   } catch (error) {
     console.error('AI meal photo parse failed', error)
+    await releaseQuota(admin, userId)
     return json({ error: 'Die erkannten Werte waren unvollständig. Bitte versuche es erneut.', code: 'invalid_response' }, 503)
   }
 }
@@ -808,6 +813,28 @@ const creatineDose = /(\d+([.,]\d+)?\s?g\b[^.!?\n]{0,40}(kreatin|creatine)|(krea
 
 // Last line of defence after the prompt: an answer that names a dose for a
 // supplement or medicine is replaced. Only a code is logged, no content.
+// What the coach says instead when an answer would recommend something that
+// Lookin never offers (pork, alcohol, gelatine).
+const halalFallback = 'Dazu gebe ich dir keine Empfehlung. Frag mich gern nach einer Alternative, ich schlage dir passende Lebensmittel vor.'
+const halalFallbackEn = 'I do not make recommendations on that. Ask me for an alternative and I will suggest suitable foods.'
+
+// True when a sentence mentions pork, alcohol or gelatine without a negation
+// ("no pork", "ohne Alkohol", "avoid" ...). Refusals and explanations pass.
+function recommendsForbiddenFood(answer: string): boolean {
+  const terms = ['pork', 'schwein', 'bacon', 'schinken', 'speck', 'salami', 'gelatin', 'gelatine', 'alkohol', 'alcohol', 'bier', 'beer', 'wein', 'wine', 'vodka', 'whisky', 'whiskey', 'likoer', 'liqueur', 'sekt', 'cocktail']
+  const negation = /\b(kein|keine|keinen|keiner|keinem|ohne|nicht|nie|niemals|vermeide|vermeiden|verzichte|no|not|never|avoid|without|free of|dont|isnt|arent)\b/
+  for (const sentence of answer.split(/(?<=[.!?\n])/)) {
+    const normalized = sentence.toLowerCase()
+      .replaceAll('ä', 'ae').replaceAll('ö', 'oe').replaceAll('ü', 'ue').replaceAll('ß', 'ss')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[']/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
+    const words = normalized.split(' ')
+    const hit = words.some((word) => terms.some((term) => word === term || (term.length > 4 && word.startsWith(term))))
+    if (hit && !negation.test(normalized)) return true
+  }
+  return false
+}
+
 function guardAnswer(answer: string | null, english = false): string | null {
   if (!answer) return answer
   const sentences = answer.split(/(?<=[.!?\n])/)
@@ -819,6 +846,10 @@ function guardAnswer(answer: string | null, english = false): string | null {
     return english
       ? 'I cannot provide quantities or doses for supplements or medicines. Please follow the package leaflet and ask your doctor or pharmacist. I can help with questions about foods, meals and movement.'
       : doseFallback
+  }
+  if (recommendsForbiddenFood(answer)) {
+    console.warn('ai-coach answer replaced: halal_guard')
+    return english ? halalFallbackEn : halalFallback
   }
   return answer
 }

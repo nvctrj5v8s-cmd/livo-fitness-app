@@ -19,5 +19,6 @@
   "consentCancel": "Cancel",
   "consentConsents": "Consents",
   "consentSaveWeightTargetWeightAndAllergiesIn": "Save weight, target weight and allergies in your account",
-  "consentSendQuestionsAndPhotosToOpenaiUsa": "Send questions and photos to OpenAI (USA)"
+  "consentSendQuestionsAndPhotosToOpenaiUsa": "Send questions and photos to OpenAI (USA)",
+  "consentConsentCouldNotBeSaved": "Your consent could not be saved. Please check your connection and try again."
 }

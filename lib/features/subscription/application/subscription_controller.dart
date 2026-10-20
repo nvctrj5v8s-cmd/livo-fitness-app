@@ -203,7 +203,12 @@ class SubscriptionController extends ChangeNotifier {
         _loaded = true;
         _loadFailed = false;
         _notify();
-        if (next.hasPremiumAt(_now())) return true;
+        // The app trial also counts as premium; a purchase is only confirmed
+        // once the server holds the subscription itself.
+        if (next.hasPremiumAt(_now()) &&
+            next.kind == EntitlementKind.subscription) {
+          return true;
+        }
       } catch (_) {
         // Try again; the webhook may simply not have arrived yet.
       }

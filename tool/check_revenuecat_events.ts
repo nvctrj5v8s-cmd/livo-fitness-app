@@ -11,6 +11,7 @@ const other = '0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d'
 const base: StoreEvent = {
   type: 'INITIAL_PURCHASE',
   app_user_id: user,
+  product_id: 'lookin_premium_yearly:yearly',
   event_timestamp_ms: 1_800_000_000_000,
   expiration_at_ms: 1_800_000_300_000,
   environment: 'PRODUCTION',
@@ -29,6 +30,14 @@ function reason(event: StoreEvent, options = live): string {
 }
 
 check('real purchase applies', reason(base) === 'apply:active')
+check(
+  'another product of the project never unlocks Premium',
+  reason({ ...base, product_id: 'other_pro:monthly' }) === 'unknown_product',
+)
+check(
+  'an event without a product is ignored',
+  reason({ ...base, product_id: undefined }) === 'unknown_product',
+)
 check('renewal applies', reason({ ...base, type: 'RENEWAL' }) === 'apply:active')
 check(
   'trial period is trialing',

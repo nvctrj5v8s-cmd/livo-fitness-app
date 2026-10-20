@@ -697,6 +697,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get consentCancel => 'Cancel';
 
   @override
+  String get consentConsentCouldNotBeSaved =>
+      'Your consent could not be saved. Please check your connection and try again.';
+
+  @override
   String get consentConsents => 'Consents';
 
   @override

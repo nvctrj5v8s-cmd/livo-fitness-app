@@ -130,6 +130,7 @@ class _PremiumWelcomeViewState extends State<PremiumWelcomeView>
   }
 
   void _onIntroTick() {
+    if (_reduced) return;
     final v = _intro.value;
     if (!_burstFired && v >= _burstAt) {
       _burstFired = true;

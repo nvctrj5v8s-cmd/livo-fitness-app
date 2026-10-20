@@ -56,6 +56,12 @@ export function decide(event: StoreEvent, options: DecideOptions): Decision {
   const userId = candidates.find((id) => typeof id === 'string' && uuidPattern.test(id))
   if (!userId) return { action: 'ignore', reason: 'no_account_id' }
 
+  // Only the Lookin Premium products count; any other product of the
+  // RevenueCat project must never unlock Premium.
+  if (typeof event.product_id !== 'string' || !event.product_id.startsWith('lookin_premium_')) {
+    return { action: 'ignore', reason: 'unknown_product' }
+  }
+
   const eventMs = Number(event.event_timestamp_ms)
   if (!Number.isFinite(eventMs) || eventMs <= 0) {
     return { action: 'ignore', reason: 'no_event_time' }

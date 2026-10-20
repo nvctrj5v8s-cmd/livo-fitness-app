@@ -703,6 +703,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get consentCancel => 'Abbrechen';
 
   @override
+  String get consentConsentCouldNotBeSaved =>
+      'Deine Einwilligung konnte nicht gespeichert werden. Bitte prüfe die Verbindung und versuche es noch einmal.';
+
+  @override
   String get consentConsents => 'Einwilligungen';
 
   @override

@@ -19,5 +19,6 @@
   "consentCancel": "Abbrechen",
   "consentConsents": "Einwilligungen",
   "consentSaveWeightTargetWeightAndAllergiesIn": "Gewicht, Zielgewicht und Allergien im Konto speichern",
-  "consentSendQuestionsAndPhotosToOpenaiUsa": "Fragen und Fotos an OpenAI (USA) senden"
+  "consentSendQuestionsAndPhotosToOpenaiUsa": "Fragen und Fotos an OpenAI (USA) senden",
+  "consentConsentCouldNotBeSaved": "Deine Einwilligung konnte nicht gespeichert werden. Bitte prüfe die Verbindung und versuche es noch einmal."
 }

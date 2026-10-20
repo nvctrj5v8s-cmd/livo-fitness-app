@@ -50,12 +50,25 @@ class ConsentController extends ChangeNotifier {
     _notify();
   }
 
-  /// Returns whether the decision was also stored as proof on the server.
+  /// Returns whether the decision is stored as proof on the server. A consent
+  /// that could not be stored is taken back (the person is asked to try
+  /// again); a withdrawal always holds and is sent later.
   Future<bool> set(ConsentKind kind, bool granted, {String? context}) async {
+    final before = _decisions[kind];
     _decisions[kind] = granted;
     _notify();
+    final stored = await repository.record(kind, granted, context: context);
+    if (granted && !stored) {
+      if (before == null) {
+        _decisions.remove(kind);
+      } else {
+        _decisions[kind] = before;
+      }
+      _notify();
+      return false;
+    }
     if (granted && kind == ConsentKind.healthData) onHealthGranted?.call();
-    return repository.record(kind, granted, context: context);
+    return stored;
   }
 
   void _notify() {

@@ -39,6 +39,19 @@ class _FakeWithdrawals implements WithdrawalRepository {
   }
 }
 
+/// The server cannot be reached: nothing is stored as proof.
+class _OfflineConsentRepository implements ConsentRepository {
+  @override
+  Future<Map<ConsentKind, bool>> load() async => {};
+
+  @override
+  Future<bool> record(
+    ConsentKind kind,
+    bool granted, {
+    String? context,
+  }) async => false;
+}
+
 Widget _host(Widget child) => MaterialApp(
   theme: AppTheme.dark,
   home: Scaffold(body: child),
@@ -46,6 +59,34 @@ Widget _host(Widget child) => MaterialApp(
 
 void main() {
   group('ConsentController', () {
+    test('a consent the server could not store is taken back', () async {
+      var healthGranted = 0;
+      final consent = ConsentController(repository: _OfflineConsentRepository())
+        ..onHealthGranted = () => healthGranted++;
+      addTearDown(consent.dispose);
+      await consent.load();
+
+      final stored = await consent.set(ConsentKind.aiProcessing, true);
+      expect(stored, isFalse);
+      // Not granted in the app either: the server would refuse the AI anyway.
+      expect(consent.aiGranted, isFalse);
+      expect(consent.decision(ConsentKind.aiProcessing), isNull);
+      expect(consent.needsInitialDecision, isTrue);
+
+      await consent.set(ConsentKind.healthData, true);
+      expect(healthGranted, 0, reason: 'no cloud copy without stored consent');
+    });
+
+    test('a withdrawal holds even when the server cannot be reached', () async {
+      final offline = ConsentController(
+        repository: _OfflineConsentRepository(),
+      );
+      addTearDown(offline.dispose);
+      await offline.set(ConsentKind.aiProcessing, false);
+      expect(offline.decision(ConsentKind.aiProcessing), isFalse);
+      expect(offline.aiGranted, isFalse);
+    });
+
     test('asks once until both decisions are recorded', () async {
       final repository = MemoryConsentRepository();
       final consent = ConsentController(repository: repository);
