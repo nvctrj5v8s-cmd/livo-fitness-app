@@ -55,9 +55,10 @@ frühere Angaben eingehen. Dafür gelten feste Grenzen zur Datenminimierung:
 | Länge einer gespeicherten Nachricht | höchstens 4000 Zeichen (Migration 0013) |
 
 Die Aufräumregel läuft in der Edge Function bei jedem Laden und jeder neuen
-Antwort. Bei komplett inaktiven Konten bleiben alte Nachrichten liegen, bis
-das Konto wieder genutzt oder gelöscht wird; ein täglicher Aufräumjob
-(z. B. `pg_cron`) ist noch offen.
+Antwort. Zusätzlich löscht der tägliche Löschlauf (`pg_cron`,
+`run_retention_cleanup()`, Migration 0024) Nachrichten älter als 90 Tage,
+auch bei inaktiven Konten. Krisennachrichten werden nicht gespeichert.
+Gemeldete Antworten liegen in `ai_answer_reports` (höchstens 12 Monate).
 
 Gespeichert werden nur Frage und Antwort als Text, nicht der mitgeschickte
 App-Kontext und keine Fotos. Bei der Fotoanalyse im Coach steht als Frage nur

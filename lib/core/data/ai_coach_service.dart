@@ -159,6 +159,9 @@ class AiCoachException implements Exception {
   String toString() => message;
 }
 
+/// What happened to a report of a coach answer.
+enum AnswerReportResult { sent, limit, failed }
+
 /// Sends one request to the `ai-coach` Edge Function. Replaceable in tests.
 typedef AiCoachInvoker =
     Future<FunctionResponse> Function(
@@ -277,6 +280,31 @@ class AiCoachService {
         error,
         fallback: L10n.current.coreTheCoachIsCurrentlyUnavailablePleaseTry,
       );
+    }
+  }
+
+  /// Reports an answer inside the app; the server stores it and tells the
+  /// team. Never throws.
+  Future<AnswerReportResult> reportAnswer({
+    required String reason,
+    required String answer,
+  }) async {
+    try {
+      final response = await _invoke({
+        'action': 'report',
+        'reason': reason,
+        'answer': answer.length > 2000 ? answer.substring(0, 2000) : answer,
+      }, timeout: historyTimeout);
+      final data = response.data;
+      return data is Map && data['reported'] == true
+          ? AnswerReportResult.sent
+          : AnswerReportResult.failed;
+    } on FunctionException catch (error) {
+      return error.status == 429
+          ? AnswerReportResult.limit
+          : AnswerReportResult.failed;
+    } catch (_) {
+      return AnswerReportResult.failed;
     }
   }
 

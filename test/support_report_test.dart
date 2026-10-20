@@ -1,4 +1,5 @@
 import 'package:fitness_ai_app/core/config/support_contact.dart';
+import 'package:fitness_ai_app/core/data/ai_coach_service.dart';
 import 'package:fitness_ai_app/features/coach/presentation/report_answer_sheet.dart';
 import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 Widget _host({
   required String answer,
-  required Future<bool> Function(Uri) opener,
+  required SubmitAnswerReport submit,
   Locale locale = const Locale('de'),
 }) => MaterialApp(
   locale: locale,
@@ -17,13 +18,25 @@ Widget _host({
       body: Center(
         child: TextButton(
           onPressed: () =>
-              showReportAnswerSheet(context, answer: answer, opener: opener),
+              showReportAnswerSheet(context, answer: answer, submit: submit),
           child: const Text('open'),
         ),
       ),
     ),
   ),
 );
+
+Future<void> _openAndSend(WidgetTester tester, {String? reason}) async {
+  await tester.tap(find.text('open'));
+  await tester.pumpAndSettle();
+  if (reason != null) {
+    await tester.tap(find.byKey(Key('report-reason-$reason')));
+    await tester.pumpAndSettle();
+  }
+  await tester.ensureVisible(find.byKey(const Key('report-send')));
+  await tester.tap(find.byKey(const Key('report-send')));
+  await tester.pumpAndSettle();
+}
 
 void main() {
   tearDown(() => L10n.use(L10n.german));
@@ -32,19 +45,16 @@ void main() {
     'mailto-Link: Leerzeichen als %20, Umlaute und Zeilenumbrüche kodiert',
     () {
       final uri = SupportContact.mailto(
-        subject: 'Lookin Coach: Antwort melden',
-        body: 'Grund: Falsch\n\nÜberprüfung & mehr',
+        subject: 'Lookin Hilfe',
+        body: 'Frage\n\nÜberprüfung & mehr',
       );
       expect(uri.scheme, 'mailto');
       expect(uri.path, SupportContact.email);
       final text = uri.toString();
-      expect(text, contains('subject=Lookin%20Coach%3A%20Antwort%20melden'));
+      expect(text, contains('subject=Lookin%20Hilfe'));
       expect(text, contains('%0A%0A'));
       expect(text, isNot(contains('+')));
-      expect(
-        uri.queryParameters['body'],
-        'Grund: Falsch\n\nÜberprüfung & mehr',
-      );
+      expect(uri.queryParameters['body'], 'Frage\n\nÜberprüfung & mehr');
     },
   );
 
@@ -63,85 +73,95 @@ void main() {
     expect(await SupportContact.open(opener: (_) async => false), isFalse);
   });
 
-  testWidgets('Antwort melden: Grund wählen, E-Mail mit der Antwort', (
+  testWidgets('Antwort melden: direkt in der App, ohne Mail-App', (
     tester,
   ) async {
-    Uri? opened;
+    ReportReason? sentReason;
+    String? sentAnswer;
     await tester.pumpWidget(
       _host(
         answer: 'Iss täglich 5 g Kreatin.',
-        opener: (uri) async {
-          opened = uri;
-          return true;
+        submit: (reason, answer) async {
+          sentReason = reason;
+          sentAnswer = answer;
+          return AnswerReportResult.sent;
         },
       ),
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
     expect(find.text('Antwort melden'), findsOneWidget);
-
+    expect(find.textContaining('E-Mail'), findsNothing);
+    expect(find.textContaining('12 Monate'), findsOneWidget);
     await tester.tap(find.byKey(const Key('report-reason-unsafe')));
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.byKey(const Key('report-send')));
     await tester.tap(find.byKey(const Key('report-send')));
     await tester.pumpAndSettle();
 
-    expect(opened, isNotNull);
-    final body = opened!.queryParameters['body']!;
-    expect(body, contains('Unsicher oder gesundheitlich bedenklich'));
-    expect(body, contains('Iss täglich 5 g Kreatin.'));
-    expect(opened!.queryParameters['subject'], 'Lookin Coach: Antwort melden');
-    // The sheet closes after the mail app opened.
+    expect(sentReason, ReportReason.unsafe);
+    expect(sentAnswer, 'Iss täglich 5 g Kreatin.');
+    // The sheet closes and thanks the person.
+    expect(find.byKey(const Key('report-send')), findsNothing);
+    expect(find.textContaining('Danke!'), findsOneWidget);
+  });
+
+  testWidgets('Fehler: Hinweis, Blatt bleibt offen, erneuter Versuch klappt', (
+    tester,
+  ) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _host(
+        answer: 'x',
+        submit: (_, _) async =>
+            ++calls == 1 ? AnswerReportResult.failed : AnswerReportResult.sent,
+      ),
+    );
+    await _openAndSend(tester);
+    expect(find.byKey(const Key('report-error')), findsOneWidget);
+    expect(find.byKey(const Key('report-send')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('report-send')));
+    await tester.pumpAndSettle();
+    expect(calls, 2);
     expect(find.byKey(const Key('report-send')), findsNothing);
   });
 
-  testWidgets(
-    'Englisch: Texte und Mail auf Englisch, bei 320 px ohne Überlauf',
-    (tester) async {
-      tester.view
-        ..physicalSize = const Size(320, 640)
-        ..devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      Uri? opened;
-      await tester.pumpWidget(
-        _host(
-          locale: L10n.english,
-          answer: 'Try oats with yoghurt.',
-          opener: (uri) async {
-            opened = uri;
-            return true;
-          },
-        ),
-      );
-      await tester.tap(find.text('open'));
-      await tester.pumpAndSettle();
-      expect(find.text('Report this answer'), findsOneWidget);
-      expect(find.text('Wrong or misleading'), findsOneWidget);
-      await tester.ensureVisible(find.byKey(const Key('report-send')));
-      await tester.tap(find.byKey(const Key('report-send')));
-      await tester.pumpAndSettle();
-      expect(
-        opened!.queryParameters['subject'],
-        'Lookin Coach: report an answer',
-      );
-      expect(
-        opened!.queryParameters['body'],
-        contains('Reason: Wrong or misleading'),
-      );
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('Tageslimit: eigener Hinweis', (tester) async {
+    await tester.pumpWidget(
+      _host(answer: 'x', submit: (_, _) async => AnswerReportResult.limit),
+    );
+    await _openAndSend(tester);
+    expect(find.textContaining('morgen'), findsOneWidget);
+  });
 
-  testWidgets('keine Mail-App: Hinweis mit der Adresse, Blatt bleibt offen', (
+  testWidgets('Englisch: Texte auf Englisch, bei 320 px ohne Überlauf', (
     tester,
   ) async {
-    await tester.pumpWidget(_host(answer: 'x', opener: (_) async => false));
+    tester.view
+      ..physicalSize = const Size(320, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    ReportReason? sentReason;
+    await tester.pumpWidget(
+      _host(
+        locale: L10n.english,
+        answer: 'Try oats with yoghurt.',
+        submit: (reason, _) async {
+          sentReason = reason;
+          return AnswerReportResult.sent;
+        },
+      ),
+    );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
+    expect(find.text('Report this answer'), findsOneWidget);
+    expect(find.text('Wrong or misleading'), findsOneWidget);
+    expect(find.text('Send report'), findsOneWidget);
     await tester.ensureVisible(find.byKey(const Key('report-send')));
     await tester.tap(find.byKey(const Key('report-send')));
     await tester.pumpAndSettle();
-    expect(find.textContaining(SupportContact.email), findsWidgets);
-    expect(find.byKey(const Key('report-send')), findsOneWidget);
+    expect(sentReason, ReportReason.wrong);
+    expect(tester.takeException(), isNull);
   });
 }

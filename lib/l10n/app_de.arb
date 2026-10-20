@@ -157,32 +157,16 @@
   "coachPremiumFeature": "Premium-Funktion",
   "coachProteinAndTrainingTipsForYourDay": "Protein- und Trainingstipps für deinen Alltag",
   "coachReportAnswer": "Antwort melden",
-  "coachReportMailAnswerLabel": "Gemeldete Antwort:",
-  "coachReportMailNotOpened": "Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.",
-  "@coachReportMailNotOpened": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
-  "coachReportMailNotice": "Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.",
-  "coachReportMailReason": "Grund: {reason}",
-  "@coachReportMailReason": {
-    "placeholders": {
-      "reason": {
-        "type": "String"
-      }
-    }
-  },
-  "coachReportMailSubject": "Lookin Coach: Antwort melden",
-  "coachReportPrepareEmail": "E-Mail vorbereiten",
+  "coachReportFailed": "Die Meldung konnte gerade nicht gesendet werden. Bitte prüfe die Verbindung und versuche es noch einmal.",
+  "coachReportLimit": "Du hast heute schon viele Antworten gemeldet, danke! Bitte melde weitere morgen.",
   "coachReportReasonInappropriate": "Unpassend oder beleidigend",
   "coachReportReasonOther": "Etwas anderes",
   "coachReportReasonUnsafe": "Unsicher oder gesundheitlich bedenklich",
   "coachReportReasonWrong": "Falsch oder irreführend",
-  "coachReportSheetText": "Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.",
+  "coachReportSend": "Meldung senden",
+  "coachReportSheetText": "Falsch, unpassend oder unsicher? Melde es hier direkt in der App. Wir prüfen jede Meldung und verbessern damit den Coach. Gespeichert werden der Grund, die gemeldete Antwort und dein Konto, höchstens 12 Monate.",
   "coachReportSheetTitle": "Antwort melden",
+  "coachReportThanks": "Danke! Deine Meldung ist angekommen. Wir prüfen sie.",
   "coachSendMessage": "Nachricht senden",
   "coachStartANewChat": "Neuen Chat beginnen?",
   "coachTheCoachCannotBeOpenedJustNow": "Der Coach kann gerade nicht geöffnet werden.",

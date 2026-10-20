@@ -488,27 +488,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachReportAnswer => 'Report answer';
 
   @override
-  String get coachReportMailAnswerLabel => 'Reported answer:';
+  String get coachReportFailed =>
+      'The report could not be sent just now. Please check your connection and try again.';
 
   @override
-  String coachReportMailNotOpened(String address) {
-    return 'The email app could not be opened. Please write to us at $address.';
-  }
-
-  @override
-  String get coachReportMailNotice =>
-      'Please add what was wrong. Do not include health details you do not want to share.';
-
-  @override
-  String coachReportMailReason(String reason) {
-    return 'Reason: $reason';
-  }
-
-  @override
-  String get coachReportMailSubject => 'Lookin Coach: report an answer';
-
-  @override
-  String get coachReportPrepareEmail => 'Prepare email';
+  String get coachReportLimit =>
+      'You have already reported many answers today, thank you! Please send more tomorrow.';
 
   @override
   String get coachReportReasonInappropriate => 'Inappropriate or offensive';
@@ -523,11 +508,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachReportReasonWrong => 'Wrong or misleading';
 
   @override
+  String get coachReportSend => 'Send report';
+
+  @override
   String get coachReportSheetText =>
-      'Wrong, inappropriate or unsafe? We read every report. Your email app opens with the answer, and you can change anything before sending.';
+      'Wrong, inappropriate or unsafe? Report it right here in the app. We review every report and use it to improve the coach. We store the reason, the reported answer and your account for no longer than 12 months.';
 
   @override
   String get coachReportSheetTitle => 'Report this answer';
+
+  @override
+  String get coachReportThanks =>
+      'Thank you! Your report has arrived. We will review it.';
 
   @override
   String get coachSendMessage => 'Send message';

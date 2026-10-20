@@ -1,5 +1,53 @@
 # Funktionsstatus
 
+## Befunde der Rechtstextprüfung behoben, 20. Oktober 2026
+
+Umsetzung der bestätigten Abweichungen aus dem nachfolgenden Eintrag
+(`docs/LEGAL_REVIEW_2026-10-20.md`):
+
+- **Täglicher Löschlauf** (Migration 0024, `pg_cron`, 03:17 UTC,
+  `run_retention_cleanup()`): IP-Prüfwert bei Widerrufen nach 24 Stunden,
+  Widerrufserklärungen nach Ablauf der Verjährung (3 Jahre ab Jahresende),
+  Testphasen-Hash nach 3 Jahren, Coach-Verlauf nach 90 Tagen, Meldungen nach
+  12 Monaten. Auf dem Server eingerichtet und einmal von Hand ausgeführt.
+- **Widerruf der Gesundheits-Einwilligung:** Ein Trigger auf `user_consents`
+  löscht Allergien, Zielgewicht, Einrichtungsantworten und Körpermaße auf dem
+  Server, sobald der Widerruf dort ankommt, auch wenn die App zuvor offline
+  war (der Widerruf wird ohnehin nachgesendet).
+- **Antwort melden in der App:** Die Meldung geht direkt an die Edge Function
+  `ai-coach` (`action: report`, Tabelle `ai_answer_reports`, nur
+  Service-Rolle, höchstens 20 pro Tag, 12 Monate) statt über die Mail-App.
+  Das Team erhält eine Benachrichtigung per E-Mail.
+- **Widerrufsbestätigung** enthält wieder Name und Hinweis (§ 356a BGB); ein
+  zweiter Versandversuch, bei Fehlschlag eine Warnung an den Inhaber.
+- **Kaufbestätigung:** AGB-Fassung (`2026-10`) in der Mail, zweiter
+  Versandversuch, bei Fehlschlag eine Warnung an den Inhaber zum manuellen
+  Versand.
+- **Krisennachrichten** werden nicht mehr gespeichert (auch bei Premium).
+- **Datenschutzerklärung DE/EN:** Supabase-Vertragspartner (Supabase Pte.
+  Ltd., Singapur, bzw. Supabase, Inc.), Singapur als Drittland, In-App-Meldung,
+  täglicher Löschlauf, Krisennachrichten, Sicherungen, Aufbewahrung bei Resend.
+- Offen bleiben die Punkte ohne Code-Bezug aus dem Prüfbericht (USt-ID,
+  Namensgleichheit, Support-Domain, anwaltliche Prüfung der AGB).
+
+## Vertiefte Rechtstextprüfung, 20. Oktober 2026
+
+Die frühere Aussage „keinen Launch-Blocker“ im nachfolgenden Eintrag ist
+durch diese vertiefte Prüfung **nicht bestätigt**. Einzelbefunde und offene
+Nachweise: `docs/LEGAL_REVIEW_2026-10-20.md`.
+
+- Bestätigte Abweichungen: Löschfristen nur bei späteren Funktionsaufrufen;
+  Gesundheitsdatenlöschung nach Einwilligungswiderruf bei Netzfehlern ohne
+  gesicherte Wiederholung; unvollständige öffentliche Widerrufsbestätigung;
+  Kauf-/Widerrufsmails ohne verlässlichen Versand-Wiederholungsprozess;
+  KI-Meldung öffnet eine externe Mail-App statt innerhalb der App zu senden.
+- Gewerbe laut Inhaber angemeldet; steuerliche Erfassung nach erhaltenem
+  Schreiben ungeklärt. Fehlende USt-ID allein ist kein allgemeines Startverbot.
+- Flutter-Analyse bestanden. Passende Tests gestartet, aber wegen vorhandenem
+  SDK-/Cachefehler (`Invalid SDK hash`, objective_c-Build-Hook) nicht ausgeführt.
+- Reine Prüfung und Dokumentation; keine Änderung an Datenverarbeitung oder
+  Rechtstexten veröffentlicht, keine Produktivkonfiguration geändert.
+
 ## Prüfung vor dem geschlossenen Test, 20. Oktober 2026
 
 Zwei Prüf-Agenten (Rechtstexte gegen App; Sicherheit und Logik) fanden **keinen

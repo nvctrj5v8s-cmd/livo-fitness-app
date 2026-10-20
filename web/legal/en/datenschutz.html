@@ -56,9 +56,9 @@
   <p>AI requests also include the German or English language code so answers and photo descriptions follow your app language. We collect no additional health information for this and use no separate translation service. Previously saved messages keep their original language.</p>
   <p>AI photo recognition and the Lookin Coach run through our server (a Supabase Edge Function), which forwards requests to <strong>OpenAI</strong> (contracting party for EEA customers: OpenAI Ireland Ltd., Ireland; processing also occurs through OpenAI in the USA). The app itself contains no AI key.</p>
   <ul>
-    <li><strong>Coach:</strong> Your question, goal and daily targets, today's diary totals, nutrition style, allergies and intolerances, activity level, optional introduction information and the last 12 chat messages. Name, email, account ID, date of birth, sex, height, weight, target weight and health notes are not sent to OpenAI. Messages indicating an acute crisis are not sent to OpenAI; you receive a fixed response offering help.</li>
+    <li><strong>Coach:</strong> Your question, goal and daily targets, today's diary totals, nutrition style, allergies and intolerances, activity level, optional introduction information and the last 12 chat messages. Name, email, account ID, date of birth, sex, height, weight, target weight and health notes are not sent to OpenAI. Messages indicating an acute crisis are not sent to OpenAI and are not stored; you receive a fixed response offering help.</li>
     <li><strong>Photo recognition:</strong> The photo is sent for analysis with the same context as the coach, without chat history. We do not store it. OpenAI may retain requests for up to 30 days for abuse detection and does not use them for training. Photo analysis in the coach stores the text answer in chat history. Recognised values are estimates. You check and confirm them before saving.</li>
-    <li><strong>Chat history:</strong> Questions and answers are saved per account, including crisis messages and their fixed responses, but not the accompanying context. At most the last 100 messages from the last 90 days are shown and used. The server deletes older messages the next time you open or use the coach, or at the latest when you delete your account. You may delete history in the app at any time.</li>
+    <li><strong>Chat history:</strong> Questions and answers are saved per account (but not crisis messages or the accompanying context). At most the last 100 messages from the last 90 days are shown and used. The server deletes older messages automatically (daily deletion run and at the next coach use), or at the latest when you delete your account. You may delete history in the app at any time.</li>
   </ul>
   <p>Sending data to OpenAI is based on your express consent (Articles 6(1)(a) and 9(2)(a) GDPR), requested before first use with a separate, unchecked box. It also covers health information you provide in questions or photos. Providing the paid feature itself is based on performance of a contract (Article 6(1)(b) GDPR). Without consent, the app sends nothing to OpenAI. You may withdraw consent at any time under Profile › Privacy &amp; data. AI can make mistakes and does not replace professional advice.</p>
   <p>We have a data-processing agreement with OpenAI that includes the European Commission's standard contractual clauses for transfers to the USA.</p>
@@ -78,7 +78,7 @@
   <h3>3.10 Server logs, emails and support</h3>
   <p>Each connection to our server causes Supabase to process your IP address, timestamp and technical device information in logs. These are deleted after no more than 7 days. Our server functions log error codes only, not message content.</p>
   <p>We send address-confirmation, password-reset, purchase-confirmation and withdrawal-confirmation emails through Supabase and Resend (Resend, Inc., USA). Your email address and message content are processed. Purchase confirmations include the plan, price, purchase date, contractual terms and, where applicable, the time of your consent to immediate service commencement. If you contact us, we process your message through our Google (Gmail) mailbox to reply. Legal bases: Article 6(1)(b) and (f) GDPR, and Article 6(1)(c) GDPR for purchase and withdrawal confirmations (statutory confirmation obligations).</p>
-  <p>If you report a coach answer, the app opens your email app with a prepared message that contains the reported answer. We only receive it once you send the email yourself; it may contain health-related details, which you can delete beforehand (Article 6(1)(a) and (f) GDPR).</p>
+  <p>If you report a coach answer, the app sends the report directly to our server. We store the chosen reason, the reported answer (no more than 2,000 characters), the language, the time and your account ID, and receive an email notification in our mailbox (see above). The report is not sent to OpenAI. We use it to review errors and unsafe answers and to improve the coach (legitimate interest in a safe service, Article 6(1)(f) GDPR; where the answer contains health information, based on your consent to AI processing, Article 9(2)(a) GDPR). We delete reports after no more than 12 months, or earlier with your account.</p>
 
   <h3>3.11 Consent records</h3>
   <p>When you give or withdraw consent, we store its type, your decision, the timestamp and the displayed text version in your account and as a copy on your device. Account records cannot be changed; withdrawal is a new record. This allows us to demonstrate consent (Articles 7(1) and 6(1)(c) GDPR). The same applies, together with the selected plan, to your express request that a purchased subscription begins immediately (Article 6(1)(b) and (c) GDPR).</p>
@@ -89,7 +89,7 @@
   <h2>4. Recipients and service providers</h2>
   <table>
     <tr><th>Service provider</th><th>Purpose</th><th>Location / region</th></tr>
-    <tr><td>Supabase</td><td>Sign-in, database, server functions, email delivery</td><td>Supabase Inc. (USA), database in the EU (Frankfurt). A data-processing agreement is in place as part of its Terms of Service.</td></tr>
+    <tr><td>Supabase</td><td>Sign-in, database, server functions, email delivery</td><td>Supabase Pte. Ltd. (Singapore) or, depending on the version of Supabase's terms, Supabase, Inc. (USA); database in the EU (Frankfurt). A data-processing agreement is in place as part of its Terms of Service.</td></tr>
     <tr><td>OpenAI</td><td>AI Coach and photo recognition (Premium, only with consent)</td><td>OpenAI Ireland Ltd. (Ireland), processing also in the USA. A data-processing agreement is in place.</td></tr>
     <tr><td>RevenueCat</td><td>Purchase and subscription-status management</td><td>USA</td></tr>
     <tr><td>Google Play</td><td>Payment and subscription processing (independent controller)</td><td>Google, EU/USA</td></tr>
@@ -102,12 +102,14 @@
   <p>We do not disclose data to other recipients for advertising purposes.</p>
 
   <h2>5. Transfers to third countries</h2>
-  <p>Supabase, OpenAI, RevenueCat, Resend, GitHub and Google may transfer data to the USA. For Supabase, OpenAI, RevenueCat and Resend, we rely on the European Commission's standard contractual clauses in their data-processing agreements (Article 46(2)(c) GDPR). For Google and GitHub, according to their statements, we rely on EU-US Data Privacy Framework certification (adequacy decision, Article 45 GDPR), supplemented by standard contractual clauses.</p>
+  <p>Supabase, OpenAI, RevenueCat, Resend, GitHub and Google may transfer data to the USA, and Supabase also to Singapore (seat of the contracting entity; there is no adequacy decision for Singapore). For Supabase, OpenAI, RevenueCat and Resend, we rely on the European Commission's standard contractual clauses in their data-processing agreements (Article 46(2)(c) GDPR). For Google and GitHub, according to their statements, we rely on EU-US Data Privacy Framework certification (adequacy decision, Article 45 GDPR), supplemented by standard contractual clauses.</p>
 
   <h2>6. How long do we store data?</h2>
   <ul>
     <li>Account data, profile, diary and favourites: until you delete your account.</li>
-    <li>Coach history: up to 100 messages from the last 90 days; older messages are deleted at the next coach use, or with the account. You may delete it at any time.</li>
+    <li>An automatic deletion run on our server enforces the following periods every night.</li>
+    <li>Coach history: up to 100 messages from the last 90 days; older messages are deleted automatically every day. You may delete it at any time.</li>
+    <li>Reports of coach answers: no more than 12 months.</li>
     <li>Trial and subscription status: until account deletion. Store billing data and our billing data are subject to statutory retention periods.</li>
     <li>AI and barcode request counters: until account deletion. They contain no content.</li>
     <li>Email-address hash for the trial: up to three years, including after account deletion.</li>
@@ -117,7 +119,8 @@
     <li>Subscription withdrawal declarations: until the statutory limitation period expires (usually three years from the end of the year received), including after account deletion, then without the account ID.</li>
     <li>Deleting your account does not automatically delete RevenueCat purchase data. You may request deletion at the email address above, subject to retention obligations.</li>
     <li>Emails in our mailbox (support and withdrawal notifications): no longer than three years after the matter is closed (limitation period); withdrawal notifications are kept no longer than withdrawal declarations.</li>
-    <li>Account deletion removes personal database entries. There are currently no automatic backups. If we create manual backups, we keep them for no more than 30 days, then overwrite them.</li>
+    <li>Account deletion removes personal database entries. Our current Supabase plan has no automatic backups that we can access. If we use daily backups in future, deleted data is overwritten there after no more than 7 days. If we create manual backups, we keep them for no more than 30 days, then overwrite them.</li>
+    <li>Resend stores sent emails and delivery logs under its own retention rules; it does not publish a fixed period. Resend backups are overwritten after 7 days. You may request deletion through us.</li>
     <li>Deleting your account does not cancel an active store subscription. You must cancel it in the store.</li>
   </ul>
 

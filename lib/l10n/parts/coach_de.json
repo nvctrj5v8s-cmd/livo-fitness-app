@@ -115,29 +115,13 @@
   },
   "coachReportAnswer": "Antwort melden",
   "coachReportSheetTitle": "Antwort melden",
-  "coachReportSheetText": "Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.",
+  "coachReportSheetText": "Falsch, unpassend oder unsicher? Melde es hier direkt in der App. Wir prüfen jede Meldung und verbessern damit den Coach. Gespeichert werden der Grund, die gemeldete Antwort und dein Konto, höchstens 12 Monate.",
   "coachReportReasonWrong": "Falsch oder irreführend",
   "coachReportReasonUnsafe": "Unsicher oder gesundheitlich bedenklich",
   "coachReportReasonInappropriate": "Unpassend oder beleidigend",
   "coachReportReasonOther": "Etwas anderes",
-  "coachReportPrepareEmail": "E-Mail vorbereiten",
-  "coachReportMailSubject": "Lookin Coach: Antwort melden",
-  "coachReportMailReason": "Grund: {reason}",
-  "@coachReportMailReason": {
-    "placeholders": {
-      "reason": {
-        "type": "String"
-      }
-    }
-  },
-  "coachReportMailAnswerLabel": "Gemeldete Antwort:",
-  "coachReportMailNotice": "Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.",
-  "coachReportMailNotOpened": "Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.",
-  "@coachReportMailNotOpened": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  }
+  "coachReportSend": "Meldung senden",
+  "coachReportThanks": "Danke! Deine Meldung ist angekommen. Wir prüfen sie.",
+  "coachReportFailed": "Die Meldung konnte gerade nicht gesendet werden. Bitte prüfe die Verbindung und versuche es noch einmal.",
+  "coachReportLimit": "Du hast heute schon viele Antworten gemeldet, danke! Bitte melde weitere morgen."
 }

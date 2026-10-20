@@ -130,20 +130,19 @@ Deno.serve(async (request) => {
   // without links or addresses.
   const mailTo = user?.email ?? email
   const english = body.locale === 'en'
-  // The public form is open to everybody: its confirmation never repeats
-  // what was typed in (name, note), so it cannot be abused for foreign texts.
-  const echo = user !== null
+  // The confirmation repeats the content of the declaration (name, note),
+  // as the law requires (§ 356a BGB); links and addresses are removed.
   const detailsEn = [
-    echo ? `Name: ${plain(name)}` : null,
+    `Name: ${plain(name)}`,
     `Account: ${user ? 'signed in' : 'not signed in (website)'}`,
-    echo && note ? `Note: ${plain(note)}` : null,
+    note ? `Note: ${plain(note)}` : null,
     `Received: ${englishDateTime(receivedAt)}`,
     `Reference number: ${row.id}`,
   ].filter(Boolean).join('\n')
   const details = [
-    echo ? `Name: ${plain(name)}` : null,
+    `Name: ${plain(name)}`,
     `Konto: ${user ? 'angemeldet' : 'ohne Anmeldung (Webseite)'}`,
-    echo && note ? `Hinweis: ${plain(note)}` : null,
+    note ? `Hinweis: ${plain(note)}` : null,
     `Eingang: ${when}`,
     `Vorgangsnummer: ${row.id}`,
   ].filter(Boolean).join('\n')
@@ -158,25 +157,34 @@ Deno.serve(async (request) => {
 
   // The withdrawal is stored either way; repeated confirmations to the same
   // address within a day, and all mails above the daily ceiling, are not sent.
-  const userMail = !mailsAllowed || (sameAddress ?? 0) >= 3 ? 'failed' : await sendMail({
+  const userMailContent = {
     to: mailTo,
     subject: english ? 'Acknowledgement of your withdrawal — Lookin Premium' : 'Eingangsbestätigung deines Widerrufs – Lookin Premium',
     text: english
-      ? `Hello${echo ? ' ' + plain(name) : ''},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
+      ? `Hello ${plain(name)},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
         'We will refund your payments under the withdrawal policy within fourteen days at the latest. ' +
         'If you requested that Premium begins immediately, we deduct a proportionate amount for the service already provided. ' +
         'Google Play purchases are refunded through Google Play.\n\n' +
         `For questions, contact ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`
-      : `Hallo${echo ? ' ' + plain(name) : ''},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
+      : `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
       'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
       'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
       'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +
       `Bei Fragen erreichst du uns unter ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`,
-  })
+  }
+  let userMail: string = 'failed'
+  if (mailsAllowed && (sameAddress ?? 0) < 3) {
+    userMail = await sendMail(userMailContent)
+    // One more try after a short pause; the owner is told if it still fails.
+    if (userMail !== 'sent') {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      userMail = await sendMail(userMailContent)
+    }
+  }
   const ownerMail = (dayTotal ?? 0) >= 200 ? 'failed' : await sendMail({
     to: ownerEmail,
-    subject: `Neuer Widerruf: ${name}`,
-    text: `Ein Widerruf ist eingegangen. Bitte die Zahlung in der Play Console erstatten und das Abo beenden.\n\n${ownerDetails}`,
+    subject: `Neuer Widerruf: ${name}${userMail === 'sent' ? '' : ' – Bestätigung NICHT zugestellt'}`,
+    text: `Ein Widerruf ist eingegangen. Bitte die Zahlung in der Play Console erstatten und das Abo beenden.${userMail === 'sent' ? '' : `\n\nACHTUNG: Die Eingangsbestätigung an ${mailTo} konnte nicht zugestellt werden. Bitte die Bestätigung (Inhalt, Eingang mit Datum und Uhrzeit) manuell per E-Mail senden.`}\n\n${ownerDetails}`,
     replyTo: email,
   })
   await admin

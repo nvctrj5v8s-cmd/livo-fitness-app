@@ -916,41 +916,17 @@ abstract class AppLocalizations {
   /// **'Antwort melden'**
   String get coachReportAnswer;
 
-  /// No description provided for @coachReportMailAnswerLabel.
+  /// No description provided for @coachReportFailed.
   ///
   /// In de, this message translates to:
-  /// **'Gemeldete Antwort:'**
-  String get coachReportMailAnswerLabel;
+  /// **'Die Meldung konnte gerade nicht gesendet werden. Bitte prüfe die Verbindung und versuche es noch einmal.'**
+  String get coachReportFailed;
 
-  /// No description provided for @coachReportMailNotOpened.
+  /// No description provided for @coachReportLimit.
   ///
   /// In de, this message translates to:
-  /// **'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an {address}.'**
-  String coachReportMailNotOpened(String address);
-
-  /// No description provided for @coachReportMailNotice.
-  ///
-  /// In de, this message translates to:
-  /// **'Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.'**
-  String get coachReportMailNotice;
-
-  /// No description provided for @coachReportMailReason.
-  ///
-  /// In de, this message translates to:
-  /// **'Grund: {reason}'**
-  String coachReportMailReason(String reason);
-
-  /// No description provided for @coachReportMailSubject.
-  ///
-  /// In de, this message translates to:
-  /// **'Lookin Coach: Antwort melden'**
-  String get coachReportMailSubject;
-
-  /// No description provided for @coachReportPrepareEmail.
-  ///
-  /// In de, this message translates to:
-  /// **'E-Mail vorbereiten'**
-  String get coachReportPrepareEmail;
+  /// **'Du hast heute schon viele Antworten gemeldet, danke! Bitte melde weitere morgen.'**
+  String get coachReportLimit;
 
   /// No description provided for @coachReportReasonInappropriate.
   ///
@@ -976,10 +952,16 @@ abstract class AppLocalizations {
   /// **'Falsch oder irreführend'**
   String get coachReportReasonWrong;
 
+  /// No description provided for @coachReportSend.
+  ///
+  /// In de, this message translates to:
+  /// **'Meldung senden'**
+  String get coachReportSend;
+
   /// No description provided for @coachReportSheetText.
   ///
   /// In de, this message translates to:
-  /// **'Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.'**
+  /// **'Falsch, unpassend oder unsicher? Melde es hier direkt in der App. Wir prüfen jede Meldung und verbessern damit den Coach. Gespeichert werden der Grund, die gemeldete Antwort und dein Konto, höchstens 12 Monate.'**
   String get coachReportSheetText;
 
   /// No description provided for @coachReportSheetTitle.
@@ -987,6 +969,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Antwort melden'**
   String get coachReportSheetTitle;
+
+  /// No description provided for @coachReportThanks.
+  ///
+  /// In de, this message translates to:
+  /// **'Danke! Deine Meldung ist angekommen. Wir prüfen sie.'**
+  String get coachReportThanks;
 
   /// No description provided for @coachSendMessage.
   ///

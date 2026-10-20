@@ -18,6 +18,10 @@ angemeldeten Konto gehören sollen.
 | Einwilligungen und Nachweis zum Sofortbeginn (Art, Entscheidung, Zeit, Textversion mit Sprache) | `user_consents` | Nachweis nach Art. 7 DSGVO; wird mit dem Konto gelöscht |
 | Widerrufe (Name, E-Mail, Vertragshinweis, Zeit, IP-Prüfwert höchstens 24 Stunden) | `withdrawal_requests` | Nachweis der Widerrufserklärung; Konto-ID wird beim Löschen entfernt |
 | Hash der Testphasen-Adresse | `trial_claims` | verhindert eine zweite Testphase; höchstens 3 Jahre |
+| Gemeldete Coach-Antworten (Grund, Antwort, Sprache, Zeit, Konto-ID) | `ai_answer_reports` | Prüfung unsicherer Antworten; nur Service-Rolle; höchstens 12 Monate, mit dem Konto gelöscht |
+
+Ein täglicher Löschlauf (`pg_cron`, `run_retention_cleanup()`, Migration 0024)
+setzt die Fristen oben durch.
 
 ## Bleibt nur auf dem Gerät
 

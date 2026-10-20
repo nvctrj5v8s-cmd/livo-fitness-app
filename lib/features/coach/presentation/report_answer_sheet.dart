@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/config/support_contact.dart';
+import '../../../core/data/ai_coach_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/l10n.dart';
 
@@ -19,42 +19,40 @@ extension on ReportReason {
   };
 }
 
-/// Text of the prepared e-mail. The answer is cut so the link stays usable.
-String buildReportBody(
-  AppLocalizations l10n, {
-  required ReportReason reason,
-  required String answer,
-}) {
-  const maxAnswer = 1200;
-  final text = answer.length > maxAnswer
-      ? '${answer.substring(0, maxAnswer)} …'
-      : answer;
-  return '${l10n.coachReportMailNotice}\n\n'
-      '${l10n.coachReportMailReason(reason.label(l10n))}\n\n'
-      '${l10n.coachReportMailAnswerLabel}\n$text\n';
-}
+/// Sends one report; replaceable in tests.
+typedef SubmitAnswerReport =
+    Future<AnswerReportResult> Function(ReportReason reason, String answer);
 
-/// "Report answer": a small sheet that prepares an e-mail to support. The
-/// mail app opens with the answer included; the person reviews and sends it.
+/// "Report answer": a small sheet that sends the report right inside the app
+/// (Google Play requires reporting without leaving the app). The server keeps
+/// the reason, the answer and the account for at most 12 months.
 Future<void> showReportAnswerSheet(
   BuildContext context, {
   required String answer,
-  Future<bool> Function(Uri uri)? opener,
+  SubmitAnswerReport? submit,
 }) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
     backgroundColor: AppColors.backgroundRaised,
-    builder: (_) => _ReportAnswerSheet(answer: answer, opener: opener),
+    builder: (_) => _ReportAnswerSheet(
+      answer: answer,
+      submit:
+          submit ??
+          (reason, answer) => AiCoachService().reportAnswer(
+            reason: reason.name,
+            answer: answer,
+          ),
+    ),
   );
 }
 
 class _ReportAnswerSheet extends StatefulWidget {
-  const _ReportAnswerSheet({required this.answer, this.opener});
+  const _ReportAnswerSheet({required this.answer, required this.submit});
 
   final String answer;
-  final Future<bool> Function(Uri uri)? opener;
+  final SubmitAnswerReport submit;
 
   @override
   State<_ReportAnswerSheet> createState() => _ReportAnswerSheetState();
@@ -63,28 +61,34 @@ class _ReportAnswerSheet extends StatefulWidget {
 class _ReportAnswerSheetState extends State<_ReportAnswerSheet> {
   ReportReason _reason = ReportReason.wrong;
   bool _busy = false;
+  String? _error;
 
   Future<void> _send() async {
     if (_busy) return;
-    setState(() => _busy = true);
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
-    final opened = await SupportContact.open(
-      subject: l10n.coachReportMailSubject,
-      body: buildReportBody(l10n, reason: _reason, answer: widget.answer),
-      opener: widget.opener,
-    );
+    final result = await widget.submit(_reason, widget.answer);
     if (!mounted) return;
-    if (opened) {
-      navigator.pop();
-    } else {
-      setState(() => _busy = false);
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(l10n.coachReportMailNotOpened(SupportContact.email)),
-        ),
-      );
+    switch (result) {
+      case AnswerReportResult.sent:
+        unawaited(HapticFeedback.lightImpact());
+        navigator.pop();
+        messenger.showSnackBar(SnackBar(content: Text(l10n.coachReportThanks)));
+      case AnswerReportResult.limit:
+        setState(() {
+          _busy = false;
+          _error = l10n.coachReportLimit;
+        });
+      case AnswerReportResult.failed:
+        setState(() {
+          _busy = false;
+          _error = l10n.coachReportFailed;
+        });
     }
   }
 
@@ -125,7 +129,7 @@ class _ReportAnswerSheetState extends State<_ReportAnswerSheet> {
             RadioGroup<ReportReason>(
               groupValue: _reason,
               onChanged: (value) {
-                if (value == null) return;
+                if (value == null || _busy) return;
                 HapticFeedback.selectionClick();
                 setState(() => _reason = value);
               },
@@ -142,12 +146,45 @@ class _ReportAnswerSheetState extends State<_ReportAnswerSheet> {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            if (_error case final error?) ...[
+              const SizedBox(height: 6),
+              Row(
+                key: const Key('report-error'),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.error_outline_rounded,
+                    size: 18,
+                    color: AppColors.error,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      error,
+                      style: const TextStyle(
+                        color: AppColors.error,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 12),
             FilledButton.icon(
               key: const Key('report-send'),
               onPressed: _busy ? null : () => unawaited(_send()),
-              icon: const Icon(Icons.mail_outline_rounded),
-              label: Text(l10n.coachReportPrepareEmail),
+              icon: _busy
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.2,
+                        color: AppColors.black,
+                      ),
+                    )
+                  : const Icon(Icons.outlined_flag_rounded),
+              label: Text(l10n.coachReportSend),
             ),
           ],
         ),

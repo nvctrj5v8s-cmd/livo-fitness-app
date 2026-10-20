@@ -93,6 +93,10 @@ Deno.serve(async (request) => {
   return json({ result: data })
 })
 
+// Version of the terms that applies to new purchases. Change it together
+// with the "Stand" line in web/legal/agb.html.
+const termsVersion = '2026-10'
+
 // Contract confirmation on a durable medium (§ 312f Abs. 2 BGB): plan, price,
 // renewal and cancellation, the customer's request to start immediately and
 // the withdrawal policy. Failures are logged only; the purchase stays valid.
@@ -132,20 +136,34 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
     const consentEn = Array.isArray(consents) && consents[0]?.granted
       ? `On ${englishDateTime(new Date(consents[0].created_at))}, you expressly requested that Lookin Premium begin immediately, before the withdrawal period ends, and acknowledged that withdrawal requires proportionate payment for the service already provided and that your right of withdrawal expires upon full performance of the contract.`
       : 'We have no declaration of consent to immediate service commencement.'
-    const result = await sendMail({
+    const content = {
       to,
       subject: english ? 'Your order: Lookin Premium' : 'Deine Bestellung: Lookin Premium',
       text: english
         ? `Thank you for your purchase!\n\nContract: ${planEn}\nService: AI photo recognition and Lookin Coach (up to 100 requests per day combined), plus all recipes, in addition to the free features.\nPrice: ${priceEn} (including any applicable VAT)\nPurchased: ${englishDateTime(new Date(Number(event.purchased_at_ms) || Date.now()))}\n` +
           `Provider: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
           `${renewalEn} You may cancel at any time effective at the end of the billing period in Google Play subscription settings or by emailing ${ownerEmail}.\n\n` +
-          `${consentEn}\n\nStatutory rights concerning defects in digital products apply. Terms: https://app.lookin-foodtracker.de/legal/en/agb.html\n\n${withdrawalPolicyTextEn}`
+          `${consentEn}\n\nStatutory rights concerning defects in digital products apply. Terms (version ${termsVersion}): https://app.lookin-foodtracker.de/legal/en/agb.html\n\n${withdrawalPolicyTextEn}`
         : `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 100 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
         `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
         `${renewal} Kündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play oder per E-Mail an ${ownerEmail}.\n\n` +
-        `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen: https://app.lookin-foodtracker.de/legal/agb.html\n\n${withdrawalPolicyText}`,
-    })
+        `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen (Fassung ${termsVersion}): https://app.lookin-foodtracker.de/legal/agb.html\n\n${withdrawalPolicyText}`,
+    }
+    let result = await sendMail(content)
+    if (result !== 'sent') {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      result = await sendMail(content)
+    }
     console.log(`purchase confirmation: ${result}`)
+    if (result !== 'sent') {
+      // The confirmation is required by law (§ 312f BGB): the owner sends it
+      // by hand.
+      await sendMail({
+        to: ownerEmail,
+        subject: 'Kaufbestätigung NICHT zugestellt – bitte manuell senden',
+        text: `Die Kaufbestätigung an ${to} konnte nicht zugestellt werden (Konto-ID ${userId}, Produkt ${event.product_id ?? '–'}, Kauf ${purchasedAt}). Bitte die Bestätigung mit Tarif, Preis, Laufzeit, AGB-Fassung und Widerrufsbelehrung manuell senden.`,
+      })
+    }
   } catch (_) {
     console.error('purchase confirmation failed')
   }

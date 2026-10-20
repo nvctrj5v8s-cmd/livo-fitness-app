@@ -490,27 +490,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coachReportAnswer => 'Antwort melden';
 
   @override
-  String get coachReportMailAnswerLabel => 'Gemeldete Antwort:';
+  String get coachReportFailed =>
+      'Die Meldung konnte gerade nicht gesendet werden. Bitte prüfe die Verbindung und versuche es noch einmal.';
 
   @override
-  String coachReportMailNotOpened(String address) {
-    return 'Die E-Mail-App konnte nicht geöffnet werden. Schreib uns bitte an $address.';
-  }
-
-  @override
-  String get coachReportMailNotice =>
-      'Bitte ergänze, was nicht gestimmt hat. Schreib keine Gesundheitsdaten hinein, die du nicht teilen möchtest.';
-
-  @override
-  String coachReportMailReason(String reason) {
-    return 'Grund: $reason';
-  }
-
-  @override
-  String get coachReportMailSubject => 'Lookin Coach: Antwort melden';
-
-  @override
-  String get coachReportPrepareEmail => 'E-Mail vorbereiten';
+  String get coachReportLimit =>
+      'Du hast heute schon viele Antworten gemeldet, danke! Bitte melde weitere morgen.';
 
   @override
   String get coachReportReasonInappropriate => 'Unpassend oder beleidigend';
@@ -526,11 +511,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coachReportReasonWrong => 'Falsch oder irreführend';
 
   @override
+  String get coachReportSend => 'Meldung senden';
+
+  @override
   String get coachReportSheetText =>
-      'Falsch, unpassend oder unsicher? Wir lesen jede Meldung. Deine E-Mail-App öffnet sich mit der Antwort, und du kannst alles vor dem Senden ändern.';
+      'Falsch, unpassend oder unsicher? Melde es hier direkt in der App. Wir prüfen jede Meldung und verbessern damit den Coach. Gespeichert werden der Grund, die gemeldete Antwort und dein Konto, höchstens 12 Monate.';
 
   @override
   String get coachReportSheetTitle => 'Antwort melden';
+
+  @override
+  String get coachReportThanks =>
+      'Danke! Deine Meldung ist angekommen. Wir prüfen sie.';
 
   @override
   String get coachSendMessage => 'Nachricht senden';

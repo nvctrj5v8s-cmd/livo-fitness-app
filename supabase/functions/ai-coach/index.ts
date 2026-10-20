@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
+import { ownerEmail, sendMail } from '../_shared/mail.ts'
 
 type AdminClient = ReturnType<typeof createClient>
 
@@ -191,6 +192,11 @@ Deno.serve(async (request) => {
     if (body.action === 'clear_history') {
       return await clearHistory(admin, user.id)
     }
+    // Reporting an answer works without Premium or consent: it never goes
+    // to the AI service.
+    if (body.action === 'report') {
+      return await reportAnswer(admin, user.id, body)
+    }
     // Crisis messages never go to the model, cost nothing and need neither
     // Premium nor consent: whoever writes one gets the help text.
     if (!body.action && typeof body.message === 'string') {
@@ -267,11 +273,11 @@ async function answerChat(
   // Checked before the quota so free accounts never consume AI requests.
   if (!hasPremium(entitlement)) return premiumRequired()
   const limit = dailyLimitFor(entitlement)
-  // Crisis messages never go to the model and never cost a request.
+  // Crisis messages never go to the model, never cost a request and are
+  // not stored (sensitive health data, data minimisation).
   if (isCrisisMessage(message)) {
     const answer = isEnglish(body) ? crisisAnswerEn : crisisAnswer
-    const saved = await saveExchange(admin, userId, message, answer)
-    return json({ answer, daily_limit: limit, model, saved })
+    return json({ answer, daily_limit: limit, model, saved: false })
   }
   const quota = await consumeQuota(
     admin,
@@ -1043,6 +1049,55 @@ function buildContext(
 }
 
 // 402 keeps older app versions from misreading it as an expired login.
+const reportReasons = ['wrong', 'unsafe', 'inappropriate', 'other']
+const maxReportsPerDay = 20
+
+// Stores a report of an AI answer made inside the app (Google Play requires
+// in-app reporting) and tells the owner by e-mail. Kept 12 months.
+async function reportAnswer(
+  admin: AdminClient,
+  userId: string,
+  body: Record<string, unknown>,
+): Promise<Response> {
+  const reason = typeof body.reason === 'string' ? body.reason : ''
+  const answer = typeof body.answer === 'string'
+    // deno-lint-ignore no-control-regex
+    ? body.answer.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 2000)
+    : ''
+  if (!reportReasons.includes(reason) || !answer) {
+    return json({ error: 'invalid report', code: 'invalid_report' }, 400)
+  }
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { count, error: countError } = await admin
+    .from('ai_answer_reports')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .gte('created_at', since)
+  if (countError) {
+    console.error('report count failed', countError.code)
+    return json({ error: 'unavailable', code: 'unavailable' }, 503)
+  }
+  if ((count ?? 0) >= maxReportsPerDay) {
+    return json({ error: 'too many reports', code: 'report_limit' }, 429)
+  }
+  const { data: row, error } = await admin
+    .from('ai_answer_reports')
+    .insert({ user_id: userId, reason, answer, locale: isEnglish(body) ? 'en' : 'de' })
+    .select('id')
+    .single()
+  if (error || !row) {
+    console.error('report insert failed', error?.code ?? 'unknown')
+    return json({ error: 'unavailable', code: 'unavailable' }, 503)
+  }
+  // The owner hears about it; the report is stored either way.
+  await sendMail({
+    to: ownerEmail,
+    subject: `Gemeldete Coach-Antwort (${reason})`,
+    text: `Eine Antwort des Lookin Coach wurde in der App gemeldet.\n\nGrund: ${reason}\nMeldung Nr.: ${row.id}\nKonto-ID: ${userId}\n\nGemeldete Antwort:\n${answer}\n\nDie Meldung liegt in der Tabelle ai_answer_reports (12 Monate).`,
+  })
+  return json({ reported: true, id: row.id })
+}
+
 // Latest decision in the append-only consent log: `true` only when the most
 // recent "ai_processing" row says granted. `null` when it could not be read
 // (then nothing is sent to the AI).
