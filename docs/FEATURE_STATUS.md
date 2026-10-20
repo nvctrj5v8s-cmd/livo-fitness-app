@@ -1,5 +1,29 @@
 # Funktionsstatus
 
+## Sicherheit der Freischaltung, Willkommens-Ansicht neu, 20. Oktober 2026
+
+- **Willkommens-Ansicht nach dem Kauf deutlich lebendiger:** Das Lookin-Zeichen
+  zeichnet sich mit Strahlen, Schockringen und funkelnden Sternen, drei Chips
+  (KI-Foto, Coach, Rezepte) fliegen in die Umlaufbahn, Konfetti aus beiden
+  Ecken; Titel Wort für Wort; **Mitgliedskarte** mit Name, Tarif und nächster
+  Verlängerung (kippt beim seitlichen Ziehen, glänzt beim Tippen); die Vorteile
+  sind zuerst gesperrt und **schließen sich nacheinander auf**, die Zahl der
+  täglichen Coach-Fragen zählt hoch; die Seite scrollt von selbst zu den Vorteilen.
+  Endlich, ohne Dauerbewegung; „Bewegung reduzieren“ zeigt den Endzustand sofort.
+- **Webhook gehärtet (am 20.10.2026 veröffentlicht):** Testkäufe (`SANDBOX`)
+  zählen nur noch, solange das Secret `ALLOW_SANDBOX_PURCHASES=true` gesetzt ist
+  (jetzt gesetzt, **vor dem Start entfernen**). Die Ereignis-Logik liegt in
+  `supabase/functions/_shared/revenuecat_events.ts` und ist mit
+  `tool/check_revenuecat_events.ts` getestet.
+- **Migration `0023` (angewendet am 20.10.2026):** Ein Store-Ereignis kann den
+  Entwickler-Premium-Schalter (`provider = developer`) nicht mehr überschreiben.
+  Geprüft mit einer zurückgerollten Probe; nur `service_role` darf die Funktion
+  ausführen.
+- **Käufe wiederherstellen:** Die App schaltet lokal nichts frei, der Server
+  entscheidet. In RevenueCat muss „Restore behavior“ auf „Keep with original App
+  User ID“ stehen, damit niemand ein Abo auf ein anderes Konto umzieht (siehe
+  `docs/BILLING_SETUP.md`).
+
 ## Paywall wie bei üblichen Abo-Apps, neue Willkommens-Ansicht, 18. Oktober 2026
 
 - **Ein Haupt-Knopf kauft den gewählten Tarif** (Recherche: Cal AI, Duolingo,
@@ -135,6 +159,9 @@
   RevenueCat-Webhook für `TRANSFER` und `BILLING_ISSUE` ergänzen.
 - Supabase-Tarif „Pro“ (tägliche Sicherungen) und Ausgabenlimit bei OpenAI
   setzen, bevor zahlende Nutzer kommen.
+- **Secret `ALLOW_SANDBOX_PURCHASES` entfernen** (sonst zählen Testkäufe in der
+  echten Datenbank) und in RevenueCat „Restore behavior“ auf „Keep with original
+  App User ID“ stellen.
 - Serverseitige Prüfung der Gesundheits-Einwilligung (die KI-Einwilligung wird
   bereits serverseitig geprüft); Halal-Filter auch für Produkte ohne Zutatenliste; Löschjobs (IP-Hash 24 h, Test-Hash
   3 Jahre, Widerrufe).

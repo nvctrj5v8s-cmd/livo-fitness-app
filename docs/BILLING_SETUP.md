@@ -182,3 +182,37 @@ abgebucht), dann prüfen:
   funktionierte mit Lizenztester und Testkarte.
 - Testabos erneuern sich alle 5 Minuten (Monat) bzw. schneller und enden nach
   wenigen Erneuerungen von selbst.
+
+## Sicherheit der Freischaltung und von „Käufe wiederherstellen“ (20. Oktober 2026)
+
+So ist sichergestellt, dass niemand Premium ohne Kauf bekommt oder ein fremdes Abo
+übernimmt:
+
+1. **Nur der Server schaltet frei.** `public.entitlements` darf die App nur
+   lesen. Geschrieben wird allein von der Edge Function `revenuecat-webhook`
+   (nach Prüfung des geheimen Headers, Vergleich in konstanter Zeit) über
+   `apply_revenuecat_event` (nur `service_role`). Die KI-Funktion prüft Premium
+   ebenfalls serverseitig. „Käufe wiederherstellen“ schaltet in der App nichts
+   lokal frei; erst die Bestätigung des Servers zählt.
+2. **RevenueCat, Einstellung „Restore behavior“ muss auf „Keep with original App
+   User ID“ stehen** (RevenueCat › Project settings). Dann bleibt ein Abo bei dem
+   Lookin-Konto, das es gekauft hat. Ein zweites Konto auf demselben Handy
+   oder mit demselben Google-Konto bekommt beim Wiederherstellen nichts und kann
+   das Abo nicht „stehlen“. Wer die App neu installiert oder das Handy wechselt,
+   meldet sich mit demselben Lookin-Konto an und stellt wieder her. Der Webhook
+   ignoriert `TRANSFER` absichtlich, weil es dann nie auftreten darf.
+3. **Testkäufe zählen nur zum Testen.** Käufe von Lizenztestern und aus dem
+   RevenueCat-Test-Store kommen als `SANDBOX`. Der Webhook übernimmt sie nur,
+   solange das Supabase-Secret `ALLOW_SANDBOX_PURCHASES` den Wert `true` hat.
+   **Vor dem echten Start auf Produktion entfernen:**
+   `supabase secrets unset ALLOW_SANDBOX_PURCHASES --project-ref kypxutvvpklkvekciuen`.
+   (Im geschlossenen Test auf Google Play sind Käufe der Tester Testkäufe;
+   dafür muss das Secret gesetzt bleiben, bis der Test vorbei ist.)
+4. **Das Entwicklerkonto ist geschützt** (Migration `0023`): Ein Store-Ereignis
+   ändert einen Eintrag mit `provider = developer` nie.
+5. **Reihenfolge und Doppelte:** Ältere oder doppelte Ereignisse verändern den
+   Zustand nicht rückwärts (`provider_event_at`). Eine Erstattung
+   (`CANCELLATION` mit `CUSTOMER_SUPPORT`) beendet Premium sofort, eine normale
+   Kündigung erst zum Laufzeitende (`EXPIRATION`).
+6. **Prüfung:** `deno run tool/check_revenuecat_events.ts` (19 Fälle, ohne
+   Netzwerk).

@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
 import { englishDateTime, germanDateTime, ownerEmail, sendMail, withdrawalPolicyText, withdrawalPolicyTextEn } from '../_shared/mail.ts'
+import { decide, type StoreEvent } from '../_shared/revenuecat_events.ts'
 
 // Receives RevenueCat webhooks and records the resulting premium state in
 // public.entitlements. Only RevenueCat may call it: the request must carry the
@@ -9,14 +10,15 @@ import { englishDateTime, germanDateTime, ownerEmail, sendMail, withdrawalPolicy
 // Secret (Supabase dashboard > Edge Functions > Secrets), never in the repo:
 //   REVENUECAT_WEBHOOK_SECRET  any long random string, same value in RevenueCat
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase.
+//
+// Test purchases (environment SANDBOX) only count while this secret is
+// "true"; remove it before Lookin goes live:
+//   ALLOW_SANDBOX_PURCHASES  true while testing with licence testers
 
 const headers = {
   'Cache-Control': 'no-store',
   'Content-Type': 'application/json; charset=utf-8',
 }
-const uuidPattern =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers })
 }
@@ -34,94 +36,6 @@ async function secretMatches(provided: string, expected: string): Promise<boolea
   let difference = 0
   for (let i = 0; i < left.length; i++) difference |= left[i] ^ right[i]
   return difference === 0
-}
-
-type StoreEvent = {
-  product_id?: string
-  price_in_purchased_currency?: number | null
-  currency?: string | null
-  purchased_at_ms?: number | null
-  id?: string
-  type?: string
-  app_user_id?: string
-  aliases?: string[]
-  period_type?: string
-  cancel_reason?: string
-  expiration_at_ms?: number | null
-  event_timestamp_ms?: number
-  environment?: string
-}
-
-type Decision =
-  | {
-    action: 'apply'
-    userId: string
-    status: 'active' | 'trialing' | 'expired'
-    expiresAt: Date
-    eventAt: Date
-  }
-  | { action: 'ignore'; reason: string }
-
-// Renewal-like events grant access until the store's expiry date. A
-// cancellation only switches auto-renew off, so access continues until the
-// EXPIRATION event; only a refund (support cancellation) ends it right away.
-function decide(event: StoreEvent): Decision {
-  const type = event.type ?? ''
-  if (type === 'TEST') return { action: 'ignore', reason: 'test_event' }
-
-  const candidates = [event.app_user_id, ...(event.aliases ?? [])]
-  const userId = candidates.find((id) => typeof id === 'string' && uuidPattern.test(id))
-  if (!userId) return { action: 'ignore', reason: 'no_account_id' }
-
-  const eventMs = Number(event.event_timestamp_ms)
-  if (!Number.isFinite(eventMs) || eventMs <= 0) {
-    return { action: 'ignore', reason: 'no_event_time' }
-  }
-  const eventAt = new Date(eventMs)
-  const expiryMs = Number(event.expiration_at_ms)
-  const hasExpiry = Number.isFinite(expiryMs) && expiryMs > 0
-  const periodStatus = event.period_type === 'TRIAL' ? 'trialing' : 'active'
-
-  switch (type) {
-    case 'INITIAL_PURCHASE':
-    case 'RENEWAL':
-    case 'PRODUCT_CHANGE':
-    case 'UNCANCELLATION':
-    case 'SUBSCRIPTION_EXTENDED':
-    case 'NON_RENEWING_PURCHASE':
-      if (!hasExpiry) return { action: 'ignore', reason: 'no_expiry' }
-      return {
-        action: 'apply',
-        userId,
-        status: periodStatus,
-        expiresAt: new Date(expiryMs),
-        eventAt,
-      }
-    case 'CANCELLATION':
-      if (event.cancel_reason === 'CUSTOMER_SUPPORT') {
-        return { action: 'apply', userId, status: 'expired', expiresAt: eventAt, eventAt }
-      }
-      if (!hasExpiry) return { action: 'ignore', reason: 'no_expiry' }
-      return {
-        action: 'apply',
-        userId,
-        status: periodStatus,
-        expiresAt: new Date(expiryMs),
-        eventAt,
-      }
-    case 'EXPIRATION':
-      return {
-        action: 'apply',
-        userId,
-        status: 'expired',
-        expiresAt: hasExpiry ? new Date(expiryMs) : eventAt,
-        eventAt,
-      }
-    default:
-      // BILLING_ISSUE, SUBSCRIPTION_PAUSED, TRANSFER and others change no
-      // access by themselves; the following RENEWAL or EXPIRATION does.
-      return { action: 'ignore', reason: `unhandled_${type.toLowerCase() || 'type'}` }
-  }
 }
 
 Deno.serve(async (request) => {
@@ -151,7 +65,9 @@ Deno.serve(async (request) => {
     return json({ code: 'bad_request' }, 400)
   }
 
-  const decision = decide(event)
+  const decision = decide(event, {
+    allowSandbox: Deno.env.get('ALLOW_SANDBOX_PURCHASES')?.trim() === 'true',
+  })
   if (decision.action === 'ignore') {
     console.log(`revenuecat-webhook ignored: ${decision.reason}`)
     return json({ result: 'ignored', reason: decision.reason })
