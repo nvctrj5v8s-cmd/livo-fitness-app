@@ -290,21 +290,28 @@ class _PaywallPageState extends State<PaywallPage>
     final l10n = context.l10n;
     final expiresAt = _subscription.entitlement.expiresAt;
     final plan = _celebratedPlan;
+    final name = context
+        .dependOnInheritedWidgetOfExactType<AppScope>()
+        ?.notifier
+        ?.personalization
+        ?.displayName;
+    final date = expiresAt == null ? '–' : AppFormat.date(expiresAt);
     if (kind == PremiumWelcomeKind.purchase) {
       return PremiumWelcomeView(
         key: const ValueKey('paywall-success'),
         kind: kind,
         statusLine: l10n.subscriptionWelcomeThanks,
-        detailLine: expiresAt == null
-            ? null
-            : l10n.subscriptionNextRenewalValue(
-                formatPremiumDateTime(expiresAt),
-              ),
-        planChip: plan == null
-            ? null
-            : '${PremiumCopy.planTitle(plan)} · '
-                  '${PremiumCopy.headlinePrice(plan)} '
-                  '${PremiumCopy.headlineUnit(plan)}',
+        card: WelcomeCardData(
+          memberName: name,
+          planLabel: plan == null
+              ? SubscriptionPlans.productName
+              : '${PremiumCopy.planTitle(plan)} · '
+                    '${PremiumCopy.headlinePrice(plan)} '
+                    '${PremiumCopy.headlineUnit(plan)}',
+          footerLabel: l10n.subscriptionWelcomeNextRenewal,
+          footerValue: date,
+        ),
+        aiLimit: SubscriptionPlans.aiDailyLimit,
         onContinue: widget.onActivated ?? widget.onClose,
       );
     }
@@ -321,6 +328,15 @@ class _PaywallPageState extends State<PaywallPage>
       statusLine: l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
         (until).toString(),
       ),
+      card: WelcomeCardData(
+        memberName: name,
+        planLabel: l10n.subscriptionWelcomeTrialPlan(
+          (SubscriptionPlans.trialDays).toString(),
+        ),
+        footerLabel: l10n.subscriptionWelcomeTrialEnds,
+        footerValue: date,
+      ),
+      aiLimit: SubscriptionPlans.aiDailyLimitTrial,
       onContinue: widget.onActivated ?? widget.onClose,
     );
   }

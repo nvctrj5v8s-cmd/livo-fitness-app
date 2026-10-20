@@ -321,20 +321,12 @@
       }
     }
   },
-  "subscriptionNextRenewalValue": "Nächste Verlängerung: {arg0}",
-  "@subscriptionNextRenewalValue": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
   "subscriptionWelcomeTitle": "Willkommen bei Lookin Premium",
   "subscriptionWelcomeThanks": "Danke für deine Unterstützung! Dein Abo ist aktiv.",
   "subscriptionWelcomeRenewsNote": "Verlängert sich automatisch · jederzeit im Store kündbar",
-  "subscriptionWelcomePhotoText": "Foto machen, Werte schätzen lassen",
-  "subscriptionWelcomeCoachText": "Frag alles rund um dein Essen",
-  "subscriptionWelcomeRecipesText": "Jedes Rezept ist jetzt freigeschaltet",
+  "subscriptionWelcomePhotoText": "Mahlzeit fotografieren, Nährwerte in Sekunden schätzen lassen",
+  "subscriptionWelcomeCoachText": "Persönliche Antworten – bis zu {arg0} Fragen pro Tag",
+  "subscriptionWelcomeRecipesText": "Jedes Rezept mit Profi-Tipps zu jedem Schritt",
   "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",
   "subscriptionPurchaseBusy": "Kauf wird vorbereitet …",
   "subscriptionTermsShort": "Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums",
@@ -353,5 +345,25 @@
       }
     }
   },
-  "subscriptionTrialNoStrings": "Kein Abo · keine Zahlungsdaten · endet automatisch"
+  "subscriptionTrialNoStrings": "Kein Abo · keine Zahlungsdaten · endet automatisch",
+  "subscriptionWelcomeMember": "Premium-Mitglied",
+  "subscriptionWelcomeMemberLabel": "MITGLIED",
+  "subscriptionWelcomeNextRenewal": "Nächste Verlängerung",
+  "subscriptionWelcomeTrialEnds": "Endet automatisch",
+  "subscriptionWelcomeTrialPlan": "Premium-Test · {arg0} Tage",
+  "@subscriptionWelcomeTrialPlan": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWelcomeUnlockedHeading": "Jetzt für dich freigeschaltet",
+  "@subscriptionWelcomeCoachText": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  }
 }

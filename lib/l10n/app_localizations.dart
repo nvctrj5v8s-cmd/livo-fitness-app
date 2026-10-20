@@ -9425,12 +9425,6 @@ abstract class AppLocalizations {
   /// **'Neues'**
   String get subscriptionNew;
 
-  /// No description provided for @subscriptionNextRenewalValue.
-  ///
-  /// In de, this message translates to:
-  /// **'Nächste Verlängerung: {arg0}'**
-  String subscriptionNextRenewalValue(String arg0);
-
   /// No description provided for @subscriptionNoActiveSubscriptionWasFoundForThis.
   ///
   /// In de, this message translates to:
@@ -9802,19 +9796,37 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionWelcomeCoachText.
   ///
   /// In de, this message translates to:
-  /// **'Frag alles rund um dein Essen'**
-  String get subscriptionWelcomeCoachText;
+  /// **'Persönliche Antworten – bis zu {arg0} Fragen pro Tag'**
+  String subscriptionWelcomeCoachText(String arg0);
+
+  /// No description provided for @subscriptionWelcomeMember.
+  ///
+  /// In de, this message translates to:
+  /// **'Premium-Mitglied'**
+  String get subscriptionWelcomeMember;
+
+  /// No description provided for @subscriptionWelcomeMemberLabel.
+  ///
+  /// In de, this message translates to:
+  /// **'MITGLIED'**
+  String get subscriptionWelcomeMemberLabel;
+
+  /// No description provided for @subscriptionWelcomeNextRenewal.
+  ///
+  /// In de, this message translates to:
+  /// **'Nächste Verlängerung'**
+  String get subscriptionWelcomeNextRenewal;
 
   /// No description provided for @subscriptionWelcomePhotoText.
   ///
   /// In de, this message translates to:
-  /// **'Foto machen, Werte schätzen lassen'**
+  /// **'Mahlzeit fotografieren, Nährwerte in Sekunden schätzen lassen'**
   String get subscriptionWelcomePhotoText;
 
   /// No description provided for @subscriptionWelcomeRecipesText.
   ///
   /// In de, this message translates to:
-  /// **'Jedes Rezept ist jetzt freigeschaltet'**
+  /// **'Jedes Rezept mit Profi-Tipps zu jedem Schritt'**
   String get subscriptionWelcomeRecipesText;
 
   /// No description provided for @subscriptionWelcomeRenewsNote.
@@ -9834,6 +9846,24 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Willkommen bei Lookin Premium'**
   String get subscriptionWelcomeTitle;
+
+  /// No description provided for @subscriptionWelcomeTrialEnds.
+  ///
+  /// In de, this message translates to:
+  /// **'Endet automatisch'**
+  String get subscriptionWelcomeTrialEnds;
+
+  /// No description provided for @subscriptionWelcomeTrialPlan.
+  ///
+  /// In de, this message translates to:
+  /// **'Premium-Test · {arg0} Tage'**
+  String subscriptionWelcomeTrialPlan(String arg0);
+
+  /// No description provided for @subscriptionWelcomeUnlockedHeading.
+  ///
+  /// In de, this message translates to:
+  /// **'Jetzt für dich freigeschaltet'**
+  String get subscriptionWelcomeUnlockedHeading;
 
   /// No description provided for @subscriptionWithPremiumAllRecipes.
   ///

@@ -46,6 +46,11 @@ abstract final class SubscriptionPlans {
   /// `start_premium_trial()` (`0011_premium_trial_seven_days.sql`).
   static const trialDays = 7;
 
+  /// Daily AI requests (chat and photos together). Mirrors the limits in the
+  /// `ai-coach` Edge Function, which is what really enforces them.
+  static const aiDailyLimit = 100;
+  static const aiDailyLimitTrial = 50;
+
   /// Share of the recipe catalog marked `access_level = 'free'`. The catalog
   /// grows, so the UI names the share, never a fixed number of recipes.
   static const freeRecipeSharePercent = 30;

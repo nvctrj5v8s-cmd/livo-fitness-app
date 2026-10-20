@@ -5413,11 +5413,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionNew => 'New';
 
   @override
-  String subscriptionNextRenewalValue(String arg0) {
-    return 'Next renewal: $arg0';
-  }
-
-  @override
   String get subscriptionNoActiveSubscriptionWasFoundForThis =>
       'No active subscription was found for this store account.';
 
@@ -5663,14 +5658,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get subscriptionWelcomeCoachText => 'Ask anything about your food';
+  String subscriptionWelcomeCoachText(String arg0) {
+    return 'Personal answers – up to $arg0 questions a day';
+  }
+
+  @override
+  String get subscriptionWelcomeMember => 'Premium member';
+
+  @override
+  String get subscriptionWelcomeMemberLabel => 'MEMBER';
+
+  @override
+  String get subscriptionWelcomeNextRenewal => 'Next renewal';
 
   @override
   String get subscriptionWelcomePhotoText =>
-      'Snap a photo, get estimated values';
+      'Photograph a meal and get estimated nutrition in seconds';
 
   @override
-  String get subscriptionWelcomeRecipesText => 'Every recipe is now unlocked';
+  String get subscriptionWelcomeRecipesText =>
+      'Every recipe with pro tips for every step';
 
   @override
   String get subscriptionWelcomeRenewsNote =>
@@ -5682,6 +5689,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionWelcomeTitle => 'Welcome to Lookin Premium';
+
+  @override
+  String get subscriptionWelcomeTrialEnds => 'Ends automatically';
+
+  @override
+  String subscriptionWelcomeTrialPlan(String arg0) {
+    return 'Premium trial · $arg0 days';
+  }
+
+  @override
+  String get subscriptionWelcomeUnlockedHeading => 'Unlocked for you';
 
   @override
   String get subscriptionWithPremiumAllRecipes => 'With Premium: all recipes';

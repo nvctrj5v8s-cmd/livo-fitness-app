@@ -2683,14 +2683,6 @@
   "subscriptionMonthly": "Monatlich",
   "subscriptionMoreRecipesWithPremium": "Mehr Rezepte mit Premium",
   "subscriptionNew": "Neues",
-  "subscriptionNextRenewalValue": "Nächste Verlängerung: {arg0}",
-  "@subscriptionNextRenewalValue": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
   "subscriptionNoActiveSubscriptionWasFoundForThis": "Für dieses Store-Konto wurde kein aktives Abo gefunden.",
   "subscriptionNoTrialStartsInThePreviewWithout": "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.",
   "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
@@ -2880,12 +2872,32 @@
       }
     }
   },
-  "subscriptionWelcomeCoachText": "Frag alles rund um dein Essen",
-  "subscriptionWelcomePhotoText": "Foto machen, Werte schätzen lassen",
-  "subscriptionWelcomeRecipesText": "Jedes Rezept ist jetzt freigeschaltet",
+  "subscriptionWelcomeCoachText": "Persönliche Antworten – bis zu {arg0} Fragen pro Tag",
+  "@subscriptionWelcomeCoachText": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWelcomeMember": "Premium-Mitglied",
+  "subscriptionWelcomeMemberLabel": "MITGLIED",
+  "subscriptionWelcomeNextRenewal": "Nächste Verlängerung",
+  "subscriptionWelcomePhotoText": "Mahlzeit fotografieren, Nährwerte in Sekunden schätzen lassen",
+  "subscriptionWelcomeRecipesText": "Jedes Rezept mit Profi-Tipps zu jedem Schritt",
   "subscriptionWelcomeRenewsNote": "Verlängert sich automatisch · jederzeit im Store kündbar",
   "subscriptionWelcomeThanks": "Danke für deine Unterstützung! Dein Abo ist aktiv.",
   "subscriptionWelcomeTitle": "Willkommen bei Lookin Premium",
+  "subscriptionWelcomeTrialEnds": "Endet automatisch",
+  "subscriptionWelcomeTrialPlan": "Premium-Test · {arg0} Tage",
+  "@subscriptionWelcomeTrialPlan": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionWelcomeUnlockedHeading": "Jetzt für dich freigeschaltet",
   "subscriptionWithPremiumAllRecipes": "Mit Premium: alle Rezepte",
   "subscriptionWithdrawFromContract": "Vertrag widerrufen",
   "subscriptionWithoutASubscriptionValueValueOfRecipes": "Ohne Abo: {arg0}{arg1}% der Rezepte",

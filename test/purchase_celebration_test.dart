@@ -106,7 +106,8 @@ Future<void> _buySelected(WidgetTester tester) async {
 void main() {
   tearDown(() => L10n.use(L10n.german));
 
-  testWidgets('Kauf: Erfolgsansicht statt kleiner Meldung', (tester) async {
+  testWidgets('Kauf: Willkommens-Ansicht mit Karte und freigeschalteten '
+      'Vorteilen', (tester) async {
     var closed = 0;
     final controller = _controller();
     addTearDown(controller.dispose);
@@ -116,24 +117,54 @@ void main() {
 
     expect(controller.hasPremium, isTrue);
     expect(find.byKey(const ValueKey('paywall-success')), findsOneWidget);
-    expect(find.text('Willkommen bei Lookin Premium'), findsOneWidget);
-    final plan = tester.widget<Text>(
-      find.byKey(const Key('premium-welcome-plan')),
-    );
-    // The yearly plan is preselected.
-    expect(plan.data, contains('Jährlich'));
-    expect(plan.data, contains('49,99'));
+    // The title appears word by word.
+    for (final word in ['Willkommen', 'bei', 'Lookin', 'Premium']) {
+      expect(find.text(word), findsWidgets);
+    }
     final subtitle = tester.widget<Text>(
       find.byKey(const Key('paywall-success-subtitle')),
     );
     expect(subtitle.data, contains('Danke für deine Unterstützung'));
-    expect(subtitle.data, contains('Nächste Verlängerung'));
+
+    // Membership card: plan (yearly is preselected) and next renewal.
+    final plan = tester.widget<Text>(
+      find.byKey(const Key('premium-welcome-plan')),
+    );
+    expect(plan.data, contains('Jährlich'));
+    expect(plan.data, contains('49,99'));
+    final label = tester.widget<Text>(
+      find.byKey(const Key('premium-welcome-footer-label')),
+    );
+    expect(label.data, 'Nächste Verlängerung');
+    final value = tester.widget<Text>(
+      find.byKey(const Key('premium-welcome-footer-value')),
+    );
+    expect(value.data, matches(RegExp(r'\d{2}\.\d{2}\.\d{4}')));
+    expect(
+      tester.widget<Text>(find.byKey(const Key('premium-welcome-member'))).data,
+      'Premium-Mitglied',
+    );
+
+    // All three benefits are unlocked at the end; the coach count reached
+    // its limit.
+    expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(3));
+    expect(find.byIcon(Icons.lock_rounded), findsNothing);
+    expect(find.textContaining('bis zu 100 Fragen pro Tag'), findsOneWidget);
+
     // The page stays open until the person continues.
     expect(closed, 0);
     expect(find.byType(SnackBar), findsNothing);
 
-    // Tapping the mark throws confetti again; nothing else changes.
+    // Tapping the mark throws confetti again; dragging the card tilts it and
+    // it comes back; neither changes anything else.
     await tester.tap(find.byKey(const Key('premium-welcome-mark')));
+    await tester.pumpAndSettle();
+    await tester.drag(
+      find.byKey(const Key('premium-welcome-card')),
+      const Offset(120, 0),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('premium-welcome-card')));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
@@ -161,12 +192,18 @@ void main() {
 
     await _buySelected(tester);
 
-    expect(find.text('Welcome to Lookin Premium'), findsOneWidget);
+    expect(find.text('Welcome'), findsWidgets);
     final subtitle = tester.widget<Text>(
       find.byKey(const Key('paywall-success-subtitle')),
     );
     expect(subtitle.data, contains('Thank you for your support'));
-    expect(subtitle.data, contains('Next renewal'));
+    expect(
+      tester
+          .widget<Text>(find.byKey(const Key('premium-welcome-footer-label')))
+          .data,
+      'Next renewal',
+    );
+    expect(find.textContaining('up to 100 questions a day'), findsOneWidget);
     final button = find.byKey(const Key('paywall-success-continue'));
     await tester.ensureVisible(button);
     await tester.pumpAndSettle();
@@ -174,7 +211,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Bewegung reduzieren: alles sofort sichtbar, ohne Animation', (
+  testWidgets('Bewegung reduzieren: alles sofort sichtbar, ohne Konfetti', (
     tester,
   ) async {
     final controller = _controller();
@@ -185,13 +222,11 @@ void main() {
 
     final title = tester.widget<Opacity>(
       find
-          .ancestor(
-            of: find.text('Willkommen bei Lookin Premium'),
-            matching: find.byType(Opacity),
-          )
+          .ancestor(of: find.text('Willkommen'), matching: find.byType(Opacity))
           .first,
     );
     expect(title.opacity, 1);
+    expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(3));
     expect(find.byKey(const Key('paywall-success-continue')), findsOneWidget);
     expect(tester.hasRunningAnimations, isFalse);
   });
@@ -204,7 +239,7 @@ void main() {
     await _pump(tester, controller, onClose: () {});
 
     await _buySelected(tester);
-    await tester.pump(const Duration(seconds: 6));
+    await tester.pump(const Duration(seconds: 8));
 
     expect(tester.hasRunningAnimations, isFalse);
   });
