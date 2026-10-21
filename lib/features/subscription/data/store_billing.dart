@@ -29,7 +29,19 @@ enum StorePurchaseStatus {
   unavailable,
 }
 
-/// Replaceable boundary to the app stores (Google Play now, App Store later).
+/// Outcome of asking the store for a refund from inside the app.
+enum StoreRefundResult {
+  /// The store received the request and decides about it.
+  submitted,
+
+  /// The person closed the store's refund sheet.
+  cancelled,
+
+  /// Not possible here (Android, web, iOS before 15 or a store error).
+  unavailable,
+}
+
+/// Replaceable boundary to the app stores (Google Play and the App Store).
 /// Widgets and controllers never talk to RevenueCat directly.
 abstract interface class StoreBilling {
   /// Whether purchases can be started on this device at all.
@@ -46,6 +58,11 @@ abstract interface class StoreBilling {
   /// store offers none or the account is not eligible (used it before). The
   /// store asks for a payment method before the trial starts.
   Future<int> freeTrialDays(PremiumPlanId plan);
+
+  /// Opens the store's own refund request for the subscription. Only Apple
+  /// can refund App Store payments, so this works on iPhones (iOS 15+);
+  /// Google Play payments are refunded by us in the Play Console.
+  Future<StoreRefundResult> requestRefund();
 
   /// Where the user manages or cancels the subscription, if known.
   Uri? managementUri();
@@ -71,6 +88,10 @@ final class UnavailableStoreBilling implements StoreBilling {
 
   @override
   Future<int> freeTrialDays(PremiumPlanId plan) async => 0;
+
+  @override
+  Future<StoreRefundResult> requestRefund() async =>
+      StoreRefundResult.unavailable;
 
   @override
   Uri? managementUri() => null;
@@ -148,23 +169,59 @@ final class RevenueCatStoreBilling implements StoreBilling {
     return null;
   }
 
+  static int _days(PeriodUnit unit, int value) => switch (unit) {
+    PeriodUnit.day => value,
+    PeriodUnit.week => value * 7,
+    PeriodUnit.month => value * 30,
+    PeriodUnit.year => value * 365,
+    PeriodUnit.unknown => 0,
+  };
+
   @override
   Future<int> freeTrialDays(PremiumPlanId plan) async {
     if (!await _accountReady()) return 0;
     try {
-      final package = await _package(plan);
-      final period =
-          package?.storeProduct.defaultOption?.freePhase?.billingPeriod;
-      if (period == null) return 0;
-      return switch (period.unit) {
-        PeriodUnit.day => period.value,
-        PeriodUnit.week => period.value * 7,
-        PeriodUnit.month => period.value * 30,
-        PeriodUnit.year => period.value * 365,
-        PeriodUnit.unknown => 0,
-      };
+      final product = (await _package(plan))?.storeProduct;
+      if (product == null) return 0;
+      // Google Play: the default option already is the best offer this
+      // account may use, including its free phase.
+      final freePhase = product.defaultOption?.freePhase?.billingPeriod;
+      if (freePhase != null) return _days(freePhase.unit, freePhase.value);
+      if (defaultTargetPlatform != TargetPlatform.iOS) return 0;
+      // App Store: the introductory offer is listed for everybody; only an
+      // account that never had one in this subscription group gets it.
+      final intro = product.introductoryPrice;
+      if (intro == null || intro.price != 0) return 0;
+      final eligibility =
+          await Purchases.checkTrialOrIntroductoryPriceEligibility([
+            product.identifier,
+          ]);
+      if (eligibility[product.identifier]?.status !=
+          IntroEligibilityStatus.introEligibilityStatusEligible) {
+        return 0;
+      }
+      final cycles = intro.cycles < 1 ? 1 : intro.cycles;
+      return _days(intro.periodUnit, intro.periodNumberOfUnits) * cycles;
     } catch (_) {
       return 0;
+    }
+  }
+
+  @override
+  Future<StoreRefundResult> requestRefund() async {
+    if (defaultTargetPlatform != TargetPlatform.iOS) {
+      return StoreRefundResult.unavailable;
+    }
+    if (!await _accountReady()) return StoreRefundResult.unavailable;
+    try {
+      final status = await Purchases.beginRefundRequestForActiveEntitlement();
+      return switch (status) {
+        RefundRequestStatus.success => StoreRefundResult.submitted,
+        RefundRequestStatus.userCancelled => StoreRefundResult.cancelled,
+        RefundRequestStatus.error => StoreRefundResult.unavailable,
+      };
+    } catch (_) {
+      return StoreRefundResult.unavailable;
     }
   }
 

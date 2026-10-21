@@ -61,6 +61,10 @@ class _FakeBilling implements StoreBilling {
   Future<int> freeTrialDays(PremiumPlanId plan) async => trialDays;
 
   @override
+  Future<StoreRefundResult> requestRefund() async =>
+      StoreRefundResult.unavailable;
+
+  @override
   Uri? managementUri() => Uri.https('play.google.com', '/store/account');
 }
 

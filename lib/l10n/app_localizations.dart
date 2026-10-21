@@ -9269,6 +9269,42 @@ abstract class AppLocalizations {
   /// **'Alle Rezepte gibt es mit Premium'**
   String get subscriptionAllRecipesAreAvailableWithPremium;
 
+  /// No description provided for @subscriptionAppleAccount.
+  ///
+  /// In de, this message translates to:
+  /// **'Apple Account'**
+  String get subscriptionAppleAccount;
+
+  /// No description provided for @subscriptionAppleRefundButton.
+  ///
+  /// In de, this message translates to:
+  /// **'Rückzahlung bei Apple anfordern'**
+  String get subscriptionAppleRefundButton;
+
+  /// No description provided for @subscriptionAppleRefundFallback.
+  ///
+  /// In de, this message translates to:
+  /// **'Falls sich nichts geöffnet hat: Fordere die Rückzahlung unter reportaproblem.apple.com an.'**
+  String get subscriptionAppleRefundFallback;
+
+  /// No description provided for @subscriptionAppleRefundSubmitted.
+  ///
+  /// In de, this message translates to:
+  /// **'Apple hat deine Anfrage erhalten und informiert dich über die Entscheidung.'**
+  String get subscriptionAppleRefundSubmitted;
+
+  /// No description provided for @subscriptionAppleRefundText.
+  ///
+  /// In de, this message translates to:
+  /// **'Dein Widerruf ist bei uns eingegangen. Zahlungen im App Store kann aber nur Apple erstatten. Fordere die Rückzahlung deshalb bei Apple an.'**
+  String get subscriptionAppleRefundText;
+
+  /// No description provided for @subscriptionAppleRefundTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Gekauft im App Store?'**
+  String get subscriptionAppleRefundTitle;
+
   /// No description provided for @subscriptionBilledEveryMonth.
   ///
   /// In de, this message translates to:
@@ -9344,7 +9380,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionForExampleTheOrderNumberFromThe.
   ///
   /// In de, this message translates to:
-  /// **'Zum Beispiel die Bestellnummer aus der Google-Play-Mail'**
+  /// **'Zum Beispiel die Bestellnummer aus der Kaufbestätigung von Google Play oder Apple'**
   String get subscriptionForExampleTheOrderNumberFromThe;
 
   /// No description provided for @subscriptionFree.
@@ -9362,14 +9398,22 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionFreeTrialUntilValueItEndsAutomatically.
   ///
   /// In de, this message translates to:
-  /// **'Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.'**
-  String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0);
+  /// **'Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von {arg1} kündigst.'**
+  String subscriptionFreeTrialUntilValueItEndsAutomatically(
+    String arg0,
+    String arg1,
+  );
 
   /// No description provided for @subscriptionFreeTrialValueDaysStoreOnly.
   ///
   /// In de, this message translates to:
-  /// **'Kostenlose Testphase: {arg0} Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}'**
-  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1);
+  /// **'Kostenlose Testphase: {arg0} Tage, einmal pro {arg2} und nur mit hinterlegtem Zahlungsmittel. Wenn du nicht vor Ende der Testphase in den Abo-Einstellungen von {arg3} kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}'**
+  String subscriptionFreeTrialValueDaysStoreOnly(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  );
 
   /// No description provided for @subscriptionGenerousAiAllowance.
   ///
@@ -9388,6 +9432,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Schön, dass du da bist'**
   String get subscriptionGladYouAreHere;
+
+  /// No description provided for @subscriptionGoogleAccount.
+  ///
+  /// In de, this message translates to:
+  /// **'Google-Konto'**
+  String get subscriptionGoogleAccount;
 
   /// No description provided for @subscriptionHereYouCanWithdrawFromYourLookin.
   ///
@@ -9494,7 +9544,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionPleaseTakeAScreenshotOfThisAcknowledgement.
   ///
   /// In de, this message translates to:
-  /// **'Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.'**
+  /// **'Bitte mach einen Screenshot dieser Bestätigung. Die E-Mail-Bestätigung konnte gerade nicht gesendet werden; wir schicken sie dir nach.'**
   String get subscriptionPleaseTakeAScreenshotOfThisAcknowledgement;
 
   /// No description provided for @subscriptionPopularSavings.
@@ -9562,6 +9612,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Vorgangsnummer: {arg0}'**
   String subscriptionReferenceNumberValue(String arg0);
+
+  /// No description provided for @subscriptionRefundThroughGooglePlay.
+  ///
+  /// In de, this message translates to:
+  /// **'Die Rückzahlung erfolgt über Google Play auf das dort verwendete Zahlungsmittel.'**
+  String get subscriptionRefundThroughGooglePlay;
 
   /// No description provided for @subscriptionRestorePurchases.
   ///
@@ -9632,7 +9688,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionSubscriptionPricesValuePaymentAndBillingAre.
   ///
   /// In de, this message translates to:
-  /// **'Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.'**
+  /// **'Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar (AGB, Ziffer 5). Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.'**
   String subscriptionSubscriptionPricesValuePaymentAndBillingAre(
     String arg0,
     String arg1,
@@ -9669,7 +9725,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionTermsShortTrial.
   ///
   /// In de, this message translates to:
-  /// **'Die Testphase braucht ein Zahlungsmittel in {arg0} · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet'**
+  /// **'Testphase nur mit hinterlegtem Zahlungsmittel · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet'**
   String subscriptionTermsShortTrial(String arg0);
 
   /// No description provided for @subscriptionTheAppStore.
@@ -9677,6 +9733,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'dem App Store'**
   String get subscriptionTheAppStore;
+
+  /// No description provided for @subscriptionTheAppStoreVia.
+  ///
+  /// In de, this message translates to:
+  /// **'den App Store'**
+  String get subscriptionTheAppStoreVia;
 
   /// No description provided for @subscriptionTheLookinCoachIsPartOfPremium.
   ///
@@ -9739,8 +9801,8 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionValueItEndsAutomaticallyAtNoCost.
   ///
   /// In de, this message translates to:
-  /// **'{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.'**
-  String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0);
+  /// **'{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in den Abo-Einstellungen von {arg1} kündigen.'**
+  String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0, String arg1);
 
   /// No description provided for @subscriptionValueNothingWasPurchasedOrChargedTry.
   ///
@@ -9763,7 +9825,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionWeHaveSentAnAcknowledgementToValue.
   ///
   /// In de, this message translates to:
-  /// **'Wir haben dir eine Eingangsbestätigung an {arg0} geschickt. Die Rückzahlung erfolgt über Google Play.'**
+  /// **'Wir haben dir eine Eingangsbestätigung an {arg0} geschickt.'**
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0);
 
   /// No description provided for @subscriptionWelcomeCoachText.
@@ -9892,8 +9954,8 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionYourFreeTrialIsActiveItEnds.
   ///
   /// In de, this message translates to:
-  /// **'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.'**
-  String get subscriptionYourFreeTrialIsActiveItEnds;
+  /// **'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von {arg0} kündigst.'**
+  String subscriptionYourFreeTrialIsActiveItEnds(String arg0);
 
   /// No description provided for @subscriptionYourFreeTrialLastsValueDays.
   ///

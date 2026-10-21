@@ -46,6 +46,10 @@ class _Billing implements StoreBilling {
   Future<int> freeTrialDays(PremiumPlanId plan) async => 0;
 
   @override
+  Future<StoreRefundResult> requestRefund() async =>
+      StoreRefundResult.unavailable;
+
+  @override
   Uri? managementUri() => null;
 }
 

@@ -107,16 +107,29 @@ abstract final class PremiumCopy {
           );
     }
     return L10n.current.subscriptionSubscriptionPricesValuePaymentAndBillingAre(
-      (prices).toString(),
-      (_storeName).toString(),
-      (_storeName).toString(),
+      prices,
+      storeNameVia,
+      storeName,
     );
   }
 
-  static String get _storeName =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS
-      ? L10n.current.subscriptionTheAppStore
-      : 'Google Play';
+  static bool get _apple =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+
+  /// The store after "von" / "of": "Google Play" or "dem App Store".
+  static String get storeName =>
+      _apple ? L10n.current.subscriptionTheAppStore : 'Google Play';
+
+  /// The store after "über" / "by": "Google Play" or "den App Store".
+  static String get storeNameVia =>
+      _apple ? L10n.current.subscriptionTheAppStoreVia : 'Google Play';
+
+  /// The store account a free trial is tied to.
+  static String get storeAccount => _apple
+      ? L10n.current.subscriptionAppleAccount
+      : L10n.current.subscriptionGoogleAccount;
+
+  static String get _storeName => storeName;
 
   /// One line under the purchase button: who bills, renewal, how to cancel.
   /// With a store trial it also says that the subscription starts after it.

@@ -313,7 +313,8 @@ class _PaywallPageState extends State<PaywallPage>
       key: const ValueKey('paywall-success'),
       kind: kind,
       statusLine: l10n.subscriptionValueItEndsAutomaticallyAtNoCost(
-        (until).toString(),
+        until,
+        PremiumCopy.storeName,
       ),
       card: WelcomeCardData(
         memberName: name,
@@ -1436,9 +1437,12 @@ class _ActiveCard extends StatelessWidget {
     final expiresAt = entitlement.expiresAt;
     final detail = trialing
         ? expiresAt == null
-              ? context.l10n.subscriptionYourFreeTrialIsActiveItEnds
+              ? context.l10n.subscriptionYourFreeTrialIsActiveItEnds(
+                  PremiumCopy.storeName,
+                )
               : context.l10n.subscriptionFreeTrialUntilValueItEndsAutomatically(
-                  (formatPremiumDateTime(expiresAt)).toString(),
+                  formatPremiumDateTime(expiresAt),
+                  PremiumCopy.storeName,
                 )
         : expiresAt == null
         ? context.l10n.subscriptionYourPremiumSubscriptionIsActive
@@ -2106,6 +2110,8 @@ class _LegalFooter extends StatelessWidget {
         ? context.l10n.subscriptionFreeTrialValueDaysStoreOnly(
             trialDays.toString(),
             prices,
+            PremiumCopy.storeAccount,
+            PremiumCopy.storeName,
           )
         : prices;
     final linkStyle = TextButton.styleFrom(

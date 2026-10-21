@@ -22,8 +22,16 @@ Der Funktionsstatus steht in `docs/FEATURE_STATUS.md`.
 Die Konto-ID, die RevenueCat bekommt, ist die Supabase-Nutzer-ID. Andere Daten
 (Profil, Tagebuch, Gesundheit) gehen nicht an RevenueCat.
 
-Die kostenlose Testphase (7 Tage) ist seit Migration `0025` ein **Angebot von
-Google Play** am jeweiligen Basis-Tarif. Google verlangt dafür ein Zahlungsmittel
+**iPhone:** Die Schritte für App Store Connect, RevenueCat (iOS) und Codemagic
+stehen in `docs/APP_STORE_RELEASE.md`. Im Code: Die Testphase kommt dort aus
+dem Einführungsangebot des Abos (nur wenn Apple die Berechtigung bestätigt),
+Rückzahlungen nach einem Widerruf öffnen Apples eigenes Rückzahlungsfenster
+(`StoreBilling.requestRefund`), und Kauf- und Widerrufsmails nennen den
+richtigen Store (`store` im Webhook-Ereignis).
+
+Die kostenlose Testphase (7 Tage) ist seit Migration `0025` ein **Angebot des
+Stores**: bei Google Play am jeweiligen Basis-Tarif, bei Apple als
+Einführungsangebot. Google verlangt dafür ein Zahlungsmittel
 und erlaubt sie nur einmal pro Google-Konto. Die App zeigt "7 Tage kostenlos
 testen" nur, wenn der Store das Angebot für dieses Konto meldet
 (`StoreBilling.freeTrialDays`); ohne Angebot steht "Kostenpflichtig
@@ -208,13 +216,15 @@ So ist sichergestellt, dass niemand Premium ohne Kauf bekommt oder ein fremdes A
    das Abo nicht „stehlen“. Wer die App neu installiert oder das Handy wechselt,
    meldet sich mit demselben Lookin-Konto an und stellt wieder her. Der Webhook
    ignoriert `TRANSFER` absichtlich, weil es dann nie auftreten darf.
-3. **Testkäufe zählen nur zum Testen.** Käufe von Lizenztestern und aus dem
-   RevenueCat-Test-Store kommen als `SANDBOX`. Der Webhook übernimmt sie nur,
-   solange das Supabase-Secret `ALLOW_SANDBOX_PURCHASES` den Wert `true` hat.
-   **Vor dem echten Start auf Produktion entfernen:**
-   `supabase secrets unset ALLOW_SANDBOX_PURCHASES --project-ref kypxutvvpklkvekciuen`.
-   (Im geschlossenen Test auf Google Play sind Käufe der Tester Testkäufe;
-   dafür muss das Secret gesetzt bleiben, bis der Test vorbei ist.)
+3. **Testkäufe (`SANDBOX`)** kommen von Google-Lizenztestern, aus TestFlight,
+   von Apple-Sandbox-Konten, aus der **Apple-Prüfung** und aus dem
+   RevenueCat-Test-Store. Der Webhook übernimmt sie nur, solange das
+   Supabase-Secret `ALLOW_SANDBOX_PURCHASES` den Wert `true` hat.
+   **Das Secret bleibt dauerhaft gesetzt** (Entscheidung vom 21.10.2026): Apple
+   prüft jede Version mit Sandbox-Käufen; ohne Freischaltung lehnt Apple die App
+   ab. Testkäufe kann nur machen, wen der Inhaber selbst einträgt
+   (Lizenztester, Sandbox-Konten, TestFlight-Tester). Sandbox-Abos laufen nach
+   wenigen Verlängerungen von selbst aus.
 4. **Das Entwicklerkonto ist geschützt** (Migration `0023`): Ein Store-Ereignis
    ändert einen Eintrag mit `provider = developer` nie.
 5. **Reihenfolge und Doppelte:** Ältere oder doppelte Ereignisse verändern den

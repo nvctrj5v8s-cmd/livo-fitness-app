@@ -5341,6 +5341,27 @@ class AppLocalizationsDe extends AppLocalizations {
       'Alle Rezepte gibt es mit Premium';
 
   @override
+  String get subscriptionAppleAccount => 'Apple Account';
+
+  @override
+  String get subscriptionAppleRefundButton => 'Rückzahlung bei Apple anfordern';
+
+  @override
+  String get subscriptionAppleRefundFallback =>
+      'Falls sich nichts geöffnet hat: Fordere die Rückzahlung unter reportaproblem.apple.com an.';
+
+  @override
+  String get subscriptionAppleRefundSubmitted =>
+      'Apple hat deine Anfrage erhalten und informiert dich über die Entscheidung.';
+
+  @override
+  String get subscriptionAppleRefundText =>
+      'Dein Widerruf ist bei uns eingegangen. Zahlungen im App Store kann aber nur Apple erstatten. Fordere die Rückzahlung deshalb bei Apple an.';
+
+  @override
+  String get subscriptionAppleRefundTitle => 'Gekauft im App Store?';
+
+  @override
   String get subscriptionBilledEveryMonth => 'jeden Monat berechnet';
 
   @override
@@ -5384,7 +5405,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionForExampleTheOrderNumberFromThe =>
-      'Zum Beispiel die Bestellnummer aus der Google-Play-Mail';
+      'Zum Beispiel die Bestellnummer aus der Kaufbestätigung von Google Play oder Apple';
 
   @override
   String get subscriptionFree => 'Kostenlos';
@@ -5393,13 +5414,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionFreeOrPremium => 'Kostenlos oder Premium?';
 
   @override
-  String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0) {
-    return 'Kostenlose Testphase bis $arg0. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.';
+  String subscriptionFreeTrialUntilValueItEndsAutomatically(
+    String arg0,
+    String arg1,
+  ) {
+    return 'Kostenlose Testphase bis $arg0. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von $arg1 kündigst.';
   }
 
   @override
-  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1) {
-    return 'Kostenlose Testphase: $arg0 Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n$arg1';
+  String subscriptionFreeTrialValueDaysStoreOnly(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  ) {
+    return 'Kostenlose Testphase: $arg0 Tage, einmal pro $arg2 und nur mit hinterlegtem Zahlungsmittel. Wenn du nicht vor Ende der Testphase in den Abo-Einstellungen von $arg3 kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n$arg1';
   }
 
   @override
@@ -5410,6 +5439,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionGladYouAreHere => 'Schön, dass du da bist';
+
+  @override
+  String get subscriptionGoogleAccount => 'Google-Konto';
 
   @override
   String get subscriptionHereYouCanWithdrawFromYourLookin =>
@@ -5470,7 +5502,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionPleaseTakeAScreenshotOfThisAcknowledgement =>
-      'Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.';
+      'Bitte mach einen Screenshot dieser Bestätigung. Die E-Mail-Bestätigung konnte gerade nicht gesendet werden; wir schicken sie dir nach.';
 
   @override
   String subscriptionPopularSavings(String savings) {
@@ -5513,6 +5545,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String subscriptionReferenceNumberValue(String arg0) {
     return 'Vorgangsnummer: $arg0';
   }
+
+  @override
+  String get subscriptionRefundThroughGooglePlay =>
+      'Die Rückzahlung erfolgt über Google Play auf das dort verwendete Zahlungsmittel.';
 
   @override
   String get subscriptionRestorePurchases => 'Käufe wiederherstellen';
@@ -5559,7 +5595,7 @@ class AppLocalizationsDe extends AppLocalizations {
     String arg1,
     String arg2,
   ) {
-    return 'Abo-Preise: $arg0 Bezahlung und Abrechnung laufen über $arg1. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von $arg2, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.';
+    return 'Abo-Preise: $arg0 Bezahlung und Abrechnung laufen über $arg1. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von $arg2, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar (AGB, Ziffer 5). Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.';
   }
 
   @override
@@ -5585,11 +5621,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String subscriptionTermsShortTrial(String arg0) {
-    return 'Die Testphase braucht ein Zahlungsmittel in $arg0 · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von $arg0 kündbar, dann wird nichts berechnet';
+    return 'Testphase nur mit hinterlegtem Zahlungsmittel · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von $arg0 kündbar, dann wird nichts berechnet';
   }
 
   @override
   String get subscriptionTheAppStore => 'dem App Store';
+
+  @override
+  String get subscriptionTheAppStoreVia => 'den App Store';
 
   @override
   String get subscriptionTheLookinCoachIsPartOfPremium =>
@@ -5634,8 +5673,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0) {
-    return '$arg0 Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.';
+  String subscriptionValueItEndsAutomaticallyAtNoCost(
+    String arg0,
+    String arg1,
+  ) {
+    return '$arg0 Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in den Abo-Einstellungen von $arg1 kündigen.';
   }
 
   @override
@@ -5655,7 +5697,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0) {
-    return 'Wir haben dir eine Eingangsbestätigung an $arg0 geschickt. Die Rückzahlung erfolgt über Google Play.';
+    return 'Wir haben dir eine Eingangsbestätigung an $arg0 geschickt.';
   }
 
   @override
@@ -5740,8 +5782,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe deine Verbindung und versuche es erneut. Es wurde nichts gekauft.';
 
   @override
-  String get subscriptionYourFreeTrialIsActiveItEnds =>
-      'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.';
+  String subscriptionYourFreeTrialIsActiveItEnds(String arg0) {
+    return 'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von $arg0 kündigst.';
+  }
 
   @override
   String subscriptionYourFreeTrialLastsValueDays(String arg0) {

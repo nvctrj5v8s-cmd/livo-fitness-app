@@ -1,5 +1,28 @@
 # Funktionsstatus
 
+## iPhone-Version vorbereitet, 21. Oktober 2026
+
+- **Kauf auf dem iPhone:** gleiche Abos, Berechtigung und Angebote wie bei
+  Google, nur mit dem iOS-Schlüssel (`REVENUECAT_IOS_KEY`). Die Testphase wird
+  aus Apples Einführungsangebot erkannt, nur wenn Apple die Berechtigung des
+  Kontos bestätigt. "Abo verwalten" öffnet die Apple-Abos.
+- **Rückzahlung bei Apple:** Nach einem Widerruf zeigt die App auf dem iPhone
+  "Rückzahlung bei Apple anfordern" (Apples eigenes Fenster, iOS 15+; sonst
+  reportaproblem.apple.com). Nur Apple kann App-Store-Zahlungen erstatten.
+- **Texte:** Paywall, Testphase, Widerruf, Kauf- und Widerrufsmails nennen den
+  passenden Store. Rechtstexte (AGB, Widerruf, Datenschutz, Konto löschen,
+  Widerrufsformular, DE/EN) gelten für Google Play und den App Store; Apple
+  als Empfänger und Drittland ergänzt, Barcode-Erkennung auf dem iPhone mit
+  Apple Vision, iCloud-Sicherung erwähnt.
+- **Projekt:** nur iPhone (keine iPad-Screenshots nötig),
+  `ITSAppUsesNonExemptEncryption = false` (keine Exportfrage bei jedem Build).
+- **Sandbox-Käufe bleiben freigeschaltet:** Apple prüft jede Version mit
+  Sandbox-Käufen.
+- **Noch zu tun (Inhaber):** alle Schritte in `docs/APP_STORE_RELEASE.md`
+  (Verträge bei Apple, Bundle-ID, App und Abos anlegen, Schlüssel, RevenueCat
+  iOS, Codemagic, TestFlight, Store-Eintrag, Einreichen). Noch nicht auf einem
+  echten iPhone getestet.
+
 ## Testphase nur über Google Play, Altersabfrage, Rechtstexte, 21. Oktober 2026
 
 - **Testphase mit Zahlungsmittel:** Die 7-Tage-Testphase ist ein Angebot von
@@ -116,7 +139,8 @@ Launch-Blocker**. Behoben und veröffentlicht:
   Endlich, ohne Dauerbewegung; „Bewegung reduzieren“ zeigt den Endzustand sofort.
 - **Webhook gehärtet (am 20.10.2026 veröffentlicht):** Testkäufe (`SANDBOX`)
   zählen nur noch, solange das Secret `ALLOW_SANDBOX_PURCHASES=true` gesetzt ist
-  (jetzt gesetzt, **vor dem Start entfernen**). Die Ereignis-Logik liegt in
+  (bleibt dauerhaft gesetzt, weil Apple mit Sandbox-Käufen prüft; siehe
+  `docs/BILLING_SETUP.md`). Die Ereignis-Logik liegt in
   `supabase/functions/_shared/revenuecat_events.ts` und ist mit
   `tool/check_revenuecat_events.ts` getestet.
 - **Migration `0023` (angewendet am 20.10.2026):** Ein Store-Ereignis kann den
@@ -270,9 +294,9 @@ Launch-Blocker**. Behoben und veröffentlicht:
   RevenueCat-Webhook für `TRANSFER` und `BILLING_ISSUE` ergänzen.
 - Supabase-Tarif „Pro“ (tägliche Sicherungen) und Ausgabenlimit bei OpenAI
   setzen, bevor zahlende Nutzer kommen.
-- **Secret `ALLOW_SANDBOX_PURCHASES` entfernen** (sonst zählen Testkäufe in der
-  echten Datenbank) und in RevenueCat „Restore behavior“ auf „Keep with original
-  App User ID“ stellen.
+- Secret `ALLOW_SANDBOX_PURCHASES` **gesetzt lassen** (Apple-Prüfung und TestFlight
+  kaufen im Sandbox-Modus) und in RevenueCat „Restore behavior“ auf „Keep with
+  original App User ID“ stellen.
 - Serverseitige Prüfung der Gesundheits-Einwilligung (die KI-Einwilligung wird
   bereits serverseitig geprüft); Halal-Filter auch für Produkte ohne Zutatenliste; Löschjobs (IP-Hash 24 h, Test-Hash
   3 Jahre, Widerrufe).

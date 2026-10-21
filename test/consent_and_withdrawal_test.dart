@@ -6,7 +6,9 @@ import 'package:fitness_ai_app/features/consent/data/consent_repository.dart';
 import 'package:fitness_ai_app/features/consent/domain/consent.dart';
 import 'package:fitness_ai_app/features/consent/presentation/consent_dialogs.dart';
 import 'package:fitness_ai_app/features/consent/presentation/consent_gate.dart';
+import 'package:fitness_ai_app/features/subscription/data/store_billing.dart';
 import 'package:fitness_ai_app/features/subscription/data/withdrawal_repository.dart';
+import 'package:fitness_ai_app/features/subscription/domain/subscription_plans.dart';
 import 'package:fitness_ai_app/features/subscription/presentation/withdrawal_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,6 +39,40 @@ class _FakeWithdrawals implements WithdrawalRepository {
       reference: 'abc-123',
     );
   }
+}
+
+/// App Store boundary that only answers the refund request.
+class _RefundBilling implements StoreBilling {
+  _RefundBilling(this.result);
+
+  final StoreRefundResult result;
+  int requests = 0;
+
+  @override
+  bool get isAvailable => true;
+
+  @override
+  Future<void> bindAccount(String? userId) async {}
+
+  @override
+  Future<StorePurchaseStatus> purchase(PremiumPlanId plan) async =>
+      StorePurchaseStatus.unavailable;
+
+  @override
+  Future<StorePurchaseStatus> restore() async =>
+      StorePurchaseStatus.unavailable;
+
+  @override
+  Future<int> freeTrialDays(PremiumPlanId plan) async => 0;
+
+  @override
+  Future<StoreRefundResult> requestRefund() async {
+    requests++;
+    return result;
+  }
+
+  @override
+  Uri? managementUri() => null;
 }
 
 /// The server cannot be reached: nothing is stored as proof.
@@ -239,6 +275,71 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('Screenshot'), findsOneWidget);
+      // Android: the refund runs through Google Play, no Apple card.
+      expect(find.byKey(const Key('withdrawal-refund-google')), findsOneWidget);
+      expect(find.byKey(const Key('withdrawal-apple-refund')), findsNothing);
+    });
+
+    testWidgets('iPhone: Apple refund request right after the withdrawal', (
+      tester,
+    ) async {
+      final billing = _RefundBilling(StoreRefundResult.submitted);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.dark,
+          home: WithdrawalPage(
+            repository: _FakeWithdrawals(),
+            initialName: 'Max',
+            billing: billing,
+            appleStore: true,
+          ),
+        ),
+      );
+      await tester.tap(find.byKey(const Key('withdrawal-confirm')));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('withdrawal-refund-google')), findsNothing);
+      expect(find.text('Gekauft im App Store?'), findsOneWidget);
+      final open = find.byKey(const Key('withdrawal-apple-refund-open'));
+      await tester.ensureVisible(open);
+      await tester.tap(open);
+      await tester.pumpAndSettle();
+      expect(billing.requests, 1);
+      expect(
+        find.byKey(const Key('withdrawal-apple-refund-sent')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('withdrawal-apple-refund-open')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('iPhone without the in-app sheet names Apple\'s website', (
+      tester,
+    ) async {
+      final billing = _RefundBilling(StoreRefundResult.unavailable);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.dark,
+          home: WithdrawalPage(
+            repository: _FakeWithdrawals(),
+            initialName: 'Max',
+            billing: billing,
+            appleStore: true,
+          ),
+        ),
+      );
+      await tester.tap(find.byKey(const Key('withdrawal-confirm')));
+      await tester.pumpAndSettle();
+      final open = find.byKey(const Key('withdrawal-apple-refund-open'));
+      await tester.ensureVisible(open);
+      await tester.tap(open);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('reportaproblem.apple.com'), findsOneWidget);
+      // Asking again stays possible.
+      expect(open, findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('needs a name and a valid e-mail', (tester) async {

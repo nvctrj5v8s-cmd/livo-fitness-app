@@ -1,9 +1,7 @@
-# Google Play: Store-Eintrag (Entwurf)
+# Google Play: Store-Eintrag
 
-Stand: 15. Oktober 2026. Entwurf zum Einfügen in die Play Console. Prüfe jede
-Aussage vor dem Absenden gegen die App und gegen `docs/FEATURE_STATUS.md`.
-Datenschutz- und Rechtsangaben sind **keine Rechtsberatung** und brauchen eine
-Prüfung vor der Veröffentlichung.
+Stand: 21. Oktober 2026. Texte zum Einfügen in die Play Console. Jede Aussage
+muss zur App und zu `docs/FEATURE_STATUS.md` passen.
 
 ## Grunddaten
 
@@ -16,7 +14,7 @@ Prüfung vor der Veröffentlichung.
 | Kategorie | Gesundheit & Fitness |
 | Paketkennung | `com.lookin.foodtracker` (nach dem ersten Upload nicht mehr änderbar) |
 | Kontakt-E-Mail | `lookinsupport@gmail.com` |
-| Datenschutzerklärung (URL) | `https://app.lookin-foodtracker.de/legal/datenschutz.html` (erst eintragen, wenn die Platzhalter ausgefüllt sind; Prüfung: `dart run tool/check_legal_pages.dart`) |
+| Datenschutzerklärung (URL) | `https://app.lookin-foodtracker.de/legal/datenschutz.html` |
 | Kontolöschung (URL, Pflicht im Datensicherheits-Formular) | `https://app.lookin-foodtracker.de/legal/konto-loeschen.html` |
 | Website | optional |
 
@@ -95,7 +93,7 @@ LOOKIN PREMIUM (OPTIONAL)
 • AI photo recognition: take a photo and Lookin estimates foods and amounts. You check and correct everything before it is saved.
 • Lookin Coach: an AI chat for questions about your nutrition. You can report any answer from inside the chat.
 • All recipes.
-Try Premium free for 7 days, no payment details needed. After that it costs €6.99 per month or €49.99 per year. You can cancel at any time in your Google Play subscription settings.
+You can try Premium free for 7 days; Google Play needs a payment method for this. Unless you cancel in Google Play before then, the subscription starts: €6.99 per month or €49.99 per year. You can cancel at any time in your Google Play subscription settings.
 
 GOOD TO KNOW
 • Values from AI and photos are estimates.
@@ -142,7 +140,7 @@ Sprache oder Schalter „DE | EN“ vor der Anmeldung).
   medizinischen Geräte oder Diagnosen anbietet.
 - **Finanzfunktionen:** keine (nur Abos über Google Play).
 
-## Datensicherheit (Entwurf für das Formular)
+## Datensicherheit (Angaben für das Formular)
 
 Sicherheitspraktiken:
 
@@ -159,7 +157,7 @@ Gesammelte Daten (jeweils für Kernfunktionen, nicht für Werbung). Seit Oktober
 | Fotos und Videos | Mahlzeitenfotos (nur bei KI-Foto-Erkennung, Premium) | App-Funktionen |
 | Nachrichten | Fragen und Antworten im Coach (Premium) | App-Funktionen |
 | Finanzinfos | Kaufverlauf (Abo-Status; Zahlungsdaten verarbeitet nur Google Play) | Abwicklung des Abos |
-| App-Aktivität / Geräte-IDs | Einwilligungsnachweise (Zeitpunkt, Textversion, Sprache), Hash der E-Mail für den einmaligen Test, technische Server-Protokolle | Nachweis, Missbrauchsschutz |
+| App-Aktivität / Geräte-IDs | Einwilligungsnachweise (Zeitpunkt, Textversion, Sprache), technische Server-Protokolle | Nachweis, Missbrauchsschutz |
 
 Das Gesundheits-Feld im Formular mit „Ja, erhoben“ beantworten (Gewicht, Mahlzeiten, Antworten mit Einwilligung), „optional: ja“ für die Antworten der Einrichtung und „nicht übertragen“ nur, wo es wirklich zutrifft. Wenn Nutzer die Einwilligung verweigern können, ist die Angabe optional.
 

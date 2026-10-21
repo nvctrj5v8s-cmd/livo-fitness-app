@@ -5,6 +5,7 @@ import 'package:fitness_ai_app/features/subscription/domain/entitlement.dart';
 import 'package:fitness_ai_app/features/subscription/domain/subscription_plans.dart';
 import 'package:fitness_ai_app/features/subscription/presentation/paywall_page.dart';
 import 'package:fitness_ai_app/features/subscription/presentation/premium_format.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -194,5 +195,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('entspricht 4,17$_nbsp€ pro Monat'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  test('store wording follows the platform', () {
+    expect(PremiumCopy.storeName, 'Google Play');
+    expect(PremiumCopy.storeAccount, 'Google-Konto');
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    expect(PremiumCopy.storeName, 'dem App Store');
+    expect(PremiumCopy.storeNameVia, 'den App Store');
+    expect(PremiumCopy.storeAccount, 'Apple Account');
+    expect(PremiumCopy.termsShortFor(trialDays: 7), contains('dem App Store'));
+    expect(
+      PremiumCopy.priceTermsFor(billingAvailable: true),
+      contains('über den App Store'),
+    );
+    debugDefaultTargetPlatformOverride = null;
   });
 }

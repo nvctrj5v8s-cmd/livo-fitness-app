@@ -5319,6 +5319,27 @@ class AppLocalizationsEn extends AppLocalizations {
       'All recipes are available with Premium';
 
   @override
+  String get subscriptionAppleAccount => 'Apple Account';
+
+  @override
+  String get subscriptionAppleRefundButton => 'Request a refund from Apple';
+
+  @override
+  String get subscriptionAppleRefundFallback =>
+      'If nothing opened: request the refund at reportaproblem.apple.com.';
+
+  @override
+  String get subscriptionAppleRefundSubmitted =>
+      'Apple has received your request and will let you know its decision.';
+
+  @override
+  String get subscriptionAppleRefundText =>
+      'Your withdrawal has reached us. However, only Apple can refund App Store payments, so please request the refund from Apple.';
+
+  @override
+  String get subscriptionAppleRefundTitle => 'Bought in the App Store?';
+
+  @override
   String get subscriptionBilledEveryMonth => 'billed every month';
 
   @override
@@ -5362,7 +5383,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionForExampleTheOrderNumberFromThe =>
-      'For example, the order number from the Google Play email';
+      'For example, the order number from the Google Play or Apple receipt';
 
   @override
   String get subscriptionFree => 'Free';
@@ -5371,13 +5392,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionFreeOrPremium => 'Free or Premium?';
 
   @override
-  String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0) {
-    return 'Free trial until $arg0. The paid subscription starts afterwards unless you cancel in Google Play first.';
+  String subscriptionFreeTrialUntilValueItEndsAutomatically(
+    String arg0,
+    String arg1,
+  ) {
+    return 'Free trial until $arg0. The paid subscription starts afterwards unless you cancel first in the subscription settings of $arg1.';
   }
 
   @override
-  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1) {
-    return 'Free trial: $arg0 days, once per Google account and only with a payment method in Google Play. If you do not cancel in Google Play before the trial ends, the paid subscription starts and renews automatically at the price of the chosen plan.\n\n$arg1';
+  String subscriptionFreeTrialValueDaysStoreOnly(
+    String arg0,
+    String arg1,
+    String arg2,
+    String arg3,
+  ) {
+    return 'Free trial: $arg0 days, once per $arg2 and only with a payment method on file. If you do not cancel in the subscription settings of $arg3 before the trial ends, the paid subscription starts and renews automatically at the price of the chosen plan.\n\n$arg1';
   }
 
   @override
@@ -5388,6 +5417,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionGladYouAreHere => 'Glad you are here';
+
+  @override
+  String get subscriptionGoogleAccount => 'Google account';
 
   @override
   String get subscriptionHereYouCanWithdrawFromYourLookin =>
@@ -5447,7 +5479,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionPleaseTakeAScreenshotOfThisAcknowledgement =>
-      'Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up. Your refund is handled through Google Play.';
+      'Please take a screenshot of this acknowledgement. The email acknowledgement could not be sent just now; we will send it to you later.';
 
   @override
   String subscriptionPopularSavings(String savings) {
@@ -5489,6 +5521,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String subscriptionReferenceNumberValue(String arg0) {
     return 'Reference number: $arg0';
   }
+
+  @override
+  String get subscriptionRefundThroughGooglePlay =>
+      'Your refund is made through Google Play to the payment method used there.';
 
   @override
   String get subscriptionRestorePurchases => 'Restore purchases';
@@ -5535,7 +5571,7 @@ class AppLocalizationsEn extends AppLocalizations {
     String arg1,
     String arg2,
   ) {
-    return 'Subscription prices: $arg0 Payment and billing are handled by $arg1. A subscription renews automatically at the same price until you cancel it. You can cancel at any time in the subscription settings of $arg2, effective at the end of the billing period. The yearly subscription initially runs for one year; it then renews for an indefinite period and can be cancelled at any time with no more than one month\'s notice. With \"Cancel immediately\" in Google Play, you then receive a proportionate refund for the unused period. Within 14 days, you can withdraw under Profile › Withdraw from contract. AI Coach and AI Photo require your consent to send data to OpenAI.';
+    return 'Subscription prices: $arg0 Payment and billing are handled by $arg1. A subscription renews automatically at the same price until you cancel it. You can cancel at any time in the subscription settings of $arg2, effective at the end of the billing period. The yearly subscription initially runs for one year; it then renews for an indefinite period and can be cancelled at any time with no more than one month\'s notice (Terms, section 5). Within 14 days, you can withdraw under Profile › Withdraw from contract. AI Coach and AI Photo require your consent to send data to OpenAI.';
   }
 
   @override
@@ -5561,11 +5597,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionTermsShortTrial(String arg0) {
-    return 'The trial needs a payment method in $arg0 · the subscription then starts and renews automatically · cancel in the subscription settings of $arg0 before the trial ends and nothing is charged';
+    return 'Trial only with a payment method on file · the subscription then starts and renews automatically · cancel in the subscription settings of $arg0 before the trial ends and nothing is charged';
   }
 
   @override
   String get subscriptionTheAppStore => 'the App Store';
+
+  @override
+  String get subscriptionTheAppStoreVia => 'the App Store';
 
   @override
   String get subscriptionTheLookinCoachIsPartOfPremium =>
@@ -5610,8 +5649,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0) {
-    return '$arg0 The paid subscription starts afterwards. You can cancel in Google Play at any time until then.';
+  String subscriptionValueItEndsAutomaticallyAtNoCost(
+    String arg0,
+    String arg1,
+  ) {
+    return '$arg0 The paid subscription starts afterwards. Until then you can cancel at any time in the subscription settings of $arg1.';
   }
 
   @override
@@ -5631,7 +5673,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionWeHaveSentAnAcknowledgementToValue(String arg0) {
-    return 'We have sent an acknowledgement to $arg0. Your refund is handled through Google Play.';
+    return 'We have sent an acknowledgement to $arg0.';
   }
 
   @override
@@ -5715,8 +5757,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your consent could not be saved just now. Please check your connection and try again. Nothing was purchased.';
 
   @override
-  String get subscriptionYourFreeTrialIsActiveItEnds =>
-      'Your free trial is active. The paid subscription starts afterwards unless you cancel in Google Play first.';
+  String subscriptionYourFreeTrialIsActiveItEnds(String arg0) {
+    return 'Your free trial is active. The paid subscription starts afterwards unless you cancel first in the subscription settings of $arg0.';
+  }
 
   @override
   String subscriptionYourFreeTrialLastsValueDays(String arg0) {

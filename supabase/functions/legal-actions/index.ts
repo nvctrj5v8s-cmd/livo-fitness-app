@@ -164,12 +164,14 @@ Deno.serve(async (request) => {
       ? `Hello ${plain(name)},\n\nwe have received your withdrawal from the Lookin Premium contract.\n\n${detailsEn}\n\n` +
         'We will refund your payments under the withdrawal policy within fourteen days at the latest. ' +
         'If you requested that Premium begins immediately, we deduct a proportionate amount for the service already provided. ' +
-        'Google Play purchases are refunded through Google Play.\n\n' +
+        'Google Play purchases are refunded through Google Play. App Store payments can only be refunded by Apple: ' +
+        'please also request the refund at https://reportaproblem.apple.com (or in the app under Withdraw from contract).\n\n' +
         `For questions, contact ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`
       : `Hallo ${plain(name)},\n\nwir haben deinen Widerruf des Vertrags über Lookin Premium erhalten.\n\n${details}\n\n` +
       'Wir erstatten dir deine Zahlungen nach den Regeln der Widerrufsbelehrung spätestens binnen vierzehn Tagen. ' +
       'Hast du verlangt, dass Premium sofort beginnt, ziehen wir einen anteiligen Betrag für die bereits erbrachte Zeit ab. ' +
-      'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play.\n\n' +
+      'Bei einem Kauf über Google Play erfolgt die Rückzahlung über Google Play. Zahlungen im App Store kann nur Apple erstatten: ' +
+      'Bitte fordere die Rückzahlung zusätzlich unter https://reportaproblem.apple.com an (oder in der App unter „Vertrag widerrufen“).\n\n' +
       `Bei Fragen erreichst du uns unter ${ownerEmail}.\n\nMhd Khair Shikho\nAm Grübchen 18, 56203 Höhr-Grenzhausen`,
   }
   let userMail: string = 'failed'
@@ -184,7 +186,7 @@ Deno.serve(async (request) => {
   const ownerMail = (dayTotal ?? 0) >= 200 ? 'failed' : await sendMail({
     to: ownerEmail,
     subject: `Neuer Widerruf: ${name}${userMail === 'sent' ? '' : ' – Bestätigung NICHT zugestellt'}`,
-    text: `Ein Widerruf ist eingegangen. Bitte die Zahlung in der Play Console erstatten und das Abo beenden.${userMail === 'sent' ? '' : `\n\nACHTUNG: Die Eingangsbestätigung an ${mailTo} konnte nicht zugestellt werden. Bitte die Bestätigung (Inhalt, Eingang mit Datum und Uhrzeit) manuell per E-Mail senden.`}\n\n${ownerDetails}`,
+    text: `Ein Widerruf ist eingegangen. Bei Google Play: Zahlung in der Play Console erstatten und das Abo beenden. Bei Apple (App Store): Erstatten kann nur Apple; der Kunde hat den Weg zur Rückzahlung in seiner Bestätigung.${userMail === 'sent' ? '' : `\n\nACHTUNG: Die Eingangsbestätigung an ${mailTo} konnte nicht zugestellt werden. Bitte die Bestätigung (Inhalt, Eingang mit Datum und Uhrzeit) manuell per E-Mail senden.`}\n\n${ownerDetails}`,
     replyTo: email,
   })
   await admin

@@ -25,11 +25,14 @@
   "subscriptionAllRecipes": "Alle Rezepte",
   "subscriptionGenerousAiAllowance": "Großzügiges KI-Kontingent",
   "subscriptionUpTo100AiRequestsADay": "Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), in der Testphase bis zu 50.",
-  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.",
-  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.",
+  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von {arg0} kündigst.",
+  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in den Abo-Einstellungen von {arg1} kündigst.",
   "@subscriptionFreeTrialUntilValueItEndsAutomatically": {
     "placeholders": {
       "arg0": {
+        "type": "String"
+      },
+      "arg1": {
         "type": "String"
       }
     }
@@ -98,10 +101,13 @@
       }
     }
   },
-  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.",
+  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in den Abo-Einstellungen von {arg1} kündigen.",
   "@subscriptionValueItEndsAutomaticallyAtNoCost": {
     "placeholders": {
       "arg0": {
+        "type": "String"
+      },
+      "arg1": {
         "type": "String"
       }
     }
@@ -193,7 +199,7 @@
       }
     }
   },
-  "subscriptionSubscriptionPricesValuePaymentAndBillingAre": "Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar. Mit „Sofort kündigen“ in Google Play bekommst du dann den nicht genutzten Teil anteilig zurück. Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.",
+  "subscriptionSubscriptionPricesValuePaymentAndBillingAre": "Abo-Preise: {arg0} Bezahlung und Abrechnung laufen über {arg1}. Ein Abo verlängert sich automatisch zum selben Preis, bis du es kündigst. Du kündigst jederzeit in den Abo-Einstellungen von {arg2}, wirksam zum Ende des Abrechnungszeitraums. Das Jahresabo läuft zunächst ein Jahr; danach verlängert es sich auf unbestimmte Zeit und ist jederzeit mit höchstens einem Monat Frist kündbar (AGB, Ziffer 5). Innerhalb von 14 Tagen kannst du den Vertrag widerrufen: Profil › „Vertrag widerrufen“. KI-Coach und KI-Foto brauchen deine Einwilligung zur Weitergabe an OpenAI.",
   "@subscriptionSubscriptionPricesValuePaymentAndBillingAre": {
     "placeholders": {
       "arg0": {
@@ -245,7 +251,7 @@
   "subscriptionYourName": "Dein Name",
   "subscriptionEmailForAcknowledgement": "E-Mail für die Bestätigung",
   "subscriptionOrderNumberOrNoteOptional": "Bestellnummer oder Hinweis (freiwillig)",
-  "subscriptionForExampleTheOrderNumberFromThe": "Zum Beispiel die Bestellnummer aus der Google-Play-Mail",
+  "subscriptionForExampleTheOrderNumberFromThe": "Zum Beispiel die Bestellnummer aus der Kaufbestätigung von Google Play oder Apple",
   "subscriptionConfirmWithdrawal": "Widerruf bestätigen",
   "subscriptionYourWithdrawalWasReceivedOnValue": "Dein Widerruf ist am {arg0} eingegangen.",
   "@subscriptionYourWithdrawalWasReceivedOnValue": {
@@ -255,7 +261,7 @@
       }
     }
   },
-  "subscriptionWeHaveSentAnAcknowledgementToValue": "Wir haben dir eine Eingangsbestätigung an {arg0} geschickt. Die Rückzahlung erfolgt über Google Play.",
+  "subscriptionWeHaveSentAnAcknowledgementToValue": "Wir haben dir eine Eingangsbestätigung an {arg0} geschickt.",
   "@subscriptionWeHaveSentAnAcknowledgementToValue": {
     "placeholders": {
       "arg0": {
@@ -263,7 +269,7 @@
       }
     }
   },
-  "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.",
+  "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Die E-Mail-Bestätigung konnte gerade nicht gesendet werden; wir schicken sie dir nach.",
   "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
   "@subscriptionReferenceNumberValue": {
     "placeholders": {
@@ -309,7 +315,7 @@
     }
   },
   "subscriptionSubscriptionBelongsToAnotherAccount": "Dieses Abo gehört zu einem anderen Lookin-Konto. Melde dich mit diesem Konto an, um Premium zu nutzen. Es wurde nichts berechnet.",
-  "subscriptionTermsShortTrial": "Die Testphase braucht ein Zahlungsmittel in {arg0} · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet",
+  "subscriptionTermsShortTrial": "Testphase nur mit hinterlegtem Zahlungsmittel · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet",
   "@subscriptionTermsShortTrial": {
     "placeholders": {
       "arg0": {
@@ -317,13 +323,19 @@
       }
     }
   },
-  "subscriptionFreeTrialValueDaysStoreOnly": "Kostenlose Testphase: {arg0} Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}",
+  "subscriptionFreeTrialValueDaysStoreOnly": "Kostenlose Testphase: {arg0} Tage, einmal pro {arg2} und nur mit hinterlegtem Zahlungsmittel. Wenn du nicht vor Ende der Testphase in den Abo-Einstellungen von {arg3} kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}",
   "@subscriptionFreeTrialValueDaysStoreOnly": {
     "placeholders": {
       "arg0": {
         "type": "String"
       },
       "arg1": {
+        "type": "String"
+      },
+      "arg2": {
+        "type": "String"
+      },
+      "arg3": {
         "type": "String"
       }
     }
@@ -344,5 +356,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "subscriptionTheAppStoreVia": "den App Store",
+  "subscriptionAppleAccount": "Apple Account",
+  "subscriptionGoogleAccount": "Google-Konto",
+  "@subscriptionYourFreeTrialIsActiveItEnds": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRefundThroughGooglePlay": "Die Rückzahlung erfolgt über Google Play auf das dort verwendete Zahlungsmittel.",
+  "subscriptionAppleRefundTitle": "Gekauft im App Store?",
+  "subscriptionAppleRefundText": "Dein Widerruf ist bei uns eingegangen. Zahlungen im App Store kann aber nur Apple erstatten. Fordere die Rückzahlung deshalb bei Apple an.",
+  "subscriptionAppleRefundButton": "Rückzahlung bei Apple anfordern",
+  "subscriptionAppleRefundSubmitted": "Apple hat deine Anfrage erhalten und informiert dich über die Entscheidung.",
+  "subscriptionAppleRefundFallback": "Falls sich nichts geöffnet hat: Fordere die Rückzahlung unter reportaproblem.apple.com an."
 }

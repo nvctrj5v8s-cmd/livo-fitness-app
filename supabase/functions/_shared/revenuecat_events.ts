@@ -15,6 +15,8 @@ export type StoreEvent = {
   expiration_at_ms?: number | null
   event_timestamp_ms?: number
   environment?: string
+  /// PLAY_STORE or APP_STORE (RevenueCat event field).
+  store?: string
 }
 
 export type Decision =
@@ -31,7 +33,8 @@ const uuidPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export type DecideOptions = {
-  /// Test purchases (Google licence testers, RevenueCat Test Store) arrive
+  /// Test purchases (Google licence testers, Apple sandbox and TestFlight,
+  /// App Review, RevenueCat Test Store) arrive
   /// with environment SANDBOX. They only count while this is on, so nobody
   /// can unlock Premium with a test purchase once Lookin is live.
   allowSandbox: boolean

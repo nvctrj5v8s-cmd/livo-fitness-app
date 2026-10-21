@@ -12,8 +12,9 @@ import { decide, type StoreEvent } from '../_shared/revenuecat_events.ts'
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase.
 //
 // Test purchases (environment SANDBOX) only count while this secret is
-// "true"; remove it before Lookin goes live:
-//   ALLOW_SANDBOX_PURCHASES  true while testing with licence testers
+// "true". It stays set: Apple reviews every version with sandbox purchases,
+// and only testers the owner adds can make them:
+//   ALLOW_SANDBOX_PURCHASES  true
 
 const headers = {
   'Cache-Control': 'no-store',
@@ -108,6 +109,10 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
     if (!to) return
     const english = userData?.user?.user_metadata?.locale === 'en'
     const yearly = (event.product_id ?? '').includes('yearly')
+    // Where the person cancels: Google Play or the App Store.
+    const apple = event.store === 'APP_STORE'
+    const storeDe = apple ? 'dem App Store' : 'Google Play'
+    const storeEn = apple ? 'the App Store' : 'Google Play'
     const plan = yearly ? 'Lookin Premium – Jahresabo' : 'Lookin Premium – Monatsabo'
     // A store trial is booked at 0: the confirmation names the price that follows.
     const trial = event.period_type === 'TRIAL'
@@ -126,21 +131,21 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
       ? `Du hast am ${germanDateTime(new Date(consents[0].created_at))} ausdrücklich verlangt, dass Lookin Premium sofort, also vor Ablauf der Widerrufsfrist, beginnt, und bestätigt, dass dir bekannt ist: Bei einem Widerruf zahlst du einen anteiligen Betrag für die bis dahin erbrachte Leistung, und dein Widerrufsrecht erlischt bei vollständiger Vertragserfüllung.`
       : 'Zur Zustimmung zum sofortigen Beginn liegt uns keine Erklärung vor.'
     const renewal = yearly
-      ? 'Laufzeit: zunächst 12 Monate ab Kaufdatum. Das Jahresabo läuft zunächst ein Jahr. Danach verlängert es sich automatisch auf unbestimmte Zeit, wenn du es nicht vorher kündigst; der Preis wird weiterhin jährlich im Voraus berechnet. Ab dann kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Das gilt nur für diesen einen Fall, das Jahresabo nach dem ersten Jahr: Schreib dazu an lookinsupport@gmail.com; wir beenden das Abo dann spätestens nach einem Monat und erstatten den Rest anteilig. In allen anderen Fällen kündigst du selbst in Google Play.'
+      ? 'Laufzeit: zunächst 12 Monate ab Kaufdatum. Das Jahresabo läuft zunächst ein Jahr. Danach verlängert es sich automatisch auf unbestimmte Zeit, wenn du es nicht vorher kündigst; der Preis wird weiterhin jährlich im Voraus berechnet. Ab dann kannst du jederzeit mit einer Frist von höchstens einem Monat kündigen. Das gilt nur für diesen einen Fall, das Jahresabo nach dem ersten Jahr: Kündige in den Abo-Einstellungen von ' + storeDe + ' und schreib uns an lookinsupport@gmail.com; wir erstatten dir dann den Betrag für die Zeit ab einem Monat nach deiner Nachricht anteilig. In allen anderen Fällen kündigst du nur in den Abo-Einstellungen von ' + storeDe + '.'
       : 'Laufzeit: 1 Monat ab Kaufdatum. Das Abo verlängert sich jeweils um einen Monat, bis du es kündigst.'
     const trialEnd = germanDateTime(new Date(Number(event.expiration_at_ms) || Date.now()))
     const trialNote = trial
-      ? `\n\nTestphase: Dein Abo beginnt mit einer kostenlosen Testphase bis ${trialEnd}. Kündigst du nicht vorher in den Abo-Einstellungen von Google Play, beginnt danach das kostenpflichtige Abo zum oben genannten Preis.`
+      ? `\n\nTestphase: Dein Abo beginnt mit einer kostenlosen Testphase bis ${trialEnd}. Kündigst du nicht vorher in den Abo-Einstellungen von ${storeDe}, beginnt danach das kostenpflichtige Abo zum oben genannten Preis.`
       : ''
     const trialNoteEn = trial
-      ? `\n\nTrial: Your subscription starts with a free trial until ${englishDateTime(new Date(Number(event.expiration_at_ms) || Date.now()))}. Unless you cancel in the Google Play subscription settings before then, the paid subscription starts afterwards at the price above.`
+      ? `\n\nTrial: Your subscription starts with a free trial until ${englishDateTime(new Date(Number(event.expiration_at_ms) || Date.now()))}. Unless you cancel in the subscription settings of ${storeEn} before then, the paid subscription starts afterwards at the price above.`
       : ''
     const planEn = yearly ? 'Lookin Premium — yearly subscription' : 'Lookin Premium — monthly subscription'
     const priceEn = typeof event.price_in_purchased_currency === 'number' && event.currency && !trial
       ? `${event.price_in_purchased_currency.toFixed(2)} ${event.currency}`
       : (yearly ? '49.99 EUR' : '6.99 EUR')
     const renewalEn = yearly
-      ? 'Term: initially 12 months from purchase. The yearly subscription initially runs for one year. It then renews automatically for an indefinite period unless cancelled beforehand; the price continues to be charged annually in advance. From then on, you may cancel at any time with no more than one month\'s notice. This applies only to this one case, a yearly subscription after its first year: email lookinsupport@gmail.com and we will end the subscription within one month and refund the remaining period proportionately. In all other cases you cancel yourself in Google Play.'
+      ? 'Term: initially 12 months from purchase. The yearly subscription initially runs for one year. It then renews automatically for an indefinite period unless cancelled beforehand; the price continues to be charged annually in advance. From then on, you may cancel at any time with no more than one month\'s notice. This applies only to this one case, a yearly subscription after its first year: cancel in the subscription settings of ' + storeEn + ' and email lookinsupport@gmail.com; we will then refund the amount for the time from one month after your message proportionately. In all other cases you cancel only in the subscription settings of ' + storeEn + '.'
       : 'Term: 1 month from purchase. The subscription renews for one month at a time until cancelled.'
     const consentEn = Array.isArray(consents) && consents[0]?.granted
       ? `On ${englishDateTime(new Date(consents[0].created_at))}, you expressly requested that Lookin Premium begin immediately, before the withdrawal period ends, and acknowledged that withdrawal requires proportionate payment for the service already provided and that your right of withdrawal expires upon full performance of the contract.`
@@ -151,11 +156,11 @@ async function sendPurchaseConfirmation(client: any, userId: string, event: Stor
       text: english
         ? `Thank you for your purchase!\n\nContract: ${planEn}\nService: AI photo recognition and Lookin Coach (up to 100 requests per day combined), plus all recipes, in addition to the free features.\nPrice: ${priceEn} (including any applicable VAT)\nPurchased: ${englishDateTime(new Date(Number(event.purchased_at_ms) || Date.now()))}\n` +
           `Provider: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
-          `${renewalEn}${trialNoteEn}\n\nYou may cancel at any time effective at the end of the billing period in the Google Play subscription settings.\n\n` +
+          `${renewalEn}${trialNoteEn}\n\nYou may cancel at any time effective at the end of the billing period in the subscription settings of ${storeEn}.\n\n` +
           `${consentEn}\n\nStatutory rights concerning defects in digital products apply. Terms (version ${termsVersion}): https://app.lookin-foodtracker.de/legal/en/agb.html\n\n${withdrawalPolicyTextEn}`
         : `Vielen Dank für deinen Kauf!\n\nVertrag: ${plan}\nLeistung: KI-Foto-Erkennung und Lookin Coach (zusammen bis zu 100 Anfragen pro Tag) sowie alle Rezepte, zusätzlich zu den kostenlosen Funktionen.\nPreis: ${price} (inkl. gegebenenfalls anfallender Umsatzsteuer)\nKaufdatum: ${purchasedAt}\n` +
         `Anbieter: Mhd Khair Shikho, Am Grübchen 18, 56203 Höhr-Grenzhausen, ${ownerEmail}, +49 15510 338501\n\n` +
-        `${renewal}${trialNote}\n\nKündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von Google Play.\n\n` +
+        `${renewal}${trialNote}\n\nKündigen kannst du jederzeit zum Ende des Abrechnungszeitraums in den Abo-Einstellungen von ${storeDe}.\n\n` +
         `${consent}\n\nEs gelten die gesetzlichen Mängelrechte für digitale Produkte. Allgemeine Geschäftsbedingungen (Fassung ${termsVersion}): https://app.lookin-foodtracker.de/legal/agb.html\n\n${withdrawalPolicyText}`,
     }
     let result = await sendMail(content)
