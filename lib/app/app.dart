@@ -15,6 +15,7 @@ import '../features/auth/presentation/password_recovery_page.dart';
 import '../features/navigation/presentation/app_shell.dart';
 import '../features/onboarding/data/introduction_store.dart';
 import '../features/onboarding/data/personalization_store.dart';
+import '../features/onboarding/presentation/age_gate.dart';
 import '../features/onboarding/presentation/introduction_gate.dart';
 import '../features/onboarding/presentation/personalization_gate.dart';
 import '../features/onboarding/presentation/questions_first_gate.dart';
@@ -227,11 +228,13 @@ class _FitnessAiAppState extends State<FitnessAiApp> {
     if (_userId == null && signInEmail != null) {
       return AuthPage(initialEmail: signInEmail);
     }
-    return const IntroductionGate(
-      child: QuestionsFirstGate(
-        child: AuthGate(
-          child: PersonalizationGate(
-            child: ConsentGate(child: PaywallGate(child: AppShell())),
+    return const AgeGate(
+      child: IntroductionGate(
+        child: QuestionsFirstGate(
+          child: AuthGate(
+            child: PersonalizationGate(
+              child: ConsentGate(child: PaywallGate(child: AppShell())),
+            ),
           ),
         ),
       ),

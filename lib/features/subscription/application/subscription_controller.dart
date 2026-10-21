@@ -44,13 +44,13 @@ class SubscriptionController extends ChangeNotifier {
   bool _loadFailed = false;
   bool _disposed = false;
   Future<void>? _pendingLoad;
-  Future<TrialStartResult>? _pendingTrial;
+  final Map<PremiumPlanId, int> _storeTrialDays = {};
+  Future<void>? _pendingOffer;
 
   Entitlement get entitlement => _entitlement;
   bool get isLoading => _loading;
   bool get hasLoaded => _loaded;
   bool get loadFailed => _loadFailed;
-  bool get isStartingTrial => _pendingTrial != null;
 
   DateTime now() => _now();
 
@@ -59,7 +59,16 @@ class SubscriptionController extends ChangeNotifier {
   EntitlementAccess get access => _entitlement.accessAt(_now());
   bool get hasPremium => access != EntitlementAccess.free;
   bool get isTrialing => access == EntitlementAccess.trialing;
-  bool get canStartTrial => _entitlement.trialAvailableAt(_now());
+
+  /// Days of free trial the store grants this account for [plan]. The trial
+  /// is a store offer: the store asks for a payment method and decides who
+  /// is eligible (once per store account). 0 = no trial offered.
+  int trialDaysFor(PremiumPlanId plan) =>
+      hasPremium ? 0 : (_storeTrialDays[plan] ?? 0);
+
+  /// Whether the store offers this account a free trial.
+  bool get canStartTrial =>
+      PremiumPlanId.values.any((p) => trialDaysFor(p) > 0);
 
   Future<void> load({bool force = false}) {
     if (_pendingLoad != null) return _pendingLoad!;
@@ -78,6 +87,7 @@ class SubscriptionController extends ChangeNotifier {
       if (_disposed) return;
       _entitlement = next;
       _loaded = true;
+      if (!hasPremium) unawaited(refreshStoreOffer());
     } catch (_) {
       if (_disposed) return;
       // Keep the last known state; the paywall gate retries next launch.
@@ -88,57 +98,31 @@ class SubscriptionController extends ChangeNotifier {
     }
   }
 
-  Future<TrialStartResult> startTrial() {
-    final pending = _pendingTrial;
-    if (pending != null) return pending;
-    final future = _startTrial().whenComplete(() {
-      _pendingTrial = null;
-      _notify();
-    });
-    _pendingTrial = future;
-    _notify();
-    return future;
+  /// Asks the store which free trial it offers this account. Without store
+  /// billing there is no trial. Never throws.
+  Future<void> refreshStoreOffer() {
+    if (!billing.isAvailable) return Future.value();
+    return _pendingOffer ??= _readOffer().whenComplete(
+      () => _pendingOffer = null,
+    );
   }
 
-  Future<TrialStartResult> _startTrial() async {
-    TrialStartResult result;
-    try {
-      result = await repository.startTrial().timeout(
-        const Duration(seconds: 12),
-      );
-    } catch (_) {
-      result = const TrialStartResult(TrialStartStatus.unavailable);
+  Future<void> _readOffer() async {
+    final next = <PremiumPlanId, int>{};
+    for (final plan in PremiumPlanId.values) {
+      try {
+        next[plan] = await billing
+            .freeTrialDays(plan)
+            .timeout(const Duration(seconds: 8));
+      } catch (_) {
+        next[plan] = 0;
+      }
     }
-    if (_disposed) return result;
-    switch (result.status) {
-      case TrialStartStatus.started:
-      case TrialStartStatus.alreadyPremium:
-        if (result.entitlement case final granted?) {
-          _entitlement = granted;
-          _loaded = true;
-        }
-        // Confirm with the server, which stays the source of truth.
-        try {
-          final confirmed = await repository.loadEntitlement().timeout(
-            const Duration(seconds: 8),
-          );
-          if (!_disposed) {
-            _entitlement = confirmed;
-            _loaded = true;
-          }
-        } catch (_) {
-          // The RPC answer above remains valid until the next load.
-        }
-      case TrialStartStatus.alreadyUsed:
-        _entitlement = _entitlement.copyWith(trialUsed: true);
-      case TrialStartStatus.emailUnconfirmed:
-      case TrialStartStatus.notConfigured:
-      case TrialStartStatus.signedOut:
-      case TrialStartStatus.previewOnly:
-      case TrialStartStatus.unavailable:
-        break;
-    }
-    return result;
+    if (_disposed) return;
+    _storeTrialDays
+      ..clear()
+      ..addAll(next);
+    _notify();
   }
 
   /// Starts the store purchase for [plan]. Premium is only reported once the

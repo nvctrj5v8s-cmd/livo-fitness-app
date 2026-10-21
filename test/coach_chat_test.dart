@@ -465,9 +465,6 @@ void main() {
 class _FailingRepository implements SubscriptionRepository {
   @override
   Future<Never> loadEntitlement() => Future.error(StateError('offline'));
-
-  @override
-  Future<Never> startTrial() => Future.error(StateError('offline'));
 }
 
 IconButton _sendButton(WidgetTester tester) =>

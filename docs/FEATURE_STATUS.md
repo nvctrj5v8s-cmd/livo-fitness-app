@@ -1,5 +1,30 @@
 # Funktionsstatus
 
+## Testphase nur über Google Play, Altersabfrage, Rechtstexte, 21. Oktober 2026
+
+- **Testphase mit Zahlungsmittel:** Die 7-Tage-Testphase ist ein Angebot von
+  Google Play (Zahlungsmittel nötig, einmal pro Google-Konto). Die Testphase
+  nur mit E-Mail ist abgeschaltet (Migration `0025`: `start_premium_trial`
+  gesperrt, `trial_claims` geleert). Die Paywall zeigt "7 Tage kostenlos
+  testen" nur, wenn der Store das Angebot meldet; sonst "Kostenpflichtig
+  abonnieren". **Noch zu tun in der Play Console:** an beiden Basis-Tarifen ein
+  Angebot "Kostenlose Testphase, 7 Tage, neue Kunden" anlegen (siehe
+  `docs/BILLING_SETUP.md`). Bis dahin gibt es keine Testphase.
+- **Altersabfrage:** Beim ersten Start fragt die App "Bist du mindestens 18
+  Jahre alt?" (Ja/Nein). Ja wird nur auf dem Gerät gemerkt, Nein sperrt die App
+  und wird nicht gespeichert.
+- **Rechtstexte:** E-Mail-Kündigung für alle entfernt (gekündigt wird in Google
+  Play; nur das Jahresabo nach dem ersten Jahr bleibt per E-Mail, § 309 Nr. 9
+  BGB). Preisänderungen nur mit Zustimmung, bis zum Periodenende gilt der alte
+  Preis. Gesetzesangaben in AGB, Impressum und Widerruf ergänzt. Testphase in
+  AGB, Widerruf, Datenschutz, Konto-löschen, Store-Text und Kaufmail angepasst.
+  Reste von Entwurfs-Hinweisen im Impressum-Quelltext und in `legal.css`
+  entfernt.
+- **USt-ID:** Sobald vorhanden, im Impressum (DE/EN) unter "Kontakt"
+  ergänzen (§ 5 Abs. 1 Nr. 6 DDG).
+- Offen für die anwaltliche Prüfung: Kündigungsbutton (§ 312k BGB) bei Abos
+  über den Store, Jahresabo-Verlängerung (§ 309 Nr. 9 BGB).
+
 ## Befunde der Rechtstextprüfung behoben, 20. Oktober 2026
 
 Umsetzung der bestätigten Abweichungen aus dem nachfolgenden Eintrag

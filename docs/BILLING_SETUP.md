@@ -22,9 +22,13 @@ Der Funktionsstatus steht in `docs/FEATURE_STATUS.md`.
 Die Konto-ID, die RevenueCat bekommt, ist die Supabase-Nutzer-ID. Andere Daten
 (Profil, Tagebuch, Gesundheit) gehen nicht an RevenueCat.
 
-Die kostenlose Testphase (7 Tage, ohne Zahlungsdaten) bleibt serverseitig in der
-App (`start_premium_trial`). In der Play Console darf deshalb **kein**
-zusätzliches Gratis-Angebot an den Abos hängen, sonst gäbe es 14 Tage gratis.
+Die kostenlose Testphase (7 Tage) ist seit Migration `0025` ein **Angebot von
+Google Play** am jeweiligen Basis-Tarif. Google verlangt dafür ein Zahlungsmittel
+und erlaubt sie nur einmal pro Google-Konto. Die App zeigt "7 Tage kostenlos
+testen" nur, wenn der Store das Angebot für dieses Konto meldet
+(`StoreBilling.freeTrialDays`); ohne Angebot steht "Kostenpflichtig
+abonnieren". Der Webhook bucht die Testphase als `trialing` (`period_type`
+`TRIAL`). Die alte E-Mail-Testphase (`start_premium_trial`) ist gesperrt.
 
 ## Im Code fertig
 
@@ -73,7 +77,10 @@ Monetarisierung > Abos:
 | `lookin_premium_monthly` | monatlich, automatisch verlängernd | 6,99 € |
 | `lookin_premium_yearly` | jährlich, automatisch verlängernd | 49,99 € |
 
-- **Keine** Testphase oder Einführungsangebot hinzufügen.
+- An **beiden** Basis-Tarifen ein Angebot anlegen: Abos > Basis-Tarif >
+  "Angebot hinzufügen" > Berechtigung "Neue Kunden" > Phase "Kostenlose
+  Testphase", **7 Tage**. Ohne dieses Angebot gibt es keine Testphase.
+- Kein Einführungsangebot (vergünstigter Preis) hinzufügen.
 - Die Preise müssen zu `lib/features/subscription/domain/subscription_plans.dart`
   passen. Ändert sich ein Preis, ändern sich Store und Datei gemeinsam.
 

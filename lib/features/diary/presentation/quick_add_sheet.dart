@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../subscription/domain/subscription_plans.dart';
 import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
 import 'add_meal_sheet.dart';
@@ -97,9 +96,7 @@ class _QuickAddSheet extends StatelessWidget {
             title: context.l10n.diaryAiPhoto,
             subtitle: premium
                 ? context.l10n.diaryTakeAPhotoAiEstimatesFoodsAnd
-                : context.l10n.diaryPremiumFeatureValueDayFreeTrial(
-                    (SubscriptionPlans.trialDays).toString(),
-                  ),
+                : context.l10n.diaryPremiumFeature,
             premiumBadge: !premium,
           ),
           const SizedBox(height: 10),

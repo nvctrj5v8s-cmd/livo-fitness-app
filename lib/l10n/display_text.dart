@@ -1347,24 +1347,6 @@ abstract final class DisplayText {
       L10n.current.progressCheckYourConnectionAndTryAgain,
     "Kein Entwickler-Konto." => L10n.current.subscriptionNotADeveloperAccount,
     "Unerwartete Antwort." => L10n.current.subscriptionUnexpectedResponse,
-    "Premium ist für dein Konto bereits aktiv." =>
-      L10n.current.subscriptionPremiumIsAlreadyActiveForYourAccount,
-    "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten." =>
-      L10n.current.subscriptionPleaseConfirmYourEmailAddressUsingThe,
-    "Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse." =>
-      L10n.current.subscriptionYouHaveAlreadyUsedYourFreeTrial,
-    "Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet." =>
-      L10n.current.subscriptionTheTrialIsBeingSetUpPlease,
-    "Bitte melde dich an, um die Testphase zu starten." =>
-      L10n.current.subscriptionPleaseSignInToStartYourTrial,
-    "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen." =>
-      L10n.current.subscriptionNoTrialStartsInThePreviewWithout,
-    "Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut." =>
-      L10n.current.subscriptionYourTrialCouldNotBeStartedJust,
-    "Starte kostenlos" => L10n.current.subscriptionStartForFree,
-    "Testphase bereits genutzt" => L10n.current.subscriptionTrialAlreadyUsed,
-    "Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist." =>
-      L10n.current.subscriptionYouCanSubscribeToPremiumOncePayments,
     "Weiter mit der kostenlosen Version" =>
       L10n.current.subscriptionContinueWithTheFreeVersion,
     "Schön, dass du da bist" => L10n.current.subscriptionGladYouAreHere,
@@ -1385,9 +1367,6 @@ abstract final class DisplayText {
     "Großzügiges KI-Kontingent" => L10n.current.subscriptionGenerousAiAllowance,
     "Mit Abo bis zu 100 KI-Anfragen pro Tag (Coach und Foto zusammen), in der Testphase bis zu 50." =>
       L10n.current.subscriptionUpTo100AiRequestsADay,
-    "Testphase wird gestartet …" => L10n.current.subscriptionStartingTrial,
-    "Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten." =>
-      L10n.current.subscriptionYourFreeTrialIsActiveItEnds,
     "Dein Premium-Abo ist aktiv." =>
       L10n.current.subscriptionYourPremiumSubscriptionIsActive,
     "Premium ist aktiv" => L10n.current.subscriptionPremiumIsActive,
@@ -1408,8 +1387,6 @@ abstract final class DisplayText {
     "Neues" => L10n.current.subscriptionNew,
     "Mit Premium: alle Rezepte" =>
       L10n.current.subscriptionWithPremiumAllRecipes,
-    "Endet automatisch · keine Zahlungsdaten nötig · keine Kosten" =>
-      L10n.current.subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo,
     "Bezahlung wird gerade eingerichtet" =>
       L10n.current.subscriptionPaymentsAreBeingSetUp,
     "Jährlich" => L10n.current.subscriptionYearly,

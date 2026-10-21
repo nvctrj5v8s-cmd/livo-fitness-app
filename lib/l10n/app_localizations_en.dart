@@ -560,7 +560,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String coachValueDayFreeTrialEndsAutomaticallyNo(String arg0) {
-    return '$arg0-day free trial · ends automatically · no payment details';
+    return '$arg0-day free trial · then a subscription, cancel anytime';
   }
 
   @override
@@ -1407,11 +1407,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diaryPremiumFeature => 'Premium feature';
-
-  @override
-  String diaryPremiumFeatureValueDayFreeTrial(String arg0) {
-    return 'Premium feature · $arg0-day free trial';
-  }
 
   @override
   String get diaryPreviousWeek => 'Previous week';
@@ -3694,6 +3689,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingAge => 'Age';
 
   @override
+  String get onboardingAgeBlockedText =>
+      'You said you are under 18, so you cannot use Lookin. If you tapped the wrong answer, close the app and open it again.';
+
+  @override
+  String get onboardingAgeBlockedTitle => 'Lookin is for ages 18 and over';
+
+  @override
+  String get onboardingAgeGateNo => 'No';
+
+  @override
+  String get onboardingAgeGateText =>
+      'Lookin is intended for people aged 18 and over. Please confirm your age before you continue.';
+
+  @override
+  String get onboardingAgeGateTitle => 'Are you at least 18 years old?';
+
+  @override
+  String get onboardingAgeGateYes => 'Yes, I am at least 18';
+
+  @override
   String get onboardingAiEstimate => 'AI estimate';
 
   @override
@@ -5297,11 +5312,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionAll => 'All';
 
   @override
-  String subscriptionAllPremiumFeaturesForValueDaysThen(String arg0) {
-    return 'All Premium features for $arg0 days — then automatically continue for free.';
-  }
-
-  @override
   String get subscriptionAllRecipes => 'All recipes';
 
   @override
@@ -5346,10 +5356,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionEmailForAcknowledgement => 'Email for acknowledgement';
 
   @override
-  String get subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo =>
-      'Ends automatically · no payment details needed · no cost';
-
-  @override
   String subscriptionEquivalentToValuePerMonth(String arg0) {
     return 'equivalent to $arg0 per month';
   }
@@ -5366,12 +5372,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0) {
-    return 'Free trial until $arg0. It ends automatically — at no cost.';
+    return 'Free trial until $arg0. The paid subscription starts afterwards unless you cancel in Google Play first.';
   }
 
   @override
-  String subscriptionFreeTrialValueDaysOncePerEmail(String arg0, String arg1) {
-    return 'Free trial: $arg0 days, once per email address. It ends automatically — at no cost and without automatic renewal. No payment details are requested.\n\n$arg1';
+  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1) {
+    return 'Free trial: $arg0 days, once per Google account and only with a payment method in Google Play. If you do not cancel in Google Play before the trial ends, the paid subscription starts and renews automatically at the price of the chosen plan.\n\n$arg1';
   }
 
   @override
@@ -5413,10 +5419,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'No active subscription was found for this store account.';
 
   @override
-  String get subscriptionNoTrialStartsInThePreviewWithout =>
-      'No trial starts in the preview without an account. Sign in to try Premium for free.';
-
-  @override
   String get subscriptionNotADeveloperAccount => 'Not a developer account.';
 
   @override
@@ -5444,14 +5446,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please confirm first that Lookin Premium should begin immediately.';
 
   @override
-  String get subscriptionPleaseConfirmYourEmailAddressUsingThe =>
-      'Please confirm your email address using the link in our email first. You can then start your trial.';
-
-  @override
-  String get subscriptionPleaseSignInToStartYourTrial =>
-      'Please sign in to start your trial.';
-
-  @override
   String get subscriptionPleaseTakeAScreenshotOfThisAcknowledgement =>
       'Please take a screenshot of this acknowledgement. An email acknowledgement will follow once our email delivery is set up. Your refund is handled through Google Play.';
 
@@ -5466,15 +5460,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get subscriptionPremiumInTheAndroidApp => 'Premium in the Android app';
+
+  @override
   String get subscriptionPremiumIsActive => 'Premium is active';
 
   @override
   String get subscriptionPremiumIsActiveThankYouForYour =>
       'Premium is active. Thank you for your support!';
-
-  @override
-  String get subscriptionPremiumIsAlreadyActiveForYourAccount =>
-      'Premium is already active for your account.';
 
   @override
   String get subscriptionPreparingYourLookin => 'Preparing your Lookin …';
@@ -5511,12 +5504,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscriptionSearchBarcodeCustomFoods =>
       'Search, barcode & custom foods';
-
-  @override
-  String get subscriptionStartForFree => 'Start for free';
-
-  @override
-  String get subscriptionStartingTrial => 'Starting trial …';
 
   @override
   String get subscriptionSubscribeInTheLookinAppForAndroid =>
@@ -5560,9 +5547,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String subscriptionSubscriptionsAreAvailableInTheLookinApp(String arg0) {
-    return 'Subscriptions are available in the Lookin app for Android. Nothing was purchased or charged in the browser — try Premium here free for $arg0 days.';
-  }
+  String get subscriptionSubscriptionsAreAvailableInTheLookinApp =>
+      'Subscriptions are available in the Lookin app for Android. Nothing was purchased or charged in the browser.';
 
   @override
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd =>
@@ -5571,6 +5557,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String subscriptionTermsShort(String arg0) {
     return 'Billed by the store · renews automatically · cancel anytime in the subscription settings of $arg0, effective at the end of the billing period';
+  }
+
+  @override
+  String subscriptionTermsShortTrial(String arg0) {
+    return 'The trial needs a payment method in $arg0 · the subscription then starts and renews automatically · cancel in the subscription settings of $arg0 before the trial ends and nothing is charged';
   }
 
   @override
@@ -5585,19 +5576,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'The store is currently unavailable. Nothing was charged — try again later.';
 
   @override
-  String get subscriptionTheTrialIsBeingSetUpPlease =>
-      'The trial is being set up. Please try again later — nothing was started or charged.';
-
-  @override
-  String get subscriptionTrialAlreadyUsed => 'Trial already used';
-
-  @override
-  String get subscriptionTrialNoStrings =>
-      'No subscription · no payment details · ends automatically';
-
-  @override
-  String subscriptionTryFreeFirst(String arg0) {
-    return 'Try $arg0 days free first';
+  String subscriptionThenValue(String arg0) {
+    return 'Then paid: $arg0';
   }
 
   @override
@@ -5616,8 +5596,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String subscriptionValueDayFreeTrialEndsAutomatically(String arg0) {
-    return '$arg0-day free trial · ends automatically';
+  String subscriptionValueDayFreeTrialThenSubscription(String arg0) {
+    return '$arg0-day free trial · then a subscription, cancel anytime';
   }
 
   @override
@@ -5631,15 +5611,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0) {
-    return '$arg0 It ends automatically — at no cost and without a subscription.';
+    return '$arg0 The paid subscription starts afterwards. You can cancel in Google Play at any time until then.';
   }
 
   @override
-  String subscriptionValueNothingWasPurchasedOrChargedTry(
-    String arg0,
-    String arg1,
-  ) {
-    return '$arg0. Nothing was purchased or charged — try Premium free for $arg1 days in the meantime.';
+  String subscriptionValueNothingWasPurchasedOrChargedTry(String arg0) {
+    return '$arg0. Nothing was purchased or charged.';
   }
 
   @override
@@ -5691,7 +5668,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subscriptionWelcomeTitle => 'Welcome to Lookin Premium';
 
   @override
-  String get subscriptionWelcomeTrialEnds => 'Ends automatically';
+  String get subscriptionWelcomeTrialEnds => 'Trial ends';
 
   @override
   String subscriptionWelcomeTrialPlan(String arg0) {
@@ -5730,14 +5707,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get subscriptionYouCanSubscribeToPremiumOncePayments =>
-      'You can subscribe to Premium once payments are available.';
-
-  @override
-  String get subscriptionYouHaveAlreadyUsedYourFreeTrial =>
-      'You have already used your free trial — it is available once per email address.';
-
-  @override
   String get subscriptionYourAiChatForNutritionAndFitness =>
       'Your AI chat for nutrition and fitness, tailored to your goal and daily totals.';
 
@@ -5747,7 +5716,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionYourFreeTrialIsActiveItEnds =>
-      'Your free trial is active. It ends automatically — at no cost.';
+      'Your free trial is active. The paid subscription starts afterwards unless you cancel in Google Play first.';
 
   @override
   String subscriptionYourFreeTrialLastsValueDays(String arg0) {
@@ -5778,10 +5747,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscriptionYourPurchaseHasBeenReceivedActivationIs =>
       'Your purchase has been received. Activation is taking a moment — open Lookin again shortly. You will not be charged twice.';
-
-  @override
-  String get subscriptionYourTrialCouldNotBeStartedJust =>
-      'Your trial could not be started just now. Please check your connection and try again.';
 
   @override
   String get subscriptionYourWithdrawalCouldNotBeSubmittedJust =>

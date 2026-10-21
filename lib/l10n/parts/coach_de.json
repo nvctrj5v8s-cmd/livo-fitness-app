@@ -51,7 +51,7 @@
   "coachYourPersonalAiCoach": "Dein persönlicher KI-Coach",
   "coachAskAboutMealsNutritionOrTrainingAnswers": "Frag nach Mahlzeiten, Nährwerten oder Training – die Antworten berücksichtigen dein Ziel und deine Tageswerte.",
   "coachUnlockPremium": "Premium freischalten",
-  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · endet automatisch · keine Zahlungsdaten",
+  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · danach Abo, jederzeit kündbar",
   "@coachValueDayFreeTrialEndsAutomaticallyNo": {
     "placeholders": {
       "arg0": {

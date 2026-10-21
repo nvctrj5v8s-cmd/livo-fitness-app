@@ -565,7 +565,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String coachValueDayFreeTrialEndsAutomaticallyNo(String arg0) {
-    return '$arg0 Tage kostenlos testen · endet automatisch · keine Zahlungsdaten';
+    return '$arg0 Tage kostenlos testen · danach Abo, jederzeit kündbar';
   }
 
   @override
@@ -1419,11 +1419,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diaryPremiumFeature => 'Premium-Funktion';
-
-  @override
-  String diaryPremiumFeatureValueDayFreeTrial(String arg0) {
-    return 'Premium-Funktion · $arg0 Tage kostenlos testen';
-  }
 
   @override
   String get diaryPreviousWeek => 'Vorherige Woche';
@@ -3712,6 +3707,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get onboardingAge => 'Alter';
 
   @override
+  String get onboardingAgeBlockedText =>
+      'Du hast angegeben, unter 18 zu sein. Deshalb kannst du Lookin nicht nutzen. Wenn du dich vertippt hast, schließe die App und öffne sie neu.';
+
+  @override
+  String get onboardingAgeBlockedTitle => 'Lookin ist erst ab 18';
+
+  @override
+  String get onboardingAgeGateNo => 'Nein';
+
+  @override
+  String get onboardingAgeGateText =>
+      'Lookin ist für Personen ab 18 Jahren gedacht. Bitte bestätige dein Alter, bevor du weitermachst.';
+
+  @override
+  String get onboardingAgeGateTitle => 'Bist du mindestens 18 Jahre alt?';
+
+  @override
+  String get onboardingAgeGateYes => 'Ja, ich bin mindestens 18';
+
+  @override
   String get onboardingAiEstimate => 'KI-Schätzung';
 
   @override
@@ -5319,11 +5334,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionAll => 'Alle';
 
   @override
-  String subscriptionAllPremiumFeaturesForValueDaysThen(String arg0) {
-    return 'Alle Premium-Funktionen $arg0 Tage lang – danach geht es automatisch kostenlos weiter.';
-  }
-
-  @override
   String get subscriptionAllRecipes => 'Alle Rezepte';
 
   @override
@@ -5368,10 +5378,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'E-Mail für die Bestätigung';
 
   @override
-  String get subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo =>
-      'Endet automatisch · keine Zahlungsdaten nötig · keine Kosten';
-
-  @override
   String subscriptionEquivalentToValuePerMonth(String arg0) {
     return 'entspricht $arg0 pro Monat';
   }
@@ -5388,12 +5394,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0) {
-    return 'Kostenlose Testphase bis $arg0. Sie endet automatisch – ohne Kosten.';
+    return 'Kostenlose Testphase bis $arg0. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.';
   }
 
   @override
-  String subscriptionFreeTrialValueDaysOncePerEmail(String arg0, String arg1) {
-    return 'Kostenlose Testphase: $arg0 Tage, einmal pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n$arg1';
+  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1) {
+    return 'Kostenlose Testphase: $arg0 Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n$arg1';
   }
 
   @override
@@ -5435,10 +5441,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Für dieses Store-Konto wurde kein aktives Abo gefunden.';
 
   @override
-  String get subscriptionNoTrialStartsInThePreviewWithout =>
-      'In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.';
-
-  @override
   String get subscriptionNotADeveloperAccount => 'Kein Entwickler-Konto.';
 
   @override
@@ -5467,14 +5469,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.';
 
   @override
-  String get subscriptionPleaseConfirmYourEmailAddressUsingThe =>
-      'Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten.';
-
-  @override
-  String get subscriptionPleaseSignInToStartYourTrial =>
-      'Bitte melde dich an, um die Testphase zu starten.';
-
-  @override
   String get subscriptionPleaseTakeAScreenshotOfThisAcknowledgement =>
       'Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.';
 
@@ -5489,15 +5483,14 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get subscriptionPremiumInTheAndroidApp => 'Premium in der Android-App';
+
+  @override
   String get subscriptionPremiumIsActive => 'Premium ist aktiv';
 
   @override
   String get subscriptionPremiumIsActiveThankYouForYour =>
       'Premium ist aktiv. Danke für deine Unterstützung!';
-
-  @override
-  String get subscriptionPremiumIsAlreadyActiveForYourAccount =>
-      'Premium ist für dein Konto bereits aktiv.';
 
   @override
   String get subscriptionPreparingYourLookin =>
@@ -5535,12 +5528,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get subscriptionSearchBarcodeCustomFoods =>
       'Suche, Barcode & eigene Lebensmittel';
-
-  @override
-  String get subscriptionStartForFree => 'Starte kostenlos';
-
-  @override
-  String get subscriptionStartingTrial => 'Testphase wird gestartet …';
 
   @override
   String get subscriptionSubscribeInTheLookinAppForAndroid =>
@@ -5584,9 +5571,8 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String subscriptionSubscriptionsAreAvailableInTheLookinApp(String arg0) {
-    return 'Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet – teste Premium hier $arg0 Tage kostenlos.';
-  }
+  String get subscriptionSubscriptionsAreAvailableInTheLookinApp =>
+      'Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet.';
 
   @override
   String get subscriptionTakeAPhotoLookinEstimatesFoodsAnd =>
@@ -5595,6 +5581,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String subscriptionTermsShort(String arg0) {
     return 'Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von $arg0 kündbar, wirksam zum Ende des Abrechnungszeitraums';
+  }
+
+  @override
+  String subscriptionTermsShortTrial(String arg0) {
+    return 'Die Testphase braucht ein Zahlungsmittel in $arg0 · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von $arg0 kündbar, dann wird nichts berechnet';
   }
 
   @override
@@ -5609,19 +5600,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.';
 
   @override
-  String get subscriptionTheTrialIsBeingSetUpPlease =>
-      'Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.';
-
-  @override
-  String get subscriptionTrialAlreadyUsed => 'Testphase bereits genutzt';
-
-  @override
-  String get subscriptionTrialNoStrings =>
-      'Kein Abo · keine Zahlungsdaten · endet automatisch';
-
-  @override
-  String subscriptionTryFreeFirst(String arg0) {
-    return 'Erst $arg0 Tage gratis testen';
+  String subscriptionThenValue(String arg0) {
+    return 'Danach kostenpflichtig: $arg0';
   }
 
   @override
@@ -5640,8 +5620,8 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String subscriptionValueDayFreeTrialEndsAutomatically(String arg0) {
-    return '$arg0 Tage kostenlos testen · endet automatisch';
+  String subscriptionValueDayFreeTrialThenSubscription(String arg0) {
+    return '$arg0 Tage kostenlos testen · danach Abo, jederzeit kündbar';
   }
 
   @override
@@ -5655,15 +5635,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0) {
-    return '$arg0 Sie endet automatisch – ohne Kosten und ohne Abo.';
+    return '$arg0 Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.';
   }
 
   @override
-  String subscriptionValueNothingWasPurchasedOrChargedTry(
-    String arg0,
-    String arg1,
-  ) {
-    return '$arg0. Es wurde nichts gekauft und nichts berechnet – teste Premium bis dahin $arg1 Tage kostenlos.';
+  String subscriptionValueNothingWasPurchasedOrChargedTry(String arg0) {
+    return '$arg0. Es wurde nichts gekauft und nichts berechnet.';
   }
 
   @override
@@ -5715,7 +5692,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get subscriptionWelcomeTitle => 'Willkommen bei Lookin Premium';
 
   @override
-  String get subscriptionWelcomeTrialEnds => 'Endet automatisch';
+  String get subscriptionWelcomeTrialEnds => 'Testphase endet';
 
   @override
   String subscriptionWelcomeTrialPlan(String arg0) {
@@ -5755,14 +5732,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get subscriptionYouCanSubscribeToPremiumOncePayments =>
-      'Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist.';
-
-  @override
-  String get subscriptionYouHaveAlreadyUsedYourFreeTrial =>
-      'Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse.';
-
-  @override
   String get subscriptionYourAiChatForNutritionAndFitness =>
       'Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und deine Tageswerte.';
 
@@ -5772,7 +5741,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionYourFreeTrialIsActiveItEnds =>
-      'Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten.';
+      'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.';
 
   @override
   String subscriptionYourFreeTrialLastsValueDays(String arg0) {
@@ -5803,10 +5772,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get subscriptionYourPurchaseHasBeenReceivedActivationIs =>
       'Dein Kauf ist angekommen. Die Freischaltung dauert noch einen Moment – öffne Lookin gleich noch einmal. Es wird nichts doppelt berechnet.';
-
-  @override
-  String get subscriptionYourTrialCouldNotBeStartedJust =>
-      'Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut.';
 
   @override
   String get subscriptionYourWithdrawalCouldNotBeSubmittedJust =>

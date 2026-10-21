@@ -233,5 +233,11 @@
   "onboardingValueAroundValue": "{arg0} around {arg1}",
   "onboardingTodayValue": "Today · {arg0}",
   "onboardingARoughEstimateYourBodyDoesNot": "A rough estimate — your body does not follow a calendar.",
-  "onboardingARoughEstimateAtAValuePace": "A rough estimate at a {arg0} pace — your body does not follow a calendar."
+  "onboardingARoughEstimateAtAValuePace": "A rough estimate at a {arg0} pace — your body does not follow a calendar.",
+  "onboardingAgeGateTitle": "Are you at least 18 years old?",
+  "onboardingAgeGateText": "Lookin is intended for people aged 18 and over. Please confirm your age before you continue.",
+  "onboardingAgeGateYes": "Yes, I am at least 18",
+  "onboardingAgeGateNo": "No",
+  "onboardingAgeBlockedTitle": "Lookin is for ages 18 and over",
+  "onboardingAgeBlockedText": "You said you are under 18, so you cannot use Lookin. If you tapped the wrong answer, close the app and open it again."
 }

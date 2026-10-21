@@ -26,14 +26,4 @@ nav { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 4px 0 18px; font-si
 table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.92rem; }
 th, td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
 th { background: var(--surface); }
-.draft {
-  background: #3a2f00;
-  border: 1px solid #ffb06a;
-  color: #fff3d6;
-  padding: 10px 14px;
-  border-radius: 10px;
-  margin: 12px 0 18px;
-  font-size: 0.92rem;
-}
-mark.todo { background: #ffe27a; color: #1b1500; padding: 0 4px; border-radius: 4px; font-weight: 600; }
 .box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px 16px 12px; margin: 14px 0; }

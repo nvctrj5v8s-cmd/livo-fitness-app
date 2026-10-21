@@ -116,8 +116,11 @@ class _PaywallPageState extends State<PaywallPage>
   _Notice? _notice;
   PremiumWelcomeKind? _celebration;
 
-  /// The plan that was bought; `null` after a restore or the trial.
+  /// The plan that was bought; `null` after a restore.
   PremiumPlan? _celebratedPlan;
+
+  /// Length of the store trial that was just started (0 = none).
+  int _celebratedTrialDays = 0;
 
   SubscriptionController get _subscription => widget.subscription;
   PremiumPlan get _plan => SubscriptionPlans.byId(_selected);
@@ -130,11 +133,15 @@ class _PaywallPageState extends State<PaywallPage>
       duration: const Duration(milliseconds: 2400),
     );
     _subscription.addListener(_onSubscription);
-    if (!_subscription.hasLoaded && !_subscription.isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(_subscription.load());
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (!_subscription.hasLoaded && !_subscription.isLoading) {
+        unawaited(_subscription.load());
+      }
+      // Which free trial the store offers this account (needs a payment
+      // method; the store decides who is eligible).
+      unawaited(_subscription.refreshStoreOffer());
+    });
   }
 
   @override
@@ -156,54 +163,6 @@ class _PaywallPageState extends State<PaywallPage>
 
   void _onSubscription() {
     if (mounted) setState(() {});
-  }
-
-  Future<void> _startTrial() async {
-    if (_subscription.isStartingTrial) return;
-    setState(() => _notice = null);
-    final result = await _subscription.startTrial();
-    if (!mounted) return;
-    setState(() {
-      switch (result.status) {
-        case TrialStartStatus.started:
-          _celebration = PremiumWelcomeKind.trial;
-        case TrialStartStatus.alreadyPremium:
-          _notice = _Notice(
-            L10n.current.subscriptionPremiumIsAlreadyActiveForYourAccount,
-            _Tone.success,
-          );
-        case TrialStartStatus.emailUnconfirmed:
-          _notice = _Notice(
-            L10n.current.subscriptionPleaseConfirmYourEmailAddressUsingThe,
-            _Tone.info,
-          );
-        case TrialStartStatus.alreadyUsed:
-          _notice = _Notice(
-            L10n.current.subscriptionYouHaveAlreadyUsedYourFreeTrial,
-            _Tone.warning,
-          );
-        case TrialStartStatus.notConfigured:
-          _notice = _Notice(
-            L10n.current.subscriptionTheTrialIsBeingSetUpPlease,
-            _Tone.info,
-          );
-        case TrialStartStatus.signedOut:
-          _notice = _Notice(
-            L10n.current.subscriptionPleaseSignInToStartYourTrial,
-            _Tone.warning,
-          );
-        case TrialStartStatus.previewOnly:
-          _notice = _Notice(
-            L10n.current.subscriptionNoTrialStartsInThePreviewWithout,
-            _Tone.info,
-          );
-        case TrialStartStatus.unavailable:
-          _notice = _Notice(
-            L10n.current.subscriptionYourTrialCouldNotBeStartedJust,
-            _Tone.warning,
-          );
-      }
-    });
   }
 
   void _showMessage(String message) {
@@ -268,7 +227,12 @@ class _PaywallPageState extends State<PaywallPage>
       return;
     }
     final plan = _plan;
-    _afterStoreFlow(await _subscription.purchase(_selected), plan: plan);
+    final trialDays = _subscription.trialDaysFor(_selected);
+    _afterStoreFlow(
+      await _subscription.purchase(_selected),
+      plan: plan,
+      trialDays: trialDays,
+    );
   }
 
   Future<void> _restore() async {
@@ -280,13 +244,21 @@ class _PaywallPageState extends State<PaywallPage>
     _afterStoreFlow(await _subscription.restore());
   }
 
-  void _afterStoreFlow(PurchaseOutcome outcome, {PremiumPlan? plan}) {
+  void _afterStoreFlow(
+    PurchaseOutcome outcome, {
+    PremiumPlan? plan,
+    int trialDays = 0,
+  }) {
     if (!mounted) return;
     if (outcome == PurchaseOutcome.active) {
-      // A real celebration instead of a small message and a closing page.
+      // A real celebration instead of a small message and a closing page. A
+      // purchase that starts with the store's free phase is a trial.
       setState(() {
-        _celebration = PremiumWelcomeKind.purchase;
+        _celebration = _subscription.isTrialing
+            ? PremiumWelcomeKind.trial
+            : PremiumWelcomeKind.purchase;
         _celebratedPlan = plan;
+        _celebratedTrialDays = trialDays;
       });
       return;
     }
@@ -329,10 +301,11 @@ class _PaywallPageState extends State<PaywallPage>
         onContinue: widget.onActivated ?? widget.onClose,
       );
     }
+    final trialDays = _celebratedTrialDays > 0
+        ? _celebratedTrialDays
+        : SubscriptionPlans.trialDays;
     final until = expiresAt == null
-        ? l10n.subscriptionYourFreeTrialLastsValueDays(
-            (SubscriptionPlans.trialDays).toString(),
-          )
+        ? l10n.subscriptionYourFreeTrialLastsValueDays(trialDays.toString())
         : l10n.subscriptionYourFreeTrialRunsUntilValue(
             (formatPremiumDateTime(expiresAt)).toString(),
           );
@@ -344,9 +317,7 @@ class _PaywallPageState extends State<PaywallPage>
       ),
       card: WelcomeCardData(
         memberName: name,
-        planLabel: l10n.subscriptionWelcomeTrialPlan(
-          (SubscriptionPlans.trialDays).toString(),
-        ),
+        planLabel: l10n.subscriptionWelcomeTrialPlan(trialDays.toString()),
         footerLabel: l10n.subscriptionWelcomeTrialEnds,
         footerValue: date,
       ),
@@ -521,16 +492,13 @@ class _PaywallPageState extends State<PaywallPage>
                             _legalFooter(),
                           ] else ...[
                             Text(
-                              context.l10n.subscriptionStartForFree,
+                              context.l10n.subscriptionPremiumInTheAndroidApp,
                               style: Theme.of(context).textTheme.headlineMedium
                                   ?.copyWith(fontWeight: FontWeight.w900),
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              context.l10n
-                                  .subscriptionAllPremiumFeaturesForValueDaysThen(
-                                    (SubscriptionPlans.trialDays).toString(),
-                                  ),
+                              PremiumCopy.unavailableNote,
                               style: const TextStyle(
                                 color: AppColors.textMuted,
                                 height: 1.45,
@@ -559,8 +527,9 @@ class _PaywallPageState extends State<PaywallPage>
   }
 
   /// Buttons of the offer. With store billing the one big button buys the
-  /// selected plan; the free trial (no payment details, ends by itself) is a
-  /// smaller second option. Without billing (web) the trial is the main way.
+  /// selected plan; when the store offers a free trial (it asks for a payment
+  /// method first), the button starts that trial. Without billing (web) there
+  /// is nothing to buy here.
   /// [primary] and [secondary] split the parts when the pinned bar would get
   /// too tall on short phones.
   Widget _actions({
@@ -577,7 +546,6 @@ class _PaywallPageState extends State<PaywallPage>
         onDone: widget.onActivated ?? widget.onClose,
       );
     }
-    final canTrial = subscription.canStartTrial;
     final freeLink = TextButton.icon(
       key: const Key('paywall-continue-free'),
       onPressed: widget.onClose,
@@ -603,22 +571,7 @@ class _PaywallPageState extends State<PaywallPage>
             _NoticeCard(notice: notice),
             const SizedBox(height: 10),
           ],
-          _TrialButton(
-            inkKey: const Key('paywall-start-trial'),
-            label: canTrial
-                ? PremiumCopy.trialCta
-                : L10n.current.subscriptionTrialAlreadyUsed,
-            busy: subscription.isStartingTrial,
-            enabled: canTrial,
-            shimmer: _intro,
-            onPressed: _startTrial,
-          ),
-          SizedBox(height: compact ? 7 : 10),
-          _PromiseLine(
-            text: canTrial
-                ? PremiumCopy.trialPromise
-                : L10n.current.subscriptionYouCanSubscribeToPremiumOncePayments,
-          ),
+          _PromiseLine(text: PremiumCopy.unavailableNote),
           SizedBox(height: compact ? 2 : 6),
           freeLink,
         ],
@@ -626,6 +579,9 @@ class _PaywallPageState extends State<PaywallPage>
     }
 
     final plan = _plan;
+    final trialDays = subscription.trialDaysFor(_selected);
+    final price =
+        '${PremiumCopy.headlinePrice(plan)} ${PremiumCopy.headlineUnit(plan)}';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -633,11 +589,17 @@ class _PaywallPageState extends State<PaywallPage>
         if (primary) ...[
           _TrialButton(
             inkKey: const Key('paywall-purchase'),
-            label: L10n.current.subscriptionSubscribePaid,
-            sublabel:
-                '${PremiumCopy.headlinePrice(plan)} '
-                '${PremiumCopy.headlineUnit(plan)}',
-            icon: Icons.workspace_premium_rounded,
+            label: trialDays > 0
+                ? L10n.current.subscriptionValueDayFreeTrial(
+                    trialDays.toString(),
+                  )
+                : L10n.current.subscriptionSubscribePaid,
+            sublabel: trialDays > 0
+                ? L10n.current.subscriptionThenValue(price)
+                : price,
+            icon: trialDays > 0
+                ? Icons.bolt_rounded
+                : Icons.workspace_premium_rounded,
             busy: subscription.isPurchasing,
             busyLabel: L10n.current.subscriptionPurchaseBusy,
             enabled: true,
@@ -646,7 +608,7 @@ class _PaywallPageState extends State<PaywallPage>
           ),
           SizedBox(height: compact ? 6 : 8),
           Text(
-            PremiumCopy.termsShort,
+            PremiumCopy.termsShortFor(trialDays: trialDays),
             key: const Key('paywall-terms-short'),
             textAlign: TextAlign.center,
             style: const TextStyle(
@@ -660,17 +622,6 @@ class _PaywallPageState extends State<PaywallPage>
           if (_notice case final notice?) ...[
             SizedBox(height: compact ? 8 : 12),
             _NoticeCard(notice: notice),
-          ],
-          if (canTrial) ...[
-            SizedBox(height: compact ? 8 : 12),
-            _TrialOutlineButton(
-              label: L10n.current.subscriptionTryFreeFirst(
-                (SubscriptionPlans.trialDays).toString(),
-              ),
-              caption: L10n.current.subscriptionTrialNoStrings,
-              busy: subscription.isStartingTrial,
-              onPressed: _startTrial,
-            ),
           ],
           SizedBox(height: compact ? 0 : 4),
           freeLink,
@@ -697,6 +648,7 @@ class _PaywallPageState extends State<PaywallPage>
 
   Widget _legalFooter() => _LegalFooter(
     billingAvailable: _subscription.storeBillingAvailable,
+    trialDays: _subscription.trialDaysFor(_selected),
     onManage: _subscription.managementUri == null ? null : _manage,
     onRestore: _restore,
   );
@@ -1213,8 +1165,7 @@ class _PinnedActions extends StatelessWidget {
 
 // ─── Actions ───────────────────────────────────────────────────────────────
 
-/// The big gradient button: the purchase with store billing, the free trial
-/// without it.
+/// The big gradient button: the purchase, or the store trial when offered.
 class _TrialButton extends StatelessWidget {
   const _TrialButton({
     required this.label,
@@ -1222,7 +1173,7 @@ class _TrialButton extends StatelessWidget {
     required this.enabled,
     required this.shimmer,
     required this.onPressed,
-    this.inkKey = const Key('paywall-start-trial'),
+    this.inkKey = const Key('paywall-purchase'),
     this.sublabel,
     this.icon = Icons.bolt_rounded,
     this.busyLabel,
@@ -1243,7 +1194,7 @@ class _TrialButton extends StatelessWidget {
     final active = enabled && !busy;
     final foreground = enabled ? AppColors.black : AppColors.textMuted;
     final text = busy
-        ? busyLabel ?? context.l10n.subscriptionStartingTrial
+        ? busyLabel ?? context.l10n.subscriptionPurchaseBusy
         : label;
     final detail = busy ? null : sublabel;
     return Semantics(
@@ -1355,78 +1306,6 @@ class _TrialButton extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// The second, smaller way in: the free trial (no subscription, no payment
-/// details, ends by itself).
-class _TrialOutlineButton extends StatelessWidget {
-  const _TrialOutlineButton({
-    required this.label,
-    required this.caption,
-    required this.busy,
-    required this.onPressed,
-  });
-
-  final String label;
-  final String caption;
-  final bool busy;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      key: const Key('paywall-start-trial'),
-      onPressed: busy ? null : onPressed,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.text,
-        minimumSize: const Size.fromHeight(54),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-        side: BorderSide(color: AppColors.primary.withValues(alpha: 0.45)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (busy)
-            const SizedBox.square(
-              dimension: 18,
-              child: CircularProgressIndicator(
-                strokeWidth: 2.2,
-                color: AppColors.primary,
-              ),
-            )
-          else
-            const Icon(Icons.bolt_rounded, size: 20, color: AppColors.primary),
-          const SizedBox(width: 10),
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  busy ? context.l10n.subscriptionStartingTrial : label,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  caption,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -2208,22 +2087,27 @@ class _Cell extends StatelessWidget {
 class _LegalFooter extends StatelessWidget {
   const _LegalFooter({
     required this.billingAvailable,
+    required this.trialDays,
     required this.onManage,
     required this.onRestore,
   });
 
   final bool billingAvailable;
+  final int trialDays;
   final VoidCallback? onManage;
   final VoidCallback onRestore;
 
   @override
   Widget build(BuildContext context) {
-    final terms = context.l10n.subscriptionFreeTrialValueDaysOncePerEmail(
-      (SubscriptionPlans.trialDays).toString(),
-      (PremiumCopy.priceTermsFor(
-        billingAvailable: billingAvailable,
-      )).toString(),
+    final prices = PremiumCopy.priceTermsFor(
+      billingAvailable: billingAvailable,
     );
+    final terms = trialDays > 0
+        ? context.l10n.subscriptionFreeTrialValueDaysStoreOnly(
+            trialDays.toString(),
+            prices,
+          )
+        : prices;
     final linkStyle = TextButton.styleFrom(
       foregroundColor: AppColors.textMuted,
       minimumSize: const Size(48, 44),

@@ -47,11 +47,6 @@ abstract final class PremiumCopy {
   static String get premiumRecipes =>
       L10n.current.subscriptionWithPremiumAllRecipes;
 
-  static String get trialCta => L10n.current.subscriptionValueDayFreeTrial(
-    (SubscriptionPlans.trialDays).toString(),
-  );
-  static String get trialPromise =>
-      L10n.current.subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo;
   static String get billingPending =>
       L10n.current.subscriptionPaymentsAreBeingSetUp;
 
@@ -123,10 +118,11 @@ abstract final class PremiumCopy {
       ? L10n.current.subscriptionTheAppStore
       : 'Google Play';
 
-  /// Shown under the purchase button when billing works.
   /// One line under the purchase button: who bills, renewal, how to cancel.
-  static String get termsShort =>
-      L10n.current.subscriptionTermsShort(_storeName);
+  /// With a store trial it also says that the subscription starts after it.
+  static String termsShortFor({required int trialDays}) => trialDays > 0
+      ? L10n.current.subscriptionTermsShortTrial(_storeName)
+      : L10n.current.subscriptionTermsShort(_storeName);
 
   static String get storeNote =>
       L10n.current.subscriptionPaymentIsHandledSecurelyByTheStore;
@@ -139,12 +135,9 @@ abstract final class PremiumCopy {
         );
 
   static String get unavailableMessage => kIsWeb
-      ? L10n.current.subscriptionSubscriptionsAreAvailableInTheLookinApp(
-          (SubscriptionPlans.trialDays).toString(),
-        )
+      ? L10n.current.subscriptionSubscriptionsAreAvailableInTheLookinApp
       : L10n.current.subscriptionValueNothingWasPurchasedOrChargedTry(
           (billingPending).toString(),
-          (SubscriptionPlans.trialDays).toString(),
         );
 
   static String get restoreUnavailableMessage =>

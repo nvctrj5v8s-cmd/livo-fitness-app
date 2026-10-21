@@ -1045,7 +1045,7 @@ abstract class AppLocalizations {
   /// No description provided for @coachValueDayFreeTrialEndsAutomaticallyNo.
   ///
   /// In de, this message translates to:
-  /// **'{arg0} Tage kostenlos testen · endet automatisch · keine Zahlungsdaten'**
+  /// **'{arg0} Tage kostenlos testen · danach Abo, jederzeit kündbar'**
   String coachValueDayFreeTrialEndsAutomaticallyNo(String arg0);
 
   /// No description provided for @coachValueOfValueAiRequestsLeftToday.
@@ -2493,12 +2493,6 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Premium-Funktion'**
   String get diaryPremiumFeature;
-
-  /// No description provided for @diaryPremiumFeatureValueDayFreeTrial.
-  ///
-  /// In de, this message translates to:
-  /// **'Premium-Funktion · {arg0} Tage kostenlos testen'**
-  String diaryPremiumFeatureValueDayFreeTrial(String arg0);
 
   /// No description provided for @diaryPreviousWeek.
   ///
@@ -6498,6 +6492,42 @@ abstract class AppLocalizations {
   /// **'Alter'**
   String get onboardingAge;
 
+  /// No description provided for @onboardingAgeBlockedText.
+  ///
+  /// In de, this message translates to:
+  /// **'Du hast angegeben, unter 18 zu sein. Deshalb kannst du Lookin nicht nutzen. Wenn du dich vertippt hast, schließe die App und öffne sie neu.'**
+  String get onboardingAgeBlockedText;
+
+  /// No description provided for @onboardingAgeBlockedTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin ist erst ab 18'**
+  String get onboardingAgeBlockedTitle;
+
+  /// No description provided for @onboardingAgeGateNo.
+  ///
+  /// In de, this message translates to:
+  /// **'Nein'**
+  String get onboardingAgeGateNo;
+
+  /// No description provided for @onboardingAgeGateText.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin ist für Personen ab 18 Jahren gedacht. Bitte bestätige dein Alter, bevor du weitermachst.'**
+  String get onboardingAgeGateText;
+
+  /// No description provided for @onboardingAgeGateTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Bist du mindestens 18 Jahre alt?'**
+  String get onboardingAgeGateTitle;
+
+  /// No description provided for @onboardingAgeGateYes.
+  ///
+  /// In de, this message translates to:
+  /// **'Ja, ich bin mindestens 18'**
+  String get onboardingAgeGateYes;
+
   /// No description provided for @onboardingAiEstimate.
   ///
   /// In de, this message translates to:
@@ -9227,12 +9257,6 @@ abstract class AppLocalizations {
   /// **'Alle'**
   String get subscriptionAll;
 
-  /// No description provided for @subscriptionAllPremiumFeaturesForValueDaysThen.
-  ///
-  /// In de, this message translates to:
-  /// **'Alle Premium-Funktionen {arg0} Tage lang – danach geht es automatisch kostenlos weiter.'**
-  String subscriptionAllPremiumFeaturesForValueDaysThen(String arg0);
-
   /// No description provided for @subscriptionAllRecipes.
   ///
   /// In de, this message translates to:
@@ -9311,12 +9335,6 @@ abstract class AppLocalizations {
   /// **'E-Mail für die Bestätigung'**
   String get subscriptionEmailForAcknowledgement;
 
-  /// No description provided for @subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo.
-  ///
-  /// In de, this message translates to:
-  /// **'Endet automatisch · keine Zahlungsdaten nötig · keine Kosten'**
-  String get subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo;
-
   /// No description provided for @subscriptionEquivalentToValuePerMonth.
   ///
   /// In de, this message translates to:
@@ -9344,14 +9362,14 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionFreeTrialUntilValueItEndsAutomatically.
   ///
   /// In de, this message translates to:
-  /// **'Kostenlose Testphase bis {arg0}. Sie endet automatisch – ohne Kosten.'**
+  /// **'Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.'**
   String subscriptionFreeTrialUntilValueItEndsAutomatically(String arg0);
 
-  /// No description provided for @subscriptionFreeTrialValueDaysOncePerEmail.
+  /// No description provided for @subscriptionFreeTrialValueDaysStoreOnly.
   ///
   /// In de, this message translates to:
-  /// **'Kostenlose Testphase: {arg0} Tage, einmal pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n{arg1}'**
-  String subscriptionFreeTrialValueDaysOncePerEmail(String arg0, String arg1);
+  /// **'Kostenlose Testphase: {arg0} Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}'**
+  String subscriptionFreeTrialValueDaysStoreOnly(String arg0, String arg1);
 
   /// No description provided for @subscriptionGenerousAiAllowance.
   ///
@@ -9425,12 +9443,6 @@ abstract class AppLocalizations {
   /// **'Für dieses Store-Konto wurde kein aktives Abo gefunden.'**
   String get subscriptionNoActiveSubscriptionWasFoundForThis;
 
-  /// No description provided for @subscriptionNoTrialStartsInThePreviewWithout.
-  ///
-  /// In de, this message translates to:
-  /// **'In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.'**
-  String get subscriptionNoTrialStartsInThePreviewWithout;
-
   /// No description provided for @subscriptionNotADeveloperAccount.
   ///
   /// In de, this message translates to:
@@ -9479,18 +9491,6 @@ abstract class AppLocalizations {
   /// **'Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.'**
   String get subscriptionPleaseConfirmFirstThatLookinPremiumShould;
 
-  /// No description provided for @subscriptionPleaseConfirmYourEmailAddressUsingThe.
-  ///
-  /// In de, this message translates to:
-  /// **'Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten.'**
-  String get subscriptionPleaseConfirmYourEmailAddressUsingThe;
-
-  /// No description provided for @subscriptionPleaseSignInToStartYourTrial.
-  ///
-  /// In de, this message translates to:
-  /// **'Bitte melde dich an, um die Testphase zu starten.'**
-  String get subscriptionPleaseSignInToStartYourTrial;
-
   /// No description provided for @subscriptionPleaseTakeAScreenshotOfThisAcknowledgement.
   ///
   /// In de, this message translates to:
@@ -9509,6 +9509,12 @@ abstract class AppLocalizations {
   /// **'Beliebt · −{arg0} %'**
   String subscriptionPopularValue(String arg0);
 
+  /// No description provided for @subscriptionPremiumInTheAndroidApp.
+  ///
+  /// In de, this message translates to:
+  /// **'Premium in der Android-App'**
+  String get subscriptionPremiumInTheAndroidApp;
+
   /// No description provided for @subscriptionPremiumIsActive.
   ///
   /// In de, this message translates to:
@@ -9520,12 +9526,6 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Premium ist aktiv. Danke für deine Unterstützung!'**
   String get subscriptionPremiumIsActiveThankYouForYour;
-
-  /// No description provided for @subscriptionPremiumIsAlreadyActiveForYourAccount.
-  ///
-  /// In de, this message translates to:
-  /// **'Premium ist für dein Konto bereits aktiv.'**
-  String get subscriptionPremiumIsAlreadyActiveForYourAccount;
 
   /// No description provided for @subscriptionPreparingYourLookin.
   ///
@@ -9586,18 +9586,6 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Suche, Barcode & eigene Lebensmittel'**
   String get subscriptionSearchBarcodeCustomFoods;
-
-  /// No description provided for @subscriptionStartForFree.
-  ///
-  /// In de, this message translates to:
-  /// **'Starte kostenlos'**
-  String get subscriptionStartForFree;
-
-  /// No description provided for @subscriptionStartingTrial.
-  ///
-  /// In de, this message translates to:
-  /// **'Testphase wird gestartet …'**
-  String get subscriptionStartingTrial;
 
   /// No description provided for @subscriptionSubscribeInTheLookinAppForAndroid.
   ///
@@ -9663,8 +9651,8 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionSubscriptionsAreAvailableInTheLookinApp.
   ///
   /// In de, this message translates to:
-  /// **'Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet – teste Premium hier {arg0} Tage kostenlos.'**
-  String subscriptionSubscriptionsAreAvailableInTheLookinApp(String arg0);
+  /// **'Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet.'**
+  String get subscriptionSubscriptionsAreAvailableInTheLookinApp;
 
   /// No description provided for @subscriptionTakeAPhotoLookinEstimatesFoodsAnd.
   ///
@@ -9677,6 +9665,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums'**
   String subscriptionTermsShort(String arg0);
+
+  /// No description provided for @subscriptionTermsShortTrial.
+  ///
+  /// In de, this message translates to:
+  /// **'Die Testphase braucht ein Zahlungsmittel in {arg0} · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet'**
+  String subscriptionTermsShortTrial(String arg0);
 
   /// No description provided for @subscriptionTheAppStore.
   ///
@@ -9696,29 +9690,11 @@ abstract class AppLocalizations {
   /// **'Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.'**
   String get subscriptionTheStoreIsCurrentlyUnavailableNothingWas;
 
-  /// No description provided for @subscriptionTheTrialIsBeingSetUpPlease.
+  /// No description provided for @subscriptionThenValue.
   ///
   /// In de, this message translates to:
-  /// **'Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.'**
-  String get subscriptionTheTrialIsBeingSetUpPlease;
-
-  /// No description provided for @subscriptionTrialAlreadyUsed.
-  ///
-  /// In de, this message translates to:
-  /// **'Testphase bereits genutzt'**
-  String get subscriptionTrialAlreadyUsed;
-
-  /// No description provided for @subscriptionTrialNoStrings.
-  ///
-  /// In de, this message translates to:
-  /// **'Kein Abo · keine Zahlungsdaten · endet automatisch'**
-  String get subscriptionTrialNoStrings;
-
-  /// No description provided for @subscriptionTryFreeFirst.
-  ///
-  /// In de, this message translates to:
-  /// **'Erst {arg0} Tage gratis testen'**
-  String subscriptionTryFreeFirst(String arg0);
+  /// **'Danach kostenpflichtig: {arg0}'**
+  String subscriptionThenValue(String arg0);
 
   /// No description provided for @subscriptionUnexpectedResponse.
   ///
@@ -9744,11 +9720,11 @@ abstract class AppLocalizations {
   /// **'{arg0} Tage kostenlos testen'**
   String subscriptionValueDayFreeTrial(String arg0);
 
-  /// No description provided for @subscriptionValueDayFreeTrialEndsAutomatically.
+  /// No description provided for @subscriptionValueDayFreeTrialThenSubscription.
   ///
   /// In de, this message translates to:
-  /// **'{arg0} Tage kostenlos testen · endet automatisch'**
-  String subscriptionValueDayFreeTrialEndsAutomatically(String arg0);
+  /// **'{arg0} Tage kostenlos testen · danach Abo, jederzeit kündbar'**
+  String subscriptionValueDayFreeTrialThenSubscription(String arg0);
 
   /// No description provided for @subscriptionValueFreeValuePremiumValue.
   ///
@@ -9763,17 +9739,14 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionValueItEndsAutomaticallyAtNoCost.
   ///
   /// In de, this message translates to:
-  /// **'{arg0} Sie endet automatisch – ohne Kosten und ohne Abo.'**
+  /// **'{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.'**
   String subscriptionValueItEndsAutomaticallyAtNoCost(String arg0);
 
   /// No description provided for @subscriptionValueNothingWasPurchasedOrChargedTry.
   ///
   /// In de, this message translates to:
-  /// **'{arg0}. Es wurde nichts gekauft und nichts berechnet – teste Premium bis dahin {arg1} Tage kostenlos.'**
-  String subscriptionValueNothingWasPurchasedOrChargedTry(
-    String arg0,
-    String arg1,
-  );
+  /// **'{arg0}. Es wurde nichts gekauft und nichts berechnet.'**
+  String subscriptionValueNothingWasPurchasedOrChargedTry(String arg0);
 
   /// No description provided for @subscriptionValueUnlocked.
   ///
@@ -9850,7 +9823,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionWelcomeTrialEnds.
   ///
   /// In de, this message translates to:
-  /// **'Endet automatisch'**
+  /// **'Testphase endet'**
   String get subscriptionWelcomeTrialEnds;
 
   /// No description provided for @subscriptionWelcomeTrialPlan.
@@ -9904,18 +9877,6 @@ abstract class AppLocalizations {
     String arg4,
   );
 
-  /// No description provided for @subscriptionYouCanSubscribeToPremiumOncePayments.
-  ///
-  /// In de, this message translates to:
-  /// **'Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist.'**
-  String get subscriptionYouCanSubscribeToPremiumOncePayments;
-
-  /// No description provided for @subscriptionYouHaveAlreadyUsedYourFreeTrial.
-  ///
-  /// In de, this message translates to:
-  /// **'Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse.'**
-  String get subscriptionYouHaveAlreadyUsedYourFreeTrial;
-
   /// No description provided for @subscriptionYourAiChatForNutritionAndFitness.
   ///
   /// In de, this message translates to:
@@ -9931,7 +9892,7 @@ abstract class AppLocalizations {
   /// No description provided for @subscriptionYourFreeTrialIsActiveItEnds.
   ///
   /// In de, this message translates to:
-  /// **'Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten.'**
+  /// **'Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.'**
   String get subscriptionYourFreeTrialIsActiveItEnds;
 
   /// No description provided for @subscriptionYourFreeTrialLastsValueDays.
@@ -9975,12 +9936,6 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Dein Kauf ist angekommen. Die Freischaltung dauert noch einen Moment – öffne Lookin gleich noch einmal. Es wird nichts doppelt berechnet.'**
   String get subscriptionYourPurchaseHasBeenReceivedActivationIs;
-
-  /// No description provided for @subscriptionYourTrialCouldNotBeStartedJust.
-  ///
-  /// In de, this message translates to:
-  /// **'Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut.'**
-  String get subscriptionYourTrialCouldNotBeStartedJust;
 
   /// No description provided for @subscriptionYourWithdrawalCouldNotBeSubmittedJust.
   ///

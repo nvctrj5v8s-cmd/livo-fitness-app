@@ -178,7 +178,7 @@
   "coachThisIsTakingALittleLongerThan": "Das dauert etwas länger als sonst …",
   "coachTryAgain": "Erneut versuchen",
   "coachUnlockPremium": "Premium freischalten",
-  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · endet automatisch · keine Zahlungsdaten",
+  "coachValueDayFreeTrialEndsAutomaticallyNo": "{arg0} Tage kostenlos testen · danach Abo, jederzeit kündbar",
   "@coachValueDayFreeTrialEndsAutomaticallyNo": {
     "placeholders": {
       "arg0": {
@@ -547,14 +547,6 @@
   "diaryPleaseUseNoMoreThan100Characters": "Bitte höchstens 100 Zeichen verwenden.",
   "diaryPleaseWaitAMomentBeforeSearchingFor": "Bitte kurz warten, bevor du den nächsten Barcode suchst.",
   "diaryPremiumFeature": "Premium-Funktion",
-  "diaryPremiumFeatureValueDayFreeTrial": "Premium-Funktion · {arg0} Tage kostenlos testen",
-  "@diaryPremiumFeatureValueDayFreeTrial": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
   "diaryPreviousWeek": "Vorherige Woche",
   "diaryProductInformation": "Produktinfos",
   "diaryProtein": "Eiweiß / Protein",
@@ -1839,6 +1831,12 @@
     }
   },
   "onboardingAge": "Alter",
+  "onboardingAgeBlockedText": "Du hast angegeben, unter 18 zu sein. Deshalb kannst du Lookin nicht nutzen. Wenn du dich vertippt hast, schließe die App und öffne sie neu.",
+  "onboardingAgeBlockedTitle": "Lookin ist erst ab 18",
+  "onboardingAgeGateNo": "Nein",
+  "onboardingAgeGateText": "Lookin ist für Personen ab 18 Jahren gedacht. Bitte bestätige dein Alter, bevor du weitermachst.",
+  "onboardingAgeGateTitle": "Bist du mindestens 18 Jahre alt?",
+  "onboardingAgeGateYes": "Ja, ich bin mindestens 18",
   "onboardingAiEstimate": "KI-Schätzung",
   "onboardingAiEstimates": "KI schätzt.",
   "onboardingAiEstimatesFoods": "KI schätzt Lebensmittel",
@@ -2598,14 +2596,6 @@
   "subscriptionAiPhotoRecognition": "KI-Foto-Erkennung",
   "subscriptionAiPhotoYourPersonalCoachAndAll": "KI-Foto, dein persönlicher Coach und alle Rezepte – für weniger Aufwand und mehr Klarheit beim Essen.",
   "subscriptionAll": "Alle",
-  "subscriptionAllPremiumFeaturesForValueDaysThen": "Alle Premium-Funktionen {arg0} Tage lang – danach geht es automatisch kostenlos weiter.",
-  "@subscriptionAllPremiumFeaturesForValueDaysThen": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
   "subscriptionAllRecipes": "Alle Rezepte",
   "subscriptionAllRecipesAreAvailableWithPremium": "Alle Rezepte gibt es mit Premium",
   "subscriptionBilledEveryMonth": "jeden Monat berechnet",
@@ -2626,7 +2616,6 @@
   "subscriptionDiaryMacrosStreak": "Tagebuch, Makros & Serie",
   "subscriptionDone": "Fertig",
   "subscriptionEmailForAcknowledgement": "E-Mail für die Bestätigung",
-  "subscriptionEndsAutomaticallyNoPaymentDetailsNeededNo": "Endet automatisch · keine Zahlungsdaten nötig · keine Kosten",
   "subscriptionEquivalentToValuePerMonth": "entspricht {arg0} pro Monat",
   "@subscriptionEquivalentToValuePerMonth": {
     "placeholders": {
@@ -2638,7 +2627,7 @@
   "subscriptionForExampleTheOrderNumberFromThe": "Zum Beispiel die Bestellnummer aus der Google-Play-Mail",
   "subscriptionFree": "Kostenlos",
   "subscriptionFreeOrPremium": "Kostenlos oder Premium?",
-  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Sie endet automatisch – ohne Kosten.",
+  "subscriptionFreeTrialUntilValueItEndsAutomatically": "Kostenlose Testphase bis {arg0}. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.",
   "@subscriptionFreeTrialUntilValueItEndsAutomatically": {
     "placeholders": {
       "arg0": {
@@ -2646,8 +2635,8 @@
       }
     }
   },
-  "subscriptionFreeTrialValueDaysOncePerEmail": "Kostenlose Testphase: {arg0} Tage, einmal pro E-Mail-Adresse. Sie endet automatisch – ohne Kosten und ohne automatische Verlängerung. Es werden keine Zahlungsdaten abgefragt.\n\n{arg1}",
-  "@subscriptionFreeTrialValueDaysOncePerEmail": {
+  "subscriptionFreeTrialValueDaysStoreOnly": "Kostenlose Testphase: {arg0} Tage, einmal pro Google-Konto und nur mit einem Zahlungsmittel in Google Play. Wenn du nicht vor Ende der Testphase in Google Play kündigst, beginnt das bezahlte Abo und verlängert sich automatisch zum Preis des gewählten Tarifs.\n\n{arg1}",
+  "@subscriptionFreeTrialValueDaysStoreOnly": {
     "placeholders": {
       "arg0": {
         "type": "String"
@@ -2669,7 +2658,6 @@
   "subscriptionMoreRecipesWithPremium": "Mehr Rezepte mit Premium",
   "subscriptionNew": "Neues",
   "subscriptionNoActiveSubscriptionWasFoundForThis": "Für dieses Store-Konto wurde kein aktives Abo gefunden.",
-  "subscriptionNoTrialStartsInThePreviewWithout": "In der Vorschau ohne Konto startet keine Testphase. Melde dich an, um Premium kostenlos zu testen.",
   "subscriptionNotADeveloperAccount": "Kein Entwickler-Konto.",
   "subscriptionNotIncluded": "nicht enthalten",
   "subscriptionOrderNumberOrNoteOptional": "Bestellnummer oder Hinweis (freiwillig)",
@@ -2678,8 +2666,6 @@
   "subscriptionPerMonth": "pro Monat",
   "subscriptionPerYear": "pro Jahr",
   "subscriptionPleaseConfirmFirstThatLookinPremiumShould": "Bitte bestätige zuerst, dass Lookin Premium sofort beginnen soll.",
-  "subscriptionPleaseConfirmYourEmailAddressUsingThe": "Bitte bestätige zuerst deine E-Mail-Adresse über den Link in unserer E-Mail. Danach kannst du die Testphase starten.",
-  "subscriptionPleaseSignInToStartYourTrial": "Bitte melde dich an, um die Testphase zu starten.",
   "subscriptionPleaseTakeAScreenshotOfThisAcknowledgement": "Bitte mach einen Screenshot dieser Bestätigung. Eine Bestätigung per E-Mail folgt, sobald unser E-Mail-Versand eingerichtet ist. Die Rückzahlung erfolgt über Google Play.",
   "subscriptionPopularSavings": ", beliebt, {savings} Prozent günstiger als monatlich",
   "@subscriptionPopularSavings": {
@@ -2697,9 +2683,9 @@
       }
     }
   },
+  "subscriptionPremiumInTheAndroidApp": "Premium in der Android-App",
   "subscriptionPremiumIsActive": "Premium ist aktiv",
   "subscriptionPremiumIsActiveThankYouForYour": "Premium ist aktiv. Danke für deine Unterstützung!",
-  "subscriptionPremiumIsAlreadyActiveForYourAccount": "Premium ist für dein Konto bereits aktiv.",
   "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
   "subscriptionProfileDailyTargets": "Profil & Tagesziele",
   "subscriptionPurchaseBusy": "Kauf wird vorbereitet …",
@@ -2717,8 +2703,6 @@
   "subscriptionRestorePurchasesComingSoon": "Käufe wiederherstellen – bald verfügbar",
   "subscriptionRestoringPurchasesIsOnlyAvailableInThe": "Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die wiederhergestellt werden müssten.",
   "subscriptionSearchBarcodeCustomFoods": "Suche, Barcode & eigene Lebensmittel",
-  "subscriptionStartForFree": "Starte kostenlos",
-  "subscriptionStartingTrial": "Testphase wird gestartet …",
   "subscriptionSubscribeInTheLookinAppForAndroid": "Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird nichts gekauft oder berechnet.",
   "subscriptionSubscribeMonthly": "Monatlich abonnieren",
   "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",
@@ -2751,14 +2735,7 @@
       }
     }
   },
-  "subscriptionSubscriptionsAreAvailableInTheLookinApp": "Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet – teste Premium hier {arg0} Tage kostenlos.",
-  "@subscriptionSubscriptionsAreAvailableInTheLookinApp": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
+  "subscriptionSubscriptionsAreAvailableInTheLookinApp": "Abos gibt es in der Lookin-App für Android. Im Browser wurde nichts gekauft und nichts berechnet.",
   "subscriptionTakeAPhotoLookinEstimatesFoodsAnd": "Foto machen – Lookin schätzt Lebensmittel und Mengen. Du prüfst alles vor dem Speichern.",
   "subscriptionTermsShort": "Abrechnung über den Store · verlängert sich automatisch · jederzeit in den Abo-Einstellungen von {arg0} kündbar, wirksam zum Ende des Abrechnungszeitraums",
   "@subscriptionTermsShort": {
@@ -2768,14 +2745,19 @@
       }
     }
   },
+  "subscriptionTermsShortTrial": "Die Testphase braucht ein Zahlungsmittel in {arg0} · danach beginnt das Abo und verlängert sich automatisch · bis zum Ende der Testphase in den Abo-Einstellungen von {arg0} kündbar, dann wird nichts berechnet",
+  "@subscriptionTermsShortTrial": {
+    "placeholders": {
+      "arg0": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionTheAppStore": "dem App Store",
   "subscriptionTheLookinCoachIsPartOfPremium": "Der Lookin Coach ist Teil von Premium",
   "subscriptionTheStoreIsCurrentlyUnavailableNothingWas": "Der Store ist gerade nicht erreichbar. Es wurde nichts berechnet – versuche es später noch einmal.",
-  "subscriptionTheTrialIsBeingSetUpPlease": "Die Testphase wird gerade eingerichtet. Bitte versuche es später noch einmal – es wurde nichts gestartet und nichts berechnet.",
-  "subscriptionTrialAlreadyUsed": "Testphase bereits genutzt",
-  "subscriptionTrialNoStrings": "Kein Abo · keine Zahlungsdaten · endet automatisch",
-  "subscriptionTryFreeFirst": "Erst {arg0} Tage gratis testen",
-  "@subscriptionTryFreeFirst": {
+  "subscriptionThenValue": "Danach kostenpflichtig: {arg0}",
+  "@subscriptionThenValue": {
     "placeholders": {
       "arg0": {
         "type": "String"
@@ -2793,8 +2775,8 @@
       }
     }
   },
-  "subscriptionValueDayFreeTrialEndsAutomatically": "{arg0} Tage kostenlos testen · endet automatisch",
-  "@subscriptionValueDayFreeTrialEndsAutomatically": {
+  "subscriptionValueDayFreeTrialThenSubscription": "{arg0} Tage kostenlos testen · danach Abo, jederzeit kündbar",
+  "@subscriptionValueDayFreeTrialThenSubscription": {
     "placeholders": {
       "arg0": {
         "type": "String"
@@ -2815,7 +2797,7 @@
       }
     }
   },
-  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Sie endet automatisch – ohne Kosten und ohne Abo.",
+  "subscriptionValueItEndsAutomaticallyAtNoCost": "{arg0} Danach beginnt das bezahlte Abo. Bis dahin kannst du jederzeit in Google Play kündigen.",
   "@subscriptionValueItEndsAutomaticallyAtNoCost": {
     "placeholders": {
       "arg0": {
@@ -2823,13 +2805,10 @@
       }
     }
   },
-  "subscriptionValueNothingWasPurchasedOrChargedTry": "{arg0}. Es wurde nichts gekauft und nichts berechnet – teste Premium bis dahin {arg1} Tage kostenlos.",
+  "subscriptionValueNothingWasPurchasedOrChargedTry": "{arg0}. Es wurde nichts gekauft und nichts berechnet.",
   "@subscriptionValueNothingWasPurchasedOrChargedTry": {
     "placeholders": {
       "arg0": {
-        "type": "String"
-      },
-      "arg1": {
         "type": "String"
       }
     }
@@ -2874,7 +2853,7 @@
   "subscriptionWelcomeRenewsNote": "Verlängert sich automatisch · jederzeit im Store kündbar",
   "subscriptionWelcomeThanks": "Danke für deine Unterstützung! Dein Abo ist aktiv.",
   "subscriptionWelcomeTitle": "Willkommen bei Lookin Premium",
-  "subscriptionWelcomeTrialEnds": "Endet automatisch",
+  "subscriptionWelcomeTrialEnds": "Testphase endet",
   "subscriptionWelcomeTrialPlan": "Premium-Test · {arg0} Tage",
   "@subscriptionWelcomeTrialPlan": {
     "placeholders": {
@@ -2918,11 +2897,9 @@
       }
     }
   },
-  "subscriptionYouCanSubscribeToPremiumOncePayments": "Premium kannst du abonnieren, sobald die Bezahlung eingerichtet ist.",
-  "subscriptionYouHaveAlreadyUsedYourFreeTrial": "Du hast deine kostenlose Testphase bereits genutzt – sie gilt einmal pro E-Mail-Adresse.",
   "subscriptionYourAiChatForNutritionAndFitness": "Dein KI-Chat für Ernährung und Fitness, abgestimmt auf dein Ziel und deine Tageswerte.",
   "subscriptionYourConsentCouldNotBeSavedJust": "Deine Zustimmung konnte gerade nicht gespeichert werden. Bitte prüfe deine Verbindung und versuche es erneut. Es wurde nichts gekauft.",
-  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Sie endet automatisch – ohne Kosten.",
+  "subscriptionYourFreeTrialIsActiveItEnds": "Deine kostenlose Testphase läuft. Danach beginnt das bezahlte Abo, wenn du nicht vorher in Google Play kündigst.",
   "subscriptionYourFreeTrialLastsValueDays": "Deine kostenlose Testphase läuft {arg0} Tage.",
   "@subscriptionYourFreeTrialLastsValueDays": {
     "placeholders": {
@@ -2951,7 +2928,6 @@
     }
   },
   "subscriptionYourPurchaseHasBeenReceivedActivationIs": "Dein Kauf ist angekommen. Die Freischaltung dauert noch einen Moment – öffne Lookin gleich noch einmal. Es wird nichts doppelt berechnet.",
-  "subscriptionYourTrialCouldNotBeStartedJust": "Die Testphase konnte gerade nicht gestartet werden. Bitte prüfe deine Verbindung und versuche es erneut.",
   "subscriptionYourWithdrawalCouldNotBeSubmittedJust": "Der Widerruf konnte gerade nicht übermittelt werden. Bitte versuche es erneut oder widerrufe per E-Mail an lookinsupport@gmail.com. Es zählt, dass du die Erklärung innerhalb der Frist absendest.",
   "subscriptionYourWithdrawalWasReceivedOnValue": "Dein Widerruf ist am {arg0} eingegangen.",
   "@subscriptionYourWithdrawalWasReceivedOnValue": {

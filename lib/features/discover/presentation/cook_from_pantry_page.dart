@@ -356,6 +356,7 @@ class _CookFromPantryPageState extends State<CookFromPantryPage> {
                   if (showPremium) ...[
                     const SizedBox(height: 18),
                     PremiumRecipesCard(
+                      trialAvailable: subscription.canStartTrial,
                       onUnlock: () => unawaited(
                         showPaywall(context, source: PaywallSource.recipes),
                       ),

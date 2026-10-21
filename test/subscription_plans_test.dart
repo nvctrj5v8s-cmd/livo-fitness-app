@@ -15,12 +15,7 @@ class _TrialAvailableRepository implements SubscriptionRepository {
   const _TrialAvailableRepository();
 
   @override
-  Future<Entitlement> loadEntitlement() async =>
-      const Entitlement.free(trialUsed: false);
-
-  @override
-  Future<TrialStartResult> startTrial() async =>
-      const TrialStartResult(TrialStartStatus.notConfigured);
+  Future<Entitlement> loadEntitlement() async => const Entitlement.free();
 }
 
 PremiumPlan _yearlyPlan(int chargeCents) => PremiumPlan(
@@ -34,7 +29,6 @@ void main() {
   group('SubscriptionPlans', () {
     test('the free trial lasts seven days', () {
       expect(SubscriptionPlans.trialDays, 7);
-      expect(PremiumCopy.trialCta, '7 Tage kostenlos testen');
     });
 
     test('flat prices are stored as the charge per billing period', () {
@@ -116,9 +110,7 @@ void main() {
     });
   });
 
-  testWidgets('paywall shows flat prices, saving and the seven-day trial', (
-    tester,
-  ) async {
+  testWidgets('paywall shows flat prices and saving', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
     addTearDown(tester.view.reset);
@@ -136,7 +128,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('7 Tage kostenlos testen'), findsOneWidget);
+    // No store billing here (web, tests): nothing to buy and no trial.
+    expect(find.textContaining('kostenlos testen'), findsNothing);
     expect(find.text('Beliebt · −40$_nbsp%'), findsOneWidget);
     expect(find.text('49,99$_nbsp€'), findsOneWidget);
     expect(find.text('pro Jahr'), findsOneWidget);
@@ -155,7 +148,7 @@ void main() {
       find.text('49,99$_nbsp€ pro Jahr (entspricht 4,17$_nbsp€ pro Monat)'),
       findsOneWidget,
     );
-    expect(find.textContaining('Kostenlose Testphase: 7 Tage'), findsOneWidget);
+    expect(find.textContaining('Kostenlose Testphase'), findsNothing);
     for (final old in ['7,99', '71,88', '65,88', '5,49', 'im 1. Jahr']) {
       expect(find.textContaining(old), findsNothing, reason: old);
     }

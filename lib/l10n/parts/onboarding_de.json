@@ -408,5 +408,11 @@
         "type": "String"
       }
     }
-  }
+  },
+  "onboardingAgeGateTitle": "Bist du mindestens 18 Jahre alt?",
+  "onboardingAgeGateText": "Lookin ist für Personen ab 18 Jahren gedacht. Bitte bestätige dein Alter, bevor du weitermachst.",
+  "onboardingAgeGateYes": "Ja, ich bin mindestens 18",
+  "onboardingAgeGateNo": "Nein",
+  "onboardingAgeBlockedTitle": "Lookin ist erst ab 18",
+  "onboardingAgeBlockedText": "Du hast angegeben, unter 18 zu sein. Deshalb kannst du Lookin nicht nutzen. Wenn du dich vertippt hast, schließe die App und öffne sie neu."
 }

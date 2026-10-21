@@ -21,12 +21,8 @@ class _Server implements SubscriptionRepository {
         ? Entitlement.subscription(
             expiresAt: DateTime.now().add(const Duration(days: 30)),
           )
-        : const Entitlement.free(trialUsed: false);
+        : const Entitlement.free();
   }
-
-  @override
-  Future<TrialStartResult> startTrial() async =>
-      const TrialStartResult(TrialStartStatus.notConfigured);
 }
 
 class _Billing implements StoreBilling {
@@ -45,6 +41,9 @@ class _Billing implements StoreBilling {
 
   @override
   Future<StorePurchaseStatus> restore() async => result;
+
+  @override
+  Future<int> freeTrialDays(PremiumPlanId plan) async => 0;
 
   @override
   Uri? managementUri() => null;

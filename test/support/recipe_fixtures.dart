@@ -15,10 +15,6 @@ class PlusSubscriptionRepository implements SubscriptionRepository {
   @override
   Future<Entitlement> loadEntitlement() async =>
       const Entitlement.subscription();
-
-  @override
-  Future<TrialStartResult> startTrial() async =>
-      const TrialStartResult(TrialStartStatus.alreadyPremium);
 }
 
 Future<AppController> recipeTestController({

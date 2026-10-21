@@ -42,6 +42,11 @@ abstract interface class StoreBilling {
 
   Future<StorePurchaseStatus> restore();
 
+  /// Days of free trial the store grants this account for [plan]; 0 when the
+  /// store offers none or the account is not eligible (used it before). The
+  /// store asks for a payment method before the trial starts.
+  Future<int> freeTrialDays(PremiumPlanId plan);
+
   /// Where the user manages or cancels the subscription, if known.
   Uri? managementUri();
 }
@@ -63,6 +68,9 @@ final class UnavailableStoreBilling implements StoreBilling {
   @override
   Future<StorePurchaseStatus> restore() async =>
       StorePurchaseStatus.unavailable;
+
+  @override
+  Future<int> freeTrialDays(PremiumPlanId plan) async => 0;
 
   @override
   Uri? managementUri() => null;
@@ -129,22 +137,42 @@ final class RevenueCatStoreBilling implements StoreBilling {
     }
   }
 
+  Future<Package?> _package(PremiumPlanId plan) async {
+    final offerings = await Purchases.getOfferings();
+    final wanted = plan == PremiumPlanId.yearly
+        ? PackageType.annual
+        : PackageType.monthly;
+    for (final candidate in offerings.current?.availablePackages ?? const []) {
+      if (candidate.packageType == wanted) return candidate;
+    }
+    return null;
+  }
+
+  @override
+  Future<int> freeTrialDays(PremiumPlanId plan) async {
+    if (!await _accountReady()) return 0;
+    try {
+      final package = await _package(plan);
+      final period =
+          package?.storeProduct.defaultOption?.freePhase?.billingPeriod;
+      if (period == null) return 0;
+      return switch (period.unit) {
+        PeriodUnit.day => period.value,
+        PeriodUnit.week => period.value * 7,
+        PeriodUnit.month => period.value * 30,
+        PeriodUnit.year => period.value * 365,
+        PeriodUnit.unknown => 0,
+      };
+    } catch (_) {
+      return 0;
+    }
+  }
+
   @override
   Future<StorePurchaseStatus> purchase(PremiumPlanId plan) async {
     if (!await _accountReady()) return StorePurchaseStatus.unavailable;
     try {
-      final offerings = await Purchases.getOfferings();
-      final wanted = plan == PremiumPlanId.yearly
-          ? PackageType.annual
-          : PackageType.monthly;
-      Package? package;
-      for (final candidate
-          in offerings.current?.availablePackages ?? const []) {
-        if (candidate.packageType == wanted) {
-          package = candidate;
-          break;
-        }
-      }
+      final package = await _package(plan);
       if (package == null) return StorePurchaseStatus.unavailable;
       final result = await Purchases.purchase(PurchaseParams.package(package));
       return _hasPremium(result.customerInfo)

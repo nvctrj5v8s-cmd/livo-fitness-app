@@ -24,19 +24,18 @@ class _LaggingServer implements SubscriptionRepository {
         ? Entitlement.subscription(
             expiresAt: DateTime.now().add(const Duration(days: 30)),
           )
-        : const Entitlement.free(trialUsed: false);
+        : const Entitlement.free();
   }
-
-  @override
-  Future<TrialStartResult> startTrial() async =>
-      const TrialStartResult(TrialStartStatus.notConfigured);
 }
 
 class _FakeBilling implements StoreBilling {
-  _FakeBilling(this.result, {this.available = true});
+  _FakeBilling(this.result, {this.available = true, this.trialDays = 0});
 
   final StorePurchaseStatus result;
   final bool available;
+
+  /// Free trial the fake store offers (0 = none).
+  final int trialDays;
   final purchased = <PremiumPlanId>[];
   int restores = 0;
 
@@ -57,6 +56,9 @@ class _FakeBilling implements StoreBilling {
     restores++;
     return result;
   }
+
+  @override
+  Future<int> freeTrialDays(PremiumPlanId plan) async => trialDays;
 
   @override
   Uri? managementUri() => Uri.https('play.google.com', '/store/account');
@@ -268,22 +270,18 @@ void main() {
       expect(find.text(PremiumCopy.billingPending), findsNothing);
     });
 
-    testWidgets('the purchase is the main button; the trial is the smaller '
-        'second option with its terms', (tester) async {
+    testWidgets('the purchase is the main button; without a store trial there '
+        'is no trial offer', (tester) async {
       await pump(tester, _FakeBilling(StorePurchaseStatus.cancelled));
 
       expect(find.text('Kostenpflichtig abonnieren'), findsOneWidget);
       expect(find.textContaining(RegExp(r'49,99.€ pro Jahr')), findsWidgets);
       expect(find.byKey(const Key('paywall-terms-short')), findsOneWidget);
       expect(find.textContaining('verlängert sich automatisch'), findsWidgets);
-      final trial = find.byKey(const Key('paywall-start-trial'));
-      expect(trial, findsOneWidget);
-      expect(tester.widget(trial), isA<OutlinedButton>());
-      expect(find.text('Erst 7 Tage gratis testen'), findsOneWidget);
-      expect(
-        find.text('Kein Abo · keine Zahlungsdaten · endet automatisch'),
-        findsOneWidget,
-      );
+      // The e-mail trial is gone: nothing says "free" without the store.
+      expect(find.byKey(const Key('paywall-start-trial')), findsNothing);
+      expect(find.textContaining('7 Tage kostenlos'), findsNothing);
+      expect(find.textContaining('Kostenlose Testphase'), findsNothing);
 
       // The button follows the selected plan.
       await tester.ensureVisible(find.text('Monatlich').first);
@@ -291,6 +289,31 @@ void main() {
       await tester.tap(find.text('Monatlich').first);
       await tester.pumpAndSettle();
       expect(find.textContaining(RegExp(r'6,99.€ pro Monat')), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a store trial makes the main button the trial button and '
+        'says that a payment method and the subscription follow', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        _FakeBilling(StorePurchaseStatus.cancelled, trialDays: 7),
+      );
+
+      expect(find.text('7 Tage kostenlos testen'), findsOneWidget);
+      expect(find.text('Kostenpflichtig abonnieren'), findsNothing);
+      expect(
+        find.textContaining('Danach kostenpflichtig: 49,99'),
+        findsOneWidget,
+      );
+      expect(
+        tester.widget<Text>(find.byKey(const Key('paywall-terms-short'))).data,
+        contains('Zahlungsmittel'),
+      );
+      expect(find.byKey(const Key('paywall-start-trial')), findsNothing);
+      await tester.ensureVisible(find.textContaining('Kostenlose Testphase'));
+      expect(find.textContaining('einmal pro Google-Konto'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 

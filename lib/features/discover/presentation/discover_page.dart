@@ -258,6 +258,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
                   AnimatedReveal(
                     delay: const Duration(milliseconds: 270),
                     child: PremiumRecipesCard(
+                      trialAvailable: controller.subscription.canStartTrial,
                       onUnlock: () => unawaited(
                         showPaywall(context, source: PaywallSource.recipes),
                       ),

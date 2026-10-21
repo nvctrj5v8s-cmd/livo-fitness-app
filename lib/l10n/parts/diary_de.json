@@ -1,6 +1,12 @@
 {
   "diaryServingBasis": "BASIS: {grams} G",
-  "@diaryServingBasis": {"placeholders": {"grams": {"type": "int"}}},
+  "@diaryServingBasis": {
+    "placeholders": {
+      "grams": {
+        "type": "int"
+      }
+    }
+  },
   "diarySavedItemsRemoved": "Bereits gespeicherte Einträge wurden aus der Liste entfernt.",
   "diaryChickpeaRiceBowl": "Kichererbsen-Reis-Bowl",
   "diaryWholemealBreadWithEgg": "Vollkornbrot mit Ei",
@@ -376,14 +382,6 @@
   "diaryNoFoodFoundYouCanAlsoLog": "Kein Lebensmittel gefunden. Du kannst es auch über „Selbst hinzufügen“ eintragen.",
   "diaryAiPhoto": "KI-Foto",
   "diaryTakeAPhotoAiEstimatesFoodsAnd": "Foto machen, KI schätzt Lebensmittel und Mengen",
-  "diaryPremiumFeatureValueDayFreeTrial": "Premium-Funktion · {arg0} Tage kostenlos testen",
-  "@diaryPremiumFeatureValueDayFreeTrial": {
-    "placeholders": {
-      "arg0": {
-        "type": "String"
-      }
-    }
-  },
   "diaryFindAPackagedProductUsingItsBarcode": "Verpacktes Produkt über den Barcode finden",
   "diaryEnterManually2": "Manuell eintragen",
   "diarySearchForFoodsOrEnterThemYourself": "Lebensmittel suchen oder selbst eintragen"

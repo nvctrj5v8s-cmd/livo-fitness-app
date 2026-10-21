@@ -50,7 +50,15 @@ class PremiumBadge extends StatelessWidget {
 /// Shown below the free recipes. Free accounts do not load premium recipes
 /// at all (RLS), so this card is the honest pointer to the rest.
 class PremiumRecipesCard extends StatelessWidget {
-  const PremiumRecipesCard({required this.onUnlock, super.key});
+  const PremiumRecipesCard({
+    required this.onUnlock,
+    this.trialAvailable = false,
+    super.key,
+  });
+
+  /// Whether the store offers this account a free trial; only then the card
+  /// mentions it.
+  final bool trialAvailable;
 
   final VoidCallback onUnlock;
 
@@ -111,16 +119,18 @@ class PremiumRecipesCard extends StatelessWidget {
                 icon: const Icon(Icons.workspace_premium_rounded, size: 19),
                 label: Text(context.l10n.subscriptionUnlockAllRecipes),
               ),
-              const SizedBox(height: 8),
-              Text(
-                context.l10n.subscriptionValueDayFreeTrialEndsAutomatically(
-                  (SubscriptionPlans.trialDays).toString(),
+              if (trialAvailable) ...[
+                const SizedBox(height: 8),
+                Text(
+                  context.l10n.subscriptionValueDayFreeTrialThenSubscription(
+                    (SubscriptionPlans.trialDays).toString(),
+                  ),
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 12,
+                  ),
                 ),
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 12,
-                ),
-              ),
+              ],
             ],
           );
           if (constraints.maxWidth < 520) {
