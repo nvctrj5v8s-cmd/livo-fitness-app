@@ -4,6 +4,12 @@ import 'app_colors.dart';
 
 abstract final class AppTheme {
   static ThemeData get dark {
+    // Button labels name the font of the platform explicitly: a button text
+    // style without a family can show empty boxes (web) instead of letters.
+    final label = ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+    ).textTheme.labelLarge;
     const scheme = ColorScheme.dark(
       primary: AppColors.primary,
       onPrimary: AppColors.black,
@@ -117,7 +123,11 @@ abstract final class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(19),
           ),
-          textStyle: const TextStyle(fontWeight: FontWeight.w800),
+          textStyle: TextStyle(
+            fontFamily: label?.fontFamily,
+            fontFamilyFallback: label?.fontFamilyFallback,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
