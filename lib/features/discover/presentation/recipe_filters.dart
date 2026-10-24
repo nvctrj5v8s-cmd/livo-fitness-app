@@ -72,7 +72,7 @@ class _MealTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  label,
+                  DisplayText.of(label),
                   style: TextStyle(
                     color: active ? AppColors.text : AppColors.textMuted,
                     fontSize: 15,

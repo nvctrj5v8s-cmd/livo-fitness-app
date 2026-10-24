@@ -1,5 +1,15 @@
 # Funktionsstatus
 
+## iPhone-Screenshots für den App Store, 24. Oktober 2026
+
+- 12 Bilder (Deutsch und Englisch, je 6) in 1206 × 2622 px, ohne Transparenz,
+  aus den echten App-Bildschirmen erzeugt. Beispieltexte (Coach-Chat) und
+  Beispielwerte (KI-Foto) sind in `docs/APP_STORE_RELEASE.md` benannt.
+- Kleine App-Änderungen dabei: Reiter der Mahlzeiten in der Rezeptliste werden
+  auf Englisch übersetzt; `AppShell` nimmt für Tests und Vorschauen einen
+  austauschbaren Coach-Dienst; der Knopf „Weiter mit der kostenlosen Version“
+  übernimmt die Schrift des Themes.
+
 ## iPhone-Version vorbereitet, 21. Oktober 2026
 
 - **Kauf auf dem iPhone:** gleiche Abos, Berechtigung und Angebote wie bei

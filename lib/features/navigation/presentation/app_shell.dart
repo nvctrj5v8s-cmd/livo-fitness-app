@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/data/ai_coach_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../shared/widgets/ui_components.dart';
@@ -13,7 +14,11 @@ import '../../profile/presentation/profile_page.dart';
 import '../../diary/presentation/quick_add_sheet.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  const AppShell({super.key, this.coachService});
+
+  /// Replaceable coach backend for tests and previews; defaults to the Edge
+  /// Function.
+  final AiCoachService? coachService;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -132,7 +137,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final pages = [
       HomePage(onOpenPage: _selectPage),
-      const CoachPage(),
+      CoachPage(service: widget.coachService),
       const DiscoverPage(),
       const ProfilePage(),
     ];

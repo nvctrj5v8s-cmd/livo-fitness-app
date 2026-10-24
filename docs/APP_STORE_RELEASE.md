@@ -173,8 +173,16 @@ Datenschutz: https://app.lookin-foodtracker.de/legal/datenschutz.html
 Englisch entsprechend mit dem englischen Text aus `docs/PLAY_STORE_LISTING.md`
 und den Links unter `/legal/en/`.
 
-**Screenshots:** iPhone 6,9 Zoll (1320 × 2868 oder 1290 × 2796), 3 bis 10
-Stück. Am einfachsten auf einem großen iPhone über TestFlight aufnehmen.
+**Screenshots:** iPhone, Hochformat, **1206 × 2622 px** (6,3-Zoll-Display, geht auch
+für 6,1 Zoll), 3 bis 10 Stück. Fertig erzeugt am 24.10.2026 aus der echten
+App-Oberfläche: `Desktop/Lookin-iOS-Screenshots/Englisch` (Hauptsprache) und
+`/Deutsch`, je 6 Bilder (Tagebuch, KI-Foto, Coach, Rezepte, Rezept-Details,
+Premium). Gezeigt werden die echten Bildschirme der App mit ihren eigenen
+Rezeptfotos (Pexels/Unsplash, Quellen in `assets/ASSET_SOURCES.md`). Der
+Coach-Text im Chat und die KI-Schätzung des Mahlzeitenfotos sind **Beispiele**
+(die Zahlen des Fotos entsprechen den Katalogwerten). Gerendert mit der
+Schrift Roboto statt der iPhone-Systemschrift; sobald ein iPhone da ist, lassen
+sich die Bilder über TestFlight gegen echte Aufnahmen tauschen.
 
 ## 11. App-Datenschutz (App Store Connect › App › App-Datenschutz)
 

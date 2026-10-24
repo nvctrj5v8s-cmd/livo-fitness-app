@@ -554,7 +554,8 @@ class _PaywallPageState extends State<PaywallPage>
       style: TextButton.styleFrom(
         foregroundColor: AppColors.text,
         minimumSize: const Size.fromHeight(48),
-        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        textStyle: (Theme.of(context).textTheme.labelLarge ?? const TextStyle())
+            .copyWith(fontSize: 15, fontWeight: FontWeight.w700),
       ),
       icon: const Icon(Icons.arrow_forward_rounded, size: 19),
       label: Text(
