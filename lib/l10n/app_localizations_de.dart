@@ -672,6 +672,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get commonOk => 'OK';
 
   @override
+  String get commonPhotoAccessBody =>
+      'Lookin öffnet jetzt deine Fotos. Du wählst ein Bild aus, und nur dieses Bild wird verwendet. Deine anderen Fotos sieht Lookin nicht.';
+
+  @override
+  String get commonPhotoAccessOpen => 'Fotos öffnen';
+
+  @override
+  String get commonPhotoAccessTitle => 'Fotos öffnen?';
+
+  @override
   String get commonPremium => 'Premium';
 
   @override

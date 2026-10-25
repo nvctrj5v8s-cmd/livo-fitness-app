@@ -102,6 +102,10 @@ class AppController extends ChangeNotifier {
   /// The signed-in account may switch premium on and off for testing.
   bool isDeveloper = false;
 
+  /// "Von vorn starten" belongs to the developer switch: it disappears when
+  /// the developer turns premium off and never shows for other accounts.
+  bool get showsDemoReplay => isDeveloper && subscription.hasPremium;
+
   Future<void> loadDeveloperStatus() async {
     try {
       final developer = await developerRepository.isDeveloper();

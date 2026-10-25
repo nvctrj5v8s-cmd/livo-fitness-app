@@ -19,5 +19,8 @@
   "commonAppTitle": "Lookin – Ernährung",
   "@commonAppTitle": {
     "description": "Window/task title of the app."
-  }
+  },
+  "commonPhotoAccessTitle": "Fotos öffnen?",
+  "commonPhotoAccessBody": "Lookin öffnet jetzt deine Fotos. Du wählst ein Bild aus, und nur dieses Bild wird verwendet. Deine anderen Fotos sieht Lookin nicht.",
+  "commonPhotoAccessOpen": "Fotos öffnen"
 }

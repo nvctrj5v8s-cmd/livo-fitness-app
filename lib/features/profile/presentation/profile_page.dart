@@ -740,7 +740,7 @@ class _SettingsList extends StatelessWidget {
             subtitle: context.l10n.profileImprintTermsPrivacyWithdrawal,
             onTap: () => showLegalSheet(context),
           ),
-          if (controller.isDeveloper) ...[
+          if (controller.showsDemoReplay) ...[
             const Divider(height: 1),
             _SettingsTile(
               key: const Key('profile-demo-replay'),

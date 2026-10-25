@@ -1222,6 +1222,24 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get commonOk;
 
+  /// No description provided for @commonPhotoAccessBody.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin öffnet jetzt deine Fotos. Du wählst ein Bild aus, und nur dieses Bild wird verwendet. Deine anderen Fotos sieht Lookin nicht.'**
+  String get commonPhotoAccessBody;
+
+  /// No description provided for @commonPhotoAccessOpen.
+  ///
+  /// In de, this message translates to:
+  /// **'Fotos öffnen'**
+  String get commonPhotoAccessOpen;
+
+  /// No description provided for @commonPhotoAccessTitle.
+  ///
+  /// In de, this message translates to:
+  /// **'Fotos öffnen?'**
+  String get commonPhotoAccessTitle;
+
   /// No description provided for @commonPremium.
   ///
   /// In de, this message translates to:

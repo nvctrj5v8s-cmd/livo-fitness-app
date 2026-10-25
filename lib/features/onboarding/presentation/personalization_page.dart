@@ -492,8 +492,15 @@ class _PersonalizationPageState extends State<PersonalizationPage> {
                       );
                       // On normal phones the controls keep their full size so
                       // wheels and the ruler receive direct drag gestures.
-                      // A compact landscape window is the only fallback.
-                      if (constraints.maxHeight < 510) {
+                      // A compact landscape window is the only fallback. The
+                      // keyboard does not count: switching the layout while
+                      // it opens would rebuild the name field and close it.
+                      // Read above the Scaffold, which hides the insets from
+                      // its body.
+                      final keyboard = MediaQuery.viewInsetsOf(
+                        this.context,
+                      ).bottom;
+                      if (constraints.maxHeight + keyboard < 510) {
                         return Center(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,

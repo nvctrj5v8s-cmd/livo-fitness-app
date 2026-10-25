@@ -2,12 +2,12 @@ import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/photo_library.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../domain/avatar_image.dart';
 
@@ -22,8 +22,11 @@ Future<void> showAvatarEditor(BuildContext context) {
 }
 
 class AvatarEditor extends StatefulWidget {
-  const AvatarEditor({required this.controller, super.key});
+  const AvatarEditor({required this.controller, this.pickPhoto, super.key});
   final AppController controller;
+
+  /// Replaces the system photo picker in tests.
+  final Future<Uint8List?> Function()? pickPhoto;
 
   @override
   State<AvatarEditor> createState() => _AvatarEditorState();
@@ -51,26 +54,20 @@ class _AvatarEditorState extends State<AvatarEditor> {
       _error = null;
     });
     try {
-      final file = await openFile(
-        acceptedTypeGroups: [
-          XTypeGroup(
-            label: L10n.current.profileImages,
-            extensions: ['jpg', 'jpeg', 'png'],
-            mimeTypes: ['image/jpeg', 'image/png'],
-            uniformTypeIdentifiers: ['public.jpeg', 'public.png'],
-          ),
-        ],
+      final bytes = await pickLibraryPhoto(
+        context,
+        label: L10n.current.profileImages,
+        maxSide: 2048,
+        quality: 90,
+        pick: widget.pickPhoto,
       );
-      if (file == null || !mounted) return;
-      if (await file.length() > maxAvatarSourceBytes) {
+      if (bytes == null || !mounted) return;
+      if (bytes.length > maxAvatarSourceBytes) {
         throw AvatarImageException(
           L10n.current.profileChooseAnImageNoLargerThan8,
         );
       }
-      final prepared = await compute(
-        prepareAvatarImage,
-        await file.readAsBytes(),
-      );
+      final prepared = await compute(prepareAvatarImage, bytes);
       final codec = await ui.instantiateImageCodec(prepared.bytes);
       final ui.FrameInfo frame;
       try {

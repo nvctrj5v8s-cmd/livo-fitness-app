@@ -495,6 +495,29 @@ void main() {
       fail('Die Zusammenfassung wurde nicht erreicht.');
     });
   }
+
+  testWidgets('the name field keeps focus when the keyboard opens', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 3;
+    tester.view.physicalSize = const Size(393 * 3, 852 * 3);
+    addTearDown(tester.view.reset);
+    await _page(tester);
+
+    await tester.tap(find.byKey(const ValueKey('personal-name')));
+    await tester.pump();
+    EditableText field() =>
+        tester.widget<EditableText>(find.byType(EditableText));
+    expect(field().focusNode.hasFocus, isTrue);
+
+    // The iPhone keyboard takes about 336 points of the screen.
+    tester.view.viewInsets = const FakeViewPadding(bottom: 336 * 3);
+    await tester.pumpAndSettle();
+
+    expect(field().focusNode.hasFocus, isTrue);
+    await tester.enterText(find.byKey(const ValueKey('personal-name')), 'Mira');
+    expect(find.text('Mira'), findsOneWidget);
+  });
 }
 
 void _expectStep(String name) =>

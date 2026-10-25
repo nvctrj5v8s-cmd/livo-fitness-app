@@ -16,5 +16,8 @@
   "commonPremium": "Premium",
   "commonConnectionFailed": "Connection failed. Please try again.",
   "commonUnknownError": "That didn't work just now. Please try again later.",
-  "commonAppTitle": "Lookin – Nutrition"
+  "commonAppTitle": "Lookin – Nutrition",
+  "commonPhotoAccessTitle": "Open your photos?",
+  "commonPhotoAccessBody": "Lookin will now open your photos. You choose one picture and only that picture is used. Lookin does not see your other photos.",
+  "commonPhotoAccessOpen": "Open photos"
 }

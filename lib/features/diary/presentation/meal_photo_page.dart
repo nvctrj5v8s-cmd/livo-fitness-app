@@ -2,7 +2,6 @@ import 'package:fitness_ai_app/l10n/display_text.dart';
 import 'package:fitness_ai_app/l10n/l10n.dart';
 import 'dart:async';
 
-import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as image_lib;
@@ -16,6 +15,7 @@ import '../../../core/models/custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../consent/presentation/consent_dialogs.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/widgets/photo_library.dart';
 import '../../allergies/domain/allergy_safety.dart';
 import '../../allergies/presentation/allergy_profile_field.dart';
 import '../../subscription/presentation/paywall_page.dart';
@@ -109,27 +109,8 @@ class _MealPhotoPageState extends State<MealPhotoPage> {
     );
   }
 
-  Future<Uint8List?> _pickFromGallery() async {
-    if (kIsWeb || _hasNativeCamera) {
-      final photo = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 1600,
-        maxHeight: 1600,
-        imageQuality: 86,
-        requestFullMetadata: false,
-      );
-      return photo?.readAsBytes();
-    }
-    final file = await file_selector.openFile(
-      acceptedTypeGroups: [
-        file_selector.XTypeGroup(
-          label: L10n.current.diaryFoodPhoto,
-          extensions: ['jpg', 'jpeg', 'png', 'webp'],
-        ),
-      ],
-    );
-    return file?.readAsBytes();
-  }
+  Future<Uint8List?> _pickFromGallery() =>
+      pickLibraryPhoto(context, label: L10n.current.diaryFoodPhoto);
 
   Future<void> _takeAndAnalyze({bool fromGallery = false}) async {
     if (_takingPhoto || _analyzing || _saving) return;

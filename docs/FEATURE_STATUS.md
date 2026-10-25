@@ -1,5 +1,21 @@
 # Funktionsstatus
 
+## Korrekturen nach dem ersten iPhone-Test, 25. Oktober 2026
+
+- Namensfrage am Anfang: Auf dem iPhone ging die Tastatur sofort wieder zu,
+  weil die Seite beim Öffnen der Tastatur in das Kompakt-Layout wechselte und
+  das Feld neu aufbaute. Die Tastatur zählt jetzt nicht mehr zur Höhe; Test
+  `the name field keeps focus when the keyboard opens`.
+- Fotoauswahl (Profilbild, Coach-Foto, KI-Foto aus der Galerie): Auf iPhone,
+  Android und im Web öffnet sich die System-Fotoauswahl statt der Dateien-App.
+  Vorher fragt Lookin „Fotos öffnen?“. Die System-Auswahl gibt nur das
+  gewählte Bild an die App weiter; ein Vollzugriff auf die Mediathek wird
+  nicht angefragt. Desktop behält den Dateidialog (`shared/widgets/photo_library.dart`).
+- „Von vorn starten“ im Profil erscheint nur noch für das Entwicklerkonto und
+  nur, solange dort der Entwickler-Premium-Schalter an ist
+  (`AppController.showsDemoReplay`). Andere Konten sahen es nie: Der Server
+  prüft die bestätigte E-Mail (`is_developer`).
+
 ## iPhone-Screenshots für den App Store, 24. Oktober 2026
 
 - 12 Bilder (Deutsch und Englisch, je 6) in 1206 × 2622 px, ohne Transparenz,

@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:image/image.dart' as img;
 
 import '../../consent/presentation/consent_dialogs.dart';
@@ -13,6 +12,7 @@ import '../../../core/data/ai_coach_service.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/animated_reveal.dart';
+import '../../../shared/widgets/photo_library.dart';
 import '../../../shared/widgets/ui_components.dart';
 import '../../subscription/domain/subscription_plans.dart';
 import '../../subscription/presentation/paywall_page.dart';
@@ -212,17 +212,12 @@ class _CoachChatState extends State<_CoachChat>
     if (!_chat.canSend) return;
     final consent = AppScope.of(context).consent;
     if (!await ensureAiConsent(context, consent) || !mounted) return;
-    final file = await openFile(
-      acceptedTypeGroups: [
-        XTypeGroup(
-          label: L10n.current.coachFoodPhoto,
-          extensions: ['jpg', 'jpeg', 'png', 'webp'],
-        ),
-      ],
+    final sourceBytes = await pickLibraryPhoto(
+      context,
+      label: L10n.current.coachFoodPhoto,
     );
-    if (file == null) return;
+    if (sourceBytes == null) return;
 
-    final sourceBytes = await file.readAsBytes();
     final decoded = img.decodeImage(sourceBytes);
     if (decoded == null) {
       _chat.showIssue(L10n.current.coachThisImageCouldNotBeRead);
