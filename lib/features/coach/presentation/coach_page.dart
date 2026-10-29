@@ -19,7 +19,7 @@ import '../../subscription/presentation/paywall_page.dart';
 import '../../subscription/presentation/premium_widgets.dart';
 import '../application/coach_chat_controller.dart';
 import '../application/coach_context.dart';
-import 'coach_formatted_text.dart';
+import 'coach_sources_view.dart';
 
 /// The coach chat is part of Lookin Premium. Free accounts see what it offers
 /// and a way to the paywall; the server enforces the same rule.
@@ -298,6 +298,12 @@ class _CoachChatState extends State<_CoachChat>
         titleSpacing: 20,
         title: const _CoachTitle(),
         actions: [
+          IconButton(
+            key: const Key('coach-sources-toolbar'),
+            tooltip: context.l10n.coachSourcesAndLimits,
+            onPressed: () => showCoachSources(context),
+            icon: const Icon(Icons.menu_book_outlined),
+          ),
           if (limit != null && limit > 0 && chat.remaining != null)
             _QuotaPill(remaining: chat.remaining!, dailyLimit: limit),
           IconButton(
@@ -632,6 +638,13 @@ class _CoachLocked extends StatelessWidget {
         backgroundColor: Colors.transparent,
         titleSpacing: 20,
         title: const _CoachTitle(),
+        actions: [
+          IconButton(
+            tooltip: context.l10n.coachSourcesAndLimits,
+            onPressed: () => showCoachSources(context),
+            icon: const Icon(Icons.menu_book_outlined),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -1373,7 +1386,7 @@ class _MessageBubble extends StatelessWidget {
                       height: 1.48,
                     ),
                   )
-                : CoachFormattedText(entry.text, style: assistantStyle),
+                : CitedCoachText(entry.text, style: assistantStyle),
           ),
           if (!fromUser && !entry.failed && entry.text.trim().isNotEmpty)
             Padding(

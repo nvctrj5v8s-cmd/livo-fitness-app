@@ -1,5 +1,37 @@
 # Lookin Coach: Daten, Verlauf und Grenzen
 
+## Ergänzung vom 29. Oktober 2026: Quellen und erneute KI-Einwilligung
+
+Der Coach bekommt zusätzlich feste, geprüfte Zusammenfassungen aus
+`supabase/functions/_shared/coach_sources.json`. Es werden keine Nutzerfragen
+an Quellen-Webseiten oder eine Suchmaschine übertragen. Die KI wählt höchstens
+drei passende Quellen-IDs; nur der Server ergänzt die zugehörigen festen URLs.
+Quellenlinks werden als Teil der Antwort im bestehenden Chatverlauf und Export
+gespeichert, mit denselben Zugriffsrechten und Löschfristen. Die App öffnet nur
+die erlaubten HTTPS-Adressen nach Antippen im externen Browser. Dabei können
+Verbindungsdaten beim Quellenanbieter anfallen; Lookin ergänzt keine Nutzer-
+oder Chatdaten in den URLs. Weitere Datenfelder, Anbieter und Berechtigungen
+werden nicht ergänzt.
+
+Die Quelle belegt die allgemeine Information, nicht persönliche Kalorien- und
+Proteinziele, Rezeptwerte oder Fotoschätzungen. Antworten ohne hinreichende
+Grundlage werden begrenzt. Die technische Prüfung erkennt strukturelle Fehler,
+fehlende Referenzen und unbekannte Quellen, sie kann die inhaltliche Wahrheit
+einer KI-Aussage nicht garantieren. Alte Antworten werden nicht nachträglich
+belegt. Übersicht und Hinweise: Coach › Buchsymbol „Quellen & Grenzen“.
+
+Die neue KI-Einwilligung (`2026-10-29:de/en`) umfasst die Hinweise zu Schätzungen,
+Quellen und medizinischen Grenzen sowie eine präzisere Erklärung der
+Freitexteingaben: Name/E-Mail werden nicht als Profilfelder hinzugefügt,
+können aber in selbst eingegebenen Nachrichten/Fotos vorkommen. Die App fragt
+eine alte positive KI-Einwilligung erneut ab und der Server prüft die neue
+Textversion. Ablehnungen/Widerrufe bleiben wirksam. Gesundheitsdaten- und
+Abo-Einwilligungen behalten ihre bisherigen Versionen. Die übrige App bleibt
+ohne KI-Einwilligung nutzbar. App und Edge Function müssen gemeinsam ausgerollt
+werden; dieser Stand ist lokal vorbereitet, noch nicht live verifiziert.
+
+Siehe auch `APP_STORE_REVIEW_1_4_1.md` und die aktualisierten Rechtsseiten.
+
 Stand: 15. Oktober 2026. Technische Dokumentation, keine abschließende
 Datenschutzerklärung oder juristische Freigabe.
 

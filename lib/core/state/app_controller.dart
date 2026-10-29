@@ -31,6 +31,7 @@ import '../data/supabase_favorites_repository.dart';
 import '../data/supabase_profile_repository.dart';
 import '../models/app_models.dart';
 import '../models/custom_food.dart';
+import '../models/saved_custom_food.dart';
 import '../models/tracking_streak.dart';
 
 class AppController extends ChangeNotifier {
@@ -622,6 +623,7 @@ class AppController extends ChangeNotifier {
   ];
   final List<MealEntry> diaryMeals = [];
   final Set<String> foodFavoriteIds = {};
+  List<SavedCustomFood> savedCustomFoods = [];
   List<String> recentFoodIds = const [];
   DateTime diaryDate = DateTime.now();
   int _diaryRequestId = 0;
@@ -906,11 +908,61 @@ class AppController extends ChangeNotifier {
         ..clear()
         ..addAll(values.favoriteIds);
       recentFoodIds = values.recentIds;
+      if (personalizationUserId != null) savedCustomFoods = values.customFoods;
     } catch (error) {
       foodPreferencesError = error.toString();
     } finally {
       foodPreferencesLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<bool> saveCustomFoodTemplate({
+    required String name,
+    required CustomFoodNutrition nutrition,
+    String? id,
+  }) async {
+    name = name.trim();
+    if (name.isEmpty ||
+        name.length > 100 ||
+        HalalContentPolicy.restrictionReason(name) != null ||
+        nutrition.validate(requireLabelValues: true) != null) {
+      return false;
+    }
+    final existing = savedCustomFoods
+        .where(
+          (food) =>
+              food.id == id || food.name.toLowerCase() == name.toLowerCase(),
+        )
+        .firstOrNull;
+    final value = SavedCustomFood(
+      id: existing?.id ?? 'custom-${DateTime.now().microsecondsSinceEpoch}',
+      name: name,
+      nutrition: nutrition,
+    );
+    final next = [
+      value,
+      ...savedCustomFoods.where((food) => food.id != value.id),
+    ].take(100).toList();
+    return _storeCustomFoodTemplates(next);
+  }
+
+  Future<bool> removeCustomFoodTemplate(String id) => _storeCustomFoodTemplates(
+    savedCustomFoods.where((food) => food.id != id).toList(),
+  );
+
+  Future<bool> _storeCustomFoodTemplates(List<SavedCustomFood> next) async {
+    try {
+      if (personalizationUserId != null) {
+        await FoodPreferencesStore(
+          userId: personalizationUserId,
+        ).saveCustomFoods(next);
+      }
+      savedCustomFoods = next;
+      notifyListeners();
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -1546,6 +1598,7 @@ class AppController extends ChangeNotifier {
     if (personalizationUserId == null) {
       meals.clear();
       favoriteRecipeIds.clear();
+      savedCustomFoods = [];
     }
     waterGlasses = 0;
     unawaited(

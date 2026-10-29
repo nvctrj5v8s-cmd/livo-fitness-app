@@ -277,7 +277,7 @@ abstract class AppLocalizations {
   /// No description provided for @authByTappingGetStartedForFreeYou.
   ///
   /// In de, this message translates to:
-  /// **'Mit „Kostenlos starten“ bestätigst du, dass du mindestens 18 Jahre alt bist, und akzeptierst die AGB. Hinweise zum Datenschutz findest du in der Datenschutzerklärung.'**
+  /// **'Die Einwilligungen zur KI-Verarbeitung und zum Speichern freiwilliger Gesundheitsangaben werden im nächsten Schritt getrennt abgefragt. Du kannst die App auch ohne diese Einwilligungen nutzen.'**
   String get authByTappingGetStartedForFreeYou;
 
   /// No description provided for @authCancelAndReturnToSignIn.
@@ -430,6 +430,12 @@ abstract class AppLocalizations {
   /// **'Persönlich'**
   String get authPersonal;
 
+  /// No description provided for @authPleaseAcceptTerms.
+  ///
+  /// In de, this message translates to:
+  /// **'Bitte bestätige dein Alter und die AGB und lies die Datenschutz- und Gesundheitshinweise.'**
+  String get authPleaseAcceptTerms;
+
   /// No description provided for @authPleaseCheckYourEmailAddress.
   ///
   /// In de, this message translates to:
@@ -537,6 +543,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Auf „E-Mail bestätigen“ tippen'**
   String get authTapConfirmEmail;
+
+  /// No description provided for @authTermsAcceptance.
+  ///
+  /// In de, this message translates to:
+  /// **'Ich bin mindestens 18 Jahre alt und akzeptiere die AGB. Die Datenschutzerklärung habe ich zur Kenntnis genommen. Ich verstehe, dass Lookin allgemeine Orientierung und Schätzungen bietet und vor medizinischen Entscheidungen fachlicher Rat nötig ist.'**
+  String get authTermsAcceptance;
 
   /// No description provided for @authThatDidNotWorkJustNowPlease.
   ///
@@ -724,6 +736,12 @@ abstract class AppLocalizations {
   /// **'Lebensmittel-Foto analysieren'**
   String get coachAnalyseAFoodPhoto;
 
+  /// No description provided for @coachAnswerSources.
+  ///
+  /// In de, this message translates to:
+  /// **'Quellen zu dieser Antwort'**
+  String get coachAnswerSources;
+
   /// No description provided for @coachAskAboutMealsNutritionOrTrainingAnswers.
   ///
   /// In de, this message translates to:
@@ -826,6 +844,12 @@ abstract class AppLocalizations {
   /// **'Beispiel eines Coach-Gesprächs, mit Premium verfügbar'**
   String get coachExampleCoachConversationAvailableWithPremium;
 
+  /// No description provided for @coachExternalSourcePrivacy.
+  ///
+  /// In de, this message translates to:
+  /// **'Die Links öffnen externe Webseiten im Browser. Lookin hängt weder Chattexte noch Profil- oder Tagebuchdaten an die Links an. Beim Öffnen verarbeitet die jeweilige Website technische Verbindungsdaten nach ihren eigenen Datenschutzhinweisen.'**
+  String get coachExternalSourcePrivacy;
+
   /// No description provided for @coachFocusedOnNutritionFitnessAndAHealthy.
   ///
   /// In de, this message translates to:
@@ -855,6 +879,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Gib mir eine einfache proteinreiche Idee.'**
   String get coachGiveMeASimpleHighProteinIdea;
+
+  /// No description provided for @coachHealthLimits.
+  ///
+  /// In de, this message translates to:
+  /// **'Lookin gibt allgemeine Orientierung zu Ernährung und Bewegung. KI-Antworten können falsch sein und ersetzen keine ärztliche oder ernährungstherapeutische Beratung. Hole vor medizinischen Entscheidungen fachlichen Rat ein. Der Coach bietet keine Diagnose, Behandlung, Medikamente oder Supplementdosierung.'**
+  String get coachHealthLimits;
 
   /// No description provided for @coachHowCanISensiblyReachMyCalorie.
   ///
@@ -981,6 +1011,24 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Nachricht senden'**
   String get coachSendMessage;
+
+  /// No description provided for @coachSourceScope.
+  ///
+  /// In de, this message translates to:
+  /// **'Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Bei einer Antwort stehen die passenden Quellen direkt unter dem Text; [1], [2] und [3] ordnen sie der jeweiligen Aussage zu. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut. Quellen zuletzt geprüft: 29.10.2026.'**
+  String get coachSourceScope;
+
+  /// No description provided for @coachSourcesAndLimits.
+  ///
+  /// In de, this message translates to:
+  /// **'Quellen & Grenzen'**
+  String get coachSourcesAndLimits;
+
+  /// No description provided for @coachSourcesDoNotVerifyEstimates.
+  ///
+  /// In de, this message translates to:
+  /// **'Die Quellen belegen allgemeine Hinweise. Portionswerte und KI-Fotowerte bleiben Schätzungen; persönliche Ziele werden dadurch nicht medizinisch geprüft.'**
+  String get coachSourcesDoNotVerifyEstimates;
 
   /// No description provided for @coachStartANewChat.
   ///
@@ -1315,7 +1363,7 @@ abstract class AppLocalizations {
   /// No description provided for @consentIExpresslyConsentToMyQuestionsPhotos.
   ///
   /// In de, this message translates to:
-  /// **'Ich willige ausdrücklich ein, dass meine Fragen, Fotos, die letzten Chat-Nachrichten und folgende Angaben zur Beantwortung an den KI-Dienst OpenAI übermittelt werden (Verarbeitung auch in den USA): Ziel, Tageswerte, Ernährungsstil, Aktivität, Angaben aus der Einführung (Motivation, Hürden, Erfahrung) und meine Allergien und Unverträglichkeiten, also Gesundheitsdaten. Name und E-Mail werden nicht übermittelt.'**
+  /// **'Ich willige ausdrücklich ein, dass meine Fragen, Fotos, die letzten Chat-Nachrichten und folgende Angaben zur Beantwortung an den KI-Dienst OpenAI übermittelt werden (Verarbeitung auch in den USA): Ziel, Tageswerte, Ernährungsstil, Aktivität, Angaben aus der Einführung (Motivation, Hürden, Erfahrung) und meine Allergien und Unverträglichkeiten, also Gesundheitsdaten. Lookin fügt Name und E-Mail nicht als Profilfelder hinzu; was ich selbst in Nachrichten oder Bildern angebe, wird mitgesendet. Ich habe die Hinweise zu KI-Schätzungen, Quellen und medizinischen Grenzen gelesen und prüfe erkannte Werte vor dem Speichern. Diese Einwilligung ist für KI-Coach und KI-Foto erforderlich; die übrige App kann ich ohne sie nutzen.'**
   String get consentIExpresslyConsentToMyQuestionsPhotos;
 
   /// No description provided for @consentIExpresslyRequestThatLookinPremiumBegins.
@@ -2062,11 +2110,23 @@ abstract class AppLocalizations {
   /// **'Eintrag löschen'**
   String get diaryDeleteEntry2;
 
+  /// No description provided for @diaryDeleteTemplate.
+  ///
+  /// In de, this message translates to:
+  /// **'Vorlage löschen'**
+  String get diaryDeleteTemplate;
+
   /// No description provided for @diaryDiary.
   ///
   /// In de, this message translates to:
   /// **'Tagebuch'**
   String get diaryDiary;
+
+  /// No description provided for @diaryDiarySavedTemplateFailed.
+  ///
+  /// In de, this message translates to:
+  /// **'Im Tagebuch eingetragen. Die Vorlage konnte nicht gespeichert werden; du kannst den Eintrag öffnen und es erneut versuchen.'**
+  String get diaryDiarySavedTemplateFailed;
 
   /// No description provided for @diaryDuplicate.
   ///
@@ -2404,6 +2464,12 @@ abstract class AppLocalizations {
   /// **'Sobald Menge, Energie und Makros eingetragen sind, siehst du hier die Berechnung.'**
   String get diaryOnceYouEnterTheAmountEnergyAnd;
 
+  /// No description provided for @diaryOwnSavedFoods.
+  ///
+  /// In de, this message translates to:
+  /// **'Eigene gemerkte Lebensmittel'**
+  String get diaryOwnSavedFoods;
+
   /// No description provided for @diaryPer100G.
   ///
   /// In de, this message translates to:
@@ -2571,6 +2637,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Übrig'**
   String get diaryRemaining;
+
+  /// No description provided for @diaryRememberOwnFood.
+  ///
+  /// In de, this message translates to:
+  /// **'Für später als eigene Vorlage merken'**
+  String get diaryRememberOwnFood;
 
   /// No description provided for @diaryRemove.
   ///
@@ -2800,6 +2872,24 @@ abstract class AppLocalizations {
   /// **'Tippe auf ein Lebensmittel, um Name und Nährwerte zu ändern. Wenn du die Menge änderst, passen sich Kalorien und Nährwerte automatisch an.'**
   String get diaryTapAFoodToChangeItsName;
 
+  /// No description provided for @diaryTemplateDemoOnly.
+  ///
+  /// In de, this message translates to:
+  /// **'In der Demo nur bis zum Neustart verfügbar.'**
+  String get diaryTemplateDemoOnly;
+
+  /// No description provided for @diaryTemplateDeviceOnly.
+  ///
+  /// In de, this message translates to:
+  /// **'Nur auf diesem Gerät und für dieses Konto. Später unter „Eigenes Lebensmittel“ auswählen. Bis zu 100 Vorlagen; bei gleichem Namen wird die vorhandene ersetzt.'**
+  String get diaryTemplateDeviceOnly;
+
+  /// No description provided for @diaryTemplateSaveFailed.
+  ///
+  /// In de, this message translates to:
+  /// **'Die Vorlage konnte nicht geändert werden. Bitte versuche es erneut.'**
+  String get diaryTemplateSaveFailed;
+
   /// No description provided for @diaryTheAvailableInformationMayMentionValueIf.
   ///
   /// In de, this message translates to:
@@ -2937,6 +3027,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Nicht bekannt'**
   String get diaryUnknown;
+
+  /// No description provided for @diaryUserEnteredSource.
+  ///
+  /// In de, this message translates to:
+  /// **'Quelle: deine eigene Eingabe. Übernimm aktuelle Verpackungswerte und prüfe Menge, Zutaten und Allergene. Diese Angaben wurden nicht von Lookin oder einer Fachstelle geprüft.'**
+  String get diaryUserEnteredSource;
 
   /// No description provided for @diaryValueGCarbs.
   ///

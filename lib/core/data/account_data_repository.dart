@@ -96,6 +96,9 @@ class AccountDataRepository {
       'avatar_jpeg_base64': avatar == null ? null : base64Encode(avatar),
       'food_favorite_ids': food.favoriteIds.toList(),
       'recent_food_ids': food.recentIds,
+      'saved_custom_foods': food.customFoods
+          .map((food) => food.toJson())
+          .toList(),
       'reminders_json': await preferences.getString('livo.reminders.$userId'),
       'old_kitchen_lists_json': await preferences.getString(
         'livo.kitchen.v1.${Uri.encodeComponent(userId)}',
@@ -156,8 +159,12 @@ class AccountDataRepository {
     await preferences.remove('livo.kitchen.v1.${Uri.encodeComponent(userId)}');
     await preferences.remove(DevicePaywallStore.keyFor(userId));
     for (final kind in ConsentKind.values) {
+      final key =
+          'lookin.consent.v1.${kind.wire}.${Uri.encodeComponent(userId)}';
+      await preferences.remove(key);
+      await preferences.remove('$key.text_version');
       await preferences.remove(
-        'lookin.consent.v1.${kind.wire}.${Uri.encodeComponent(userId)}',
+        'lookin.consent.pending.${kind.wire}.${Uri.encodeComponent(userId)}',
       );
     }
   }

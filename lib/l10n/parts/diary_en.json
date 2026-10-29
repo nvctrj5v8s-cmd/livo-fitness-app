@@ -1,4 +1,12 @@
 {
+  "diaryOwnSavedFoods": "My saved custom foods",
+  "diaryDeleteTemplate": "Delete template",
+  "diaryRememberOwnFood": "Save as my template for later",
+  "diaryTemplateDeviceOnly": "On this device, for this account only. Select it later under “Custom food”. Up to 100 templates; saving the same name replaces the existing template.",
+  "diaryTemplateDemoOnly": "In the demo, available until the app restarts.",
+  "diaryUserEnteredSource": "Source: your own entry. Use the current packaging values and check the amount, ingredients and allergens. These details have not been verified by Lookin or a qualified professional.",
+  "diaryTemplateSaveFailed": "The template could not be changed. Please try again.",
+  "diaryDiarySavedTemplateFailed": "Added to your diary. The template could not be saved; open the entry and try again.",
   "diaryServingBasis": "PER {grams} G",
   "diarySavedItemsRemoved": "Items already saved have been removed from the list.",
   "diaryChickpeaRiceBowl": "Chickpea rice bowl",

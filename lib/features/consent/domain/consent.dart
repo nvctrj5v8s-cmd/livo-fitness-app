@@ -24,7 +24,15 @@ enum ConsentKind {
 /// [version], so stored decisions can be traced to the text that was shown.
 abstract final class ConsentTexts {
   static const version = '2026-10-14';
+  static const aiVersion = '2026-10-29';
   static String get localizedVersion => '$version:${L10n.code}';
+  static String versionFor(ConsentKind kind) =>
+      kind == ConsentKind.aiProcessing ? aiVersion : version;
+  static String localizedVersionFor(ConsentKind kind) =>
+      '${versionFor(kind)}:${L10n.code}';
+
+  static bool isCurrentAiVersion(Object? value) =>
+      value == '$aiVersion:de' || value == '$aiVersion:en';
 
   static String get healthTitle => L10n.current.consentSaveHealthInformation;
   static String get health =>

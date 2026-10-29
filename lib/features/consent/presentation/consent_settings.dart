@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/ui_components.dart';
+import '../../coach/presentation/coach_sources_view.dart';
 import '../domain/consent.dart';
 import 'consent_dialogs.dart';
 
@@ -109,6 +110,7 @@ class ConsentSettingsCard extends StatelessWidget {
                 context.l10n.consentSendQuestionsAndPhotosToOpenaiUsa,
               ),
             ),
+            const CoachSourcesButton(),
           ],
         ),
       ),

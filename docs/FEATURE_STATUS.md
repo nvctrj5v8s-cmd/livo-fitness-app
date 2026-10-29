@@ -1537,3 +1537,49 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   schalten Premium für das eigene Konto an und aus (`developer_set_premium`,
   Anbieter `developer`). Das Inhaber-Konto startet mit Premium. Wirksam nach
   Migration `0018`.
+# Aktualisierung: Apple-Review 1.4.1, 29. Oktober 2026
+
+- **Lokal implementiert, noch nicht veröffentlicht:** Coach-Antworten werden als
+  strukturiertes JSON mit Quellen-IDs erzeugt. Der Server erlaubt nur die vier
+  geprüften WHO-/NHS-/EFSA-Quellen aus
+  `supabase/functions/_shared/coach_sources.json`. Passende Referenzen `[1]` bis
+  `[3]` und anklickbare Links stehen direkt bei der Antwort. Links bleiben im
+  gespeicherten Verlauf und im bestehenden Kontoexport erhalten.
+- Der Prompt begrenzt allgemeine Gesundheitsinformationen auf die mitgegebenen
+  Quellenzusammenfassungen. Keine neuen individuellen Kalorien-, Protein-,
+  Abnehm- oder Trainingsvorgaben. Medizinische Beratung, Medikamente und
+  Supplementdosierung bleiben ausgeschlossen. Ungültiges/unvollständiges JSON,
+  unbekannte Quellen und fehlende Referenzen bei als gesundheitsbezogen
+  gekennzeichneten Antworten werden durch einen neutralen Hinweis ersetzt.
+  Die inhaltliche Zuordnung erfolgt durch das Modell; die technische Prüfung
+  ist keine medizinische oder semantische Richtigkeitsgarantie.
+- **Quellen & Grenzen:** im Coach über das Buchsymbol (auch ohne Premium),
+  bei der KI-Einwilligung und unter Profil › Datenschutz & Daten erreichbar.
+  Allgemeine Quellen bestätigen keine persönlichen Ziele, Portionswerte oder
+  Fotoschätzungen. Frühere Chats erhalten keine nachträglich erfundenen Belege.
+- **Einwilligungen:** KI-Textversion `2026-10-29:de/en`, getrennt von der
+  unveränderten Gesundheitsdaten-Version `2026-10-14`. Alte positive
+  KI-Einwilligungen werden erneut abgefragt; der Server verlangt dieselbe neue
+  Version. Ablehnung/Widerruf bleibt möglich; die übrige App ist weiter nutzbar.
+- **Neue Registrierung:** nicht vorausgewähltes Pflichtfeld für Mindestalter,
+  AGB und Kenntnisnahme der Datenschutz-/Gesundheitshinweise. Die Versionsangaben
+  liegen in Auth-Kontometadaten; diese sind kein unveränderliches Beweisarchiv.
+  Bestehende Konten werden nicht zu neuen AGB gezwungen.
+- **Eigene Lebensmittel:** optionale private Vorlagen im manuellen Editor,
+  bis zu 100, auf dem Gerät nach Konto getrennt, Auswahl und Löschung im selben
+  Editor. Werte werden ausdrücklich als ungeprüfte eigene Eingaben bezeichnet.
+  Gleicher Name ersetzt die vorhandene Vorlage. Tagebucheinträge bleiben im
+  bestehenden Tagebuchspeicher; Vorlagen werden nicht in den Produktkatalog
+  hochgeladen. Demo-Vorlagen sind nur im Arbeitsspeicher. Lokaler Kontoexport
+  und Kontolöschung umfassen die Vorlagen.
+- Deutsch/Englisch ergänzt; AGB, Datenschutz und eigene öffentliche Quellen-
+  seiten unter `web/legal/gesundheit-quellen.html` und `web/legal/en/` angepasst.
+  Externe Quellen werden erst durch Antippen im Browser geöffnet; Links
+  enthalten keine Chat-/Profilwerte. Keine neue Berechtigung, kein Tracking,
+  kein neuer KI-Anbieter und keine zusätzlichen Profilfelder an OpenAI.
+- **Veröffentlichung erforderlich:** neue App bauen, `ai-coach` mit den neuen
+  `_shared`-Dateien deployen und Rechts-/Quellenseiten mit der Website
+  veröffentlichen. Keine neue Datenbankmigration nötig (bestehende Migrationen
+  für Chat und Einwilligungen vorausgesetzt). Vor Review echten Testchat und
+  Quellenlinks im neuen iOS-Build prüfen; Details und Antwortentwurf in
+  `APP_STORE_REVIEW_1_4_1.md`. Keine Live-Veröffentlichung durch diese Änderung.

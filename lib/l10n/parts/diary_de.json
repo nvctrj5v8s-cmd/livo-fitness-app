@@ -1,4 +1,12 @@
 {
+  "diaryOwnSavedFoods": "Eigene gemerkte Lebensmittel",
+  "diaryDeleteTemplate": "Vorlage löschen",
+  "diaryRememberOwnFood": "Für später als eigene Vorlage merken",
+  "diaryTemplateDeviceOnly": "Nur auf diesem Gerät und für dieses Konto. Später unter „Eigenes Lebensmittel“ auswählen. Bis zu 100 Vorlagen; bei gleichem Namen wird die vorhandene ersetzt.",
+  "diaryTemplateDemoOnly": "In der Demo nur bis zum Neustart verfügbar.",
+  "diaryUserEnteredSource": "Quelle: deine eigene Eingabe. Übernimm aktuelle Verpackungswerte und prüfe Menge, Zutaten und Allergene. Diese Angaben wurden nicht von Lookin oder einer Fachstelle geprüft.",
+  "diaryTemplateSaveFailed": "Die Vorlage konnte nicht geändert werden. Bitte versuche es erneut.",
+  "diaryDiarySavedTemplateFailed": "Im Tagebuch eingetragen. Die Vorlage konnte nicht gespeichert werden; du kannst den Eintrag öffnen und es erneut versuchen.",
   "diaryServingBasis": "BASIS: {grams} G",
   "@diaryServingBasis": {
     "placeholders": {

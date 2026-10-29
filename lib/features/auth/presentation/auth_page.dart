@@ -130,6 +130,9 @@ class _AuthPageState extends State<AuthPage>
           data: {
             'display_name': _nameController.text.trim(),
             'locale': L10n.code,
+            'terms_version': '2026-10-29:${L10n.code}',
+            'privacy_notice_version': '2026-10-29:${L10n.code}',
+            'health_notice_version': '2026-10-29:${L10n.code}',
           },
         );
         if (!mounted) return;
@@ -708,6 +711,39 @@ class _AuthPanel extends StatelessWidget {
                     label: Text(resendLabel(resendCooldown)),
                   ),
                 ),
+              if (isSignUp) ...[
+                FormField<bool>(
+                  key: const Key('auth-terms-acceptance'),
+                  initialValue: false,
+                  validator: (value) =>
+                      value == true ? null : context.l10n.authPleaseAcceptTerms,
+                  builder: (field) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CheckboxListTile(
+                        value: field.value ?? false,
+                        onChanged: loading
+                            ? null
+                            : (value) => field.didChange(value ?? false),
+                        contentPadding: EdgeInsets.zero,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        title: Text(
+                          context.l10n.authTermsAcceptance,
+                          style: const TextStyle(fontSize: 12.5, height: 1.4),
+                        ),
+                      ),
+                      if (field.hasError)
+                        Text(
+                          field.errorText!,
+                          style: const TextStyle(color: AppColors.error),
+                        ),
+                    ],
+                  ),
+                ),
+                const LegalLinksRow(
+                  pages: [LegalPage.terms, LegalPage.privacy],
+                ),
+              ],
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
@@ -743,13 +779,7 @@ class _AuthPanel extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-                const LegalLinksRow(
-                  pages: [
-                    LegalPage.terms,
-                    LegalPage.privacy,
-                    LegalPage.imprint,
-                  ],
-                ),
+                const LegalLinksRow(pages: [LegalPage.imprint]),
               ],
               // Withdrawal must work without signing in (§ 356a BGB).
               if (!isSignUp)

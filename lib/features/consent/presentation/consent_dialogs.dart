@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
+import '../../coach/presentation/coach_sources_view.dart';
 import '../application/consent_controller.dart';
 import '../domain/consent.dart';
 
@@ -39,7 +40,11 @@ Future<bool> _ensure(
   if (consent.decision(kind) == true) return true;
   final granted = await showDialog<bool>(
     context: context,
-    builder: (_) => ConsentDialog(title: title, text: text),
+    builder: (_) => ConsentDialog(
+      title: title,
+      text: text,
+      showAiNotice: kind == ConsentKind.aiProcessing,
+    ),
   );
   if (granted != true) return false;
   final stored = await consent.set(kind, true);
@@ -54,10 +59,16 @@ Future<bool> _ensure(
 /// One consent with a checkbox that is never pre-ticked. The button stays
 /// disabled until the box is ticked, so agreeing is always a deliberate act.
 class ConsentDialog extends StatefulWidget {
-  const ConsentDialog({required this.title, required this.text, super.key});
+  const ConsentDialog({
+    required this.title,
+    required this.text,
+    this.showAiNotice = false,
+    super.key,
+  });
 
   final String title;
   final String text;
+  final bool showAiNotice;
 
   @override
   State<ConsentDialog> createState() => _ConsentDialogState();
@@ -75,6 +86,13 @@ class _ConsentDialogState extends State<ConsentDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (widget.showAiNotice) ...[
+              Text(
+                context.l10n.coachHealthLimits,
+                style: const TextStyle(height: 1.4),
+              ),
+              const CoachSourcesButton(),
+            ],
             CheckboxListTile(
               key: const Key('consent-dialog-checkbox'),
               value: _ticked,
@@ -89,7 +107,7 @@ class _ConsentDialogState extends State<ConsentDialog> {
               style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
             const LegalLinksRow(
-              pages: [LegalPage.privacy],
+              pages: [LegalPage.terms, LegalPage.privacy],
               alignment: WrapAlignment.start,
             ),
           ],

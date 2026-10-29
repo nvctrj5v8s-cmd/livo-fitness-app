@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/legal_links_row.dart';
+import '../../coach/presentation/coach_sources_view.dart';
 import '../application/consent_controller.dart';
 import '../domain/consent.dart';
 
@@ -117,11 +118,22 @@ class _ConsentPageState extends State<ConsentPage> {
                 ),
                 const SizedBox(height: 14),
                 Text(
+                  context.l10n.coachHealthLimits,
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    height: 1.4,
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: CoachSourcesButton(),
+                ),
+                Text(
                   ConsentTexts.revocableNote,
                   style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
                 ),
                 const LegalLinksRow(
-                  pages: [LegalPage.privacy],
+                  pages: [LegalPage.terms, LegalPage.privacy],
                   alignment: WrapAlignment.start,
                 ),
                 const SizedBox(height: 14),

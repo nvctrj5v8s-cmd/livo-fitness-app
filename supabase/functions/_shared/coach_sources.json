@@ -1,0 +1,38 @@
+[
+  {
+    "id": "who-diet",
+    "title": "WHO – Healthy diet",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet",
+    "checked": "2026-10-29",
+    "summary_de": "Allgemeine Grundlagen einer abwechslungsreichen Ernährung und Auswahl von Vollkorn, Gemüse, Obst und Hülsenfrüchten.",
+    "summary_en": "General principles of a varied diet and choosing whole grains, vegetables, fruit and pulses.",
+    "facts": "Eine ausgewogene Ernährung ist abwechslungsreich. Vollkorn, Gemüse, Obst und Hülsenfrüchte sind geeignete Kohlenhydratquellen. Die konkrete Zusammensetzung hängt von individuellen Umständen ab."
+  },
+  {
+    "id": "nhs-calories",
+    "title": "NHS – Understanding calories",
+    "url": "https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/understanding-calories/",
+    "checked": "2026-10-29",
+    "summary_de": "Kalorien als Energieeinheit, unterschiedliche Energiebedürfnisse und Nährwertangaben auf Verpackungen.",
+    "summary_en": "Calories as a unit of energy, differing energy needs and nutrition information on packaging.",
+    "facts": "Kalorien beschreiben die Energie in Lebensmitteln. Der Energiebedarf variiert unter anderem mit Alter, Gewicht, Größe und Bewegung. Verpackungsangaben helfen, die Energie eines Produkts einzuschätzen. Mahlzeitenplanung kann die Übersicht unterstützen. Diese Quelle bestätigt keine persönlichen Kalorienziele."
+  },
+  {
+    "id": "who-activity",
+    "title": "WHO – Physical activity",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+    "checked": "2026-10-29",
+    "summary_de": "Allgemeine Bewegung im Alltag, beispielsweise Gehen und Radfahren, und weniger langes Sitzen.",
+    "summary_en": "Everyday physical activity, such as walking and cycling, and reducing sedentary time.",
+    "facts": "Auch Alltagsbewegung zählt, beispielsweise Gehen und Radfahren. Etwas Bewegung ist besser als keine. Langes Sitzen sollte begrenzt werden. Daraus keine individuellen Trainingspläne, Belastungsvorgaben oder Behandlungsempfehlungen ableiten."
+  },
+  {
+    "id": "efsa-reference",
+    "title": "EFSA – Dietary reference values",
+    "url": "https://www.efsa.europa.eu/en/topics/topic/dietary-reference-values",
+    "checked": "2026-10-29",
+    "summary_de": "Einordnung von Nährstoffreferenzwerten: allgemeine Referenzen sind keine persönlichen Nährstoffziele.",
+    "summary_en": "Interpreting nutrient reference values: population references are not personal nutrient targets.",
+    "facts": "Nährstoffreferenzwerte dienen der allgemeinen Orientierung für gesunde Bevölkerungsgruppen. Sie sind keine individuellen Nährstoffziele. Bei Erkrankungen kann der Bedarf abweichen; Fachleute beraten bei besonderen Bedürfnissen. Diese Quelle begründet keine persönlichen Protein- oder Supplementmengen."
+  }
+]

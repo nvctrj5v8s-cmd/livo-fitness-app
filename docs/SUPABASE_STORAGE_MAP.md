@@ -6,6 +6,7 @@ angemeldeten Konto gehören sollen.
 | Bereich | Speicherort | Warum |
 | --- | --- | --- |
 | Anmeldung und Sitzung | Supabase Auth | Konto über mehrere Geräte hinweg |
+| Versionen von AGB, Datenschutz- und Gesundheitshinweisen bei neuer Registrierung | Auth-Kontometadaten | dokumentiert angezeigte Fassung; kein unveränderliches Beweisarchiv; im Kontoexport enthalten |
 | Name, Ziel, Kalorien- und Proteinziele, freiwillige Allergien/Unverträglichkeiten | `public.profiles` | persönliches Profil bleibt beim Gerätewechsel erhalten; Allergien: `ALLERGY_SAFETY.md` |
 | Lebensmittel, Rezepte, Zutaten und Quellen | Katalogtabellen | gemeinsamer, versionierbarer Datenbestand |
 | Premium-Rezeptextras (Profi-Tipps, Fehler, Austausch, Meal-Prep, Varianten) | `recipe_premium_details` | Katalogdaten; RLS gibt sie nur an Konten mit aktivem Premium oder Testphase heraus |
@@ -24,6 +25,10 @@ setzt die Fristen oben durch.
 
 ## Bleibt nur auf dem Gerät
 
+- Private eigene Lebensmittelvorlagen (bis zu 100, nach Konto getrennt): Name,
+  eingegebene Nährwerte, Mengenbasis, Menge, Vorlagen-ID und `user_entered` als
+  Herkunft. Keine Aufnahme in den Produktkatalog, im lokalen Kontoexport
+  enthalten und bei Kontolöschung auf dem Gerät entfernt. Demo nur im Speicher.
 - Profilbild
 - Antworten aus der freiwilligen Einführung – nur ohne Einwilligung in die
   Gesundheitsangaben; mit Einwilligung liegt eine Kopie im Konto

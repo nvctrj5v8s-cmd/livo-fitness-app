@@ -54,12 +54,14 @@ final class SupabaseConsentRepository implements ConsentRepository {
   String _pendingKey(ConsentKind kind) =>
       'lookin.consent.pending.${kind.wire}.${Uri.encodeComponent(userId)}';
 
+  String _versionKey(ConsentKind kind) => '${_key(kind)}.text_version';
+
   Future<void> _insert(ConsentKind kind, bool granted, {String? context}) =>
       _client.from('user_consents').insert({
         'user_id': userId,
         'kind': kind.wire,
         'granted': granted,
-        'text_version': ConsentTexts.localizedVersion,
+        'text_version': ConsentTexts.localizedVersionFor(kind),
         'context': ?context,
       });
 
@@ -70,7 +72,13 @@ final class SupabaseConsentRepository implements ConsentRepository {
     final pending = <ConsentKind>{};
     for (final kind in ConsentKind.values) {
       final local = await preferences.getBool(_key(kind));
-      if (local != null) result[kind] = local;
+      final version = await preferences.getString(_versionKey(kind));
+      if (local != null &&
+          (local == false ||
+              kind != ConsentKind.aiProcessing ||
+              ConsentTexts.isCurrentAiVersion(version))) {
+        result[kind] = local;
+      }
       if (await preferences.getBool(_pendingKey(kind)) == true) {
         pending.add(kind);
         result[kind] = false;
@@ -85,7 +93,7 @@ final class SupabaseConsentRepository implements ConsentRepository {
       }
       final rows = await _client
           .from('user_consents')
-          .select('kind,granted,created_at')
+          .select('kind,granted,created_at,text_version')
           .eq('user_id', userId)
           .order('created_at', ascending: false)
           .limit(50)
@@ -97,8 +105,22 @@ final class SupabaseConsentRepository implements ConsentRepository {
         if (wire is! String || granted is! bool || !seen.add(wire)) continue;
         for (final kind in ConsentKind.values) {
           if (kind.wire == wire && !pending.contains(kind)) {
+            if (kind == ConsentKind.aiProcessing &&
+                granted &&
+                !ConsentTexts.isCurrentAiVersion(row['text_version'])) {
+              result.remove(kind);
+              await preferences.remove(_key(kind));
+              await preferences.remove(_versionKey(kind));
+              continue;
+            }
             result[kind] = granted;
             await preferences.setBool(_key(kind), granted);
+            if (row['text_version'] is String) {
+              await preferences.setString(
+                _versionKey(kind),
+                row['text_version'] as String,
+              );
+            }
           }
         }
       }
@@ -120,6 +142,10 @@ final class SupabaseConsentRepository implements ConsentRepository {
     try {
       await _insert(kind, granted, context: context);
       await preferences.setBool(_key(kind), granted);
+      await preferences.setString(
+        _versionKey(kind),
+        ConsentTexts.localizedVersionFor(kind),
+      );
       await preferences.remove(_pendingKey(kind));
       return true;
     } catch (error) {

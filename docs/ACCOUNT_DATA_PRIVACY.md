@@ -1,5 +1,21 @@
 # Kontoexport und Kontolöschung
 
+Ergänzung, 29.10.2026: Private Lebensmittelvorlagen liegen nach Konto getrennt
+unter `lookin.food.custom.v1.<Konto-ID>` im lokalen App-/Browser-Speicher.
+Gespeichert werden Vorlagen-ID, Name, Mengenbasis, eingegebene Nährwerte und
+Menge, markiert mit `source: user_entered`. Sie gehören nicht zum öffentlichen
+Katalog und werden nicht automatisch an Anbieter übertragen. Bis zu 100
+Vorlagen, einzeln löschbar unter Tagebuch › Hinzufügen › Eigenes Lebensmittel.
+Der Kontoexport enthält sie als `this_device.saved_custom_foods`; die bestehende
+lokale Kontolöschung entfernt sie. Demo-Vorlagen bleiben nur im Arbeitsspeicher.
+
+Registrierungen ergänzen in Auth-Metadaten die Versionen von AGB, Datenschutz-
+und Gesundheitshinweisen (je `2026-10-29:de/en`). Der Export der Auth-Daten
+enthält diese Metadaten; mit dem Konto werden sie gelöscht. Auth-Metadaten
+können vom Kontoinhaber geändert werden und sind kein unveränderliches
+Beweisarchiv. KI-Einwilligungen bleiben im bestehenden append-only-Protokoll.
+Die lokale Kopie ihrer Textversion wird bei Kontolöschung ebenfalls entfernt.
+
 Stand: 1. Oktober 2026. Technische Dokumentation, kein Rechtstext.
 
 ## Speicherorte und Export

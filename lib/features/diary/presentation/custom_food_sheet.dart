@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/data/halal_content_policy.dart';
 import '../../../core/models/app_models.dart';
 import '../../../core/models/custom_food.dart';
+import '../../../core/models/saved_custom_food.dart';
 import '../../../core/state/app_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../allergies/domain/allergy_safety.dart';
@@ -65,6 +66,8 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
   late MealSlot _slot;
   NutritionBasis _basis = NutritionBasis.per100g;
   bool _saving = false;
+  bool _remember = false;
+  String? _templateId;
   String? _error;
 
   bool get _legacy =>
@@ -73,6 +76,9 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) AppScope.of(context).loadFoodPreferences();
+    });
     final entry = widget.entry;
     _slot = entry?.slot ?? widget.initialSlot;
     _name.text = entry?.name ?? '';
@@ -129,6 +135,49 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
   }
 
   String _display(double value) => AppFormat.decimal(value, maxDecimals: 1);
+
+  void _useTemplate(SavedCustomFood food) {
+    setState(() {
+      _templateId = food.id;
+      _remember = true;
+      _name.text = food.name;
+      final value = food.nutrition;
+      _basis = value.basis;
+      _amount.text = _number(value.amount);
+      final values = <String, double?>{
+        'calories': value.calories,
+        'protein': value.protein,
+        'carbs': value.carbohydrates,
+        'fat': value.fat,
+        'sugar': value.sugar,
+        'saturated': value.saturatedFat,
+        'salt': value.salt,
+        'fiber': value.fiber,
+      };
+      for (final entry in values.entries) {
+        _fields[entry.key]!.text = entry.value == null
+            ? ''
+            : _number(entry.value!);
+      }
+    });
+  }
+
+  Future<void> _removeTemplate() async {
+    final removed = await AppScope.of(
+      context,
+    ).removeCustomFoodTemplate(_templateId!);
+    if (!mounted) return;
+    if (removed) {
+      setState(() {
+        _templateId = null;
+        _remember = false;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.diaryTemplateSaveFailed)),
+      );
+    }
+  }
 
   CustomFoodNutrition? _readNutrition() {
     final amount = parseNutritionNumber(_amount.text);
@@ -209,6 +258,63 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                         : context.l10n.diaryCopyTheNutritionValuesFromTheLabel,
                   ),
                   const SizedBox(height: 24),
+                  if (widget.entry == null &&
+                      AppScope.of(context).savedCustomFoods.isNotEmpty) ...[
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            key: ValueKey(
+                              'custom-template-${_templateId ?? 'none'}',
+                            ),
+                            initialValue: _templateId,
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: context.l10n.diaryOwnSavedFoods,
+                            ),
+                            items: [
+                              for (final food in AppScope.of(
+                                context,
+                              ).savedCustomFoods)
+                                DropdownMenuItem(
+                                  value: food.id,
+                                  child: Text(
+                                    food.name,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                            ],
+                            onChanged: _saving
+                                ? null
+                                : (id) {
+                                    final food = AppScope.of(context)
+                                        .savedCustomFoods
+                                        .where((food) => food.id == id)
+                                        .firstOrNull;
+                                    if (food != null) _useTemplate(food);
+                                  },
+                          ),
+                        ),
+                        if (_templateId != null)
+                          IconButton(
+                            key: const Key('custom-template-delete'),
+                            onPressed: _saving ? null : _removeTemplate,
+                            tooltip: context.l10n.diaryDeleteTemplate,
+                            icon: const Icon(Icons.delete_outline),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  Text(
+                    context.l10n.diaryUserEnteredSource,
+                    style: const TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     key: const Key('custom-name'),
                     controller: _name,
@@ -443,6 +549,21 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
                       ),
                     ),
                   ),
+                  CheckboxListTile(
+                    key: const Key('custom-remember'),
+                    value: _remember,
+                    onChanged: _saving
+                        ? null
+                        : (value) => setState(() => _remember = value ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(context.l10n.diaryRememberOwnFood),
+                    subtitle: Text(
+                      AppScope.of(context).personalizationUserId == null
+                          ? context.l10n.diaryTemplateDemoOnly
+                          : context.l10n.diaryTemplateDeviceOnly,
+                    ),
+                  ),
                   if (_error != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
@@ -566,7 +687,7 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
       return;
     }
     final nutrition = _readNutrition()!;
-    final error = nutrition.validate(requireLabelValues: !_legacy);
+    final error = nutrition.validate(requireLabelValues: !_legacy || _remember);
     if (error != null) {
       setState(() => _error = error);
       return;
@@ -623,6 +744,21 @@ class _CustomFoodSheetState extends State<CustomFoodSheet> {
             );
       if (!mounted) return;
       if (saved) {
+        if (_remember) {
+          final remembered = await controller.saveCustomFoodTemplate(
+            name: _name.text.trim(),
+            nutrition: nutrition,
+            id: _templateId,
+          );
+          if (!mounted) return;
+          if (!remembered) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.diaryDiarySavedTemplateFailed),
+              ),
+            );
+          }
+        }
         // No extra confirmation overlay: the diary entry itself is the result.
         setState(() => _saving = false);
         Navigator.pop(context);

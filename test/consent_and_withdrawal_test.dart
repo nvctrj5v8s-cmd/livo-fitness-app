@@ -220,7 +220,12 @@ void main() {
 
       final confirm = find.byKey(const Key('consent-dialog-confirm'));
       expect(tester.widget<FilledButton>(confirm).onPressed, isNull);
-      await tester.tap(find.byKey(const Key('consent-dialog-checkbox')));
+      final checkbox = find.descendant(
+        of: find.byKey(const Key('consent-dialog-checkbox')),
+        matching: find.byType(Checkbox),
+      );
+      await tester.ensureVisible(checkbox);
+      await tester.tap(checkbox);
       await tester.pumpAndSettle();
       await tester.tap(confirm);
       await tester.pumpAndSettle();

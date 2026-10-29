@@ -1,4 +1,6 @@
 {
+  "authTermsAcceptance": "I am at least 18 and accept the Terms. I have taken note of the Privacy Policy. I understand that Lookin provides general information and estimates and that medical decisions require professional advice.",
+  "authPleaseAcceptTerms": "Please confirm your age and the Terms and read the privacy and health notices.",
   "authCheckingYourSignIn": "Checking your sign-in",
   "authYourLookinAccountIsReady": "Your Lookin account is ready.",
   "authConnectionFailedPleaseTryAgain": "Connection failed. Please try again.",
@@ -29,7 +31,7 @@
   "authForgotPassword": "Forgot password?",
   "authGetStartedForFree": "Get started for free",
   "authSignIn": "Sign in",
-  "authByTappingGetStartedForFreeYou": "By tapping \"Get started for free\", you confirm that you are at least 18 years old and accept the Terms. You can find information about privacy in the Privacy Policy.",
+  "authByTappingGetStartedForFreeYou": "Consent to AI processing and storing optional health information is requested separately in the next step. You can use the app without these consents.",
   "authSecurelyStoredDeleteAtAnyTime": "Securely stored · delete at any time",
   "authSignIn2": "Sign in",
   "authSignUp": "Sign up",

@@ -118,7 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authByTappingGetStartedForFreeYou =>
-      'By tapping \"Get started for free\", you confirm that you are at least 18 years old and accept the Terms. You can find information about privacy in the Privacy Policy.';
+      'Consent to AI processing and storing optional health information is requested separately in the next step. You can use the app without these consents.';
 
   @override
   String get authCancelAndReturnToSignIn => 'Cancel and return to sign-in';
@@ -205,6 +205,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authPersonal => 'Personal';
 
   @override
+  String get authPleaseAcceptTerms =>
+      'Please confirm your age and the Terms and read the privacy and health notices.';
+
+  @override
   String get authPleaseCheckYourEmailAddress =>
       'Please check your email address.';
 
@@ -264,6 +268,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authTapConfirmEmail => 'Tap \"Confirm email\"';
+
+  @override
+  String get authTermsAcceptance =>
+      'I am at least 18 and accept the Terms. I have taken note of the Privacy Policy. I understand that Lookin provides general information and estimates and that medical decisions require professional advice.';
 
   @override
   String get authThatDidNotWorkJustNowPlease =>
@@ -379,6 +387,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachAnalyseAFoodPhoto => 'Analyse a food photo';
 
   @override
+  String get coachAnswerSources => 'Sources for this answer';
+
+  @override
   String get coachAskAboutMealsNutritionOrTrainingAnswers =>
       'Ask about meals, nutrition or training — answers take your goal and daily totals into account.';
 
@@ -436,6 +447,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Example coach conversation, available with Premium';
 
   @override
+  String get coachExternalSourcePrivacy =>
+      'Links open external websites in your browser. Lookin does not attach chat text, profile or diary data to these links. When you open a website, it processes technical connection data under its own privacy notice.';
+
+  @override
   String get coachFocusedOnNutritionFitnessAndAHealthy =>
       'Focused on nutrition, fitness and a healthy daily routine';
 
@@ -452,6 +467,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get coachGiveMeASimpleHighProteinIdea =>
       'Give me a simple high-protein idea.';
+
+  @override
+  String get coachHealthLimits =>
+      'Lookin provides general information about food and movement. AI answers can be wrong and do not replace medical or dietetic advice. Consult a qualified professional before making medical decisions. The coach does not provide diagnoses, treatment, medicines or supplement dosages.';
 
   @override
   String get coachHowCanISensiblyReachMyCalorie =>
@@ -523,6 +542,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coachSendMessage => 'Send message';
+
+  @override
+  String get coachSourceScope =>
+      'Health-related guidance in the coach uses the references listed here. Relevant sources appear directly below each answer; [1], [2] and [3] connect them to the corresponding statement. Sources do not validate personal targets, recipe nutrition or AI photo estimates. Older chat answers may have no citations; ask again if needed. Sources last checked: 29 October 2026.';
+
+  @override
+  String get coachSourcesAndLimits => 'Sources & limits';
+
+  @override
+  String get coachSourcesDoNotVerifyEstimates =>
+      'Sources support general guidance. Portion and AI photo values remain estimates; personal targets have not been medically assessed.';
 
   @override
   String get coachStartANewChat => 'Start a new chat?';
@@ -717,7 +747,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get consentIExpresslyConsentToMyQuestionsPhotos =>
-      'I expressly consent to my questions, photos, recent chat messages and the following information being sent to the AI service OpenAI to answer my requests (processing also takes place in the USA): goal, daily totals, nutrition style, activity, introduction answers (motivation, obstacles, experience) and my allergies and intolerances, which are health data. My name and email address are not sent.';
+      'I expressly consent to my questions, photos, recent chat messages and the following information being sent to the AI service OpenAI to answer my requests (processing also takes place in the USA): goal, daily totals, nutrition style, activity, introduction answers (motivation, obstacles, experience) and my allergies and intolerances, which are health data. Lookin does not add my name or email as profile fields; information I include in messages or images is sent too. I have read the notices about AI estimates, sources and medical limits and will check recognised values before saving. This consent is required for AI Coach and AI Photo; I can use the rest of the app without it.';
 
   @override
   String get consentIExpresslyRequestThatLookinPremiumBegins =>
@@ -1169,7 +1199,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diaryDeleteEntry2 => 'Delete entry';
 
   @override
+  String get diaryDeleteTemplate => 'Delete template';
+
+  @override
   String get diaryDiary => 'Diary';
+
+  @override
+  String get diaryDiarySavedTemplateFailed =>
+      'Added to your diary. The template could not be saved; open the entry and try again.';
 
   @override
   String get diaryDuplicate => 'Duplicate';
@@ -1353,6 +1390,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Once you enter the amount, energy and macros, you will see the calculation here.';
 
   @override
+  String get diaryOwnSavedFoods => 'My saved custom foods';
+
+  @override
   String get diaryPer100G => 'Per 100 g';
 
   @override
@@ -1447,6 +1487,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diaryRemaining => 'Remaining';
+
+  @override
+  String get diaryRememberOwnFood => 'Save as my template for later';
 
   @override
   String get diaryRemove => 'Remove';
@@ -1576,6 +1619,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap a food to change its name and nutrition values. Changing the amount automatically updates calories and nutrition values.';
 
   @override
+  String get diaryTemplateDemoOnly =>
+      'In the demo, available until the app restarts.';
+
+  @override
+  String get diaryTemplateDeviceOnly =>
+      'On this device, for this account only. Select it later under “Custom food”. Up to 100 templates; saving the same name replaces the existing template.';
+
+  @override
+  String get diaryTemplateSaveFailed =>
+      'The template could not be changed. Please try again.';
+
+  @override
   String diaryTheAvailableInformationMayMentionValueIf(String arg0) {
     return 'The available information may mention: $arg0. If you have an allergy, do not treat this as a recommendation. Only continue if you want to record the food.';
   }
@@ -1660,6 +1715,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diaryUnknown => 'Unknown';
+
+  @override
+  String get diaryUserEnteredSource =>
+      'Source: your own entry. Use the current packaging values and check the amount, ingredients and allergens. These details have not been verified by Lookin or a qualified professional.';
 
   @override
   String diaryValueGCarbs(String arg0) {
