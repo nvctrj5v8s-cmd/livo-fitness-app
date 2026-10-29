@@ -467,12 +467,14 @@ class _AuthPageState extends State<AuthPage>
                               const SizedBox(width: 54),
                               Expanded(
                                 flex: 9,
-                                child: _Entrance(
-                                  animation: _entranceController,
-                                  begin: 0.22,
-                                  end: 1,
-                                  fromRight: true,
-                                  child: panel,
+                                child: SingleChildScrollView(
+                                  child: _Entrance(
+                                    animation: _entranceController,
+                                    begin: 0.22,
+                                    end: 1,
+                                    fromRight: true,
+                                    child: panel,
+                                  ),
                                 ),
                               ),
                             ],
