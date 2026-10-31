@@ -2641,6 +2641,7 @@
       }
     }
   },
+  "subscriptionBilledYearly": "einmal im Jahr berechnet",
   "subscriptionCancelMonthly": "monatlich kündbar",
   "subscriptionChooseAPremiumSubscription": "Premium-Abo wählen",
   "subscriptionClose": "Schließen",
@@ -2731,10 +2732,12 @@
   "subscriptionPremiumIsActive": "Premium ist aktiv",
   "subscriptionPremiumIsActiveThankYouForYour": "Premium ist aktiv. Danke für deine Unterstützung!",
   "subscriptionPreparingYourLookin": "Dein Lookin wird vorbereitet …",
+  "subscriptionPriceUnavailable": "Preis aktuell nicht verfügbar",
   "subscriptionProfileDailyTargets": "Profil & Tagesziele",
   "subscriptionPurchaseBusy": "Kauf wird vorbereitet …",
   "subscriptionPurchaseCancelledNothingWasCharged": "Kauf abgebrochen. Es wurde nichts berechnet.",
   "subscriptionRecipes": "Rezepte",
+  "subscriptionRecommended": "Empfohlen",
   "subscriptionReferenceNumberValue": "Vorgangsnummer: {arg0}",
   "@subscriptionReferenceNumberValue": {
     "placeholders": {
@@ -2748,6 +2751,17 @@
   "subscriptionRestorePurchasesComingSoon": "Käufe wiederherstellen – bald verfügbar",
   "subscriptionRestoringPurchasesIsOnlyAvailableInThe": "Käufe wiederherstellen ist nur in der Lookin-App möglich, sobald die Bezahlung dort freigeschaltet ist. Hier gibt es keine Käufe, die wiederhergestellt werden müssten.",
   "subscriptionSearchBarcodeCustomFoods": "Suche, Barcode & eigene Lebensmittel",
+  "subscriptionStorePriceSummary": "Jährlich {yearly} pro Jahr. Monatlich {monthly} pro Monat. Es gilt der vom Store angezeigte Endpreis.",
+  "@subscriptionStorePriceSummary": {
+    "placeholders": {
+      "yearly": {
+        "type": "String"
+      },
+      "monthly": {
+        "type": "String"
+      }
+    }
+  },
   "subscriptionSubscribeInTheLookinAppForAndroid": "Das Abo schließt du in der Lookin-App für Android ab. Im Browser wird nichts gekauft oder berechnet.",
   "subscriptionSubscribeMonthly": "Monatlich abonnieren",
   "subscriptionSubscribePaid": "Kostenpflichtig abonnieren",

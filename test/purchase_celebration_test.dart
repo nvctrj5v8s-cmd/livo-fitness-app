@@ -25,10 +25,22 @@ class _Server implements SubscriptionRepository {
   }
 }
 
-class _Billing implements StoreBilling {
+class _Billing implements StoreBilling, StorePriceProvider {
   _Billing(this.result);
 
   final StorePurchaseStatus result;
+
+  @override
+  Future<Map<PremiumPlanId, StorePrice>> loadPrices() async => {
+    PremiumPlanId.yearly: const StorePrice(
+      formatted: '49,99 €',
+      currencyCode: 'EUR',
+    ),
+    PremiumPlanId.monthly: const StorePrice(
+      formatted: '6,99 €',
+      currencyCode: 'EUR',
+    ),
+  };
 
   @override
   bool get isAvailable => true;

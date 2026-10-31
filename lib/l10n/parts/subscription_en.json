@@ -1,5 +1,9 @@
 {
   "subscriptionIncluded": "included",
+  "subscriptionPriceUnavailable": "Price currently unavailable",
+  "subscriptionBilledYearly": "billed once a year",
+  "subscriptionRecommended": "Recommended",
+  "subscriptionStorePriceSummary": "Yearly {yearly} per year. Monthly {monthly} per month. The final price is shown by the store.",
   "subscriptionPopularSavings": ", popular, {savings} per cent cheaper than monthly",
   "subscriptionNotADeveloperAccount": "Not a developer account.",
   "subscriptionUnexpectedResponse": "Unexpected response.",

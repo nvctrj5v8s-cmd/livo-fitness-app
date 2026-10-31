@@ -1,5 +1,6 @@
 import {
   appendCitations, parseSourcedReply, shortenWithCitations,
+  verificationInput, verificationPassed,
 } from './coach_citations.ts'
 
 function assert(condition: unknown, message = 'Assertion failed'): asserts condition {
@@ -23,6 +24,19 @@ Deno.test('valid source ids become canonical links, preserved in history', () =>
     assert(shortened.length <= 1200)
     assert(shortened.endsWith('detail/physical-activity)'))
   }
+})
+
+Deno.test('citation verification fails closed and uses selected server facts', () => {
+  assert(verificationPassed('{"supported":true}'))
+  for (const raw of [null, '', '{}', '{"supported":false}',
+    '{"supported":"true"}', '{"supported":true,"extra":1}']) {
+    assert(!verificationPassed(raw))
+  }
+  const input = JSON.parse(verificationInput('Kalorien sind Energie. [1]', ['nhs-calories']))
+  assert(input.sources.length === 1)
+  assert(input.sources[0].reference === 1)
+  assert(input.sources[0].facts.includes('Kalorien'))
+  assert(!JSON.stringify(input).includes('who-activity'))
 })
 
 Deno.test('missing evidence, fabricated ids, URLs and broken references are rejected', () => {

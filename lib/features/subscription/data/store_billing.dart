@@ -41,6 +41,18 @@ enum StoreRefundResult {
   unavailable,
 }
 
+/// The price and currency supplied by the store for the current storefront.
+class StorePrice {
+  const StorePrice({required this.formatted, required this.currencyCode});
+  final String formatted;
+  final String currencyCode;
+}
+
+/// Optional capability for loading store-localized prices before purchase.
+abstract interface class StorePriceProvider {
+  Future<Map<PremiumPlanId, StorePrice>> loadPrices();
+}
+
 /// Replaceable boundary to the app stores (Google Play and the App Store).
 /// Widgets and controllers never talk to RevenueCat directly.
 abstract interface class StoreBilling {
@@ -100,7 +112,7 @@ final class UnavailableStoreBilling implements StoreBilling {
 /// RevenueCat-backed billing. The account id handed to RevenueCat is the
 /// Supabase user id, so the server webhook can write the entitlement for the
 /// right account. Only that id leaves the device; no health or profile data.
-final class RevenueCatStoreBilling implements StoreBilling {
+final class RevenueCatStoreBilling implements StoreBilling, StorePriceProvider {
   RevenueCatStoreBilling({required this.apiKey});
 
   final String apiKey;
@@ -167,6 +179,34 @@ final class RevenueCatStoreBilling implements StoreBilling {
       if (candidate.packageType == wanted) return candidate;
     }
     return null;
+  }
+
+  @override
+  Future<Map<PremiumPlanId, StorePrice>> loadPrices() async {
+    if (!await _accountReady()) return {};
+    final offerings = await Purchases.getOfferings();
+    final prices = <PremiumPlanId, StorePrice>{};
+    for (final package
+        in offerings.current?.availablePackages ?? const <Package>[]) {
+      final plan = switch (package.packageType) {
+        PackageType.annual => PremiumPlanId.yearly,
+        PackageType.monthly => PremiumPlanId.monthly,
+        _ => null,
+      };
+      final product = package.storeProduct;
+      if (plan == null ||
+          product.priceString.trim().isEmpty ||
+          product.currencyCode.trim().isEmpty ||
+          !product.price.isFinite ||
+          product.price <= 0) {
+        continue;
+      }
+      prices[plan] = StorePrice(
+        formatted: product.priceString,
+        currencyCode: product.currencyCode,
+      );
+    }
+    return prices;
   }
 
   static int _days(PeriodUnit unit, int value) => switch (unit) {

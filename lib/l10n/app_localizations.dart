@@ -9443,6 +9443,12 @@ abstract class AppLocalizations {
   /// **'einmal im Jahr berechnet – du sparst {arg0} gegenüber monatlich'**
   String subscriptionBilledOnceAYearSaveValueCompared(String arg0);
 
+  /// No description provided for @subscriptionBilledYearly.
+  ///
+  /// In de, this message translates to:
+  /// **'einmal im Jahr berechnet'**
+  String get subscriptionBilledYearly;
+
   /// No description provided for @subscriptionCancelMonthly.
   ///
   /// In de, this message translates to:
@@ -9709,6 +9715,12 @@ abstract class AppLocalizations {
   /// **'Dein Lookin wird vorbereitet …'**
   String get subscriptionPreparingYourLookin;
 
+  /// No description provided for @subscriptionPriceUnavailable.
+  ///
+  /// In de, this message translates to:
+  /// **'Preis aktuell nicht verfügbar'**
+  String get subscriptionPriceUnavailable;
+
   /// No description provided for @subscriptionProfileDailyTargets.
   ///
   /// In de, this message translates to:
@@ -9732,6 +9744,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Rezepte'**
   String get subscriptionRecipes;
+
+  /// No description provided for @subscriptionRecommended.
+  ///
+  /// In de, this message translates to:
+  /// **'Empfohlen'**
+  String get subscriptionRecommended;
 
   /// No description provided for @subscriptionReferenceNumberValue.
   ///
@@ -9768,6 +9786,12 @@ abstract class AppLocalizations {
   /// In de, this message translates to:
   /// **'Suche, Barcode & eigene Lebensmittel'**
   String get subscriptionSearchBarcodeCustomFoods;
+
+  /// No description provided for @subscriptionStorePriceSummary.
+  ///
+  /// In de, this message translates to:
+  /// **'Jährlich {yearly} pro Jahr. Monatlich {monthly} pro Monat. Es gilt der vom Store angezeigte Endpreis.'**
+  String subscriptionStorePriceSummary(String yearly, String monthly);
 
   /// No description provided for @subscriptionSubscribeInTheLookinAppForAndroid.
   ///

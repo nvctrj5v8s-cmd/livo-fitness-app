@@ -70,47 +70,31 @@ void main() {
       expect(formatEuro(123456), '1.234,56$_nbsp€');
     });
 
-    test('names flat prices without introductory offers', () {
+    test('uses store prices and never invents a fallback', () {
       const yearly = SubscriptionPlans.yearly;
       const monthly = SubscriptionPlans.monthly;
-      expect(PremiumCopy.headlinePrice(yearly), '49,99$_nbsp€');
-      expect(PremiumCopy.headlineUnit(yearly), 'pro Jahr');
       expect(
-        PremiumCopy.priceDetail(yearly),
-        'entspricht 4,17$_nbsp€ pro Monat',
+        PremiumCopy.headlinePrice(yearly),
+        'Preis aktuell nicht verfügbar',
       );
       expect(
-        PremiumCopy.billingNote(yearly),
-        'einmal im Jahr berechnet – du sparst 33,89$_nbsp€ gegenüber '
-        'monatlich',
+        PremiumCopy.headlinePrice(yearly, storePrice: r'$59.99'),
+        r'$59.99',
       );
       expect(
-        PremiumCopy.purchaseSummary(yearly),
-        '49,99$_nbsp€ pro Jahr (entspricht 4,17$_nbsp€ pro Monat)',
+        PremiumCopy.purchaseSummary(monthly, storePrice: r'$7.99'),
+        r'$7.99 pro Monat',
       );
-
-      expect(PremiumCopy.headlinePrice(monthly), '6,99$_nbsp€');
-      expect(PremiumCopy.headlineUnit(monthly), 'pro Monat');
-      expect(PremiumCopy.priceDetail(monthly), 'monatlich kündbar');
-      expect(PremiumCopy.billingNote(monthly), 'jeden Monat berechnet');
-      expect(
-        PremiumCopy.purchaseSummary(monthly),
-        '6,99$_nbsp€ pro Monat (monatlich kündbar)',
+      final terms = PremiumCopy.priceTermsFor(
+        billingAvailable: true,
+        yearlyPrice: r'$59.99',
+        monthlyPrice: r'$7.99',
       );
-
-      final terms = PremiumCopy.priceTerms;
-      expect(terms, contains('Jährlich 49,99$_nbsp€ pro Jahr'));
-      expect(terms, contains('Monatlich 6,99$_nbsp€ pro Monat'));
-      expect(terms, contains('zum selben Preis'));
-      for (final old in ['7,99', '5,99', '71,88', '65,88', '3,99', '5,49']) {
-        // Whole amounts only: "49,99" must not count as the old "5,99".
-        expect(terms, isNot(matches(RegExp('(?<![0-9])$old'))));
-      }
-      expect(terms, isNot(contains('danach')));
-      expect(terms, isNot(contains('ersten')));
+      expect(terms, contains(r'$59.99'));
+      expect(terms, contains(r'$7.99'));
+      expect(terms, isNot(contains('49,99')));
     });
   });
-
   testWidgets('paywall shows flat prices and saving', (tester) async {
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(390, 844);
@@ -129,42 +113,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // No store billing here (web, tests): nothing to buy and no trial.
+    // No store connection: do not show invented prices.
     expect(find.textContaining('kostenlos testen'), findsNothing);
-    expect(find.text('Beliebt · −40$_nbsp%'), findsOneWidget);
-    expect(find.text('49,99$_nbsp€'), findsOneWidget);
-    expect(find.text('pro Jahr'), findsOneWidget);
-    expect(find.text('entspricht 4,17$_nbsp€ pro Monat'), findsOneWidget);
-    expect(
-      find.text(
-        'einmal im Jahr berechnet – du sparst 33,89$_nbsp€ gegenüber '
-        'monatlich',
-      ),
-      findsOneWidget,
-    );
-    expect(find.text('6,99$_nbsp€'), findsOneWidget);
-    expect(find.text('pro Monat'), findsOneWidget);
-    expect(find.text('monatlich kündbar'), findsOneWidget);
-    expect(
-      find.text('49,99$_nbsp€ pro Jahr (entspricht 4,17$_nbsp€ pro Monat)'),
-      findsOneWidget,
-    );
-    expect(find.textContaining('Kostenlose Testphase'), findsNothing);
-    for (final old in ['7,99', '71,88', '65,88', '5,49', 'im 1. Jahr']) {
-      expect(find.textContaining(old), findsNothing, reason: old);
-    }
-
-    final monthlyCard = find.byKey(const ValueKey('paywall-plan-monthly'));
-    await tester.ensureVisible(monthlyCard);
-    await tester.pumpAndSettle();
-    await tester.tap(monthlyCard);
-    await tester.pumpAndSettle();
-
-    expect(
-      find.text('6,99$_nbsp€ pro Monat (monatlich kündbar)'),
-      findsOneWidget,
-    );
-    expect(find.text('Monatlich abonnieren'), findsOneWidget);
+    expect(find.text('Preis aktuell nicht verfügbar'), findsWidgets);
+    expect(find.textContaining('49,99'), findsNothing);
+    expect(find.textContaining('6,99'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -193,7 +146,7 @@ void main() {
     final yearlyCard = find.byKey(const ValueKey('paywall-plan-yearly'));
     await tester.ensureVisible(yearlyCard);
     await tester.pumpAndSettle();
-    expect(find.text('entspricht 4,17$_nbsp€ pro Monat'), findsOneWidget);
+    expect(find.text('Preis aktuell nicht verfügbar'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 

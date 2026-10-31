@@ -5454,6 +5454,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get subscriptionBilledYearly => 'einmal im Jahr berechnet';
+
+  @override
   String get subscriptionCancelMonthly => 'monatlich kündbar';
 
   @override
@@ -5613,6 +5616,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dein Lookin wird vorbereitet …';
 
   @override
+  String get subscriptionPriceUnavailable => 'Preis aktuell nicht verfügbar';
+
+  @override
   String get subscriptionProfileDailyTargets => 'Profil & Tagesziele';
 
   @override
@@ -5624,6 +5630,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get subscriptionRecipes => 'Rezepte';
+
+  @override
+  String get subscriptionRecommended => 'Empfohlen';
 
   @override
   String subscriptionReferenceNumberValue(String arg0) {
@@ -5648,6 +5657,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get subscriptionSearchBarcodeCustomFoods =>
       'Suche, Barcode & eigene Lebensmittel';
+
+  @override
+  String subscriptionStorePriceSummary(String yearly, String monthly) {
+    return 'Jährlich $yearly pro Jahr. Monatlich $monthly pro Monat. Es gilt der vom Store angezeigte Endpreis.';
+  }
 
   @override
   String get subscriptionSubscribeInTheLookinAppForAndroid =>

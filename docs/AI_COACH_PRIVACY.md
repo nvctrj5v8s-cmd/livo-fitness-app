@@ -121,6 +121,13 @@ Bestehende Nachrichten werden beim Sprachwechsel nicht nachträglich übersetzt.
 
 ## Inhaltliche Grenzen
 
+Die erzeugte Chatantwort wird mit den ausgewählten redaktionellen
+Quellenzusammenfassungen für eine zusätzliche Quellenprüfung erneut an OpenAI
+gesendet. Die Antwort kann vom Nutzer eingegebene Angaben enthalten. Es wird
+kein zusätzlicher Profil- oder Chatverlauf für diesen Prüfschritt übermittelt.
+Bei fehlgeschlagener oder unklarer Prüfung zeigt der Server eine feste Antwort.
+Die KI-Prüfung kann unpassende Belege übersehen und garantiert keine Richtigkeit.
+
 Die Systemanweisung verpflichtet den Coach auf: die ausgewählte App-Sprache
 (Deutsch oder Englisch), kurz und freundlich;
 nur Ernährung, Fitness und Alltag; Halal-Inhaltsregel

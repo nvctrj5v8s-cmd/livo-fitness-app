@@ -1,5 +1,10 @@
 {
   "subscriptionIncluded": "enthalten",
+  "subscriptionPriceUnavailable": "Preis aktuell nicht verfügbar",
+  "subscriptionBilledYearly": "einmal im Jahr berechnet",
+  "subscriptionRecommended": "Empfohlen",
+  "subscriptionStorePriceSummary": "Jährlich {yearly} pro Jahr. Monatlich {monthly} pro Monat. Es gilt der vom Store angezeigte Endpreis.",
+  "@subscriptionStorePriceSummary": {"placeholders": {"yearly": {"type": "String"}, "monthly": {"type": "String"}}},
   "subscriptionPopularSavings": ", beliebt, {savings} Prozent günstiger als monatlich",
   "@subscriptionPopularSavings": {
     "placeholders": {

@@ -28,7 +28,7 @@ class _LaggingServer implements SubscriptionRepository {
   }
 }
 
-class _FakeBilling implements StoreBilling {
+class _FakeBilling implements StoreBilling, StorePriceProvider {
   _FakeBilling(this.result, {this.available = true, this.trialDays = 0});
 
   final StorePurchaseStatus result;
@@ -38,6 +38,18 @@ class _FakeBilling implements StoreBilling {
   final int trialDays;
   final purchased = <PremiumPlanId>[];
   int restores = 0;
+
+  @override
+  Future<Map<PremiumPlanId, StorePrice>> loadPrices() async => {
+    PremiumPlanId.yearly: const StorePrice(
+      formatted: '49,99 €',
+      currencyCode: 'EUR',
+    ),
+    PremiumPlanId.monthly: const StorePrice(
+      formatted: '6,99 €',
+      currencyCode: 'EUR',
+    ),
+  };
 
   @override
   bool get isAvailable => available;

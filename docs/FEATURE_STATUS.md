@@ -1598,10 +1598,15 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   App-Bedienung oder Ablehnungen erfunden. Die Serveranweisung verlangt für
   Ernährungs-, Lebensmittel- und Bewegungsantworten passende Belege; nicht
   durch die vorhandenen Grundlagen gestützte Empfehlungen sollen entfallen.
-- **Supabase:** `ai-coach` wurde am 31. Oktober 2026 als Version 23 im
-  verknüpften Fitness-Projekt veröffentlicht. Der heruntergeladene Live-Stand
-  der Funktion und ihrer drei gemeinsamen Dateien stimmt mit dem lokalen
-  Quellcode überein. Der vorige Funktionsstand wurde temporär gesichert.
+- Der Coach erhält eine zusätzliche automatische Prüfung, ob Aussagen und
+  Quellen zusammenpassen. Bei unklarer Prüfung erscheint eine feste Antwort;
+  die KI-Prüfung ist keine Garantie für korrekte Belege.
+- Die Paywall zeigt die Preise und Währung aus dem Store. Ohne geladenen Preis
+  startet kein Kauf. Store-Konfiguration und Sandbox-Käufe müssen auf echten
+  Geräten geprüft werden.
+- **Supabase:** `ai-coach` wurde am 31. Oktober 2026 als Version 24 im
+  verknüpften Fitness-Projekt veröffentlicht. Version 23 wurde vor der
+  Veröffentlichung temporär gesichert.
 - Noch erforderlich: den neuen App-Build mit neuen Fragen und anklickbaren
   Quellen in der echten Anwendung prüfen. Ein Live-Testchat und eine Zusage
   der App-Store-Freigabe sind dadurch noch nicht belegt.

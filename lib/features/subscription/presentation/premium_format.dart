@@ -59,7 +59,8 @@ abstract final class PremiumCopy {
       : L10n.current.subscriptionSubscribeMonthly;
 
   /// Big amount that is charged per billing period.
-  static String headlinePrice(PremiumPlan plan) => formatEuro(plan.chargeCents);
+  static String headlinePrice(PremiumPlan plan, {String? storePrice}) =>
+      storePrice ?? L10n.current.subscriptionPriceUnavailable;
 
   /// Unit next to the charged amount.
   static String headlineUnit(PremiumPlan plan) => plan.isYearly
@@ -68,36 +69,33 @@ abstract final class PremiumCopy {
 
   /// Small line directly below the charged amount.
   static String priceDetail(PremiumPlan plan) => plan.isYearly
-      ? L10n.current.subscriptionEquivalentToValuePerMonth(
-          (formatEuro(plan.monthlyEquivalentCents)).toString(),
-        )
+      ? L10n.current.subscriptionBilledYearly
       : L10n.current.subscriptionCancelMonthly;
 
   /// How often the plan is charged, always visible below the price.
   static String billingNote(PremiumPlan plan) => plan.isYearly
-      ? L10n.current.subscriptionBilledOnceAYearSaveValueCompared(
-          (formatEuro(SubscriptionPlans.yearlySavingsCents)).toString(),
-        )
+      ? L10n.current.subscriptionBilledYearly
       : L10n.current.subscriptionBilledEveryMonth;
 
   /// Short price summary shown in purchase buttons.
-  static String purchaseSummary(PremiumPlan plan) =>
-      '${headlinePrice(plan)} ${headlineUnit(plan)} (${priceDetail(plan)})';
+  static String purchaseSummary(PremiumPlan plan, {String? storePrice}) =>
+      '${headlinePrice(plan, storePrice: storePrice)} ${headlineUnit(plan)}';
 
   /// Price paragraph of the paywall terms while no purchase is possible.
   static String get priceTerms => priceTermsFor(billingAvailable: false);
 
   /// Price paragraph of the paywall terms. With working store billing it
   /// also names who bills and where the subscription is cancelled.
-  static String priceTermsFor({required bool billingAvailable}) {
+  static String priceTermsFor({
+    required bool billingAvailable,
+    String? yearlyPrice,
+    String? monthlyPrice,
+  }) {
     const yearly = SubscriptionPlans.yearly;
     const monthly = SubscriptionPlans.monthly;
-    final prices = L10n.current.subscriptionYearlyValueValueBilledOnceAYear(
-      (headlinePrice(yearly)).toString(),
-      (headlineUnit(yearly)).toString(),
-      (priceDetail(yearly)).toString(),
-      (headlinePrice(monthly)).toString(),
-      (headlineUnit(monthly)).toString(),
+    final prices = L10n.current.subscriptionStorePriceSummary(
+      headlinePrice(yearly, storePrice: yearlyPrice),
+      headlinePrice(monthly, storePrice: monthlyPrice),
     );
     if (!billingAvailable) {
       return L10n.current

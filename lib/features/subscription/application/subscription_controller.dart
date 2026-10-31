@@ -45,6 +45,7 @@ class SubscriptionController extends ChangeNotifier {
   bool _disposed = false;
   Future<void>? _pendingLoad;
   final Map<PremiumPlanId, int> _storeTrialDays = {};
+  final Map<PremiumPlanId, StorePrice> _storePrices = {};
   Future<void>? _pendingOffer;
 
   Entitlement get entitlement => _entitlement;
@@ -69,6 +70,8 @@ class SubscriptionController extends ChangeNotifier {
   /// Whether the store offers this account a free trial.
   bool get canStartTrial =>
       PremiumPlanId.values.any((p) => trialDaysFor(p) > 0);
+
+  StorePrice? priceFor(PremiumPlanId plan) => _storePrices[plan];
 
   Future<void> load({bool force = false}) {
     if (_pendingLoad != null) return _pendingLoad!;
@@ -109,6 +112,17 @@ class SubscriptionController extends ChangeNotifier {
 
   Future<void> _readOffer() async {
     final next = <PremiumPlanId, int>{};
+    var prices = <PremiumPlanId, StorePrice>{};
+    final provider = billing;
+    if (provider is StorePriceProvider) {
+      try {
+        prices = await (provider as StorePriceProvider).loadPrices().timeout(
+          const Duration(seconds: 8),
+        );
+      } catch (_) {
+        prices = {};
+      }
+    }
     for (final plan in PremiumPlanId.values) {
       try {
         next[plan] = await billing
@@ -122,6 +136,9 @@ class SubscriptionController extends ChangeNotifier {
     _storeTrialDays
       ..clear()
       ..addAll(next);
+    _storePrices
+      ..clear()
+      ..addAll(prices);
     _notify();
   }
 

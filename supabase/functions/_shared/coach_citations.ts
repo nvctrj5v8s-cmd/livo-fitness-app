@@ -33,6 +33,37 @@ export const citationFormat = {
   },
 }
 
+// This is a second, independent check, not proof of factual correctness.
+// Only source summaries controlled by the server are supplied to the verifier.
+export const verificationFormat = {
+  type: 'json_schema', name: 'lookin_citation_check', strict: true,
+  schema: {
+    type: 'object',
+    properties: { supported: { type: 'boolean' } },
+    required: ['supported'], additionalProperties: false,
+  },
+}
+
+export function verificationInput(answer: string, ids: string[]): string {
+  return JSON.stringify({
+    answer,
+    sources: ids.map((id, index) => ({
+      reference: index + 1,
+      facts: sources.find((source) => source.id === id)?.facts,
+    })),
+  })
+}
+
+export function verificationPassed(raw: string | null): boolean {
+  try {
+    const value = JSON.parse(raw ?? '')
+    return value !== null && typeof value === 'object' &&
+      Object.keys(value).length === 1 && value.supported === true
+  } catch {
+    return false
+  }
+}
+
 // A readable Markdown footer is retained with the answer in the existing
 // history/export format. Only server-owned URLs can enter this footer.
 export function parseSourcedReply(raw: string): { answer: string; ids: string[] } | null {

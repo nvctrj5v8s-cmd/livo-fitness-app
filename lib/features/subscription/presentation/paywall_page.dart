@@ -186,6 +186,11 @@ class _PaywallPageState extends State<PaywallPage>
       _showMessage(PremiumCopy.unavailableMessage);
       return;
     }
+    if (_subscription.priceFor(_selected) == null) {
+      unawaited(_subscription.refreshStoreOffer());
+      _showMessage(context.l10n.subscriptionPriceUnavailable);
+      return;
+    }
     if (_subscription.isPurchasing) return;
     if (!_immediateStart) {
       // Point at the box instead of greying the button out.
@@ -292,7 +297,7 @@ class _PaywallPageState extends State<PaywallPage>
           planLabel: plan == null
               ? SubscriptionPlans.productName
               : '${PremiumCopy.planTitle(plan)} · '
-                    '${PremiumCopy.headlinePrice(plan)} '
+                    '${PremiumCopy.headlinePrice(plan, storePrice: _subscription.priceFor(plan.id)?.formatted)} '
                     '${PremiumCopy.headlineUnit(plan)}',
           footerLabel: l10n.subscriptionWelcomeNextRenewal,
           footerValue: date,
@@ -583,7 +588,7 @@ class _PaywallPageState extends State<PaywallPage>
     final plan = _plan;
     final trialDays = subscription.trialDaysFor(_selected);
     final price =
-        '${PremiumCopy.headlinePrice(plan)} ${PremiumCopy.headlineUnit(plan)}';
+        '${PremiumCopy.headlinePrice(plan, storePrice: subscription.priceFor(plan.id)?.formatted)} ${PremiumCopy.headlineUnit(plan)}';
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -633,6 +638,7 @@ class _PaywallPageState extends State<PaywallPage>
   }
 
   Widget _planSection() => _PlanSection(
+    subscription: _subscription,
     selected: _selected,
     onSelected: (id) => setState(() => _selected = id),
     onPurchase: _purchase,
@@ -650,6 +656,8 @@ class _PaywallPageState extends State<PaywallPage>
 
   Widget _legalFooter() => _LegalFooter(
     billingAvailable: _subscription.storeBillingAvailable,
+    yearlyPrice: _subscription.priceFor(PremiumPlanId.yearly)?.formatted,
+    monthlyPrice: _subscription.priceFor(PremiumPlanId.monthly)?.formatted,
     trialDays: _subscription.trialDaysFor(_selected),
     onManage: _subscription.managementUri == null ? null : _manage,
     onRestore: _restore,
@@ -1500,6 +1508,7 @@ class _ActiveCard extends StatelessWidget {
 
 class _PlanSection extends StatelessWidget {
   const _PlanSection({
+    required this.subscription,
     required this.selected,
     required this.onSelected,
     required this.onPurchase,
@@ -1512,6 +1521,7 @@ class _PlanSection extends StatelessWidget {
     required this.onImmediateStartChanged,
   });
 
+  final SubscriptionController subscription;
   final PremiumPlanId selected;
   final ValueChanged<PremiumPlanId> onSelected;
   final VoidCallback onPurchase;
@@ -1557,6 +1567,7 @@ class _PlanSection extends StatelessWidget {
                 if (i > 0) const SizedBox(height: 12),
                 _PlanCard(
                   plan: candidate,
+                  storePrice: subscription.priceFor(candidate.id)?.formatted,
                   selected: candidate.id == selected,
                   onTap: () => onSelected(candidate.id),
                 ),
@@ -1663,7 +1674,10 @@ class _PlanSection extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    PremiumCopy.purchaseSummary(plan),
+                    PremiumCopy.purchaseSummary(
+                      plan,
+                      storePrice: subscription.priceFor(plan.id)?.formatted,
+                    ),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: AppColors.textMuted,
@@ -1742,11 +1756,13 @@ class _SoonTag extends StatelessWidget {
 class _PlanCard extends StatelessWidget {
   const _PlanCard({
     required this.plan,
+    required this.storePrice,
     required this.selected,
     required this.onTap,
   });
 
   final PremiumPlan plan;
+  final String? storePrice;
   final bool selected;
   final VoidCallback onTap;
 
@@ -1754,17 +1770,15 @@ class _PlanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final reducedMotion = MediaQuery.disableAnimationsOf(context);
     final title = PremiumCopy.planTitle(plan);
-    final price = PremiumCopy.headlinePrice(plan);
+    final price = PremiumCopy.headlinePrice(plan, storePrice: storePrice);
     final unit = PremiumCopy.headlineUnit(plan);
     final detail = PremiumCopy.priceDetail(plan);
     final billing = PremiumCopy.billingNote(plan);
-    final savings = SubscriptionPlans.yearlySavingsPercent;
     return Semantics(
       button: true,
       selected: selected,
       inMutuallyExclusiveGroup: true,
-      label:
-          '$title${plan.isYearly ? context.l10n.subscriptionPopularSavings(savings.toString()) : ''}: $price $unit, $detail, $billing',
+      label: '$title: $price $unit, $detail, $billing',
       onTap: onTap,
       excludeSemantics: true,
       child: Material(
@@ -1853,9 +1867,7 @@ class _PlanCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(99),
                               ),
                               child: Text(
-                                context.l10n.subscriptionPopularValue(
-                                  (savings).toString(),
-                                ),
+                                context.l10n.subscriptionRecommended,
                                 style: const TextStyle(
                                   color: AppColors.black,
                                   fontSize: 11,
@@ -2092,12 +2104,16 @@ class _Cell extends StatelessWidget {
 class _LegalFooter extends StatelessWidget {
   const _LegalFooter({
     required this.billingAvailable,
+    required this.yearlyPrice,
+    required this.monthlyPrice,
     required this.trialDays,
     required this.onManage,
     required this.onRestore,
   });
 
   final bool billingAvailable;
+  final String? yearlyPrice;
+  final String? monthlyPrice;
   final int trialDays;
   final VoidCallback? onManage;
   final VoidCallback onRestore;
@@ -2106,6 +2122,8 @@ class _LegalFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final prices = PremiumCopy.priceTermsFor(
       billingAvailable: billingAvailable,
+      yearlyPrice: yearlyPrice,
+      monthlyPrice: monthlyPrice,
     );
     final terms = trialDays > 0
         ? context.l10n.subscriptionFreeTrialValueDaysStoreOnly(
