@@ -1,6 +1,7 @@
 {
   "coachSourcesAndLimits": "Quellen & Grenzen",
   "coachAnswerSources": "Quellen zu dieser Antwort",
+  "coachNoAnswerSources": "Für diese Antwort ist keine Quelle hinterlegt.",
   "coachHealthLimits": "Lookin gibt allgemeine Orientierung zu Ernährung und Bewegung. KI-Antworten können falsch sein und ersetzen keine ärztliche oder ernährungstherapeutische Beratung. Hole vor medizinischen Entscheidungen fachlichen Rat ein. Der Coach bietet keine Diagnose, Behandlung, Medikamente oder Supplementdosierung.",
   "coachSourceScope": "Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Bei einer Antwort stehen die passenden Quellen direkt unter dem Text; [1], [2] und [3] ordnen sie der jeweiligen Aussage zu. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut. Quellen zuletzt geprüft: 29.10.2026.",
   "coachExternalSourcePrivacy": "Die Links öffnen externe Webseiten im Browser. Lookin hängt weder Chattexte noch Profil- oder Tagebuchdaten an die Links an. Beim Öffnen verarbeitet die jeweilige Website technische Verbindungsdaten nach ihren eigenen Datenschutzhinweisen.",

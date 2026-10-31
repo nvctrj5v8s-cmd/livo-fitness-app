@@ -137,6 +137,7 @@
   "coachMoreProtein": "More protein",
   "coachNewChatDeleteHistory": "New chat (delete history)",
   "coachNewChatExplanation": "Starting a new chat permanently deletes your existing chat history from your account. This cannot be undone. Your daily limit stays the same.",
+  "coachNoAnswerSources": "No source is available for this answer.",
   "coachNotSent": "Not sent",
   "coachPremiumFeature": "Premium feature",
   "coachProteinAndTrainingTipsForYourDay": "Protein and training tips for your day",

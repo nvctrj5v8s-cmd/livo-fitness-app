@@ -1583,3 +1583,21 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   für Chat und Einwilligungen vorausgesetzt). Vor Review echten Testchat und
   Quellenlinks im neuen iOS-Build prüfen; Details und Antwortentwurf in
   `APP_STORE_REVIEW_1_4_1.md`. Keine Live-Veröffentlichung durch diese Änderung.
+
+## Coach: Quellen direkt an Aussagen, 31. Oktober 2026
+
+- Nach bestätigten Quellenmarkierungen zeigt der Coach anklickbare Hinweise mit
+  Quellentitel direkt im Antworttext. Am Ende derselben Antwort stehen die
+  zugeordneten Quellen mit Anzahl und direkten Links gemeinsam in einer Liste.
+- Frühere oder andere Antworten ohne zugeordnete Quelle erhalten einen Hinweis,
+  dass keine Quelle hinterlegt ist. Es werden keine Quellen für Grüße,
+  App-Bedienung oder Ablehnungen erfunden. Die Serveranweisung verlangt für
+  Ernährungs-, Lebensmittel- und Bewegungsantworten passende Belege; nicht
+  durch die vorhandenen Grundlagen gestützte Empfehlungen sollen entfallen.
+- **Supabase:** `ai-coach` wurde am 31. Oktober 2026 als Version 22 im
+  verknüpften Fitness-Projekt veröffentlicht. Der heruntergeladene Live-Stand
+  der Funktion und ihrer drei gemeinsamen Dateien stimmt mit dem lokalen
+  Quellcode überein. Der vorige Funktionsstand wurde temporär gesichert.
+- Noch erforderlich: den neuen App-Build mit neuen Fragen und anklickbaren
+  Quellen in der echten Anwendung prüfen. Ein Live-Testchat und eine Zusage
+  der App-Store-Freigabe sind dadurch noch nicht belegt.

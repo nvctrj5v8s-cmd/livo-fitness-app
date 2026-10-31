@@ -102,11 +102,23 @@ class CitedCoachText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CoachFormattedText(answer.text, style: style),
+        CoachFormattedText(
+          answer.text,
+          style: style,
+          citationBuilder: (number, occurrence) {
+            if (number < 1 || number > answer.sources.length) return null;
+            return _InlineSourceChip(
+              source: answer.sources[number - 1],
+              number: number,
+              occurrence: occurrence,
+              opener: opener,
+            );
+          },
+        ),
         if (answer.sources.isNotEmpty) ...[
           const SizedBox(height: 14),
           Text(
-            context.l10n.coachAnswerSources,
+            '${context.l10n.coachAnswerSources} (${answer.sources.length})',
             style: style.copyWith(fontWeight: FontWeight.w700),
           ),
           for (final (index, source) in answer.sources.indexed)
@@ -119,10 +131,54 @@ class CitedCoachText extends StatelessWidget {
               height: 1.4,
             ),
           ),
+        ] else ...[
+          const SizedBox(height: 10),
+          Text(
+            context.l10n.coachNoAnswerSources,
+            key: const Key('coach-no-answer-sources'),
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+          ),
         ],
       ],
     );
   }
+}
+
+class _InlineSourceChip extends StatelessWidget {
+  const _InlineSourceChip({
+    required this.source,
+    required this.number,
+    required this.occurrence,
+    this.opener,
+  });
+
+  final CoachSource source;
+  final int number;
+  final int occurrence;
+  final Future<bool> Function(Uri)? opener;
+
+  @override
+  Widget build(BuildContext context) => ConstrainedBox(
+    constraints: const BoxConstraints(maxWidth: 190),
+    child: TextButton(
+      key: ValueKey('inline-source-${source.id}-$number-$occurrence'),
+      onPressed: () => openExternalLink(context, source.uri, opener: opener),
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.mint,
+        backgroundColor: AppColors.surfaceSoft,
+        minimumSize: const Size(48, 40),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        tapTargetSize: MaterialTapTargetSize.padded,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      child: Text(
+        '[$number] ${source.title}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 11),
+      ),
+    ),
+  );
 }
 
 class _SourceLink extends StatelessWidget {

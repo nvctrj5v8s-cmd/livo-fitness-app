@@ -494,6 +494,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Starting a new chat permanently deletes your existing chat history from your account. This cannot be undone. Your daily limit stays the same.';
 
   @override
+  String get coachNoAnswerSources => 'No source is available for this answer.';
+
+  @override
   String get coachNotSent => 'Not sent';
 
   @override

@@ -47,7 +47,8 @@ ergänzen. Keine medizinische Behandlung, Medikamente oder Supplementdosierung.
   hochgesetzt, weil die eingereichte 1.0 (6) nicht dieser lokalen Nummer
   entspricht; für den Upload eine freie höhere Buildnummer wählen.
 - `ai-coach` mit `supabase/functions/_shared/coach_citations.ts` und
-  `coach_sources.json` im richtigen Fitness-Projekt deployen. Keine Migration
+  `coach_sources.json` wurde am 31.10.2026 im verknüpften Fitness-Projekt als
+  Version 22 veröffentlicht und der heruntergeladene Stand verglichen. Keine Migration
   neu nötig, bestehende Chat-/Einwilligungsmigrationen müssen angewendet sein.
   Die neue Funktion akzeptiert nur die neue KI-Einwilligung; deshalb Rollout
   mit der App abstimmen. Ältere App-Versionen können diese neue Zustimmung
@@ -62,8 +63,8 @@ ergänzen. Keine medizinische Behandlung, Medikamente oder Supplementdosierung.
   nicht nur am Vorhandensein eines Links. Keine echten Gesundheitsdaten zum
   Testen benutzen. Lokale Tests ersetzen keine Live-KI- oder Geräteprüfung.
 
-Keine Veröffentlichung, keine Nachricht an Apple und keine Live-KI-Abfrage
-erfolgt automatisch durch diese Codeänderung. Die rechtlichen Ergänzungen
+Die Veröffentlichung des neuen iOS-Builds, eine Nachricht an Apple und eine
+Live-KI-Abfrage sind weiterhin nicht erfolgt. Die rechtlichen Ergänzungen
 beschreiben die implementierten Abläufe; sie sind keine juristische Freigabe.
 Eine Zustimmung ersetzt weder sachliche Belege noch Apples erneute Prüfung.
 

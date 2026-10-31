@@ -922,6 +922,12 @@ abstract class AppLocalizations {
   /// **'Dafür wird dein bisheriger Chatverlauf dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.'**
   String get coachNewChatExplanation;
 
+  /// No description provided for @coachNoAnswerSources.
+  ///
+  /// In de, this message translates to:
+  /// **'Für diese Antwort ist keine Quelle hinterlegt.'**
+  String get coachNoAnswerSources;
+
   /// No description provided for @coachNotSent.
   ///
   /// In de, this message translates to:

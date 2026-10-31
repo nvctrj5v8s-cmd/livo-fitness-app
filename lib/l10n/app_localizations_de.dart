@@ -496,6 +496,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dafür wird dein bisheriger Chatverlauf dauerhaft aus deinem Konto gelöscht. Das lässt sich nicht rückgängig machen. Dein Tageslimit bleibt unverändert.';
 
   @override
+  String get coachNoAnswerSources =>
+      'Für diese Antwort ist keine Quelle hinterlegt.';
+
+  @override
   String get coachNotSent => 'Nicht gesendet';
 
   @override

@@ -1,6 +1,7 @@
 {
   "coachSourcesAndLimits": "Sources & limits",
   "coachAnswerSources": "Sources for this answer",
+  "coachNoAnswerSources": "No source is available for this answer.",
   "coachHealthLimits": "Lookin provides general information about food and movement. AI answers can be wrong and do not replace medical or dietetic advice. Consult a qualified professional before making medical decisions. The coach does not provide diagnoses, treatment, medicines or supplement dosages.",
   "coachSourceScope": "Health-related guidance in the coach uses the references listed here. Relevant sources appear directly below each answer; [1], [2] and [3] connect them to the corresponding statement. Sources do not validate personal targets, recipe nutrition or AI photo estimates. Older chat answers may have no citations; ask again if needed. Sources last checked: 29 October 2026.",
   "coachExternalSourcePrivacy": "Links open external websites in your browser. Lookin does not attach chat text, profile or diary data to these links. When you open a website, it processes technical connection data under its own privacy notice.",

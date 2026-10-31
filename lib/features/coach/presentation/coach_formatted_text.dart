@@ -195,10 +195,18 @@ List<CoachInline> _merge(List<CoachInline> spans) {
 /// Renders a coach answer with simple lists and emphasis instead of raw
 /// Markdown characters.
 class CoachFormattedText extends StatelessWidget {
-  const CoachFormattedText(this.text, {required this.style, super.key});
+  const CoachFormattedText(
+    this.text, {
+    required this.style,
+    this.citationBuilder,
+    super.key,
+  });
 
   final String text;
   final TextStyle style;
+
+  /// Only validated citations supplied by the caller become interactive.
+  final Widget? Function(int number, int occurrence)? citationBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +223,11 @@ class CoachFormattedText extends StatelessWidget {
                   ? 5
                   : 10,
             ),
-          _BlockView(block: block, style: style),
+          _BlockView(
+            block: block,
+            style: style,
+            citationBuilder: citationBuilder,
+          ),
         ],
       ],
     );
@@ -227,10 +239,53 @@ class CoachFormattedText extends StatelessWidget {
 }
 
 class _BlockView extends StatelessWidget {
-  const _BlockView({required this.block, required this.style});
+  const _BlockView({
+    required this.block,
+    required this.style,
+    this.citationBuilder,
+  });
 
   final CoachBlock block;
   final TextStyle style;
+  final Widget? Function(int number, int occurrence)? citationBuilder;
+
+  List<InlineSpan> _buildSpans(TextStyle baseStyle) {
+    final result = <InlineSpan>[];
+    final references = RegExp(r'\[(\d+)\]');
+    var occurrence = 0;
+    for (final span in block.spans) {
+      final spanStyle = baseStyle.copyWith(
+        fontWeight: span.bold ? FontWeight.w800 : null,
+        fontStyle: span.italic ? FontStyle.italic : null,
+      );
+      var position = 0;
+      for (final match in references.allMatches(span.text)) {
+        final number = int.tryParse(match.group(1)!);
+        final citation = number == null
+            ? null
+            : citationBuilder?.call(number, occurrence++);
+        if (citation == null) continue;
+        if (match.start > position) {
+          result.add(
+            TextSpan(
+              text: span.text.substring(position, match.start),
+              style: spanStyle,
+            ),
+          );
+        }
+        result.add(
+          WidgetSpan(alignment: PlaceholderAlignment.middle, child: citation),
+        );
+        position = match.end;
+      }
+      if (position < span.text.length) {
+        result.add(
+          TextSpan(text: span.text.substring(position), style: spanStyle),
+        );
+      }
+    }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,18 +293,7 @@ class _BlockView extends StatelessWidget {
         ? style.copyWith(fontWeight: FontWeight.w800)
         : style;
     final content = Text.rich(
-      TextSpan(
-        children: [
-          for (final span in block.spans)
-            TextSpan(
-              text: span.text,
-              style: baseStyle.copyWith(
-                fontWeight: span.bold ? FontWeight.w800 : null,
-                fontStyle: span.italic ? FontStyle.italic : null,
-              ),
-            ),
-        ],
-      ),
+      TextSpan(children: _buildSpans(baseStyle)),
       style: baseStyle,
     );
     if (block.kind != CoachBlockKind.bullet &&

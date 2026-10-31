@@ -95,7 +95,16 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
-          expect(find.text(L10n.current.coachAnswerSources), findsOneWidget);
+          expect(
+            find.text('${L10n.current.coachAnswerSources} (1)'),
+            findsOneWidget,
+          );
+          await tester.tap(
+            find.byKey(const ValueKey('inline-source-who-diet-1-0')),
+          );
+          await tester.pump();
+          expect(opened, coachSources.first.uri);
+          opened = null;
           await tester.tap(find.byKey(const ValueKey('source-who-diet')));
           await tester.pump();
           expect(opened, coachSources.first.uri);
@@ -104,6 +113,70 @@ void main() {
       );
     }
   }
+
+  testWidgets(
+    'multiple references link to their own sources and appear together',
+    (tester) async {
+      Uri? opened;
+      final first = coachSources[0];
+      final second = coachSources[1];
+      final answer =
+          'Abwechslungsreich essen [1]. Kalorien sind eine Energieeinheit [2]. '
+          'Ein weiterer Hinweis [1].\n\n'
+          'Quellen:\n'
+          '[1] [${first.title}](${first.url})\n'
+          '[2] [${second.title}](${second.url})';
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.dark,
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: CitedCoachText(
+                answer,
+                style: const TextStyle(fontSize: 14),
+                opener: (uri) async {
+                  opened = uri;
+                  return true;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('${L10n.current.coachAnswerSources} (2)'),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('source-who-diet')), findsOneWidget);
+      expect(find.byKey(const ValueKey('source-nhs-calories')), findsOneWidget);
+      await tester.tap(
+        find.byKey(const ValueKey('inline-source-nhs-calories-2-1')),
+      );
+      await tester.pump();
+      expect(opened, second.uri);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('uncited older replies do not pretend to have a source', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark,
+        home: const Scaffold(
+          body: CitedCoachText(
+            'Ältere Antwort ohne Beleg.',
+            style: TextStyle(fontSize: 14),
+          ),
+        ),
+      ),
+    );
+    expect(find.byKey(const Key('coach-no-answer-sources')), findsOneWidget);
+    expect(find.text(L10n.current.coachNoAnswerSources), findsOneWidget);
+    expect(find.byKey(const ValueKey('source-who-diet')), findsNothing);
+  });
 
   testWidgets('source overview opens and closes without a premium account', (
     tester,
