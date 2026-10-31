@@ -1586,15 +1586,19 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
 
 ## Coach: Quellen direkt an Aussagen, 31. Oktober 2026
 
-- Nach bestätigten Quellenmarkierungen zeigt der Coach anklickbare Hinweise mit
-  Quellentitel direkt im Antworttext. Am Ende derselben Antwort stehen die
-  zugeordneten Quellen mit Anzahl und direkten Links gemeinsam in einer Liste.
+- Nach bestätigten Quellenmarkierungen zeigt der Coach kleine grüne, anklickbare
+  Hinweise am Ende des jeweiligen Abschnitts. Am Ende der Antwort öffnet die
+  Quellenanzahl die zugeordneten Quellen mit Titel und direkten Links gemeinsam
+  in einer Liste. Die EFSA-Grundlage zu Protein wurde am 31. Oktober nachgeprüft.
+- Türkise Akzente sowie die Filter und Plusknöpfe in der Lebensmittelauswahl
+  verwenden das bestehende helle App-Grün; auf grünen Schaltflächen steht dunkle
+  Schrift beziehungsweise ein dunkles Symbol.
 - Frühere oder andere Antworten ohne zugeordnete Quelle erhalten einen Hinweis,
   dass keine Quelle hinterlegt ist. Es werden keine Quellen für Grüße,
   App-Bedienung oder Ablehnungen erfunden. Die Serveranweisung verlangt für
   Ernährungs-, Lebensmittel- und Bewegungsantworten passende Belege; nicht
   durch die vorhandenen Grundlagen gestützte Empfehlungen sollen entfallen.
-- **Supabase:** `ai-coach` wurde am 31. Oktober 2026 als Version 22 im
+- **Supabase:** `ai-coach` wurde am 31. Oktober 2026 als Version 23 im
   verknüpften Fitness-Projekt veröffentlicht. Der heruntergeladene Live-Stand
   der Funktion und ihrer drei gemeinsamen Dateien stimmt mit dem lokalen
   Quellcode überein. Der vorige Funktionsstand wurde temporär gesichert.

@@ -174,7 +174,15 @@
   "coachReportSheetTitle": "Antwort melden",
   "coachReportThanks": "Danke! Deine Meldung ist angekommen. Wir prüfen sie.",
   "coachSendMessage": "Nachricht senden",
-  "coachSourceScope": "Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Bei einer Antwort stehen die passenden Quellen direkt unter dem Text; [1], [2] und [3] ordnen sie der jeweiligen Aussage zu. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut. Quellen zuletzt geprüft: 29.10.2026.",
+  "coachSourceCount": "{count, plural, =1{1 Quelle} other{{count} Quellen}}",
+  "@coachSourceCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coachSourceScope": "Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Tippe auf den kleinen Quellenhinweis am Ende eines Abschnitts, um die passende Quelle zu öffnen. Über die Quellenanzahl am Ende der Antwort findest du alle zugehörigen Links. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut.",
   "coachSourcesAndLimits": "Quellen & Grenzen",
   "coachSourcesDoNotVerifyEstimates": "Die Quellen belegen allgemeine Hinweise. Portionswerte und KI-Fotowerte bleiben Schätzungen; persönliche Ziele werden dadurch nicht medizinisch geprüft.",
   "coachStartANewChat": "Neuen Chat beginnen?",

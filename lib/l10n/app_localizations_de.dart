@@ -551,8 +551,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get coachSendMessage => 'Nachricht senden';
 
   @override
+  String coachSourceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Quellen',
+      one: '1 Quelle',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get coachSourceScope =>
-      'Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Bei einer Antwort stehen die passenden Quellen direkt unter dem Text; [1], [2] und [3] ordnen sie der jeweiligen Aussage zu. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut. Quellen zuletzt geprüft: 29.10.2026.';
+      'Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Tippe auf den kleinen Quellenhinweis am Ende eines Abschnitts, um die passende Quelle zu öffnen. Über die Quellenanzahl am Ende der Antwort findest du alle zugehörigen Links. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut.';
 
   @override
   String get coachSourcesAndLimits => 'Quellen & Grenzen';

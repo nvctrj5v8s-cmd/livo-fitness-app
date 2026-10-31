@@ -12,11 +12,11 @@ abstract final class AppColors {
   static const textMuted = Color(0xFF98A6A1);
   static const primary = Color(0xFFC8FF5A);
   static const primarySoft = Color(0xFF9EEA4F);
-  static const mint = Color(0xFF57E3BC);
+  static const mint = primary;
   static const orange = Color(0xFFFFB06A);
   static const purple = Color(0xFFB6A3FF);
   static const blue = Color(0xFF5DCAFF);
-  static const cyan = Color(0xFF55E2E8);
+  static const cyan = primary;
   static const error = Color(0xFFFF7E82);
   static const black = Color(0xFF050706);
   static const white = Color(0xFFFFFFFF);

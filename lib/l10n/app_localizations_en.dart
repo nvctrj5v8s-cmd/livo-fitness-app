@@ -547,8 +547,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coachSendMessage => 'Send message';
 
   @override
+  String coachSourceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sources',
+      one: '1 source',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get coachSourceScope =>
-      'Health-related guidance in the coach uses the references listed here. Relevant sources appear directly below each answer; [1], [2] and [3] connect them to the corresponding statement. Sources do not validate personal targets, recipe nutrition or AI photo estimates. Older chat answers may have no citations; ask again if needed. Sources last checked: 29 October 2026.';
+      'Health-related guidance in the coach uses the references listed here. Tap the small source label at the end of a section to open its reference. The source count at the end of the answer opens all associated links. Sources do not validate personal targets, recipe nutrition or AI photo estimates. Older chat answers may have no citations; ask again if needed.';
 
   @override
   String get coachSourcesAndLimits => 'Sources & limits';

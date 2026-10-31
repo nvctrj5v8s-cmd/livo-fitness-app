@@ -43,8 +43,8 @@ void main() {
         ? 'Health information and sources'
         : 'Gesundheitshinweise und Quellen';
     final note = english
-        ? 'Lookin provides general information about food and movement. Consult a qualified professional before making medical decisions. AI answers can be wrong. Sources do not validate personal calorie or protein targets, recipe nutrition or photo estimates. Check estimates before saving. Custom foods are your own unverified entries; use current packaging information. Sources last checked: 29 October 2026.'
-        : 'Lookin gibt allgemeine Orientierung zu Ernährung und Bewegung. Hole vor medizinischen Entscheidungen fachlichen Rat ein. KI-Antworten können falsch sein. Quellen bestätigen keine persönlichen Kalorien- oder Proteinziele, Rezeptnährwerte oder Fotoschätzungen. Prüfe Schätzungen vor dem Speichern. Eigene Lebensmittel sind deine ungeprüften Eingaben; nutze aktuelle Verpackungsangaben. Quellen zuletzt geprüft: 29.10.2026.';
+        ? 'Lookin provides general information about food and movement. Consult a qualified professional before making medical decisions. AI answers can be wrong. Sources do not validate personal calorie or protein targets, recipe nutrition or photo estimates. Check estimates before saving. Custom foods are your own unverified entries; use current packaging information. Source catalogue updated: 31 October 2026.'
+        : 'Lookin gibt allgemeine Orientierung zu Ernährung und Bewegung. Hole vor medizinischen Entscheidungen fachlichen Rat ein. KI-Antworten können falsch sein. Quellen bestätigen keine persönlichen Kalorien- oder Proteinziele, Rezeptnährwerte oder Fotoschätzungen. Prüfe Schätzungen vor dem Speichern. Eigene Lebensmittel sind deine ungeprüften Eingaben; nutze aktuelle Verpackungsangaben. Quellenstand: 31.10.2026.';
     final links = sources
         .map(
           (source) =>

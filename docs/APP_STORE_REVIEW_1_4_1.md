@@ -7,9 +7,9 @@ geprüfte Version 1.0 (6), iPad Air 11-inch (M3).
 
 1. **Coach:** oben das Buchsymbol „Quellen & Grenzen“ öffnen. Funktioniert
    auch ohne Premium. Enthält medizinische Grenzen, Quellenumfang und Links.
-2. **Neue Coach-Antwort:** gesundheitsbezogene allgemeine Hinweise haben
-   Referenzen `[1]` usw. und unmittelbar darunter „Quellen zu dieser Antwort“
-   mit Link, Herausgeber und Thema. Beispiel: „Wie kann ich mehr Abwechslung
+2. **Neue Coach-Antwort:** gesundheitsbezogene allgemeine Hinweise haben am
+   Abschnittsende einen kleinen anklickbaren Quellenhinweis. Die Quellenanzahl
+   am Antwortende öffnet alle zugehörigen Links. Beispiel: „Wie kann ich mehr Abwechslung
    in mein Essen bringen?“; Quelle sollte zur Aussage passen. Rezepte ohne
    Gesundheitsbehauptung, App-Bedienung und Ablehnungen brauchen keine
    sachfremden Referenzen. Nicht jeder Antwort wird pauschal dieselbe Liste
@@ -33,7 +33,7 @@ geprüfte Version 1.0 (6), iPad Air 11-inch (M3).
 - NHS, Understanding calories: https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/understanding-calories/
 - EFSA, Dietary reference values: https://www.efsa.europa.eu/en/topics/topic/dietary-reference-values
 
-Abgerufen am 29.10.2026. Die KI bekommt begrenzte redaktionelle Paraphrasen,
+Die Quellen wurden am 29.10.2026 abgerufen; die EFSA-Seite wurde am 31.10.2026 erneut geprüft. Die KI bekommt begrenzte redaktionelle Paraphrasen,
 keine vollständigen Webseiten. Diese Quellen bestätigen keine individuellen
 Ziele oder konkreten KI-/Rezeptnährwerte. Neue Themen nur nach Quellenprüfung
 ergänzen. Keine medizinische Behandlung, Medikamente oder Supplementdosierung.
@@ -48,7 +48,7 @@ ergänzen. Keine medizinische Behandlung, Medikamente oder Supplementdosierung.
   entspricht; für den Upload eine freie höhere Buildnummer wählen.
 - `ai-coach` mit `supabase/functions/_shared/coach_citations.ts` und
   `coach_sources.json` wurde am 31.10.2026 im verknüpften Fitness-Projekt als
-  Version 22 veröffentlicht und der heruntergeladene Stand verglichen. Keine Migration
+  Version 23 veröffentlicht und der heruntergeladene Stand verglichen. Keine Migration
   neu nötig, bestehende Chat-/Einwilligungsmigrationen müssen angewendet sein.
   Die neue Funktion akzeptiert nur die neue KI-Einwilligung; deshalb Rollout
   mit der App abstimmen. Ältere App-Versionen können diese neue Zustimmung

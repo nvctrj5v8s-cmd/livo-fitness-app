@@ -37,10 +37,10 @@ const coachSources = <CoachSource>[
     id: "efsa-reference",
     title: "EFSA – Dietary reference values",
     url: "https://www.efsa.europa.eu/en/topics/topic/dietary-reference-values",
-    checked: "2026-10-29",
+    checked: "2026-10-31",
     summaryDe:
-        "Einordnung von Nährstoffreferenzwerten: allgemeine Referenzen sind keine persönlichen Nährstoffziele.",
+        "Protein als Nährstoff und Einordnung von Nährstoffreferenzwerten; allgemeine Referenzen sind keine persönlichen Ziele.",
     summaryEn:
-        "Interpreting nutrient reference values: population references are not personal nutrient targets.",
+        "Protein as a nutrient and interpreting dietary reference values; population references are not personal targets.",
   ),
 ];

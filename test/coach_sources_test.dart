@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fitness_ai_app/core/theme/app_theme.dart';
+import 'package:fitness_ai_app/core/theme/app_colors.dart';
 import 'package:fitness_ai_app/features/coach/domain/coach_sources.dart';
 import 'package:fitness_ai_app/features/coach/presentation/coach_sources_view.dart';
 import 'package:fitness_ai_app/l10n/l10n.dart';
@@ -95,16 +96,16 @@ void main() {
             ),
           );
           await tester.pumpAndSettle();
-          expect(
-            find.text('${L10n.current.coachAnswerSources} (1)'),
-            findsOneWidget,
-          );
+          expect(find.text(L10n.current.coachSourceCount(1)), findsOneWidget);
+          expect(find.byKey(const ValueKey('source-who-diet')), findsNothing);
           await tester.tap(
             find.byKey(const ValueKey('inline-source-who-diet-1-0')),
           );
           await tester.pump();
           expect(opened, coachSources.first.uri);
           opened = null;
+          await tester.tap(find.byKey(const Key('coach-answer-sources')));
+          await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('source-who-diet')));
           await tester.pump();
           expect(opened, coachSources.first.uri);
@@ -144,20 +145,70 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(
-        find.text('${L10n.current.coachAnswerSources} (2)'),
-        findsOneWidget,
-      );
-      expect(find.byKey(const ValueKey('source-who-diet')), findsOneWidget);
-      expect(find.byKey(const ValueKey('source-nhs-calories')), findsOneWidget);
+      expect(find.text(L10n.current.coachSourceCount(2)), findsOneWidget);
+      expect(find.byKey(const ValueKey('source-who-diet')), findsNothing);
       await tester.tap(
         find.byKey(const ValueKey('inline-source-nhs-calories-2-1')),
       );
       await tester.pump();
       expect(opened, second.uri);
+      await tester.tap(find.byKey(const Key('coach-answer-sources')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('source-who-diet')), findsOneWidget);
+      expect(find.byKey(const ValueKey('source-nhs-calories')), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('calorie and protein sections have small green source links', (
+    tester,
+  ) async {
+    final calorie = coachSources.singleWhere((s) => s.id == 'nhs-calories');
+    final protein = coachSources.singleWhere((s) => s.id == 'efsa-reference');
+    Uri? opened;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark,
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: CitedCoachText(
+              'Kalorien sind eine Energieeinheit. [1]\n\n'
+              'Protein ist ein Nährstoff. [2]\n\n'
+              'Quellen:\n'
+              '[1] [${calorie.title}](${calorie.url})\n'
+              '[2] [${protein.title}](${protein.url})',
+              style: const TextStyle(fontSize: 14),
+              opener: (uri) async {
+                opened = uri;
+                return true;
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final calorieChip = find.byKey(
+      const ValueKey('inline-source-nhs-calories-1-0'),
+    );
+    final proteinChip = find.byKey(
+      const ValueKey('inline-source-efsa-reference-2-0'),
+    );
+    expect(calorieChip, findsOneWidget);
+    expect(proteinChip, findsOneWidget);
+    expect(tester.getSize(calorieChip).height, lessThanOrEqualTo(28));
+    final button = tester.widget<TextButton>(proteinChip);
+    expect(button.style!.foregroundColor!.resolve({}), AppColors.primary);
+    expect(AppColors.mint, AppColors.primary);
+    await tester.tap(proteinChip);
+    await tester.pump();
+    expect(opened, protein.uri);
+    await tester.tap(find.byKey(const Key('coach-answer-sources')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('source-nhs-calories')), findsOneWidget);
+    expect(find.byKey(const ValueKey('source-efsa-reference')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('uncited older replies do not pretend to have a source', (
     tester,

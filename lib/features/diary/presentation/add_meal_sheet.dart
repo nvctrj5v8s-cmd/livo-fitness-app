@@ -762,6 +762,10 @@ class _FoodResultTile extends StatelessWidget {
               key: ValueKey('add-food-${food.id}'),
               tooltip: context.l10n.diaryAddToValue((slot.label).toString()),
               onPressed: enabled ? onAdd : null,
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.black,
+              ),
               icon: loading
                   ? const SizedBox.square(
                       dimension: 18,
@@ -800,6 +804,12 @@ class _FoodFilterBar extends StatelessWidget {
                 child: ChoiceChip(
                   label: Text(labels[filter]!),
                   selected: selected == filter,
+                  selectedColor: AppColors.primary,
+                  labelStyle: TextStyle(
+                    color: selected == filter
+                        ? AppColors.black
+                        : AppColors.text,
+                  ),
                   showCheckmark: false,
                   onSelected: (_) => onSelected(filter),
                 ),

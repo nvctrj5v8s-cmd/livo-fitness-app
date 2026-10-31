@@ -1018,10 +1018,16 @@ abstract class AppLocalizations {
   /// **'Nachricht senden'**
   String get coachSendMessage;
 
+  /// No description provided for @coachSourceCount.
+  ///
+  /// In de, this message translates to:
+  /// **'{count, plural, =1{1 Quelle} other{{count} Quellen}}'**
+  String coachSourceCount(int count);
+
   /// No description provided for @coachSourceScope.
   ///
   /// In de, this message translates to:
-  /// **'Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Bei einer Antwort stehen die passenden Quellen direkt unter dem Text; [1], [2] und [3] ordnen sie der jeweiligen Aussage zu. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut. Quellen zuletzt geprüft: 29.10.2026.'**
+  /// **'Gesundheitsbezogene Hinweise im Coach stützen sich auf die hier aufgeführten Grundlagen. Tippe auf den kleinen Quellenhinweis am Ende eines Abschnitts, um die passende Quelle zu öffnen. Über die Quellenanzahl am Ende der Antwort findest du alle zugehörigen Links. Quellen bestätigen keine persönlichen Ziele, Rezeptnährwerte oder KI-Fotoschätzungen. Frühere Chatantworten können ohne Belege sein; frage bei Bedarf erneut.'**
   String get coachSourceScope;
 
   /// No description provided for @coachSourcesAndLimits.
