@@ -83,9 +83,9 @@ wurden nicht geprüft.
 ## Antwortentwurf – erst nach tatsächlicher Veröffentlichung verwenden
 
 Thank you for your feedback regarding Guideline 1.4.1. We have updated the
-Lookin Coach to show relevant citations directly below health-related general
-nutrition and movement guidance, with clickable links to WHO, NHS and EFSA
-references. Numbered references connect statements to their sources. The
+Lookin Coach to show clickable source labels after the relevant health-related
+nutrition and movement sections. The source count at the end of each cited
+answer opens its complete list of WHO, NHS and EFSA references. The
 source overview and medical limitations are accessible through the book icon
 (“Sources & limits”) at the top of the Coach screen, including without Premium.
 
@@ -99,4 +99,5 @@ Users are reminded to consult a qualified professional before medical decisions.
 We also updated the AI consent notices, Terms and Privacy Policy. AI processing
 requires separate, explicit consent. Please review the new build and updated
 backend. To find the citations, open Coach, ask a general nutrition question,
-and use the source links directly below the answer, or open “Sources & limits”.
+and tap a source label or the source count at the end of the answer, or open
+“Sources & limits”.
