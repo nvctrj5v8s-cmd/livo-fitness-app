@@ -38,17 +38,14 @@ Oberfläche auf sichere Aufbewahrung hin. Es gibt keine automatische
 
 ## Löschung
 
-Vorbereitet, noch nicht im Produktivsystem aktiviert: Nach Passwortprüfung
-fordert `account-data` die Löschung des RevenueCat-Kunden an und wartet auf
-eine Bestätigung per erneutem DELETE (404). Eine 200-Antwort bedeutet nur,
-dass der Auftrag angenommen wurde. Bei Fehlern oder noch ausstehender
+Seit 31.10.2026 aktiv (Edge Function `account-data`, Version 10): Nach
+Passwortprüfung fordert `account-data` die Löschung des RevenueCat-Kunden an
+und wartet auf eine Bestätigung per erneutem DELETE (404). Eine 200-Antwort
+bedeutet nur, dass der Auftrag angenommen wurde. Bei Fehlern oder ausstehender
 Bestätigung bleibt das App-Konto bestehen; der Nutzer kann erneut versuchen.
-Eine aktive Store-Mitgliedschaft wird dadurch nicht gekündigt. Zur Aktivierung
-muss ein geheimer RevenueCat-API-v1-Schlüssel aus dem richtigen Projekt als
-`REVENUECAT_SECRET_KEY` ausschließlich in den Server-Secrets hinterlegt und
-der Ablauf mit einem Testkonto Ende-zu-Ende geprüft werden. Die öffentlichen
-Datenschutz- und Löschseiten behalten ihre bisherige Beschreibung, bis die
-Funktion tatsächlich bereitgestellt und erfolgreich getestet wurde.
+Eine aktive Store-Mitgliedschaft wird dadurch nicht gekündigt. Eine
+Ende-zu-Ende-Prüfung mit einem Testkonto steht noch aus; echte Konten nicht als
+Testobjekte verwenden.
 
 Auf iOS markiert der neue App-Stand das lokale UserDefaults-Verzeichnis zum
 Ausschluss aus Gerätesicherungen, da dort auch Ernährungsinformationen liegen.

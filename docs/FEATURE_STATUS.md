@@ -1590,9 +1590,9 @@ keine Anmeldung, dauerhafte Speicherung oder Übertragung an externe Anbieter.
   Start und erneuter Aktivierung zum Ausschluss aus Gerätesicherungen
   markiert. Ein Test auf einem echten iPhone mit Backup/Wiederherstellung
   steht noch aus; ältere Sicherungen können weiterhin Daten enthalten.
-- Die RevenueCat-Kontolöschung ist im Quellcode vorbereitet, aber noch nicht
-  live: Dafür fehlen die Einrichtung des Server-Secrets und ein Testkonto.
-  Bis zur Aktivierung bleibt die bisherige Kontolöschung unverändert.
+- RevenueCat-Kontolöschung ist in `account-data` Version 10 aktiv. Der Server
+  wartet auf die RevenueCat-Bestätigung, bevor er das Supabase-Konto löscht.
+  Fehler lassen das Konto bestehen; ein Testkonto-Ende-zu-Ende-Test steht aus.
 
 - Nach bestätigten Quellenmarkierungen zeigt der Coach kleine grüne, anklickbare
   Hinweise am Ende des jeweiligen Abschnitts. Am Ende der Antwort öffnet die
