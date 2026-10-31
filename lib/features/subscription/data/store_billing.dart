@@ -186,6 +186,7 @@ final class RevenueCatStoreBilling implements StoreBilling, StorePriceProvider {
     if (!await _accountReady()) return {};
     final offerings = await Purchases.getOfferings();
     final prices = <PremiumPlanId, StorePrice>{};
+    final seen = <PremiumPlanId>{};
     for (final package
         in offerings.current?.availablePackages ?? const <Package>[]) {
       final plan = switch (package.packageType) {
@@ -193,17 +194,22 @@ final class RevenueCatStoreBilling implements StoreBilling, StorePriceProvider {
         PackageType.monthly => PremiumPlanId.monthly,
         _ => null,
       };
+      if (plan == null || !seen.add(plan)) {
+        continue;
+      }
       final product = package.storeProduct;
-      if (plan == null ||
-          product.priceString.trim().isEmpty ||
+      if (product.priceString.trim().isEmpty ||
           product.currencyCode.trim().isEmpty ||
           !product.price.isFinite ||
           product.price <= 0) {
         continue;
       }
-      prices[plan] = StorePrice(
-        formatted: product.priceString,
-        currencyCode: product.currencyCode,
+      prices.putIfAbsent(
+        plan,
+        () => StorePrice(
+          formatted: product.priceString,
+          currencyCode: product.currencyCode,
+        ),
       );
     }
     return prices;
