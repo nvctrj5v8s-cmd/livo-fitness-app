@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.117.0'
+import { deleteRevenueCatCustomer } from '../_shared/revenuecat_deletion.ts'
 
 // Only an authenticated user may export or delete their own account.
 // The service-role key stays in the Edge Function and is never sent to Flutter.
@@ -88,6 +89,13 @@ Deno.serve(async (request) => {
       })
     if (passwordError || verified.user?.id !== user.id) {
       return json({ code: 'reauth_failed' }, 403)
+    }
+    const revenueCatResult = await deleteRevenueCatCustomer(
+      user.id, Deno.env.get('REVENUECAT_SECRET_KEY'),
+    )
+    if (revenueCatResult !== 'confirmed') {
+      return json({ code: revenueCatResult === 'pending'
+        ? 'deletion_pending' : 'deletion_unavailable' }, 503)
     }
     const { error } = await admin.auth.admin.deleteUser(user.id)
     if (error) {
